@@ -1,0 +1,132 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "開く: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "すべて開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "新しいタブで開く: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "すべて新しいタブで開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "T">
+<!ENTITY textlink.openTextLink.window.single     "新しいウィンドウで開く: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "すべて新しいウィンドウで開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "W">
+
+
+<!ENTITY textlink.context.current.pref "開く: &lt;選択範囲のURI&gt;">
+<!ENTITY textlink.context.tab.pref     "新しいタブで開く: &lt;選択範囲のURI&gt;">
+<!ENTITY textlink.context.window.pref  "新しいウィンドウで開く: &lt;選択範囲のURI&gt;">
+
+
+
+
+<!ENTITY textlink.tree "テキストリンク">
+<!ENTITY textlink.title "テキストリンクの設定">
+
+
+<!ENTITY textlink.group.general "全般">
+
+<!ENTITY textlink.group.mode    "動作モード">
+
+<!ENTITY textlink.behavior.link   "通常モード（リファラを通知する）">
+<!ENTITY textlink.behavior.dnd    "ステルスモード（リファラを通知しない）">
+<!ENTITY textlink.behavior.select "選択モード（URI文字列を選択するだけで、読み込まない）">
+<!ENTITY textlink.behavior.none   "無効">
+
+<!ENTITY textlink.group.behavior "起動のトリガーと動作">
+
+<!ENTITY textlink.behavior.action_before "ページ中に書かれたURI文字列を">
+<!ENTITY textlink.behavior.action_after  "した時か">
+<!ENTITY textlink.action.dblclick             "ダブルクリック">
+<!ENTITY textlink.action.dblclick.accel       "Ctrl + ダブルクリック">
+<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + ダブルクリック">
+<!ENTITY textlink.action.dblclick.accel.mac       "Command + ダブルクリック">
+<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + ダブルクリック">
+<!ENTITY textlink.action.dblclick.alt         "Alt + ダブルクリック">
+<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + ダブルクリック">
+<!ENTITY textlink.action.dblclick.shift       "Shift + ダブルクリック">
+
+<!ENTITY textlink.behavior.action.enter_before "">
+<!ENTITY textlink.behavior.action.enter_after  "">
+<!ENTITY textlink.action.enter.ignore      "（キーボードからの入力を検知しない）">
+<!ENTITY textlink.action.enter             "テキストを選択して Enter キーを押した時">
+<!ENTITY textlink.action.enter.accel       "テキストを選択して Ctrl + Enter キーを押した時">
+<!ENTITY textlink.action.enter.accel.shift "テキストを選択して Ctrl + Shift + Enter キーを押した時">
+<!ENTITY textlink.action.enter.accel.mac       "テキストを選択して Command + Enter キーを押した時">
+<!ENTITY textlink.action.enter.accel.shift.mac "テキストを選択して Command + Shift + Enter キーを押した時">
+<!ENTITY textlink.action.enter.alt         "テキストを選択して Alt + Enter キーを押した時">
+<!ENTITY textlink.action.enter.alt.shift   "テキストを選択して Alt + Shift + Enter キーを押した時">
+<!ENTITY textlink.action.enter.shift       "テキストを選択して Shift + Enter キーを押した時">
+
+<!ENTITY textlink.openIn.before        "">
+<!ENTITY textlink.openIn.current       "現在のタブで">
+<!ENTITY textlink.openIn.window        "新しいウィンドウで">
+<!ENTITY textlink.openIn.tab           "新しい最前面のタブで">
+<!ENTITY textlink.openIn.tabBackground "新しい背後のタブで">
+<!ENTITY textlink.openIn.after         "読み込む">
+
+<!ENTITY textlink.select.label         "選択する">
+
+
+
+
+<!ENTITY textlink.group.contextmenu    "URI文字列を選択したときのコンテキストメニューに以下の項目を加える">
+
+
+
+<!ENTITY textlink.group.advanced    "詳細">
+
+<!ENTITY textlink.group.find        "URIの検出方法">
+
+<!ENTITY textlink.schemer             "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: ">
+<!ENTITY textlink.schemer.default     "初期値に戻す">
+<!ENTITY textlink.schemer.fixup.table "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）">
+<!ENTITY textlink.schemer.fixup.table.default "初期値に戻す">
+
+<!ENTITY textlink.relative.enabled    "相対パスも解釈する">
+<!ENTITY textlink.multibyte.enabled   "全角英数文字も解釈する">
+
+<!ENTITY textlink.find_click_point.strict        "クリック位置の認識方法">
+<!ENTITY textlink.find_click_point.strict.strict "厳密に認識する（URIを開けない場合があります）">
+<!ENTITY textlink.find_click_point.strict.loose  "ゆるく認識する（クリックされていないURIを開く場合があります）">
+
+
+
+<!ENTITY textlink.group.about  "About">
+<!ENTITY about.title       "テキストリンクについて">
+<!ENTITY about.name_before "テキストリンク Ver.">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "アンインストール">

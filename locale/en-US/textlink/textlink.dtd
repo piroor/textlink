@@ -1,0 +1,131 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Open &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Open All: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "Open in New Tab: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Open All in New Tabs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "T">
+<!ENTITY textlink.openTextLink.window.single     "Open in New Window: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Open All in New Windows: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "W">
+
+<!ENTITY textlink.context.current.pref "Open &lt;selected URI string&gt;">
+<!ENTITY textlink.context.tab.pref     "Open &lt;selected URI strings&gt; in New Tabs">
+<!ENTITY textlink.context.window.pref  "Open &lt;selected URI strings&gt; in New Windows">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Text Link Configuration">
+
+
+<!ENTITY textlink.group.general "General">
+
+<!ENTITY textlink.group.mode    "Mode">
+
+<!ENTITY textlink.behavior.link   "Normal Mode (sends HTTP_REFERER)">
+<!ENTITY textlink.behavior.dnd    "Stealth Mode (sends no HTTP_REFERER)">
+<!ENTITY textlink.behavior.select "Select Mode (only select the URI, don't load)">
+<!ENTITY textlink.behavior.none   "Disabled">
+
+<!ENTITY textlink.group.behavior    "Trigger and Behavior">
+
+<!ENTITY textlink.behavior.action_before "When an URI text is">
+<!ENTITY textlink.behavior.action_after  ",">
+<!ENTITY textlink.action.dblclick             "Double-clicked">
+<!ENTITY textlink.action.dblclick.accel       "Ctrl + Double-clicked">
+<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + Double-clicked">
+<!ENTITY textlink.action.dblclick.accel.mac       "Command + Double-clicked">
+<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + Double-clicked">
+<!ENTITY textlink.action.dblclick.alt         "Alt + Double-clicked">
+<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + Double-clicked">
+<!ENTITY textlink.action.dblclick.shift       "Shift + Double-clicked">
+
+<!ENTITY textlink.behavior.action.enter_before "or">
+<!ENTITY textlink.behavior.action.enter_after  ",">
+<!ENTITY textlink.action.enter.ignore      "(no key event is captured)">
+<!ENTITY textlink.action.enter             "Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.accel       "Ctrl + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.accel.shift "Ctrl + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.accel.mac       "Command + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.accel.shift.mac "Command + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.alt         "Alt + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.alt.shift   "Alt + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.action.enter.shift       "Shift + Enter is pressed with text selecting">
+
+<!ENTITY textlink.openIn.before        "load it in">
+<!ENTITY textlink.openIn.current       "the Current Tab">
+<!ENTITY textlink.openIn.window        "a New Window">
+<!ENTITY textlink.openIn.tab           "a New Foreground Tab">
+<!ENTITY textlink.openIn.tabBackground "a New Background Tab">
+<!ENTITY textlink.openIn.after         ".">
+
+<!ENTITY textlink.select.label         "select it.">
+
+
+
+<!ENTITY textlink.group.contextmenu    "Extra ContextMenu Items when URI texts are selected">
+
+
+
+<!ENTITY textlink.group.advanced    "Advanced">
+
+<!ENTITY textlink.group.find        "URI Detection">
+
+<!ENTITY textlink.schemer             "Recognize text which starts with following parts, as URI: (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default     "Reset">
+<!ENTITY textlink.schemer.fixup.table "Fix up broken URI, with following rules: (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Reset">
+
+<!ENTITY textlink.relative.enabled    "Parse relative pathes">
+<!ENTITY textlink.multibyte.enabled   "Parse multi-byte characters">
+
+<!ENTITY textlink.find_click_point.strict        "Policy of detecting clicked points">
+<!ENTITY textlink.find_click_point.strict.strict "Strict (sometimes fails to load URIs)">
+<!ENTITY textlink.find_click_point.strict.loose  "Loose (sometimes wrongly loads non clicked URIs)">
+
+
+
+
+<!ENTITY textlink.group.about  "About">
+<!ENTITY about.title       "About Text Link">
+<!ENTITY about.name_before "Text Link Ver.">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Uninstall">

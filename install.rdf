@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+	<Description about="urn:mozilla:install-manifest">
+
+		<em:id>{54BB9F3F-07E5-486c-9B39-C7398B99391C}</em:id>
+
+		<em:version>1.3.2006100702</em:version>
+
+
+		<em:targetApplication>
+			<Description><!-- Firefox -->
+				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+				<em:minVersion>1.0</em:minVersion>
+				<em:maxVersion>2.0.0.*</em:maxVersion>
+			</Description>
+			<Description><!-- Mozilla Suite -->
+				<em:id>{86c18b42-e466-45a9-ae7a-9b95ba6f5640}</em:id>
+				<em:minVersion>1.0</em:minVersion>
+				<em:maxVersion>1.8</em:maxVersion>
+			</Description>
+			<Description><!-- Netscape Browser 8 -->
+				<em:id>{3db10fab-e461-4c80-8b97-957ad5f8ea47}</em:id>
+				<em:minVersion>8.0</em:minVersion>
+				<em:maxVersion>8.1</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+
+		<em:name>Text Link</em:name>
+		<em:description>Allows URI texts written in webpages to be loaded by double clicks.</em:description>
+		<em:creator>SHIMODA Hiroshi</em:creator>
+		<em:contributor>menet</em:contributor>
+		<em:homepageURL>http://piro.sakura.ne.jp/xul/_textlink.html.en</em:homepageURL>
+		<em:updateURL>http://piro.sakura.ne.jp/xul/xul.rdf.en</em:updateURL>
+
+
+		<em:optionsURL>chrome://textlink/content/pref/prefDialog.xul</em:optionsURL>
+		<!--em:aboutURL>chrome://textlink/content/pref/prefDialog.xul</em:aboutURL-->
+		<!--em:iconURL></em:iconURL-->
+
+
+		<em:file>
+			<Description about="urn:mozilla:extension:file:textlink.jar">
+				<em:package>content/textlink/</em:package>
+				<em:locale>locale/en-US/textlink/</em:locale>
+				<em:locale>locale/ja-JP/textlink/</em:locale>
+				<em:locale>locale/fr-FR/textlink/</em:locale>
+			</Description>
+		</em:file>
+	</Description>
+</RDF>

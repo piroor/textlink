@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2002-2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+<?xml-stylesheet href="chrome://textlink/content/pref/prefOverlay.css" type="text/css"?>
+
+<!DOCTYPE overlay [
+<!ENTITY % versionDTD SYSTEM "chrome://textlink/content/_version.dtd">
+%versionDTD;
+<!ENTITY % textlinkDTD SYSTEM "chrome://textlink/locale/">
+%textlinkDTD;
+]>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<box orient="vertical" id="textlinkPrefs">
+
+<script type="application/x-javascript" src="chrome://textlink/content/globalOverlay.js"/>
+<script type="application/x-javascript" src="chrome://textlink/content/pref/exUnregisterer.js"/>
+<script type="application/x-javascript" src="chrome://textlink/content/pref/prefOverlay.js"/>
+
+
+<tabbox>
+<tabs>
+	<tab label="&textlink.group.general;"/>
+	<tab label="&textlink.group.advanced;"/>
+	<tab label="&textlink.group.about;"/>
+</tabs>
+<tabpanels>
+
+	<tabpanel orient="vertical">
+		<groupbox orient="vertical">
+			<caption label="&textlink.group.mode;"/>
+
+			<radiogroup id="textlink.mode"
+				prefstring="textlink.mode"
+				preftype="int"
+				oncommand="onBehaviorRadioChanged();"
+				linked-enable="textlink.action textlink.action.label_before textlink.action.label_after textlink.action.key_events textlink.action.label.enter_before textlink.action.label.enter_after textlink.group.behavior textlink.openIn.before textlink.openIn textlink.openIn.after textlink.group.find textlink.find_click_point.strict findClickedPointRadioGroup textlink.find_click_point.strict.strict textlink.find_click_point.strict.loose">
+				<radio value="1" label="&textlink.behavior.link;"/>
+				<radio value="2" label="&textlink.behavior.dnd;"/>
+				<radio value="3" label="&textlink.behavior.select;"/>
+				<radio value="0" label="&textlink.behavior.none;"/>
+			</radiogroup>
+		</groupbox>
+
+		<groupbox orient="vertical">
+			<caption id="textlink.group.behavior"
+				label="&textlink.group.behavior;"/>
+
+			<hbox align="center">
+				<label id="textlink.action.label_before"
+					value="&textlink.behavior.action_before;"
+					control="textlink.action"/>
+				<menulist id="textlink.action"
+					prefstring="textlink.action">
+					<menupopup>
+						<menuitem label="&textlink.action.dblclick;"             value="dblclick"/>
+						<menuseparator/>
+						<menuitem label="&textlink.action.dblclick.accel;"       value="accel-dblclick"
+							id="textlink.action.accel-dblclick"/>
+						<menuitem label="&textlink.action.dblclick.accel.shift;" value="accel-shift-dblclick"
+							id="textlink.action.accel-shift-dblclick"/>
+						<menuitem label="&textlink.action.dblclick.alt;"         value="alt-dblclick"/>
+						<menuitem label="&textlink.action.dblclick.alt.shift;"   value="alt-shift-dblclick"/>
+						<menuitem label="&textlink.action.dblclick.shift;"       value="shift-dblclick"/>
+					</menupopup>
+				</menulist>
+				<label id="textlink.action.label_after"
+					value="&textlink.behavior.action_after;"
+					control="textlink.action"/>
+
+				<data maclabel-for="textlink.action.accel-dblclick"
+					value="&textlink.action.dblclick.accel.mac;"/>
+				<data maclabel-for="textlink.action.accel-shift-dblclick"
+					value="&textlink.action.dblclick.accel.shift.mac;"/>
+			</hbox>
+
+			<hbox align="center">
+				<label id="textlink.action.label.enter_before"
+					value="&textlink.behavior.action.enter_before;"
+					control="textlink.action.key_events"/>
+				<menulist id="textlink.action.key_events"
+					prefstring="textlink.action.key_events">
+					<menupopup>
+						<menuitem label="&textlink.action.enter.ignore;"             value=""/>
+						<menuseparator/>
+						<menuitem label="&textlink.action.enter;"             value="VK_ENTER"/>
+						<menuseparator/>
+						<menuitem label="&textlink.action.enter.accel;"       value="accel-VK_ENTER"
+							id="textlink.action.accel-enter"/>
+						<menuitem label="&textlink.action.enter.accel.shift;" value="accel-shift-VK_ENTER"
+							id="textlink.action.accel-shift-enter"/>
+						<menuitem label="&textlink.action.enter.alt;"         value="alt-VK_ENTER"/>
+						<menuitem label="&textlink.action.enter.alt.shift;"   value="alt-shift-VK_ENTER"/>
+						<menuitem label="&textlink.action.enter.shift;"       value="shift-VK_ENTER"/>
+					</menupopup>
+				</menulist>
+				<label id="textlink.action.label.enter_after"
+					value="&textlink.behavior.action.enter_after;"
+					control="textlink.action.key_events"/>
+
+				<data maclabel-for="textlink.action.accel-enter"
+					value="&textlink.action.enter.accel.mac;"/>
+				<data maclabel-for="textlink.action.accel-shift-enter"
+					value="&textlink.action.enter.accel.shift.mac;"/>
+			</hbox>
+
+
+			<deck id="behaviorForMode">
+				<hbox align="center">
+					<label id="textlink.openIn.before"
+						value="&textlink.openIn.before;"
+						control="textlink.openIn"/>
+					<menulist id="textlink.openIn"
+						prefstring="textlink.openIn">
+						<menupopup>
+							<menuitem label="&textlink.openIn.current;" value="0"/>
+							<menuitem label="&textlink.openIn.window;"  value="1"/>
+							<menuitem label="&textlink.openIn.tab;"     value="2"/>
+							<menuitem label="&textlink.openIn.tabBackground;" value="3"/>
+						</menupopup>
+					</menulist>
+					<label id="textlink.openIn.after"
+						value="&textlink.openIn.after;"
+						control="textlink.openIn"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.select.label;"/>
+				</hbox>
+			</deck>
+		</groupbox>
+
+		<groupbox orient="vertical">
+			<caption id="textlink.group.contextmenu"
+				label="&textlink.group.contextmenu;"/>
+			<checkbox id="textlink.contextmenu.openTextLink.current"
+				label="&textlink.context.current.pref;"
+				prefstring="textlink.contextmenu.openTextLink.current"/>
+			<checkbox id="textlink.contextmenu.openTextLink.tab"
+				label="&textlink.context.tab.pref;"
+				prefstring="textlink.contextmenu.openTextLink.tab"/>
+			<checkbox id="textlink.contextmenu.openTextLink.window"
+				label="&textlink.context.window.pref;"
+				prefstring="textlink.contextmenu.openTextLink.window"/>
+		</groupbox>
+
+		<spacer flex="1"/>
+	</tabpanel>
+
+
+	<tabpanel orient="vertical">
+		<groupbox orient="vertical">
+			<caption id="textlink.group.find"
+				label="&textlink.group.find;"/>
+
+			<label id="textlink.schemer.label"
+				value="&textlink.schemer;"
+				control="textlink.schemer"/>
+			<hbox align="center">
+				<spacer style="width:1em;"/>
+				<textbox id="textlink.schemer"
+					flex="1"
+					prefstring="textlink.schemer"/>
+				<button label="&textlink.schemer.default;"
+					class="reset-button"
+					oncommand="this.previousSibling.value = this.nextSibling.firstChild.value;"/>
+				<box collapsed="true">
+					<textbox id="textlink.schemer.default"
+						prefstring="textlink.schemer.default"/>
+				</box>
+			</hbox>
+
+			<label id="textlink.schemer.fixup.table.label"
+				value="&textlink.schemer.fixup.table;"
+				control="textlink.schemer.fixup.table"/>
+			<hbox align="center">
+				<spacer style="width:1em;"/>
+				<textbox id="textlink.schemer.fixup.table"
+					flex="1"
+					prefstring="textlink.schemer.fixup.table"/>
+				<button label="&textlink.schemer.fixup.table.default;"
+					class="reset-button"
+					oncommand="this.previousSibling.value = this.nextSibling.firstChild.value;"/>
+				<box collapsed="true">
+					<textbox id="textlink.schemer.fixup.table.default"
+						prefstring="textlink.schemer.fixup.table.default"/>
+				</box>
+			</hbox>
+
+			<checkbox id="textlink.relative.enabled"
+				label="&textlink.relative.enabled;"
+				prefstring="textlink.relative.enabled"/>
+			<checkbox id="textlink.multibyte.enabled"
+				label="&textlink.multibyte.enabled;"
+				prefstring="textlink.multibyte.enabled"/>
+
+		</groupbox>
+
+		<groupbox orient="vertical">
+			<caption id="textlink.find_click_point.strict"
+				label="&textlink.find_click_point.strict;"/>
+			<radiogroup id="findClickedPointRadioGroup"
+				oncommand="onFindClickedPointRadioChanged();">
+				<radio id="textlink.find_click_point.strict.strict"
+					value="0"
+					label="&textlink.find_click_point.strict.strict;"/>
+				<radio id="textlink.find_click_point.strict.loose"
+					value="1"
+					label="&textlink.find_click_point.strict.loose;"/>
+			</radiogroup>
+			<box collapsed="true">
+				<checkbox id="textlink.find_click_point.strict"
+					prefstring="textlink.find_click_point.strict"/>
+			</box>
+		</groupbox>
+
+		<spacer flex="1"/>
+	</tabpanel>
+
+
+	<tabpanel orient="vertical">
+		<groupbox orient="vertical">
+			<caption label="&about.title;"/>
+			<box orient="horizontal">
+				<spacer flex="1"/>
+				<description value="&about.name_before;&version;&about.name_after;"/>
+				<spacer flex="1"/>
+			</box>
+			<box orient="horizontal">
+				<spacer flex="1"/>
+				<description value="&about.destributed;"
+					href="&about.destributed;"
+					onclick="loadURI(this.getAttribute('href'));"
+					class="text-link"/>
+				<spacer flex="1"/>
+			</box>
+			<box orient="horizontal" id="uninstallBox">
+				<spacer flex="2"/>
+				<button flex="1"
+					label="&about.uninstall;"
+					oncommand="Unregister();"/>
+				<spacer flex="2"/>
+			</box>
+		</groupbox>
+
+		<spacer flex="1"/>
+	</tabpanel>
+
+</tabpanels>
+</tabbox>
+
+</box>
+
+</overlay>

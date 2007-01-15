@@ -1,0 +1,131 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): menet <menetriertm-forumozillazine@yahoo.fr>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Ouvrir &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Ouvrir tout : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "Ouvrir dans un nouvel onglet : &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Ouvrir tout dans de nouveaux onglets : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "N">
+<!ENTITY textlink.openTextLink.window.single     "Ouvrir dans une nouvelle fenêtre : &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Ouvrir tout dans de nouvelles fenêtres : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "F">
+
+<!ENTITY textlink.context.current.pref "Ouvrir le &lt;lien sélectionné&gt;">
+<!ENTITY textlink.context.tab.pref     "Ouvrir les &lt;liens sélectionnés&gt; dans un de nouveaux onglets">
+<!ENTITY textlink.context.window.pref  "Ouvrir les &lt;liens sélectionnés&gt; dans de nouvelles fenêtres">
+
+
+
+
+<!ENTITY textlink.tree  "Text Link">
+<!ENTITY textlink.title "Configuration de Text Link">
+
+
+<!ENTITY textlink.group.general "Générale">
+
+<!ENTITY textlink.group.mode    "Mode">
+
+<!ENTITY textlink.behavior.link "Mode Normal (envoi de HTTP_REFERER)">
+<!ENTITY textlink.behavior.dnd  "Mode Secret (pas d'envoi HTTP_REFERER)">
+<!ENTITY textlink.behavior.select "Mode Sélection (seulement sélection de l'URL, pas de chargement)">
+<!ENTITY textlink.behavior.none "Désactivé">
+
+<!ENTITY textlink.group.behavior    "Comment et Où">
+
+<!ENTITY textlink.behavior.action_before       "Texte URL choisi par">
+<!ENTITY textlink.behavior.action_after        "">
+<!ENTITY textlink.action.dblclick                 "Double-clic">
+<!ENTITY textlink.action.dblclick.accel           "Ctrl + Double-clic">
+<!ENTITY textlink.action.dblclick.accel.shift     "Ctrl + Maj + Double-clic">
+<!ENTITY textlink.action.dblclick.accel.mac       "Commande + Double-clic">
+<!ENTITY textlink.action.dblclick.accel.shift.mac "Commande + Maj + Double-clic">
+<!ENTITY textlink.action.dblclick.alt             "Alt + Double-clic">
+<!ENTITY textlink.action.dblclick.alt.shift       "Alt + Maj + Double-clic">
+<!ENTITY textlink.action.dblclick.shift           "Maj + Double-clic">
+
+<!ENTITY textlink.behavior.action.enter_before "ou">
+<!ENTITY textlink.behavior.action.enter_after  ",">
+<!ENTITY textlink.action.enter.ignore          "(aucune saisie au clavier n'est prise en compte)">
+<!ENTITY textlink.action.enter                 "Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.accel           "Ctrl + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.accel.shift     "Ctrl + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.accel.mac       "Command + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.accel.shift.mac "Command + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.alt             "Alt + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.alt.shift       "Alt + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.action.enter.shift           "Shift + Entrée est tapé avec du texte sélectionné">
+
+<!ENTITY textlink.openIn.before        "L'ouvrir dans">
+<!ENTITY textlink.openIn.current       "l'onglet courant">
+<!ENTITY textlink.openIn.window        "une nouvelle fenêtre">
+<!ENTITY textlink.openIn.tab           "un nouvel onglet actif">
+<!ENTITY textlink.openIn.tabBackground "un nouvel onglet en arrière-plan">
+<!ENTITY textlink.openIn.after         "">
+
+<!ENTITY textlink.select.label         "Le selectionner.">
+
+
+
+<!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsque une URL est selectionné">
+
+
+
+<!ENTITY textlink.group.advanced    "Avancé">
+
+<!ENTITY textlink.group.find        "Détection d'URL">
+
+<!ENTITY textlink.schemer                     "Traiter le texte qui commence avec ce qui suit, comme une URL : (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default             "Défaut">
+<!ENTITY textlink.schemer.fixup.table         "Corriger les URLs coupées, en utilisant les règles suivantes : (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Défaut">
+
+<!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs">
+<!ENTITY textlink.multibyte.enabled   "Analyser les caractères multi-octet">
+
+<!ENTITY textlink.find_click_point.strict        "Règle pour la détection des clics">
+<!ENTITY textlink.find_click_point.strict.strict "Stricte (quelquefois les URLs ne sont pas chargées)">
+<!ENTITY textlink.find_click_point.strict.loose  "Large (quelquefois des URLs non cliquées sont chargées à tord)">
+
+
+
+
+<!ENTITY textlink.group.about  "À propos">
+<!ENTITY about.title       "À propos de Text Link">
+<!ENTITY about.name_before "Version de Text Link ">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Désinstaller">
