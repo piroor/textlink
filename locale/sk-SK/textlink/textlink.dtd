@@ -1,0 +1,131 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2007
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): Gianny111   <jan.gallik@gmail.com>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Otvoriť &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Otvoriť všetko: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "Otvoriť na novej karte: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Otvoriť všetko na nových kartách: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "T">
+<!ENTITY textlink.openTextLink.window.single     "Otvoriť v novom okne: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Otvoriť všetko v nových oknách: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "K">
+
+<!ENTITY textlink.context.current.pref "Otvoriť &lt;vybraný reťazec s internetovou adresou&gt;">
+<!ENTITY textlink.context.tab.pref     "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; na nových kartách">
+<!ENTITY textlink.context.window.pref  "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; v nových oknách">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Nastavenie Text Link">
+
+
+<!ENTITY textlink.group.general "Všeobecné">
+
+<!ENTITY textlink.group.mode    "Režim">
+
+<!ENTITY textlink.behavior.link   "Normálny (odosiela HTTP_REFERER)">
+<!ENTITY textlink.behavior.dnd    "Skrytý (neodosiela HTTP_REFERER)">
+<!ENTITY textlink.behavior.select "Režim označenia (iba označí internetovú adresu, nenačítava ju)">
+<!ENTITY textlink.behavior.none   "Zakázaný">
+
+<!ENTITY textlink.group.behavior    "Spúšťanie a správanie sa">
+
+<!ENTITY textlink.behavior.action_before "Ak na texte s internetovou adresou">
+<!ENTITY textlink.behavior.action_after  ",">
+<!ENTITY textlink.action.dblclick             "dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.accel       "stlačíte Ctrl + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.accel.shift "stlačíte Ctrl + Shift + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.accel.mac       "stlačíte Command + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.accel.shift.mac "stlačíte Command + Shift + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.alt         "stlačíte Alt + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.alt.shift   "stlačíte Alt + Shift + dvakrát kliknete">
+<!ENTITY textlink.action.dblclick.shift       "stlačíte Shift + dvakrát kliknete">
+
+<!ENTITY textlink.behavior.action.enter_before "alebo">
+<!ENTITY textlink.behavior.action.enter_after  ",">
+<!ENTITY textlink.action.enter.ignore      "(žiadny kláves nie je stlačený)">
+<!ENTITY textlink.action.enter             "stlačíte Enter na vybranom texte">
+<!ENTITY textlink.action.enter.accel       "stlačíte Ctrl + Enter na vybranom texte">
+<!ENTITY textlink.action.enter.accel.shift "stlačíte Ctrl + Shift + Enter počas označenia textu">
+<!ENTITY textlink.action.enter.accel.mac       "stlačíte Command + Enter na vybranom texte">
+<!ENTITY textlink.action.enter.accel.shift.mac "stlačíte Command + Shift + Enter počas označenie textu">
+<!ENTITY textlink.action.enter.alt         "Alt + Enter sú stlačené počas označenia textu">
+<!ENTITY textlink.action.enter.alt.shift   "Alt + Shift + Enter sú stlačené počas označenia textu">
+<!ENTITY textlink.action.enter.shift       "Shift + Enter sú stlačené počas označenia textu">
+
+<!ENTITY textlink.openIn.before        "načítať na/v">
+<!ENTITY textlink.openIn.current       "súčasnej karte">
+<!ENTITY textlink.openIn.window        "novom okne">
+<!ENTITY textlink.openIn.tab           "novej karte v popredí">
+<!ENTITY textlink.openIn.tabBackground "novej karte v pozadí">
+<!ENTITY textlink.openIn.after         ".">
+
+<!ENTITY textlink.select.label         "označí ho.">
+
+
+
+<!ENTITY textlink.group.contextmenu    "Špeciálne položky kontextovej ponuky pri označení textu s internetovou adresou">
+
+
+
+<!ENTITY textlink.group.advanced    "Pokročilé">
+
+<!ENTITY textlink.group.find        "Detekcia internetových adries">
+
+<!ENTITY textlink.schemer             "Rozpoznať text ako internetovú adresu, ak začína nasledovnými reťazcami: (napr. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default     "Vymazať">
+<!ENTITY textlink.schemer.fixup.table "Opraviť poškodené internetové adresy pomocou nasledovných pravidiel: (napr. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Vymazať">
+
+<!ENTITY textlink.relative.enabled    "Rozložiť relatívne cesty">
+<!ENTITY textlink.multibyte.enabled   "Rozložiť viacnásobné slabiky">
+
+<!ENTITY textlink.find_click_point.strict        "Politika detekcie">
+<!ENTITY textlink.find_click_point.strict.strict "Prísna (niekedy nemusí načítať internetovú adresu)">
+<!ENTITY textlink.find_click_point.strict.loose  "Mierna (niekedy nesprávne načíta adresu)">
+
+
+
+
+<!ENTITY textlink.group.about  "Informácie">
+<!ENTITY about.title       "O rozšírení Text Link">
+<!ENTITY about.name_before "Verzia rozšírenia Text Link ">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Odinštalovať">

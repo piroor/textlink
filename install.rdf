@@ -30,6 +30,7 @@
 		<em:description>Allows URI texts written in webpages to be loaded by double clicks.</em:description>
 		<em:creator>SHIMODA Hiroshi</em:creator>
 		<em:contributor>menet</em:contributor>
+		<em:contributor>Gianny111  </em:contributor>
 		<em:homepageURL>http://piro.sakura.ne.jp/xul/_textlink.html.en</em:homepageURL>
 		<em:updateURL>http://piro.sakura.ne.jp/xul/xul.rdf.en</em:updateURL>
 
@@ -45,6 +46,7 @@
 				<em:locale>locale/en-US/textlink/</em:locale>
 				<em:locale>locale/ja-JP/textlink/</em:locale>
 				<em:locale>locale/fr-FR/textlink/</em:locale>
+				<em:locale>locale/sk-SK/textlink/</em:locale>
 			</Description>
 		</em:file>
 	</Description>

@@ -104,6 +104,10 @@ else {
 		for (i = 0; i < installedOptions.length; i++)
 			registerChrome(localeFlag, folder, 'locale/fr-FR/'+installedOptions[i]+'/');
 
+		registerChrome(localeFlag, folder, 'locale/sk-SK/'+appName+'/');
+		for (i = 0; i < installedOptions.length; i++)
+			registerChrome(localeFlag, folder, 'locale/sk-SK/'+installedOptions[i]+'/');
+
 
 		if ('hasSkin' in this && hasSkin) {
 			registerChrome(skinFlag, folder, 'skin/classic/'+appName+'/');
