@@ -816,6 +816,10 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			if (isPlainAction && aEvent.shiftKey)
 				selectTab = !selectTab;
 
+			if ('TreeStyleTabService' in window) { // Tree Style Tab
+				TreeStyleTabService.readyToOpenChildTab(w);
+			}
+
 			var t;
 			if ('loadOneTab' in b) { // Firefox 2.0
 				t = b.loadOneTab(uri, referrer, null, null, !selectTab);
@@ -866,6 +870,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 						(b.currentURI && b.currentURI.spec == 'about:blank')
 				)
 				) {
+				if ('TreeStyleTabService' in window) // Tree Style Tab
+					TreeStyleTabService.readyToOpenChildTab(b);
 				b.loadURI(uris[i]);
 				if (!selectTab) selectTab = b.selectedTab;
 			}
@@ -876,6 +882,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 				else if (openInFlag == this.OPEN_IN_TAB ||
 					openInFlag == this.OPEN_IN_BACKGROUND_TAB ||
 					(openInFlag == this.OPEN_IN_CURRENT && i > 0)) {
+					if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
+						TreeStyleTabService.readyToOpenChildTab(b);
 					tab = b.addTab(uris[i]);
 					if (b.tabGroupsAvailable) // for TBE
 						tab.parentTab = current;
@@ -888,6 +896,9 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 				}
 			}
 		}
+
+		if ('TreeStyleTabService' in window) // Tree Style Tab
+			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
 			openInFlag != this.OPEN_IN_BACKGROUND_TAB) {
