@@ -871,7 +871,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 				)
 				) {
 				if ('TreeStyleTabService' in window) // Tree Style Tab
-					TreeStyleTabService.readyToOpenChildTab(b);
+					TreeStyleTabService.readyToOpenChildTab(b, true);
 				b.loadURI(uris[i]);
 				if (!selectTab) selectTab = b.selectedTab;
 			}
@@ -883,8 +883,10 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 					openInFlag == this.OPEN_IN_BACKGROUND_TAB ||
 					(openInFlag == this.OPEN_IN_CURRENT && i > 0)) {
 					if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
-						TreeStyleTabService.readyToOpenChildTab(b);
+						TreeStyleTabService.readyToOpenChildTab(b, true);
+
 					tab = b.addTab(uris[i]);
+
 					if (b.tabGroupsAvailable) // for TBE
 						tab.parentTab = current;
 
