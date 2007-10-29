@@ -512,6 +512,9 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		while (node.parentNode && node.nodeType != Node.ELEMENT_NODE)
 			node = node.parentNode;
 
+		var doc = Components.lookupMethod(node, 'ownerDocument').call(node);
+		if (Components.lookupMethod(doc, 'designMode').call(doc) == 'on') return;
+
 		if (
 			(
 				(
