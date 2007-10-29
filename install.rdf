@@ -13,9 +13,9 @@
 <!--
                    em:iconURL=""
 -->
-	<em:contributor>menet</em:contributor>
-	<em:contributor>Gianny111</em:contributor>
-	<em:contributor>Carlos Oliveira</em:contributor>
+	<em:translator>menet</em:translator>
+	<em:translator>Gianny111</em:translator>
+	<em:translator>Carlos Oliveira</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
