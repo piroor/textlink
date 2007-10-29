@@ -1,0 +1,131 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): Carlos Oliveira <wlq105556@gmail.com>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "打开 &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "全部打开：&quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "在新标签中打开： &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "全部于新标签中打开： &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "T">
+<!ENTITY textlink.openTextLink.window.single     "在新窗口中打开： &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "全部于新窗口中打开： &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "W">
+
+<!ENTITY textlink.context.current.pref "打开&lt;选定的 URI 串&gt;">
+<!ENTITY textlink.context.tab.pref     "在新标签中打开&lt;选定的 URI 串&gt; ">
+<!ENTITY textlink.context.window.pref  "在新窗口中打开&lt;选定的 URI 串&gt;">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Text Link 配置">
+
+
+<!ENTITY textlink.group.general "常规">
+
+<!ENTITY textlink.group.mode    "模式">
+
+<!ENTITY textlink.behavior.link   "普通模式（发送 HTTP_REFERER）">
+<!ENTITY textlink.behavior.dnd    "隐蔽模式（不发送 HTTP_REFERER）">
+<!ENTITY textlink.behavior.select "选择模式 （只选定而不载入 URI）">
+<!ENTITY textlink.behavior.none   "禁用">
+
+<!ENTITY textlink.group.behavior    "事件触发与动作执行">
+
+<!ENTITY textlink.behavior.action_before "当">
+<!ENTITY textlink.behavior.action_after  "一个 URI 文本，">
+<!ENTITY textlink.action.dblclick             "双击">
+<!ENTITY textlink.action.dblclick.accel       "Ctrl + 双击">
+<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + 双击">
+<!ENTITY textlink.action.dblclick.accel.mac       "Command + 双击">
+<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + 双击">
+<!ENTITY textlink.action.dblclick.alt         "Alt + 双击">
+<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + 双击">
+<!ENTITY textlink.action.dblclick.shift       "Shift + 双击">
+
+<!ENTITY textlink.behavior.action.enter_before "或">
+<!ENTITY textlink.behavior.action.enter_after  "，">
+<!ENTITY textlink.action.enter.ignore      "（不执行任何键盘操作）">
+<!ENTITY textlink.action.enter             "选定文本并按下 Enter 键">
+<!ENTITY textlink.action.enter.accel       "选定文本并按下 Ctrl + Enter 键">
+<!ENTITY textlink.action.enter.accel.shift "选定文本并按下 Ctrl + Shift + 键">
+<!ENTITY textlink.action.enter.accel.mac       "选定文本并按下 Command + Enter 键">
+<!ENTITY textlink.action.enter.accel.shift.mac "选定文本并按下 Command + Shift + Enter 键">
+<!ENTITY textlink.action.enter.alt         "选定文本并按下 Alt + Enter 键">
+<!ENTITY textlink.action.enter.alt.shift   "选定文本并按下 Alt + Shift + Enter 键">
+<!ENTITY textlink.action.enter.shift       "选定文本并按下 Shift + Enter 键">
+
+<!ENTITY textlink.openIn.before        "在">
+<!ENTITY textlink.openIn.current       "当前标签">
+<!ENTITY textlink.openIn.window        "新窗口">
+<!ENTITY textlink.openIn.tab           "前台的新标签">
+<!ENTITY textlink.openIn.tabBackground "后台的新标签">
+<!ENTITY textlink.openIn.after         "中载入该 URI">
+
+<!ENTITY textlink.select.label         "选定该文本。">
+
+
+
+<!ENTITY textlink.group.contextmenu    "选定 URI 文本时的其他上下文菜单">
+
+
+
+<!ENTITY textlink.group.advanced    "高级">
+
+<!ENTITY textlink.group.find        "URI 检测">
+
+<!ENTITY textlink.schemer             "将以下部分开头的文本视作 URI：（例如 &quot;http、ftp、mailto&quot;）">
+<!ENTITY textlink.schemer.default     "重置">
+<!ENTITY textlink.schemer.fixup.table "使用以下规则修复拼写错误的 URI：（例如 &quot;ttp=>http、ttps=>https&quot;）">
+<!ENTITY textlink.schemer.fixup.table.default "重置">
+
+<!ENTITY textlink.relative.enabled    "解析相关的路径">
+<!ENTITY textlink.multibyte.enabled   "解析多字节的字符">
+
+<!ENTITY textlink.find_click_point.strict        "检测双击点的方式">
+<!ENTITY textlink.find_click_point.strict.strict "严格的（某些时候可能导致 URI 载入失败）">
+<!ENTITY textlink.find_click_point.strict.loose  "宽松的（某些时候可能错误地载入未点击的 URI）">
+
+
+
+
+<!ENTITY textlink.group.about  "关于">
+<!ENTITY about.title       "关于 Text Link">
+<!ENTITY about.name_before "Text Link 版本　">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "卸载">
