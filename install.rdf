@@ -16,6 +16,7 @@
 	<em:translator>menet</em:translator>
 	<em:translator>Gianny111</em:translator>
 	<em:translator>Carlos Oliveira</em:translator>
+	<em:translator>Alan CHENG</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -47,6 +48,11 @@
                        em:name="Text Link"
                        em:description="允许通过双击载入网页中的 URI 文本。"/>
     </em:localized>
+    <em:localized>
+      <RDF:Description em:locale="zh-TW"
+                       em:name="Text Link"
+                       em:description="讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。"/>
+    </em:localized>
 
 
     <em:targetApplication>
@@ -71,6 +77,7 @@
 			<em:locale>locale/fr-FR/textlink/</em:locale>
 			<em:locale>locale/sk-SK/textlink/</em:locale>
 			<em:locale>locale/zh-CN/textlink/</em:locale>
+			<em:locale>locale/zh-TW/textlink/</em:locale>
 		</RDF:Description>
 	</em:file>
   </RDF:Description>
