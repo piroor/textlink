@@ -1,4 +1,4 @@
-var version     = '1.3.2007103002',
+var version     = '1.3.2007110501',
 	displayName = 'Text Link',
 	appName     = 'textlink',
 	author      = 'SHIMODA Hiroshi',
