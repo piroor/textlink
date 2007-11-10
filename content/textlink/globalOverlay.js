@@ -742,7 +742,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			)
 			return;
 
-		var b = aEvent.target;
+		var b = aEvent.currentTarget;
 		if (!b) return;
 
 		var w = (new XPCNativeWrapper(nodeWrapper.ownerDocument, 'defaultView')).defaultView;
@@ -753,15 +753,14 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 		var referrer = (
 					aAction & this.ACTION_STEALTH ||
-					(
-						'referrerBlocked' in b.selectedTab &&
-						b.selectedTab.referrerBlocked
-					)
+					(b.selectedTab && b.selectedTab.referrerBlocked)
 				) ?
 					null :
 					this.makeURIFromSpec(w.location.href) ;
 
-		if (aAction & this.ACTION_OPEN_IN_CURRENT || uri.match(/^mailto:/)) {
+		if (aAction & this.ACTION_OPEN_IN_CURRENT ||
+			uri.match(/^mailto:/) ||
+			b.localName != 'tabbrowser') {
 			b.loadURI(uri, referrer);
 		}
 		else if (aAction & this.ACTION_OPEN_IN_WINDOW) {
@@ -806,14 +805,20 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		var current = b.selectedTab;
 
 		var openInFlag = aOpenInFlag;
-		if (openInFlag === void(0)) openInFlag = this.getPref('textlink.openIn');
+		if (openInFlag === void(0)) openInFlag = this.ACTION_OPEN_IN_CURRENT;
 
-		// Firefox 2.0
-		if (uris.length > 1 &&
-			'_confirmOpenTabs' in BookmarksCommand &&
-			(openInFlag == this.OPEN_IN_TAB ||
-			openInFlag == this.OPEN_IN_BACKGROUND_TAB) &&
-			!BookmarksCommand._confirmOpenTabs(uris.length))
+		if (
+			uris.length > 1 &&
+			(openInFlag == this.ACTION_OPEN_IN_TAB ||
+			openInFlag == this.ACTION_OPEN_IN_BACKGROUND_TAB) &&
+			(
+				('BookmarksCommand' in window && '_confirmOpenTabs' in BookmarksCommand) ? // Firefox 2.0
+					!BookmarksCommand._confirmOpenTabs(uris.length) :
+				('PlacesController' in window) ? // Firefox 3
+					!PlacesController.prototype._confirmOpenTabs(uris.length) :
+					false
+			)
+			)
 			return;
 
 		for (var i in uris)
@@ -830,12 +835,12 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 				if (!selectTab) selectTab = b.selectedTab;
 			}
 			else {
-				if (openInFlag == this.OPEN_IN_WINDOW) {
+				if (openInFlag == this.ACTION_OPEN_IN_WINDOW) {
 					window.open(uris[i]);
 				}
-				else if (openInFlag == this.OPEN_IN_TAB ||
-					openInFlag == this.OPEN_IN_BACKGROUND_TAB ||
-					(openInFlag == this.OPEN_IN_CURRENT && i > 0)) {
+				else if (openInFlag == this.ACTION_OPEN_IN_TAB ||
+					openInFlag == this.ACTION_OPEN_IN_BACKGROUND_TAB ||
+					(openInFlag == this.ACTION_OPEN_IN_CURRENT && i > 0)) {
 					if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
 						TreeStyleTabService.readyToOpenChildTab(b, true);
 
@@ -846,7 +851,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 					if (!selectTab) selectTab = tab;
 				}
-				else if (openInFlag == this.OPEN_IN_CURRENT) {
+				else if (openInFlag == this.ACTION_OPEN_IN_CURRENT) {
 					b.loadURI(uris[i]);
 					selectTab = b.selectedTab;
 				}
@@ -857,7 +862,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
-			openInFlag != this.OPEN_IN_BACKGROUND_TAB) {
+			openInFlag != this.ACTION_OPEN_IN_BACKGROUND_TAB) {
 			b.selectedTab = selectTab;
 			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
 			if ('setFocusInternal' in b) b.setFocusInternal();
