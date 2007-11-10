@@ -57,46 +57,48 @@
 
 <!ENTITY textlink.group.general "Všeobecné">
 
-<!ENTITY textlink.group.mode    "Režim">
+<!ENTITY textlink.actions.tab0    "Action 1">
+<!ENTITY textlink.actions.tab1    "Action 2">
+<!ENTITY textlink.actions.tab2    "Action 3">
+<!ENTITY textlink.actions.tab3    "Action 4">
+<!ENTITY textlink.actions.tab4    "Action 5">
 
-<!ENTITY textlink.behavior.link   "Normálny (odosiela HTTP_REFERER)">
-<!ENTITY textlink.behavior.dnd    "Skrytý (neodosiela HTTP_REFERER)">
-<!ENTITY textlink.behavior.select "Režim označenia (iba označí internetovú adresu, nenačítava ju)">
-<!ENTITY textlink.behavior.none   "Zakázaný">
+<!ENTITY textlink.trigger.mouse_before "Ak na texte s internetovou adresou">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.dblclick             "dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "stlačíte Ctrl + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "stlačíte Ctrl + Shift + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "stlačíte Command + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "stlačíte Command + Shift + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "stlačíte Alt + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "stlačíte Alt + Shift + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "stlačíte Shift + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse_after  ",">
 
-<!ENTITY textlink.group.behavior    "Spúšťanie a správanie sa">
+<!ENTITY textlink.trigger.key_before "alebo">
+<!ENTITY textlink.trigger.key.ignore      "(žiadny kláves nie je stlačený)">
+<!ENTITY textlink.trigger.key.enter             "stlačíte Enter na vybranom texte">
+<!ENTITY textlink.trigger.key.enter.accel       "stlačíte Ctrl + Enter na vybranom texte">
+<!ENTITY textlink.trigger.key.enter.accel.shift "stlačíte Ctrl + Shift + Enter počas označenia textu">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "stlačíte Command + Enter na vybranom texte">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "stlačíte Command + Shift + Enter počas označenie textu">
+<!ENTITY textlink.trigger.key.enter.alt         "Alt + Enter sú stlačené počas označenia textu">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Enter sú stlačené počas označenia textu">
+<!ENTITY textlink.trigger.key.enter.shift       "Shift + Enter sú stlačené počas označenia textu">
+<!ENTITY textlink.trigger.key_after  ",">
 
-<!ENTITY textlink.behavior.action_before "Ak na texte s internetovou adresou">
-<!ENTITY textlink.behavior.action_after  ",">
-<!ENTITY textlink.action.dblclick             "dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.accel       "stlačíte Ctrl + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.accel.shift "stlačíte Ctrl + Shift + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.accel.mac       "stlačíte Command + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.accel.shift.mac "stlačíte Command + Shift + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.alt         "stlačíte Alt + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.alt.shift   "stlačíte Alt + Shift + dvakrát kliknete">
-<!ENTITY textlink.action.dblclick.shift       "stlačíte Shift + dvakrát kliknete">
-
-<!ENTITY textlink.behavior.action.enter_before "alebo">
-<!ENTITY textlink.behavior.action.enter_after  ",">
-<!ENTITY textlink.action.enter.ignore      "(žiadny kláves nie je stlačený)">
-<!ENTITY textlink.action.enter             "stlačíte Enter na vybranom texte">
-<!ENTITY textlink.action.enter.accel       "stlačíte Ctrl + Enter na vybranom texte">
-<!ENTITY textlink.action.enter.accel.shift "stlačíte Ctrl + Shift + Enter počas označenia textu">
-<!ENTITY textlink.action.enter.accel.mac       "stlačíte Command + Enter na vybranom texte">
-<!ENTITY textlink.action.enter.accel.shift.mac "stlačíte Command + Shift + Enter počas označenie textu">
-<!ENTITY textlink.action.enter.alt         "Alt + Enter sú stlačené počas označenia textu">
-<!ENTITY textlink.action.enter.alt.shift   "Alt + Shift + Enter sú stlačené počas označenia textu">
-<!ENTITY textlink.action.enter.shift       "Shift + Enter sú stlačené počas označenia textu">
-
-<!ENTITY textlink.openIn.before        "načítať na/v">
-<!ENTITY textlink.openIn.current       "súčasnej karte">
-<!ENTITY textlink.openIn.window        "novom okne">
-<!ENTITY textlink.openIn.tab           "novej karte v popredí">
-<!ENTITY textlink.openIn.tabBackground "novej karte v pozadí">
-<!ENTITY textlink.openIn.after         ".">
-
-<!ENTITY textlink.select.label         "označí ho.">
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.select        "označí ho.">
+<!ENTITY textlink.action.current       "načítať na/v súčasnej karte.">
+<!ENTITY textlink.action.window        "načítať na/v novom okne.">
+<!ENTITY textlink.action.tab           "načítať na/v novej karte v popredí.">
+<!ENTITY textlink.action.tabBackground "načítať na/v novej karte v pozadí.">
+<!ENTITY textlink.action.current.stealth       "načítať na/v súčasnej karte (without HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "načítať na/v novom okne (without HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "načítať na/v novej karte v popredí (without HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "načítať na/v novej karte v pozadí (without HTTP_REFERER).">
+<!ENTITY textlink.action_after  "">
 
 
 

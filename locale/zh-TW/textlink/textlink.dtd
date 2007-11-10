@@ -57,47 +57,48 @@
 
 <!ENTITY textlink.group.general "一般">
 
-<!ENTITY textlink.group.mode    "模式">
+<!ENTITY textlink.actions.tab0    "Action 1">
+<!ENTITY textlink.actions.tab1    "Action 2">
+<!ENTITY textlink.actions.tab2    "Action 3">
+<!ENTITY textlink.actions.tab3    "Action 4">
+<!ENTITY textlink.actions.tab4    "Action 5">
 
-<!ENTITY textlink.behavior.link   "正常模式 (傳送 HTTP_REFERER)">
-<!ENTITY textlink.behavior.dnd    "保密模式 (不傳送 HTTP_REFERER)">
-<!ENTITY textlink.behavior.select "選取模式 (僅選取 URI，不要載入)">
-<!ENTITY textlink.behavior.none   "停用">
+<!ENTITY textlink.trigger.mouse_before "對 URI 文字">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.dblclick             "雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Command + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + 雙擊">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + 雙擊">
+<!ENTITY textlink.trigger.mouse_after  "，">
 
-<!ENTITY textlink.group.behavior    "觸發與行為">
+<!ENTITY textlink.trigger.key_before "或">
+<!ENTITY textlink.trigger.key.ignore            "(不擷取鍵盤事件)">
+<!ENTITY textlink.trigger.key.enter             "有文字被選取時，按下 Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.accel       "有文字被選取時，按下 Ctrl + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.accel.shift "有文字被選取時，按下 Ctrl + Shift + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "有文字被選取時，按下 Command + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "有文字被選取時，按下 Command + Shift + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.alt         "有文字被選取時，按下 Alt + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "有文字被選取時，按下 Alt + Shift + Enter 鍵">
+<!ENTITY textlink.trigger.key.enter.shift       "有文字被選取時，按下 Shift + Enter 鍵">
+<!ENTITY textlink.trigger.key_after  "，">
 
-<!ENTITY textlink.behavior.action_before "對 URI 文字">
-<!ENTITY textlink.behavior.action_after  "，">
-<!ENTITY textlink.action.dblclick             "雙擊">
-<!ENTITY textlink.action.dblclick.accel       "Ctrl + 雙擊">
-<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + 雙擊">
-<!ENTITY textlink.action.dblclick.accel.mac       "Command + 雙擊">
-<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + 雙擊">
-<!ENTITY textlink.action.dblclick.alt         "Alt + 雙擊">
-<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + 雙擊">
-<!ENTITY textlink.action.dblclick.shift       "Shift + 雙擊">
-
-<!ENTITY textlink.behavior.action.enter_before "或">
-<!ENTITY textlink.behavior.action.enter_after  "，">
-<!ENTITY textlink.action.enter.ignore      "(不擷取鍵盤事件)">
-<!ENTITY textlink.action.enter             "有文字被選取時，按下 Enter 鍵">
-<!ENTITY textlink.action.enter.accel       "有文字被選取時，按下 Ctrl + Enter 鍵">
-<!ENTITY textlink.action.enter.accel.shift "有文字被選取時，按下 Ctrl + Shift + Enter 鍵">
-<!ENTITY textlink.action.enter.accel.mac       "有文字被選取時，按下 Command + Enter 鍵">
-<!ENTITY textlink.action.enter.accel.shift.mac "有文字被選取時，按下 Command + Shift + Enter 鍵">
-<!ENTITY textlink.action.enter.alt         "有文字被選取時，按下 Alt + Enter 鍵">
-<!ENTITY textlink.action.enter.alt.shift   "有文字被選取時，按下 Alt + Shift + Enter 鍵">
-<!ENTITY textlink.action.enter.shift       "有文字被選取時，按下 Shift + Enter 鍵">
-
-<!ENTITY textlink.openIn.before        "便將它載入到">
-<!ENTITY textlink.openIn.current       "目前分頁">
-<!ENTITY textlink.openIn.window        "新視窗">
-<!ENTITY textlink.openIn.tab           "新前景分頁">
-<!ENTITY textlink.openIn.tabBackground "新背景分頁">
-<!ENTITY textlink.openIn.after         "。">
-
-<!ENTITY textlink.select.label         "選取它。">
-
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.select        "選取它。">
+<!ENTITY textlink.action.current       "便將它載入到目前分頁。">
+<!ENTITY textlink.action.window        "便將它載入到新視窗。">
+<!ENTITY textlink.action.tab           "便將它載入到新前景分頁。">
+<!ENTITY textlink.action.tabBackground "便將它載入到新背景分頁。">
+<!ENTITY textlink.action.current.stealth       "便將它載入到目前分頁。 (without HTTP_REFERER)">
+<!ENTITY textlink.action.window.stealth        "便將它載入到新視窗。 (without HTTP_REFERER)">
+<!ENTITY textlink.action.tab.stealth           "便將它載入到新前景分頁。 (without HTTP_REFERER)">
+<!ENTITY textlink.action.tabBackground.stealth "便將它載入到新背景分頁。 (without HTTP_REFERER)">
+<!ENTITY textlink.action_after  "">
 
 
 <!ENTITY textlink.group.contextmenu    "有 URI 文字被選取時，額外的右鍵選單項目">

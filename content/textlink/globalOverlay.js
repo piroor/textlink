@@ -1,38 +1,3 @@
-/* ***** BEGIN LICENSE BLOCK ***** 
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is the Text Link.
- *
- * The Initial Developer of the Original Code is SHIMODA Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2004-2007
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
- 
 // start of definition 
 if (!window.TextLinkService) {
 
@@ -40,7 +5,7 @@ var TextLinkService =
 {
 	debug : false,
 
-	activated : false,
+	initialized : false,
 
 //	findRangeSize : 512,
 	get findRangeSize()
@@ -55,10 +20,13 @@ var TextLinkService =
 
 	XULNS : 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul',
 
-	MODE_DISABLED : 0,
-	MODE_NORMAL   : 1,
-	MODE_STEALTH  : 2,
-	MODE_SELECT   : 3,
+	ACTION_DISABLED               : 0,
+	ACTION_STEALTH                : 1,
+	ACTION_SELECT                 : 2,
+	ACTION_OPEN_IN_CURRENT        : 4,
+	ACTION_OPEN_IN_WINDOW         : 8,
+	ACTION_OPEN_IN_TAB            : 16,
+	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
 
 	get kURIPattern()
 	{
@@ -100,11 +68,6 @@ var TextLinkService =
 	kOnebyteArray : '-_.!~~*\'()acdefghijklmnopqrstuvwxyzACDEFGHIJKLMNOPQRSTUVWXYZ0123456789;/?:@&=+$,%#',
 	kMultibyteArray : '\uff0d\uff3f\uff0e\uff01\uffe3\uff5e\uff0a\u2019\uff08\uff09\uff41\uff43\uff44\uff45\uff46\uff47\uff48\uff49\uff4a\uff4b\uff4c\uff4d\uff4e\uff4f\uff50\uff51\uff52\uff53\uff54\uff55\uff56\uff57\uff58\uff59\uff5a\uff21\uff23\uff24\uff25\uff26\uff27\uff28\uff29\uff2a\uff2b\uff2c\uff2d\uff2e\uff2f\uff30\uff31\uff32\uff33\uff34\uff35\uff36\uff37\uff38\uff39\uff3a\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03',
 
-	OPEN_IN_CURRENT        : 0,
-	OPEN_IN_WINDOW         : 1,
-	OPEN_IN_TAB            : 2,
-	OPEN_IN_BACKGROUND_TAB : 3,
-
 	// see http://www4.plala.or.jp/nomrax/TLD/
 	kTopLevelDomains : [
 		// iTLD , gTLD
@@ -136,7 +99,7 @@ var TextLinkService =
 		'yd', 'ye', 'yt', 'yu',
 		'za', 'zm', 'zr', 'zw'
 	],
-	
+	 
 	get browsers() 
 	{
 		return document.getElementsByTagNameNS(this.XULNS, 'tabbrowser');
@@ -500,7 +463,15 @@ if (this.debug)
 	handleEvent : function(aEvent) 
 	{
 if (this.debug) dump('TextLinkService.handleEvent();\n');
-		var action;
+		for (var i = 0; this.getPref('textlink.actions.'+i+'.action') !== null; i++)
+		{
+			if (this.handleEventFor(aEvent, i)) return;
+		}
+	},
+	 
+	handleEventFor : function(aEvent, aIndex) 
+	{
+		var trigger;
 
 		var node;
 		try {
@@ -512,15 +483,17 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		while (node.parentNode && node.nodeType != Node.ELEMENT_NODE)
 			node = node.parentNode;
 
+		if (node.ownerDocument == document) return false;
+
 		var doc = Components.lookupMethod(node, 'ownerDocument').call(node);
-		if (Components.lookupMethod(doc, 'designMode').call(doc) == 'on') return;
+		if (Components.lookupMethod(doc, 'designMode').call(doc) == 'on') return false;
 
 		if (
 			(
 				(
 					aEvent.type == 'keypress' &&
-					(action = (this.getPref('textlink.action.key_events') || this.getPref('textlink.action.key_events.default')).toLowerCase()) &&
-					/(VK_[^-,|\s]+)/i.test(action) &&
+					(trigger = this.getPref('textlink.actions.'+aIndex+'.trigger.key').toLowerCase()) &&
+					/(VK_[^-,|\s]+)/i.test(trigger) &&
 					aEvent['DOM_'+RegExp.$1.toUpperCase()] &&
 					(
 						RegExp.$1.toUpperCase().search(/VK_(ENTER|RETURN)/) > -1 ?
@@ -533,11 +506,11 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 					node.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) < 0
 				) ||
 				(
-					(action = (this.getPref('textlink.action') || this.getPref('textlink.action.default')).toLowerCase()) &&
+					(trigger = this.getPref('textlink.actions.'+aIndex+'.trigger.mouse').toLowerCase()) &&
 					(
 						aEvent.type == 'dblclick' ?
-							(aEvent.button == 0 && action.indexOf('dblclick') > -1) :
-						action.indexOf('middleclick') > -1 ?
+							(aEvent.button == 0 && trigger.indexOf('dblclick') > -1) :
+						trigger.indexOf('middleclick') > -1 ?
 							aEvent.button == 1 :
 							aEvent.button == 0
 					)
@@ -545,26 +518,24 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 			) &&
 			(
 				(
-					action.indexOf('ctrl') < 0 &&
-					action.indexOf('meta') < 0 &&
-					action.indexOf('accel') < 0 &&
-					action.indexOf('shift') < 0 &&
-					action.indexOf('alt') < 0
-				) ||
-				(
-					(
-						(action.indexOf('ctrl') > -1 == aEvent.ctrlKey) ||
-						(action.indexOf('meta') > -1 == aEvent.metaKey) ||
-						(action.indexOf('accel') > -1 == (aEvent.ctrlKey || aEvent.metaKey))
-					) &&
-					(action.indexOf('shift') > -1 == aEvent.shiftKey) &&
-					(action.indexOf('alt') > -1 == aEvent.altKey)
-				)
+					trigger.indexOf('accel') > -1 ?
+						(aEvent.ctrlKey || aEvent.metaKey) :
+						(
+							(trigger.indexOf('ctrl') > -1 == aEvent.ctrlKey) &&
+							(trigger.indexOf('meta') > -1 == aEvent.metaKey)
+						)
+				) &&
+				(trigger.indexOf('shift') > -1 == aEvent.shiftKey) &&
+				(trigger.indexOf('alt') > -1 == aEvent.altKey)
 			)
-			)
-			this.openClickedURI(aEvent, action);
+			) {
+			this.openClickedURI(aEvent, this.getPref('textlink.actions.'+aIndex+'.action'), trigger);
+			return true;
+		}
+
+		return false;
 	},
- 
+ 	 
 	FIND_CLICKED      : 1,
 	FIND_ALL_SELECTED : 2,
 	getSelectionURI : function(aMode, aWindow) 
@@ -752,11 +723,9 @@ originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange)+'\n'
 		return findRange;
 	},
   
-	openClickedURI : function(aEvent, aAction) 
+	openClickedURI : function(aEvent, aAction, aTrigger) 
 	{
 if (this.debug) dump('TextLinkService.openClickedURI();\n');
-		var mode = this.getPref('textlink.mode');
-
 		var target = aEvent.originalTarget;
 		var nodeWrapper;
 		while (
@@ -767,7 +736,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 		nodeWrapper = new XPCNativeWrapper(target, 'localName', 'ownerDocument');
 		if (
-			mode == this.MODE_DISABLED ||
+			aAction == this.ACTION_DISABLED ||
 			aEvent.button > 0 ||
 			nodeWrapper.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
 			)
@@ -779,11 +748,11 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		var w = (new XPCNativeWrapper(nodeWrapper.ownerDocument, 'defaultView')).defaultView;
 
 		var uri = this.getClickedURI(w);
-		if (!uri || mode == this.MODE_SELECT) return;
+		if (!uri || aAction & this.ACTION_SELECT) return;
 
 
 		var referrer = (
-					mode == this.MODE_STEALTH ||
+					aAction & this.ACTION_STEALTH ||
 					(
 						'referrerBlocked' in b.selectedTab &&
 						b.selectedTab.referrerBlocked
@@ -792,32 +761,14 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 					null :
 					this.makeURIFromSpec(w.location.href) ;
 
-		var isPlainAction = !aAction || (
-					aAction.indexOf('accel') < 0 &&
-					aAction.indexOf('ctrl') < 0 &&
-					aAction.indexOf('meta') < 0 &&
-					aAction.indexOf('shift') < 0 &&
-					aAction.indexOf('alt') < 0
-				);
-
-		var openIn = this.getPref('textlink.openIn');
-		if (isPlainAction && (aEvent.ctrlKey || aEvent.metaKey)) {
-			if (openIn == this.OPEN_IN_CURRENT) {
-				openIn = this.OPEN_IN_TAB;
-			}
-			else {
-				openIn = this.OPEN_IN_CURRENT;
-			}
-		}
-
-		if (openIn == this.OPEN_IN_CURRENT || uri.match(/^mailto:/))
+		if (aAction & this.ACTION_OPEN_IN_CURRENT || uri.match(/^mailto:/)) {
 			b.loadURI(uri, referrer);
-		else if (openIn == this.OPEN_IN_WINDOW)
+		}
+		else if (aAction & this.ACTION_OPEN_IN_WINDOW) {
 			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', uri, null, referrer);
+		}
 		else {
-			var selectTab = (openIn != this.OPEN_IN_BACKGROUND_TAB);
-			if (isPlainAction && aEvent.shiftKey)
-				selectTab = !selectTab;
+			var selectTab = !(aAction &this.ACTION_OPEN_IN_BACKGROUND_TAB);
 
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(w);
@@ -915,8 +866,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
  
 	init : function() 
 	{
-		if (this.activated) return;
-		this.activated = true;
+		if (this.initialized) return;
+		this.initialized = true;
 
 		this.loadDefaultPrefs();
 
@@ -1010,10 +961,10 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		item.setAttribute('label', base);
 	},
   
-	destruct : function() 
+	destroy : function() 
 	{
-		if (!this.activated) return;
-		this.activated = false;
+		if (!this.initialized) return;
+		this.initialized = false;
 
 		var b = this.browsers;
 		for (var i = 0; i < b.length; i++)
@@ -1030,29 +981,29 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 // initialize 
 window.addEventListener('unload', function()
 {
-	if (!TextLinkService.activated) return;
+	if (!TextLinkService.initialized) return;
 
-	TextLinkService.destruct();
+	TextLinkService.destroy();
 },
 false);
 window.addEventListener('unload', function()
 {
-	if (!TextLinkService.activated) return;
+	if (!TextLinkService.initialized) return;
 
-	TextLinkService.destruct();
+	TextLinkService.destroy();
 },
 false);
 
 window.addEventListener('load', function()
 {
-	if (TextLinkService.activated) return;
+	if (TextLinkService.initialized) return;
 
 	TextLinkService.init();
 },
 false);
 window.addEventListener('load', function()
 {
-	if (TextLinkService.activated) return;
+	if (TextLinkService.initialized) return;
 
 	TextLinkService.init();
 },

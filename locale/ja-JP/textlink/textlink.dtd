@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - Portions created by the Initial Developer are Copyright (C) 2004-2007
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -58,46 +58,48 @@
 
 <!ENTITY textlink.group.general "全般">
 
-<!ENTITY textlink.group.mode    "動作モード">
+<!ENTITY textlink.actions.tab0    "アクション1">
+<!ENTITY textlink.actions.tab1    "アクション2">
+<!ENTITY textlink.actions.tab2    "アクション3">
+<!ENTITY textlink.actions.tab3    "アクション4">
+<!ENTITY textlink.actions.tab4    "アクション5">
 
-<!ENTITY textlink.behavior.link   "通常モード（リファラを通知する）">
-<!ENTITY textlink.behavior.dnd    "ステルスモード（リファラを通知しない）">
-<!ENTITY textlink.behavior.select "選択モード（URI文字列を選択するだけで、読み込まない）">
-<!ENTITY textlink.behavior.none   "無効">
+<!ENTITY textlink.trigger.mouse_before "ページ中に書かれたURI文字列を">
+<!ENTITY textlink.trigger.mouse.ignore               "（マウスからの入力を検知しない）">
+<!ENTITY textlink.trigger.mouse.dblclick             "ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + ダブルクリック">
+<!ENTITY textlink.trigger.mouse_after  "した時か">
 
-<!ENTITY textlink.group.behavior "起動のトリガーと動作">
+<!ENTITY textlink.trigger.key_before "">
+<!ENTITY textlink.trigger.key.ignore            "（キーボードからの入力を検知しない）">
+<!ENTITY textlink.trigger.key.enter             "テキストを選択して Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel       "テキストを選択して Ctrl + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "テキストを選択して Command + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel.shift "テキストを選択して Ctrl + Shift + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "テキストを選択して Command + Shift + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.alt         "テキストを選択して Alt + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "テキストを選択して Alt + Shift + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.shift       "テキストを選択して Shift + Enter キーを押した時">
+<!ENTITY textlink.trigger.key_after  "">
 
-<!ENTITY textlink.behavior.action_before "ページ中に書かれたURI文字列を">
-<!ENTITY textlink.behavior.action_after  "した時か">
-<!ENTITY textlink.action.dblclick             "ダブルクリック">
-<!ENTITY textlink.action.dblclick.accel       "Ctrl + ダブルクリック">
-<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + ダブルクリック">
-<!ENTITY textlink.action.dblclick.accel.mac       "Command + ダブルクリック">
-<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + ダブルクリック">
-<!ENTITY textlink.action.dblclick.alt         "Alt + ダブルクリック">
-<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + ダブルクリック">
-<!ENTITY textlink.action.dblclick.shift       "Shift + ダブルクリック">
-
-<!ENTITY textlink.behavior.action.enter_before "">
-<!ENTITY textlink.behavior.action.enter_after  "">
-<!ENTITY textlink.action.enter.ignore      "（キーボードからの入力を検知しない）">
-<!ENTITY textlink.action.enter             "テキストを選択して Enter キーを押した時">
-<!ENTITY textlink.action.enter.accel       "テキストを選択して Ctrl + Enter キーを押した時">
-<!ENTITY textlink.action.enter.accel.shift "テキストを選択して Ctrl + Shift + Enter キーを押した時">
-<!ENTITY textlink.action.enter.accel.mac       "テキストを選択して Command + Enter キーを押した時">
-<!ENTITY textlink.action.enter.accel.shift.mac "テキストを選択して Command + Shift + Enter キーを押した時">
-<!ENTITY textlink.action.enter.alt         "テキストを選択して Alt + Enter キーを押した時">
-<!ENTITY textlink.action.enter.alt.shift   "テキストを選択して Alt + Shift + Enter キーを押した時">
-<!ENTITY textlink.action.enter.shift       "テキストを選択して Shift + Enter キーを押した時">
-
-<!ENTITY textlink.openIn.before        "">
-<!ENTITY textlink.openIn.current       "現在のタブで">
-<!ENTITY textlink.openIn.window        "新しいウィンドウで">
-<!ENTITY textlink.openIn.tab           "新しい最前面のタブで">
-<!ENTITY textlink.openIn.tabBackground "新しい背後のタブで">
-<!ENTITY textlink.openIn.after         "読み込む">
-
-<!ENTITY textlink.select.label         "選択する">
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "何もしない">
+<!ENTITY textlink.action.select        "URI文字列を選択する">
+<!ENTITY textlink.action.current       "現在のタブに読み込む">
+<!ENTITY textlink.action.window        "新しいウィンドウで開く">
+<!ENTITY textlink.action.tab           "新しい最全面のタブで開く">
+<!ENTITY textlink.action.tabBackground "新しい背後のタブで開く">
+<!ENTITY textlink.action.current.stealth       "現在のタブに読み込む（リファラを通知しない）">
+<!ENTITY textlink.action.window.stealth        "新しいウィンドウで開く（リファラを通知しない）">
+<!ENTITY textlink.action.tab.stealth           "新しい最全面のタブで開く（リファラを通知しない）">
+<!ENTITY textlink.action.tabBackground.stealth "新しい背後のタブで開く（リファラを通知しない）">
+<!ENTITY textlink.action_after  "">
 
 
 

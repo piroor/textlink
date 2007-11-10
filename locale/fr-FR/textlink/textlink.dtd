@@ -57,46 +57,48 @@
 
 <!ENTITY textlink.group.general "Générale">
 
-<!ENTITY textlink.group.mode    "Mode">
+<!ENTITY textlink.actions.tab0    "Action 1">
+<!ENTITY textlink.actions.tab1    "Action 2">
+<!ENTITY textlink.actions.tab2    "Action 3">
+<!ENTITY textlink.actions.tab3    "Action 4">
+<!ENTITY textlink.actions.tab4    "Action 5">
 
-<!ENTITY textlink.behavior.link "Mode Normal (envoi de HTTP_REFERER)">
-<!ENTITY textlink.behavior.dnd  "Mode Secret (pas d'envoi HTTP_REFERER)">
-<!ENTITY textlink.behavior.select "Mode Sélection (seulement sélection de l'URL, pas de chargement)">
-<!ENTITY textlink.behavior.none "Désactivé">
+<!ENTITY textlink.trigger.mouse_before "Texte URL choisi par">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.dblclick                 "Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel           "Ctrl + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift     "Ctrl + Maj + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Commande + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Commande + Maj + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.alt             "Alt + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift       "Alt + Maj + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.shift           "Maj + Double-clic">
+<!ENTITY textlink.trigger.mouse_after  "">
 
-<!ENTITY textlink.group.behavior    "Comment et Où">
+<!ENTITY textlink.trigger.key_before "ou">
+<!ENTITY textlink.trigger.key.ignore                "(aucune saisie au clavier n'est prise en compte)">
+<!ENTITY textlink.trigger.key.enter                 "Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel           "Ctrl + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.shift     "Ctrl + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.alt             "Alt + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.alt.shift       "Alt + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.shift           "Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key_after  ",">
 
-<!ENTITY textlink.behavior.action_before       "Texte URL choisi par">
-<!ENTITY textlink.behavior.action_after        "">
-<!ENTITY textlink.action.dblclick                 "Double-clic">
-<!ENTITY textlink.action.dblclick.accel           "Ctrl + Double-clic">
-<!ENTITY textlink.action.dblclick.accel.shift     "Ctrl + Maj + Double-clic">
-<!ENTITY textlink.action.dblclick.accel.mac       "Commande + Double-clic">
-<!ENTITY textlink.action.dblclick.accel.shift.mac "Commande + Maj + Double-clic">
-<!ENTITY textlink.action.dblclick.alt             "Alt + Double-clic">
-<!ENTITY textlink.action.dblclick.alt.shift       "Alt + Maj + Double-clic">
-<!ENTITY textlink.action.dblclick.shift           "Maj + Double-clic">
-
-<!ENTITY textlink.behavior.action.enter_before "ou">
-<!ENTITY textlink.behavior.action.enter_after  ",">
-<!ENTITY textlink.action.enter.ignore          "(aucune saisie au clavier n'est prise en compte)">
-<!ENTITY textlink.action.enter                 "Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.accel           "Ctrl + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.accel.shift     "Ctrl + Shift + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.accel.mac       "Command + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.accel.shift.mac "Command + Shift + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.alt             "Alt + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.alt.shift       "Alt + Shift + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.action.enter.shift           "Shift + Entrée est tapé avec du texte sélectionné">
-
-<!ENTITY textlink.openIn.before        "L'ouvrir dans">
-<!ENTITY textlink.openIn.current       "l'onglet courant">
-<!ENTITY textlink.openIn.window        "une nouvelle fenêtre">
-<!ENTITY textlink.openIn.tab           "un nouvel onglet actif">
-<!ENTITY textlink.openIn.tabBackground "un nouvel onglet en arrière-plan">
-<!ENTITY textlink.openIn.after         "">
-
-<!ENTITY textlink.select.label         "Le selectionner.">
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.select        "Le selectionner.">
+<!ENTITY textlink.action.current       "L'ouvrir dans l'onglet courant.">
+<!ENTITY textlink.action.window        "L'ouvrir dans une nouvelle fenêtre.">
+<!ENTITY textlink.action.tab           "L'ouvrir dans un nouvel onglet actif.">
+<!ENTITY textlink.action.tabBackground "L'ouvrir dans un nouvel onglet en arrière-plan.">
+<!ENTITY textlink.action.current.stealth       "L'ouvrir dans l'onglet courant (without HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "L'ouvrir dans une nouvelle fenêtre (without HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "L'ouvrir dans un nouvel onglet actif (without HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "L'ouvrir dans un nouvel onglet en arrière-plan (without HTTP_REFERER).">
+<!ENTITY textlink.action_after  "">
 
 
 

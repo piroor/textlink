@@ -1,0 +1,12 @@
+content	textlink	jar:chrome/textlink.jar!/content/textlink/
+
+overlay	chrome://global/content/globalOverlay.xul	chrome://textlink/content/globalOverlay.xul
+overlay	chrome://browser/content/browser.xul	chrome://textlink/content/globalOverlay.xul
+overlay	chrome://communicator/content/pref/preftree.xul	chrome://textlink/content/pref/preftreeOverlay.xul
+
+locale	textlink	en-US	jar:chrome/textlink.jar!/locale/en-US/textlink/
+locale	textlink	ja-JP	jar:chrome/textlink.jar!/locale/ja-JP/textlink/
+locale	textlink	fr-FR	jar:chrome/textlink.jar!/locale/fr-FR/textlink/
+locale	textlink	sk-SK	jar:chrome/textlink.jar!/locale/sk-SK/textlink/
+locale	textlink	zh-CN	jar:chrome/textlink.jar!/locale/zh-CN/textlink/
+locale	textlink	zh-TW	jar:chrome/textlink.jar!/locale/zh-TW/textlink/

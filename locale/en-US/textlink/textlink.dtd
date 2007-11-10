@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - Portions created by the Initial Developer are Copyright (C) 2004-2007
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -57,46 +57,48 @@
 
 <!ENTITY textlink.group.general "General">
 
-<!ENTITY textlink.group.mode    "Mode">
+<!ENTITY textlink.actions.tab0    "Action 1">
+<!ENTITY textlink.actions.tab1    "Action 2">
+<!ENTITY textlink.actions.tab2    "Action 3">
+<!ENTITY textlink.actions.tab3    "Action 4">
+<!ENTITY textlink.actions.tab4    "Action 5">
 
-<!ENTITY textlink.behavior.link   "Normal Mode (sends HTTP_REFERER)">
-<!ENTITY textlink.behavior.dnd    "Stealth Mode (sends no HTTP_REFERER)">
-<!ENTITY textlink.behavior.select "Select Mode (only select the URI, don't load)">
-<!ENTITY textlink.behavior.none   "Disabled">
+<!ENTITY textlink.trigger.mouse_before "When an URI text is">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.dblclick             "Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + Double-clicked">
+<!ENTITY textlink.trigger.mouse_after  ",">
 
-<!ENTITY textlink.group.behavior    "Trigger and Behavior">
+<!ENTITY textlink.trigger.key_before "or">
+<!ENTITY textlink.trigger.key.ignore            "(ignore key events)">
+<!ENTITY textlink.trigger.key.enter             "Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel       "Ctrl + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "Command + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.alt         "Alt + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.shift       "Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key_after  ",">
 
-<!ENTITY textlink.behavior.action_before "When an URI text is">
-<!ENTITY textlink.behavior.action_after  ",">
-<!ENTITY textlink.action.dblclick             "Double-clicked">
-<!ENTITY textlink.action.dblclick.accel       "Ctrl + Double-clicked">
-<!ENTITY textlink.action.dblclick.accel.shift "Ctrl + Shift + Double-clicked">
-<!ENTITY textlink.action.dblclick.accel.mac       "Command + Double-clicked">
-<!ENTITY textlink.action.dblclick.accel.shift.mac "Command + Shift + Double-clicked">
-<!ENTITY textlink.action.dblclick.alt         "Alt + Double-clicked">
-<!ENTITY textlink.action.dblclick.alt.shift   "Alt + Shift + Double-clicked">
-<!ENTITY textlink.action.dblclick.shift       "Shift + Double-clicked">
-
-<!ENTITY textlink.behavior.action.enter_before "or">
-<!ENTITY textlink.behavior.action.enter_after  ",">
-<!ENTITY textlink.action.enter.ignore      "(no key event is captured)">
-<!ENTITY textlink.action.enter             "Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.accel       "Ctrl + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.accel.shift "Ctrl + Shift + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.accel.mac       "Command + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.accel.shift.mac "Command + Shift + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.alt         "Alt + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.alt.shift   "Alt + Shift + Enter is pressed with text selecting">
-<!ENTITY textlink.action.enter.shift       "Shift + Enter is pressed with text selecting">
-
-<!ENTITY textlink.openIn.before        "load it in">
-<!ENTITY textlink.openIn.current       "the Current Tab">
-<!ENTITY textlink.openIn.window        "a New Window">
-<!ENTITY textlink.openIn.tab           "a New Foreground Tab">
-<!ENTITY textlink.openIn.tabBackground "a New Background Tab">
-<!ENTITY textlink.openIn.after         ".">
-
-<!ENTITY textlink.select.label         "select it.">
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.select        "select it.">
+<!ENTITY textlink.action.current       "load it in the Current Tab.">
+<!ENTITY textlink.action.window        "load it in a New Window.">
+<!ENTITY textlink.action.tab           "load it in a New Foreground Tab.">
+<!ENTITY textlink.action.tabBackground "load it in a New Background Tab.">
+<!ENTITY textlink.action.current.stealth       "load it in the Current Tab (without HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "load it in a New Window (without HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "load it in a New Foreground Tab (without HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "load it in a New Background Tab (without HTTP_REFERER).">
+<!ENTITY textlink.action_after  "">
 
 
 
