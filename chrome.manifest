@@ -10,3 +10,4 @@ locale	textlink	fr-FR	jar:chrome/textlink.jar!/locale/fr-FR/textlink/
 locale	textlink	sk-SK	jar:chrome/textlink.jar!/locale/sk-SK/textlink/
 locale	textlink	zh-CN	jar:chrome/textlink.jar!/locale/zh-CN/textlink/
 locale	textlink	zh-TW	jar:chrome/textlink.jar!/locale/zh-TW/textlink/
+locale	textlink	it-IT	jar:chrome/textlink.jar!/locale/it-IT/textlink/

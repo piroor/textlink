@@ -34,7 +34,8 @@ function init()
 				node.value = value;
 				break;
 			case 'number':
-				node.selectedIndex = value;
+				var items = node.getElementsByAttribute('value', value);
+				if (items.length) node.selectedItem = items[0];
 				node.value = value;
 				break;
 			case 'boolean':

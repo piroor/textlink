@@ -1,4 +1,4 @@
-var version     = '2.0.2007111101',
+var version     = '2.0.2007111103',
 	displayName = 'Text Link',
 	appName     = 'textlink',
 	author      = 'SHIMODA Hiroshi',
@@ -115,6 +115,10 @@ else {
 		registerChrome(localeFlag, folder, 'locale/zh-TW/'+appName+'/');
 		for (i = 0; i < installedOptions.length; i++)
 			registerChrome(localeFlag, folder, 'locale/zh-TW/'+installedOptions[i]+'/');
+
+		registerChrome(localeFlag, folder, 'locale/it-IT/'+appName+'/');
+		for (i = 0; i < installedOptions.length; i++)
+			registerChrome(localeFlag, folder, 'locale/it-IT/'+installedOptions[i]+'/');
 
 
 		if ('hasSkin' in this && hasSkin) {

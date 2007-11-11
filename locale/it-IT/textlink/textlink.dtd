@@ -1,0 +1,134 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): Marco C. <marcopcef@alice.it>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Apri &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Apri tutti: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "Apri in una nuova scheda: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Apri tutti in nuove schede: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "T">
+<!ENTITY textlink.openTextLink.window.single     "Apri in una nuova finestra: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Apri tutti in nuove finestre: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "W">
+
+<!ENTITY textlink.context.current.pref "Apri &lt;URI selezionato&gt;">
+<!ENTITY textlink.context.tab.pref     "Apri &lt;URI selezionato&gt; in nuove schede">
+<!ENTITY textlink.context.window.pref  "Apri &lt;URI selezionato&gt; in nuove finestre">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Configurazione di Text Link">
+
+
+<!ENTITY textlink.group.general "Generale">
+
+<!ENTITY textlink.actions.tab0    "Action 1">
+<!ENTITY textlink.actions.tab1    "Action 2">
+<!ENTITY textlink.actions.tab2    "Action 3">
+<!ENTITY textlink.actions.tab3    "Action 4">
+<!ENTITY textlink.actions.tab4    "Action 5">
+
+<!ENTITY textlink.trigger.mouse_before "Quando un URI testuale viene">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.dblclick             "cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + cliccato due volte>
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Command + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + cliccato due volte">
+<!ENTITY textlink.trigger.mouse_after  ",">
+
+<!ENTITY textlink.trigger.key_before "o">
+<!ENTITY textlink.trigger.key.ignore            "(niente altro)">
+<!ENTITY textlink.trigger.key.enter             "viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel       "Ctrl + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.alt         "Alt + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.shift       "Shift + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key_after  ",">
+
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.select        "selezionalo.">
+<!ENTITY textlink.action.current       "caricalo nella scheda corrente.">
+<!ENTITY textlink.action.window        "caricalo in una nuova finestra.">
+<!ENTITY textlink.action.tab           "caricalo in una nuova scheda in primo piano.">
+<!ENTITY textlink.action.tabBackground "caricalo in una nuova scheda in secondo piano.">
+<!ENTITY textlink.action.current.stealth       "caricalo nella scheda corrente (without HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "caricalo in una nuova finestra (without HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "caricalo in una nuova scheda in primo piano (without HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "caricalo in una nuova scheda in secondo piano (without HTTP_REFERER).">
+<!ENTITY textlink.action_after  "">
+
+
+
+
+<!ENTITY textlink.group.contextmenu    "Voci extra del menu contestuale quando gli URI testuali sono selezionati">
+
+
+
+<!ENTITY textlink.group.advanced    "Avanzate">
+
+<!ENTITY textlink.group.find        "Rilevamento degli URI">
+
+<!ENTITY textlink.schemer             "Rileva come URI un testo che incomincia con una di queste parti: (es. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default     "Resetta">
+<!ENTITY textlink.schemer.fixup.table "Correggi gli URI errati secondo le seguenti regole: (es. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Resetta">
+
+<!ENTITY textlink.relative.enabled    "Analizza percorsi relativi">
+<!ENTITY textlink.multibyte.enabled   "Analizza caratteri multi-byte">
+
+<!ENTITY textlink.find_click_point.strict        "Criterio di rilevamento dei punti cliccati">
+<!ENTITY textlink.find_click_point.strict.strict "Rigido (a volte non carica gli URI)">
+<!ENTITY textlink.find_click_point.strict.loose  "Flessibile (a volte carica erroneamente URI non cliccati)">
+
+
+
+
+<!ENTITY textlink.group.about  "A proposito di">
+<!ENTITY about.title       "A proposito di Text Link">
+<!ENTITY about.name_before "Text Link Ver.">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Disinstalla">
