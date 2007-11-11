@@ -66,7 +66,7 @@
 <!ENTITY textlink.trigger.mouse_before "Quando un URI testuale viene">
 <!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
 <!ENTITY textlink.trigger.mouse.dblclick             "cliccato due volte">
-<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + cliccato due volte>
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Command + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + cliccato due volte">
