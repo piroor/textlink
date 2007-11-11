@@ -57,14 +57,14 @@
 
 <!ENTITY textlink.group.general "Generale">
 
-<!ENTITY textlink.actions.tab0    "Action 1">
-<!ENTITY textlink.actions.tab1    "Action 2">
-<!ENTITY textlink.actions.tab2    "Action 3">
-<!ENTITY textlink.actions.tab3    "Action 4">
-<!ENTITY textlink.actions.tab4    "Action 5">
+<!ENTITY textlink.actions.tab0    "Azione 1">
+<!ENTITY textlink.actions.tab1    "Azione 2">
+<!ENTITY textlink.actions.tab2    "Azione 3">
+<!ENTITY textlink.actions.tab3    "Azione 4">
+<!ENTITY textlink.actions.tab4    "Azione 5">
 
 <!ENTITY textlink.trigger.mouse_before "Quando un URI testuale viene">
-<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignora mouse)">
 <!ENTITY textlink.trigger.mouse.dblclick             "cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + cliccato due volte">
@@ -77,27 +77,27 @@
 
 <!ENTITY textlink.trigger.key_before "o">
 <!ENTITY textlink.trigger.key.ignore            "(niente altro)">
-<!ENTITY textlink.trigger.key.enter             "viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel       "Ctrl + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.alt         "Alt + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + viene premuto Invio quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.shift       "Shift + viene premuto Invio quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter             "Invio viene premuto quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel       "Ctrl + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.alt         "Alt + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.shift       "Shift + Invio vengono premuti quando si seleziona il testo">
 <!ENTITY textlink.trigger.key_after  ",">
 
 <!ENTITY textlink.action_before "">
-<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.blank         "non fare niente.">
 <!ENTITY textlink.action.select        "selezionalo.">
 <!ENTITY textlink.action.current       "caricalo nella scheda corrente.">
 <!ENTITY textlink.action.window        "caricalo in una nuova finestra.">
 <!ENTITY textlink.action.tab           "caricalo in una nuova scheda in primo piano.">
 <!ENTITY textlink.action.tabBackground "caricalo in una nuova scheda in secondo piano.">
-<!ENTITY textlink.action.current.stealth       "caricalo nella scheda corrente (without HTTP_REFERER).">
-<!ENTITY textlink.action.window.stealth        "caricalo in una nuova finestra (without HTTP_REFERER).">
-<!ENTITY textlink.action.tab.stealth           "caricalo in una nuova scheda in primo piano (without HTTP_REFERER).">
-<!ENTITY textlink.action.tabBackground.stealth "caricalo in una nuova scheda in secondo piano (without HTTP_REFERER).">
+<!ENTITY textlink.action.current.stealth       "caricalo nella scheda corrente (senza HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "caricalo in una nuova finestra (senza HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "caricalo in una nuova scheda in primo piano (senza HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "caricalo in una nuova scheda in secondo piano (senza HTTP_REFERER).">
 <!ENTITY textlink.action_after  "">
 
 
