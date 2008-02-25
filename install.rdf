@@ -25,37 +25,44 @@
     <em:localized>
       <RDF:Description em:locale="en-US"
                        em:name="Text Link"
-                       em:description="Allows URI texts written in webpages to be loaded by double clicks."/>
+                       em:description="Allows URI texts written in webpages to be loaded by double clicks."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="ja-JP"
                        em:name="テキストリンク"
-                       em:description="ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。"/>
+                       em:description="ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。"
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="fr-FR"
                        em:name="Text Link"
-                       em:description="Permet de charger une page WEB seulement grâce à un double-clic sur le texte du lien URL."/>
+                       em:description="Permet de charger une page WEB seulement grâce à un double-clic sur le texte du lien URL."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="sk-SK"
                        em:name="Text Link"
-                       em:description="Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím."/>
+                       em:description="Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="zh-CN"
                        em:name="Text Link"
-                       em:description="允许通过双击载入网页中的 URI 文本。"/>
+                       em:description="允许通过双击载入网页中的 URI 文本。"
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="zh-TW"
                        em:name="Text Link"
-                       em:description="讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。"/>
+                       em:description="讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。"
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="it-IT"
                        em:name="Text Link"
-                       em:description="Carica gli URI testuali con un doppio clic."/>
+                       em:description="Carica gli URI testuali con un doppio clic."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
 
 
@@ -64,10 +71,14 @@
       <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                        em:minVersion="1.0"
                        em:maxVersion="3.0b1" />
+    </em:targetApplication>
+    <em:targetApplication>
       <!-- Mozilla Suite -->
       <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
                        em:minVersion="1.0"
                        em:maxVersion="1.8.*" />
+    </em:targetApplication>
+    <em:targetApplication>
       <!-- Netscape Browser 8 -->
       <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
                        em:minVersion="8.0"
