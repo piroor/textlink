@@ -80,13 +80,15 @@ function loadURI(uri)
 }
 
 // Uninstall 
-var unreg = new exUnregisterer(
-	'chrome://textlink/content/contents.rdf',
-	'jar:%chromeFolder%textlink.jar!/locale/en-US/textlink/contents.rdf',
-	'jar:%chromeFolder%textlink.jar!/locale/ja-JP/textlink/contents.rdf'
-);
 var STRBUNDLE = Components.classes['@mozilla.org/intl/stringbundle;1'].getService(Components.interfaces.nsIStringBundleService);
 var msg = STRBUNDLE.createBundle('chrome://textlink/locale/textlink.properties');
+var unreg;
+if (location.href.indexOf('prefDialog.xul') < 0)
+	unreg = new exUnregisterer(
+		'chrome://textlink/content/contents.rdf',
+		'jar:%chromeFolder%textlink.jar!/locale/en-US/textlink/contents.rdf',
+		'jar:%chromeFolder%textlink.jar!/locale/ja-JP/textlink/contents.rdf'
+	);
 
 
 function Unregister()

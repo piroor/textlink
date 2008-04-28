@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{54BB9F3F-07E5-486c-9B39-C7398B99391C}"
                    em:name="Text Link"
-                   em:version="2.0.2007111301"
+                   em:version="2.0.2008042801"
                    em:creator="SHIMODA Hiroshi"
                    em:description="Allows URI texts written in webpages to be loaded by double clicks."
                    em:iconURL="chrome://textlink/content/icon.png"
@@ -70,19 +70,13 @@
       <!-- Firefox -->
       <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                        em:minVersion="1.0"
-                       em:maxVersion="3.0b1" />
+                       em:maxVersion="3.0pre" />
     </em:targetApplication>
     <em:targetApplication>
       <!-- Mozilla Suite -->
       <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
                        em:minVersion="1.0"
-                       em:maxVersion="1.8.*" />
-    </em:targetApplication>
-    <em:targetApplication>
-      <!-- Netscape Browser 8 -->
-      <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
-                       em:minVersion="8.0"
-                       em:maxVersion="8.*" />
+                       em:maxVersion="1.8+" />
     </em:targetApplication>
 	<em:file>
 		<RDF:Description RDF:about="urn:mozilla:extension:file:textlink.jar">
