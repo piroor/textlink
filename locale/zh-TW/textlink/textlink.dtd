@@ -57,14 +57,14 @@
 
 <!ENTITY textlink.group.general "一般">
 
-<!ENTITY textlink.actions.tab0    "Action 1">
-<!ENTITY textlink.actions.tab1    "Action 2">
-<!ENTITY textlink.actions.tab2    "Action 3">
-<!ENTITY textlink.actions.tab3    "Action 4">
-<!ENTITY textlink.actions.tab4    "Action 5">
+<!ENTITY textlink.actions.tab0    "動作 1">
+<!ENTITY textlink.actions.tab1    "動作 2">
+<!ENTITY textlink.actions.tab2    "動作 3">
+<!ENTITY textlink.actions.tab3    "動作 4">
+<!ENTITY textlink.actions.tab4    "動作 5">
 
 <!ENTITY textlink.trigger.mouse_before "對 URI 文字">
-<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.ignore               "(忽略滑鼠事件)">
 <!ENTITY textlink.trigger.mouse.dblclick             "雙擊">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + 雙擊">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + 雙擊">
@@ -76,7 +76,7 @@
 <!ENTITY textlink.trigger.mouse_after  "，">
 
 <!ENTITY textlink.trigger.key_before "或">
-<!ENTITY textlink.trigger.key.ignore            "(不擷取鍵盤事件)">
+<!ENTITY textlink.trigger.key.ignore            "(忽略鍵盤事件)">
 <!ENTITY textlink.trigger.key.enter             "有文字被選取時，按下 Enter 鍵">
 <!ENTITY textlink.trigger.key.enter.accel       "有文字被選取時，按下 Ctrl + Enter 鍵">
 <!ENTITY textlink.trigger.key.enter.accel.shift "有文字被選取時，按下 Ctrl + Shift + Enter 鍵">
@@ -88,7 +88,7 @@
 <!ENTITY textlink.trigger.key_after  "，">
 
 <!ENTITY textlink.action_before "">
-<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.blank         "什麼都不做">
 <!ENTITY textlink.action.select        "選取它。">
 <!ENTITY textlink.action.current       "便將它載入到目前分頁。">
 <!ENTITY textlink.action.window        "便將它載入到新視窗。">
@@ -117,7 +117,7 @@
 <!ENTITY textlink.relative.enabled    "剖析相對路徑">
 <!ENTITY textlink.multibyte.enabled   "剖析多位元組字元 (multi-byte characters)">
 
-<!ENTITY textlink.find_click_point.strict        "滑鼠點擊點偵測政策">
+<!ENTITY textlink.find_click_point.strict        "滑鼠點擊偵測方式">
 <!ENTITY textlink.find_click_point.strict.strict "嚴格 (有時無法載入 URI)">
 <!ENTITY textlink.find_click_point.strict.loose  "寬鬆 (有時錯誤地載入沒有點擊的 URI)">
 
