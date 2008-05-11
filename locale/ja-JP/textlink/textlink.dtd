@@ -93,11 +93,11 @@
 <!ENTITY textlink.action.select        "URI文字列を選択する">
 <!ENTITY textlink.action.current       "現在のタブに読み込む">
 <!ENTITY textlink.action.window        "新しいウィンドウで開く">
-<!ENTITY textlink.action.tab           "新しい最全面のタブで開く">
+<!ENTITY textlink.action.tab           "新しい最前面のタブで開く">
 <!ENTITY textlink.action.tabBackground "新しい背後のタブで開く">
 <!ENTITY textlink.action.current.stealth       "現在のタブに読み込む（リファラを通知しない）">
 <!ENTITY textlink.action.window.stealth        "新しいウィンドウで開く（リファラを通知しない）">
-<!ENTITY textlink.action.tab.stealth           "新しい最全面のタブで開く（リファラを通知しない）">
+<!ENTITY textlink.action.tab.stealth           "新しい最前面のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action.tabBackground.stealth "新しい背後のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action_after  "">
 
