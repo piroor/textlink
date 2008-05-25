@@ -859,8 +859,11 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			)
 			return;
 
+		var done = {};
 		for (var i in uris)
 		{
+			if (!(uris[i] in done)) continue;
+			done[uris[i]] = true;
 			if (
 				(
 					('isReallyBlank' in b.selectedTab) ? b.selectedTab.isReallyBlank :
