@@ -39,6 +39,7 @@ pref("textlink.schemer",                     "http https ftp news nntp telnet ir
 pref("textlink.schemer.default",             "http https ftp news nntp telnet irc mms ed2k about file urn");
 pref("textlink.schemer.fixup.table",         "www=>http:\/\/www ftp.=>ftp:\/\/ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
 pref("textlink.schemer.fixup.table.default", "www=>http:\/\/www ftp.=>ftp:\/\/ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
+pref("textlink.schemer.fixup.default", "http");
 
 pref("textlink.relative.enabled",    false);
 pref("textlink.multibyte.enabled",   true);

@@ -36,7 +36,7 @@ var TextLinkService =
 					this.kURIPattern_part
 				).replace(
 					/%DOMAIN_PATTERN%/g,
-					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')'
+					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')\\b'
 				);
 
 		return this._kURIPattern;
@@ -63,7 +63,7 @@ var TextLinkService =
 					this.kURIPatternMultibyte_part
 				).replace(
 					/%DOMAIN_PATTERN%/g,
-					'[0-9a-z\\.-]+[\\.]('+this.kTopLevelDomains.join('|')+')'
+					'[0-9a-z\\.-]+[\\.]('+this.kTopLevelDomains.join('|')+')\\b'
 /*
 					'[0-9a-z\\.-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0e\uff0d]+[\\.\uff0e]('+
 					this.kTopLevelDomains.join('|')+
@@ -473,6 +473,11 @@ if (this.debug)
 					)
 				))
 				aURI = aURI.replace(target, RegExp.$2);
+		}
+		else if (!/^\w+:/.test(aURI)) {
+			var schemer = this.getPref('textlink.schemer.fixup.default');
+			if (schemer)
+				aURI = schemer+'://'+aURI;
 		}
 
 		return aURI;
