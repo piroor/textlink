@@ -32,7 +32,10 @@ var TextLinkService =
 	{
 		if (!this._kURIPattern)
 			this._kURIPattern = this.kURIPattern_base.replace(
-					/%DOMAIN_PATTERN%/,
+					/%PART_PATTERN%/g,
+					this.kURIPattern_part
+				).replace(
+					/%DOMAIN_PATTERN%/g,
 					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')'
 				);
 
@@ -40,11 +43,26 @@ var TextLinkService =
 	},
 	_kURIPattern : null,
 
+	get kURIPatternRelative()
+	{
+		if (!this._kURIPatternRelative)
+			this._kURIPatternRelative = this.kURIPatternRelative_base.replace(
+					/%PART_PATTERN%/g,
+					this.kURIPattern_part
+				);
+
+		return this._kURIPatternRelative;
+	},
+	_kURIPatternRelative : null,
+
 	get kURIPatternMultibyte()
 	{
 		if (!this._kURIPatternMultibyte)
 			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base.replace(
-					/%DOMAIN_PATTERN%/,
+					/%PART_PATTERN%/g,
+					this.kURIPatternMultibyte_part
+				).replace(
+					/%DOMAIN_PATTERN%/g,
 					'[0-9a-z\\.-]+[\\.]('+this.kTopLevelDomains.join('|')+')'
 /*
 					'[0-9a-z\\.-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0e\uff0d]+[\\.\uff0e]('+
@@ -59,11 +77,26 @@ var TextLinkService =
 	},
 	_kURIPatternMultibyte : null,
 
-	kURIPattern_base : '\\(?([\\*\\+\\w]+:(//)?|%DOMAIN_PATTERN%)[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
-	kURIPatternRelative : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+(\\.|/)[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
+	get kURIPatternMultibyteRelative()
+	{
+		if (!this._kURIPatternMultibyteRelative)
+			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base.replace(
+					/%PART_PATTERN%/g,
+					this.kURIPatternMultibyte_part
+				);
 
-	kURIPatternMultibyte_base : '[\\(\uff08]?([\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a](//|\uff0f\uff0f)?|%DOMAIN_PATTERN%)[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
-	kURIPatternMultibyteRelative : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+(\\.|\uff0e|/|\uff0f)[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
+		return this._kURIPatternMultibyteRelative;
+	},
+	_kURIPatternMultibyteRelative : null,
+
+	kURIPattern_base : '\\(?([\\*\\+\\w]+:(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)',
+	kURIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
+
+	kURIPatternMultibyte_base : '[\\(\uff08]?([\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a](//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)',
+	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
+
+	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
+	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
 
 	kOnebyteArray : '-_.!~~*\'()acdefghijklmnopqrstuvwxyzACDEFGHIJKLMNOPQRSTUVWXYZ0123456789;/?:@&=+$,%#',
 	kMultibyteArray : '\uff0d\uff3f\uff0e\uff01\uffe3\uff5e\uff0a\u2019\uff08\uff09\uff41\uff43\uff44\uff45\uff46\uff47\uff48\uff49\uff4a\uff4b\uff4c\uff4d\uff4e\uff4f\uff50\uff51\uff52\uff53\uff54\uff55\uff56\uff57\uff58\uff59\uff5a\uff21\uff23\uff24\uff25\uff26\uff27\uff28\uff29\uff2a\uff2b\uff2c\uff2d\uff2e\uff2f\uff30\uff31\uff32\uff33\uff34\uff35\uff36\uff37\uff38\uff39\uff3a\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03',
