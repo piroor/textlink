@@ -16,6 +16,7 @@
 	<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 	<em:translator>Alan CHENG (zh-TW)</em:translator>
 	<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+	<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -64,6 +65,12 @@
                        em:description="Carica gli URI testuali con un doppio clic."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
     </em:localized>
+    <em:localized>
+      <RDF:Description em:locale="hu-HU"
+                       em:name="Text Link"
+                       em:description="Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+    </em:localized>
 
 
     <em:targetApplication>
@@ -88,6 +95,7 @@
 			<em:locale>locale/zh-CN/textlink/</em:locale>
 			<em:locale>locale/zh-TW/textlink/</em:locale>
 			<em:locale>locale/it-IT/textlink/</em:locale>
+			<em:locale>locale/hu-HU/textlink/</em:locale>
 		</RDF:Description>
 	</em:file>
   </RDF:Description>
