@@ -64,7 +64,7 @@
 <!ENTITY textlink.actions.tab4    "Action 5">
 
 <!ENTITY textlink.trigger.mouse_before "Texte URL choisi par">
-<!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignorer les actions sur la souris)">
 <!ENTITY textlink.trigger.mouse.dblclick                 "Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.accel           "Ctrl + Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift     "Ctrl + Maj + Double-clic">
@@ -79,30 +79,30 @@
 <!ENTITY textlink.trigger.key.ignore                "(aucune saisie au clavier n'est prise en compte)">
 <!ENTITY textlink.trigger.key.enter                 "Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.accel           "Ctrl + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.accel.shift     "Ctrl + Shift + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.shift     "Ctrl + Maj + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "Commande + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Commande + Maj + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.alt             "Alt + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.alt.shift       "Alt + Shift + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.shift           "Shift + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.alt.shift       "Alt + Maj + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.shift           "Maj + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key_after  ",">
 
 <!ENTITY textlink.action_before "">
-<!ENTITY textlink.action.blank         "do nothing.">
+<!ENTITY textlink.action.blank         "ne rien faire.">
 <!ENTITY textlink.action.select        "Le selectionner.">
 <!ENTITY textlink.action.current       "L'ouvrir dans l'onglet courant.">
 <!ENTITY textlink.action.window        "L'ouvrir dans une nouvelle fenêtre.">
 <!ENTITY textlink.action.tab           "L'ouvrir dans un nouvel onglet actif.">
 <!ENTITY textlink.action.tabBackground "L'ouvrir dans un nouvel onglet en arrière-plan.">
-<!ENTITY textlink.action.current.stealth       "L'ouvrir dans l'onglet courant (without HTTP_REFERER).">
-<!ENTITY textlink.action.window.stealth        "L'ouvrir dans une nouvelle fenêtre (without HTTP_REFERER).">
-<!ENTITY textlink.action.tab.stealth           "L'ouvrir dans un nouvel onglet actif (without HTTP_REFERER).">
-<!ENTITY textlink.action.tabBackground.stealth "L'ouvrir dans un nouvel onglet en arrière-plan (without HTTP_REFERER).">
+<!ENTITY textlink.action.current.stealth       "L'ouvrir dans l'onglet courant (sans HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "L'ouvrir dans une nouvelle fenêtre (sans HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "L'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "L'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
 <!ENTITY textlink.action_after  "">
 
 
 
-<!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsque une URL est selectionné">
+<!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsque une URL est selectionnée">
 
 
 
