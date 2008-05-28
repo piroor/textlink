@@ -638,6 +638,7 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		const max    = uris.length;
 		const strict = (aMode == this.FIND_CLICKED) && this.getPref('textlink.find_click_point.strict');
 
+		var done = {};
 		for (var i = 0; i < max; i++)
 		{
 			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
@@ -675,7 +676,8 @@ originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange)+'\n'
 				) {
 				uri = this.fixupURI(uris[i], w);
 
-				if (uri) {
+				if (uri && !(uri in done)) {
+					done[uri] = true;
 					if (aMode == this.FIND_CLICKED) {
 						foundRange = this.Find.Find(uri, findRange, startPoint, endPoint);
 						if (!foundRange)
@@ -859,11 +861,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			)
 			return;
 
-		var done = {};
 		for (var i in uris)
 		{
-			if (!(uris[i] in done)) continue;
-			done[uris[i]] = true;
 			if (
 				(
 					('isReallyBlank' in b.selectedTab) ? b.selectedTab.isReallyBlank :
