@@ -88,6 +88,8 @@ function resetActions()
 	{
 		node = document.getElementById(ids[i]);
 		value = getDefaultPref(node.getAttribute('prefstring'));
+		node.value = value;
+		node.selectedItem = node.getElementsByAttribute('value', value)[0];
 	}
 }
 
