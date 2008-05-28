@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2007
+   - Portions created by the Initial Developer are Copyright (C) 2004-2008
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -100,6 +100,8 @@
 <!ENTITY textlink.action.tab.stealth           "新しい最前面のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action.tabBackground.stealth "新しい背後のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action_after  "">
+
+<!ENTITY textlink.actions.default "初期値に戻す">
 
 
 

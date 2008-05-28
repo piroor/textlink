@@ -100,6 +100,8 @@
 <!ENTITY textlink.action.tabBackground.stealth "načítať na/v novej karte v pozadí (without HTTP_REFERER).">
 <!ENTITY textlink.action_after  "">
 
+<!ENTITY textlink.actions.default "Vymazať">
+
 
 
 <!ENTITY textlink.group.contextmenu    "Špeciálne položky kontextovej ponuky pri označení textu s internetovou adresou">

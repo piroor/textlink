@@ -64,6 +64,60 @@ function initMacLabel()
 }
 
 
+function resetActions()
+{
+	var ids = [
+			'textlink.actions.0.action',
+			'textlink.actions.0.trigger.mouse',
+			'textlink.actions.0.trigger.key',
+			'textlink.actions.1.action',
+			'textlink.actions.1.trigger.mouse',
+			'textlink.actions.1.trigger.key',
+			'textlink.actions.2.action',
+			'textlink.actions.2.trigger.mouse',
+			'textlink.actions.2.trigger.key',
+			'textlink.actions.3.action',
+			'textlink.actions.3.trigger.mouse',
+			'textlink.actions.3.trigger.key',
+			'textlink.actions.4.action',
+			'textlink.actions.4.trigger.mouse',
+			'textlink.actions.4.trigger.key'
+		];
+	var node, value;
+	for (var i = 0, maxi = ids.length; i < maxi; i++)
+	{
+		node = document.getElementById(ids[i]);
+		value = getDefaultPref(node.getAttribute('prefstring'));
+	}
+}
+
+function getDefaultPref(aPrefstring)
+{
+	const DEFPrefs = Components
+			.classes['@mozilla.org/preferences-service;1']
+			.getService(Components.interfaces.nsIPrefService)
+			.getDefaultBranch(null);
+	try {
+		var type = DEFPrefs.getPrefType(aPrefstring);
+		switch (type)
+		{
+			case DEFPrefs.PREF_STRING:
+				return decodeURIComponent(escape(DEFPrefs.getCharPref(aPrefstring)));
+				break;
+			case DEFPrefs.PREF_INT:
+				return DEFPrefs.getIntPref(aPrefstring);
+				break;
+			default:
+				return DEFPrefs.getBoolPref(aPrefstring);
+				break;
+		}
+	}
+	catch(e) {
+	}
+	return null;
+}
+
+
 // About
 const WindowManager = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator);
 function opener()

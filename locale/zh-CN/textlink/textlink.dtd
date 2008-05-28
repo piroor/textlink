@@ -100,6 +100,8 @@
 <!ENTITY textlink.action.tabBackground.stealth "在后台的新标签中载入该 URI (without HTTP_REFERER)">
 <!ENTITY textlink.action_after  "">
 
+<!ENTITY textlink.actions.default "重置">
+
 
 <!ENTITY textlink.group.contextmenu    "选定 URI 文本时的其他上下文菜单">
 

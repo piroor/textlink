@@ -100,6 +100,8 @@
 <!ENTITY textlink.action.tabBackground.stealth "便將它載入到新背景分頁。 (without HTTP_REFERER)">
 <!ENTITY textlink.action_after  "">
 
+<!ENTITY textlink.actions.default "重設">
+
 
 <!ENTITY textlink.group.contextmenu    "有 URI 文字被選取時，額外的右鍵選單項目">
 

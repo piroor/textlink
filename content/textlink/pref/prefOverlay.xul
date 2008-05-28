@@ -469,6 +469,13 @@
 			</tabpanels>
 		</tabbox>
 
+		<hbox align="center">
+			<spacer flex="1"/>
+			<button label="&textlink.actions.default;"
+				class="reset-button"
+				oncommand="resetActions()"/>
+		</hbox>
+
 		<groupbox orient="vertical">
 			<caption id="textlink.group.contextmenu"
 				label="&textlink.group.contextmenu;"/>

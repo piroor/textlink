@@ -101,6 +101,8 @@
 <!ENTITY textlink.action.tabBackground.stealth "l'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
 <!ENTITY textlink.action_after  "">
 
+<!ENTITY textlink.actions.default "Défaut">
+
 
 
 <!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsqu'une URL est sélectionnée">

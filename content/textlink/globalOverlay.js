@@ -14,10 +14,6 @@ var TextLinkService =
 	},
 
 
-
-	knsISupportsString : ('nsISupportsWString' in Components.interfaces) ? Components.interfaces.nsISupportsWString : Components.interfaces.nsISupportsString,
-	kSupportsString : ('@mozilla.org/supports-wstring;1' in Components.classes) ? '@mozilla.org/supports-wstring;1' : '@mozilla.org/supports-string;1',
-
 	XULNS : 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul',
 
 	ACTION_DISABLED               : 0,
@@ -176,7 +172,7 @@ var TextLinkService =
 			switch (type)
 			{
 				case this.Prefs.PREF_STRING:
-					return this.Prefs.getComplexValue(aPrefstring, this.knsISupportsString).data;
+					return decodeURIComponent(escape(this.Prefs.getCharPref(aPrefstring)));
 					break;
 				case this.Prefs.PREF_INT:
 					return this.Prefs.getIntPref(aPrefstring);
@@ -205,9 +201,7 @@ var TextLinkService =
 		switch (type)
 		{
 			case 'string':
-				var string = Components.classes[this.kSupportsString].createInstance(this.knsISupportsString);
-				string.data = aNewValue;
-				this.Prefs.setComplexValue(aPrefstring, this.knsISupportsString, string);
+				this.Prefs.setCharPref(aPrefstring, unescape(encodeURIComponent(aNewValue)));
 				break;
 			case 'number':
 				this.Prefs.setIntPref(aPrefstring, parseInt(aNewValue));
@@ -933,15 +927,11 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 	loadDefaultPrefs : function() 
 	{
 		const DEFPrefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefService).getDefaultBranch(null);
-		var knsISupportsString = this.knsISupportsString;
-		var kSupportsString = this.kSupportsString;
 		function pref(aPrefstring, aValue) {
 			switch (typeof aValue)
 			{
 				case 'string':
-					var string = Components.classes[kSupportsString].createInstance(knsISupportsString);
-					string.data = aValue ;
-					DEFPrefs.setComplexValue(aPrefstring, knsISupportsString, string);
+					DEFPrefs.setCharPref(aPrefstring, unescape(encodeURIComponent(aValue)));
 					break;
 				case 'number':
 					DEFPrefs.setIntPref(aPrefstring, parseInt(aValue));
