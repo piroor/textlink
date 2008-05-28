@@ -12,6 +12,7 @@
                    em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                    em:optionsURL="chrome://textlink/content/pref/prefDialog.xul">
 	<em:translator>menet (fr-FR)</em:translator>
+	<em:translator>BlackJack (fr-FR)</em:translator>
 	<em:translator>Gianny111 (sk-SK)</em:translator>
 	<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 	<em:translator>Alan CHENG (zh-TW)</em:translator>

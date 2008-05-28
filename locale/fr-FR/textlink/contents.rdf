@@ -14,7 +14,7 @@
 	<!-- locale information -->
 	<RDF:Description about="urn:mozilla:locale:fr-FR"
 		chrome:displayName="Français(FR)"
-		chrome:author="menet"
+		chrome:author="menet &amp; BlackJack"
 		chrome:name="fr-FR">
 		<chrome:packages>
 			<RDF:Seq about="urn:mozilla:locale:fr-FR:packages">

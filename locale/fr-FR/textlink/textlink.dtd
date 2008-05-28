@@ -14,10 +14,11 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2006
+   - Portions created by the Initial Developer are Copyright (C) 2006-2008
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): menet <menetriertm-forumozillazine@yahoo.fr>
+   -                 BlackJack <JackBlackUK at aol.com>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -45,7 +46,7 @@
 <!ENTITY textlink.openTextLink.window.accesskey  "F">
 
 <!ENTITY textlink.context.current.pref "Ouvrir le &lt;lien sélectionné&gt;">
-<!ENTITY textlink.context.tab.pref     "Ouvrir les &lt;liens sélectionnés&gt; dans un de nouveaux onglets">
+<!ENTITY textlink.context.tab.pref     "Ouvrir les &lt;liens sélectionnés&gt; dans de nouveaux onglets">
 <!ENTITY textlink.context.window.pref  "Ouvrir les &lt;liens sélectionnés&gt; dans de nouvelles fenêtres">
 
 
@@ -89,20 +90,20 @@
 
 <!ENTITY textlink.action_before "">
 <!ENTITY textlink.action.blank         "ne rien faire.">
-<!ENTITY textlink.action.select        "Le selectionner.">
-<!ENTITY textlink.action.current       "L'ouvrir dans l'onglet courant.">
-<!ENTITY textlink.action.window        "L'ouvrir dans une nouvelle fenêtre.">
-<!ENTITY textlink.action.tab           "L'ouvrir dans un nouvel onglet actif.">
-<!ENTITY textlink.action.tabBackground "L'ouvrir dans un nouvel onglet en arrière-plan.">
-<!ENTITY textlink.action.current.stealth       "L'ouvrir dans l'onglet courant (sans HTTP_REFERER).">
-<!ENTITY textlink.action.window.stealth        "L'ouvrir dans une nouvelle fenêtre (sans HTTP_REFERER).">
-<!ENTITY textlink.action.tab.stealth           "L'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
-<!ENTITY textlink.action.tabBackground.stealth "L'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
+<!ENTITY textlink.action.select        "le sélectionner.">
+<!ENTITY textlink.action.current       "l'ouvrir dans l'onglet courant.">
+<!ENTITY textlink.action.window        "l'ouvrir dans une nouvelle fenêtre.">
+<!ENTITY textlink.action.tab           "l'ouvrir dans un nouvel onglet actif.">
+<!ENTITY textlink.action.tabBackground "l'ouvrir dans un nouvel onglet en arrière-plan.">
+<!ENTITY textlink.action.current.stealth       "l'ouvrir dans l'onglet courant (sans HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "l'ouvrir dans une nouvelle fenêtre (sans HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "l'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "l'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
 <!ENTITY textlink.action_after  "">
 
 
 
-<!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsque une URL est selectionnée">
+<!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsqu'une URL est sélectionnée">
 
 
 
