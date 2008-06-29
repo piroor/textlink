@@ -53,10 +53,13 @@ function initMacLabel()
 	if (navigator.platform.match(/Mac/)) {
 		var macLabels = document.getElementsByAttribute('label-mac', '*');
 		var node;
+		var label;
 
-		for (var i = 0; i < macLabels.length; i++)
+		for (var i = macLabels.length-1; i < -1; i--)
 		{
-			macLabels[i].setAttribute('label', macLabels[i].getAttribute('label-mac'));
+			node = macLabels[i];
+			label = node.getAttribute('label-mac');
+			node.setAttribute('label', label);
 			if (node.localName != 'caption')
 				node.setAttribute('flex', 1);
 		}
