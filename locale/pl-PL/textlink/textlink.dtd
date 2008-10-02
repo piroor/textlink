@@ -1,0 +1,135 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2004-2008
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Otwórz &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Otwórz wszystkie: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "k">
+<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "n">
+
+<!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres URI&gt;">
+<!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy URI&gt; w nowych kartach">
+<!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy URI&gt; w nowych oknach">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Konfiguracja Text Link">
+
+
+<!ENTITY textlink.group.general "Główne">
+
+<!ENTITY textlink.actions.tab0    "Działanie 1">
+<!ENTITY textlink.actions.tab1    "Działanie 2">
+<!ENTITY textlink.actions.tab2    "Działanie 3">
+<!ENTITY textlink.actions.tab3    "Działanie 4">
+<!ENTITY textlink.actions.tab4    "Działanie 5">
+
+<!ENTITY textlink.trigger.mouse_before "Kiedy zostanie wciśnięta kombinacja">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignoruj zachowanie myszy)">
+<!ENTITY textlink.trigger.mouse.dblclick             "podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse_after  ",">
+
+<!ENTITY textlink.trigger.key_before "lub">
+<!ENTITY textlink.trigger.key.ignore            "(ignoruj naciśnięte klawisze)">
+<!ENTITY textlink.trigger.key.enter             "naciśnięto klawisz Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel       "naciśnięto klawisze Ctrl + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "naciśnięto klawisze Command + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel.shift "naciśnięto klawisze Ctrl + Shift + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "naciśnięto klawisze Command + Shift + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.alt         "naciśnięto klawisze Alt + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "naciśnięto klawisze Alt + Shift + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.shift       "naciśnięto klawisz Shift przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key_after  ",">
+
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "nic nie rób.">
+<!ENTITY textlink.action.select        "zaznacz adres URI.">
+<!ENTITY textlink.action.current       "otwórz adres URI w aktualnej karcie.">
+<!ENTITY textlink.action.window        "otwórz adres URI w nowym oknie.">
+<!ENTITY textlink.action.tab           "otwórz adres URI w nowej karcie (i przejdź do niej).">
+<!ENTITY textlink.action.tabBackground "otwórz adres URI w nowej karcie (w tle).">
+<!ENTITY textlink.action.current.stealth       "otwórz adres URI w aktualnej karcie (usuń HTTP_REFERER).">
+<!ENTITY textlink.action.window.stealth        "otwórz adres URI w nowym oknie (usuń HTTP_REFERER).">
+<!ENTITY textlink.action.tab.stealth           "otwórz adres URI w nowej karcie (i przejdź do niej; usuń HTTP_REFERER).">
+<!ENTITY textlink.action.tabBackground.stealth "otwórz adres URI w nowej karcie (w tle; usuń HTTP_REFERER).">
+<!ENTITY textlink.action_after  "">
+
+<!ENTITY textlink.actions.default "Przywróć domyślne">
+
+
+
+<!ENTITY textlink.group.contextmenu    "Dodatkowe elementy menu kontekstowego kiedy zaznaczono adres URI">
+
+
+
+<!ENTITY textlink.group.advanced    "Zawansowane">
+
+<!ENTITY textlink.group.find        "Wykrywanie adresów URI">
+
+<!ENTITY textlink.schemer             "Rozpoznaj tekst jako adres URI, jeśli zaczyna się od słów: (np. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default     "Przywróć domyślne">
+<!ENTITY textlink.schemer.fixup.table "Popraw błędne adresy przy pomocy następujących reguł: (np. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Przywróć domyślne">
+
+<!ENTITY textlink.relative.enabled    "Odczytuj adresy względne">
+<!ENTITY textlink.multibyte.enabled   "Odczytuj znaki kilkubajtowe">
+
+<!ENTITY textlink.find_click_point.strict        "Rozpoznawanie punktów kliknięcia">
+<!ENTITY textlink.find_click_point.strict.strict "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)">
+<!ENTITY textlink.find_click_point.strict.loose  "Swobodne (czasami otwiera adresy, które nie zostały kliknięte)">
+
+
+
+
+<!ENTITY textlink.group.about  "O…">
+<!ENTITY about.title       "O Text Link">
+<!ENTITY about.name_before "Wersja Text Link">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Odinstaluj">
