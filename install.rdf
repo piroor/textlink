@@ -11,14 +11,15 @@
                    em:iconURL="chrome://textlink/content/icon.png"
                    em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                    em:optionsURL="chrome://textlink/content/pref/prefDialog.xul">
-	<em:translator>menet (fr-FR)</em:translator>
-	<em:translator>BlackJack (fr-FR)</em:translator>
-	<em:translator>Gianny111 (sk-SK)</em:translator>
-	<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-	<em:translator>Alan CHENG (zh-TW)</em:translator>
-	<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-	<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
-	<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -29,55 +30,171 @@
       <RDF:Description em:locale="en-US"
                        em:name="Text Link"
                        em:description="Allows URI texts written in webpages to be loaded by double clicks."
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="ja-JP"
                        em:name="テキストリンク"
                        em:description="ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。"
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="fr-FR"
                        em:name="Text Link"
                        em:description="Permet de charger une page WEB seulement grâce à un double-clic sur le texte du lien URL."
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="sk-SK"
                        em:name="Text Link"
                        em:description="Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím."
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="zh-CN"
                        em:name="Text Link"
                        em:description="允许通过双击载入网页中的 URI 文本。"
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="zh-TW"
                        em:name="Text Link"
                        em:description="讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。"
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="it-IT"
                        em:name="Text Link"
                        em:description="Carica gli URI testuali con un doppio clic."
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="hu-HU"
                        em:name="Text Link"
                        em:description="Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással."
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
     <em:localized>
       <RDF:Description em:locale="pl-PL"
                        em:name="Text Link"
                        em:description="Pozwala na otwieranie nieklikalnych (tekstowych) linków przy pomocy podwójnego kliknięcia"
-                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"/>
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
+    </em:localized>
+    <em:localized>
+      <RDF:Description em:locale="tr-TR"
+                       em:name="Text Link"
+                       em:description="Web sayfalarýndaki link özelliði olmayan URL metinlerinin çift týklanarak açýlmasýný saðlar."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+      </RDF:Description>
     </em:localized>
 
 
@@ -105,6 +222,7 @@
 			<em:locale>locale/it-IT/textlink/</em:locale>
 			<em:locale>locale/hu-HU/textlink/</em:locale>
 			<em:locale>locale/pl-PL/textlink/</em:locale>
+			<em:locale>locale/tr-TR/textlink/</em:locale>
 		</RDF:Description>
 	</em:file>
   </RDF:Description>

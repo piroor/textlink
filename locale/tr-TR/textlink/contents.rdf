@@ -14,7 +14,7 @@
 	<!-- locale information -->
 	<RDF:Description about="urn:mozilla:locale:tr-TR"
 		chrome:displayName="Türkçe(TR)"
-		chrome:author="SHIMODA Hiroshi"
+		chrome:author="Anıl Yıldız"
 		chrome:name="tr-TR">
 		<chrome:packages>
 			<RDF:Seq about="urn:mozilla:locale:tr-TR:packages">
