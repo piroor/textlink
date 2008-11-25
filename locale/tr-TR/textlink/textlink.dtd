@@ -1,0 +1,135 @@
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is the Text Link.
+   -
+   - The Initial Developer of the Original Code is SHIMODA Hiroshi.
+   - Portions created by the Initial Developer are Copyright (C) 2008
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s): Anıl Yıldız <manilyildiz@hotmail.com>
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+
+<!ENTITY textlink.openTextLink.current.single    "Aç &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple  "Tümünü Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.accesskey "A">
+<!ENTITY textlink.openTextLink.tab.single        "Yeni Sekmede Aç: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.tab.multiple      "Tümünü Yeni Sekmede Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.accesskey     "S">
+<!ENTITY textlink.openTextLink.window.single     "Yeni Pencerede Aç: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.window.multiple   "Tümünü Yeni Pencerede Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.accesskey  "Y">
+
+<!ENTITY textlink.context.current.pref "&lt;Seçili URL metnini&gt; Aç">
+<!ENTITY textlink.context.tab.pref     "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç">
+<!ENTITY textlink.context.window.pref  "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç">
+
+
+
+
+<!ENTITY textlink.tree "Text Link">
+<!ENTITY textlink.title "Text Link Ayarları">
+
+
+<!ENTITY textlink.group.general "Genel">
+
+<!ENTITY textlink.actions.tab0    "Eylem 1">
+<!ENTITY textlink.actions.tab1    "Eylem 2">
+<!ENTITY textlink.actions.tab2    "Eylem 3">
+<!ENTITY textlink.actions.tab3    "Eylem 4">
+<!ENTITY textlink.actions.tab4    "Eylem 5">
+
+<!ENTITY textlink.trigger.mouse_before "Bir URL metni">
+<!ENTITY textlink.trigger.mouse.ignore               "(fare hareketlerini yoksay)">
+<!ENTITY textlink.trigger.mouse.dblclick             "Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse_after  "">
+
+<!ENTITY textlink.trigger.key_before "ya da">
+<!ENTITY textlink.trigger.key.ignore            "(tuş hareketlerini yoksay)">
+<!ENTITY textlink.trigger.key.enter             "Metin seçiliyken Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel       "Metin seçiliyken Ctrl + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "Metin seçiliyken Command + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel.shift "Metin seçiliyken Ctrl + Shift + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Metin seçiliyken Command + Shift + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.alt         "Metin seçiliyken Alt + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.alt.shift   "Metin seçiliyken Alt + Shift + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.shift       "Metin seçiliyken Shift + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key_after  ",">
+
+<!ENTITY textlink.action_before "">
+<!ENTITY textlink.action.blank         "hiçbir şey yapma.">
+<!ENTITY textlink.action.select        "seç onu.">
+<!ENTITY textlink.action.current       "seçili sekmede aç.">
+<!ENTITY textlink.action.window        "yeni pencerede aç.">
+<!ENTITY textlink.action.tab           "yeni ön plan sekmede aç.">
+<!ENTITY textlink.action.tabBackground "yeni arka plan sekmede aç.">
+<!ENTITY textlink.action.current.stealth       "seçili sekmede aç (HTTP_REFERER olmadan).">
+<!ENTITY textlink.action.window.stealth        "yeni pencerede aç (HTTP_REFERER olmadan).">
+<!ENTITY textlink.action.tab.stealth           "eni ön plan sekmede aç (HTTP_REFERER olmadan).">
+<!ENTITY textlink.action.tabBackground.stealth "yeni arka plan sekmede aç (HTTP_REFERER olmadan).">
+<!ENTITY textlink.action_after  "">
+
+<!ENTITY textlink.actions.default "Sıfırla">
+
+
+
+<!ENTITY textlink.group.contextmenu    "Seçili URL Metinleri İçin Ekstra Sağ Tık Menüsü Öğeleri">
+
+
+
+<!ENTITY textlink.group.advanced    "Gelişmiş">
+
+<!ENTITY textlink.group.find        "URL Algılanması">
+
+<!ENTITY textlink.schemer             "Bunlarla başlayan metinleri URL olarak tanı: (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer.default     "Sıfırla">
+<!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table.default "Sıfırla">
+
+<!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır">
+<!ENTITY textlink.multibyte.enabled   "Multi-byte karakterleri ayrıştır">
+
+<!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
+<!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">
+<!ENTITY textlink.find_click_point.strict.loose  "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)">
+
+
+
+
+<!ENTITY textlink.group.about  "Hakkında">
+<!ENTITY about.title       "Text Link Hakkında">
+<!ENTITY about.name_before "Text Link Ver.">
+<!ENTITY about.name_after  "">
+<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
+<!ENTITY about.uninstall   "Kaldır">
