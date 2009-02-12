@@ -252,28 +252,16 @@ var TextLinkService =
 	_Find : null,
   
 	// common functions 
-	
+	 
 	makeURIFromSpec : function(aURI) 
 	{
 		try {
 			var newURI;
 			aURI = aURI || '';
 			if (aURI && String(aURI).match(/^file:/)) {
-				var tempLocalFile;
-				try {
-					var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-					tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
-				}
-				catch(ex) { // [[interchangeability for Mozilla 1.1]]
-					try {
-						tempLocalFile = this.IOService.getFileFromURLSpec(aURI);
-					}
-					catch(ex) { // [[interchangeability for Mozilla 1.0.x]]
-						tempLocalFile = Components.classes['@mozilla.org/file/local;1'].createInstance(Components.interfaces.nsILocalFile);
-						this.IOService.initFileFromURLSpec(tempLocalFile, aURI);
-					}
-				}
-				newURI = this.IOService.newFileURI(tempLocalFile); // we can use this instance with the nsIFileURL interface.
+				var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
+				newURI = this.IOService.newFileURI(tempLocalFile);
 			}
 			else {
 				newURI = this.IOService.newURI(aURI, null, null);
@@ -283,36 +271,6 @@ var TextLinkService =
 		}
 		catch(e){
 		}
-		return null;
-	},
- 
-	loadText : function(aURI) 
-	{
-		var uri;
-		try {
-			uri = aURI.QueryInterface(Components.interfaces.nsIURI);
-		}
-		catch(e) {
-			uri = this.makeURIFromSpec(aURI);
-		}
-
-		try {
-			var channel = this.IOService.newChannelFromURI(uri);
-			var stream  = channel.open();
-
-			var scriptableStream = Components.classes['@mozilla.org/scriptableinputstream;1'].createInstance(Components.interfaces.nsIScriptableInputStream);
-			scriptableStream.init(stream);
-
-			var fileContents = scriptableStream.read(scriptableStream.available());
-
-			scriptableStream.close();
-			stream.close();
-
-			return fileContents;
-		}
-		catch(e) {
-		}
-
 		return null;
 	},
  
@@ -491,10 +449,44 @@ if (this.debug)
 		var baseURI = this.IOService.newURI(aSourceURI, null, null);
 		return this.IOService.newURI(aURI, null, baseURI).spec;
 	},
-   
+  
+	evaluateXPath : function(aExpression, aContext, aType) 
+	{
+		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+		try {
+			var xpathResult = (aContext.ownerDocument || aContext || document).evaluate(
+					aExpression,
+					(aContext || document),
+					this.NSResolver,
+					aType,
+					null
+				);
+		}
+		catch(e) {
+			return {
+				singleNodeValue : null,
+				snapshotLength  : 0,
+				snapshotItem    : function() {
+					return null
+				}
+			};
+		}
+		return xpathResult;
+	},
+  
 	handleEvent : function(aEvent) 
 	{
 if (this.debug) dump('TextLinkService.handleEvent();\n');
+		switch (aEvent.type)
+		{
+			case 'load':
+				this.init();
+				return;
+			case 'unload':
+				this.destroy();
+				return;
+		}
+
 		for (var i = 0; this.getPref('textlink.actions.'+i+'.action') !== null; i++)
 		{
 			if (this.handleEventFor(aEvent, i)) return;
@@ -505,20 +497,12 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 	{
 		var trigger;
 
-		var node;
-		try {
-			node = aEvent.originalTarget || aEvent.target;
-		}
-		catch(e) {
-			node = aEvent.target;
-		}
-		while (node.parentNode && node.nodeType != Node.ELEMENT_NODE)
-			node = node.parentNode;
+		if (aEvent.originalTarget.ownerDocument == document) return false;
 
-		if (node.ownerDocument == document) return false;
+		var node = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
-		var doc = Components.lookupMethod(node, 'ownerDocument').call(node);
-		if (Components.lookupMethod(doc, 'designMode').call(doc) == 'on') return false;
+		var doc = node.ownerDocument;
+		if (node.ownerDocument.designMode == 'on') return false;
 
 		if (
 			(
@@ -567,23 +551,19 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 
 		return false;
 	},
- 	 
+  
 	FIND_CLICKED      : 1,
 	FIND_ALL_SELECTED : 2,
 	getSelectionURI : function(aMode, aWindow) 
 	{
 		var selectionURIs = [];
 
-		var w = aWindow;
-		if (!w) {
-			w = document.commandDispatcher.focusedWindow;
-			if ((new XPCNativeWrapper(w, 'top')).top != gBrowser.contentWindow)
-				w = gBrowser.contentWindow;
+		var w = aWindow || document.commandDispatcher.focusedWindow;
+		if (!w || w.top != gBrowser.contentWindow) {
+			w = gBrowser.contentWindow;
 		}
 
-		var winWrapper = new XPCNativeWrapper(w, 'location', 'document', 'getSelection()', 'QueryInterface()');
-
-		var sel = winWrapper.getSelection();
+		var sel = w.getSelection();
 		if (!sel) return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
 
 		var originalRange;
@@ -597,8 +577,7 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 
 		var findRange = this.getFindRangeInWindow(w);
 
-
-		var selCon = winWrapper
+		var selCon = w
 			.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
 			.getInterface(Components.interfaces.nsIWebNavigation)
 			.QueryInterface(Components.interfaces.nsIDocShell)
@@ -644,14 +623,6 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				continue;
 			}
 //dump('FOUND RANGE: '+foundRange.toString()+'\n');
-/*
-dump('TEXTLINK: '+originalRange+'\n\t'+uris[i]+'\n\t'+originalRange.compareBoundaryPoints(Range.START_TO_START, foundRange)+', '+
-originalRange.compareBoundaryPoints(Range.START_TO_END, foundRange)+', '+
-originalRange.compareBoundaryPoints(Range.END_TO_START, foundRange)+', '+
-originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange)+'\n'
-);
-*/
-
 			if (
 				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
 					originalRange.compareBoundaryPoints(Range.START_TO_START, foundRange) >= 0 &&
@@ -705,17 +676,13 @@ originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange)+'\n'
 
 		return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
 	},
-	
+	 
 	getFindRangeInWindow : function(aWindow) 
 	{
-		var winWrapper = new XPCNativeWrapper(aWindow, 'document', 'getSelection()', 'QueryInterface()');
-		var docWrapper = new XPCNativeWrapper(winWrapper.document, 'documentElement', 'createRange()');
+		var originalRange = aWindow.getSelection().getRangeAt(0);
 
-
-		var originalRange = winWrapper.getSelection().getRangeAt(0);
-
-		var findRange = docWrapper.createRange();
-		findRange.selectNode(docWrapper.documentElement);
+		var findRange = aWindow.document.createRange();
+		findRange.selectNode(aWindow.document.documentElement);
 
 
 		var count = 0;
@@ -756,34 +723,25 @@ originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange)+'\n'
 //dump('FIND RANGE:: "'+findRange.toString()+'"\n');
 		return findRange;
 	},
-  
+ 	 
 	openClickedURI : function(aEvent, aAction, aTrigger) 
 	{
 if (this.debug) dump('TextLinkService.openClickedURI();\n');
-		var target = aEvent.originalTarget;
-		var nodeWrapper;
-		while (
-			(nodeWrapper = new XPCNativeWrapper(target, 'nodeType', 'parentNode')) &&
-			nodeWrapper.nodeType != Node.ELEMENT_NODE
-			)
-			target = nodeWrapper.parentNode;
+		var target = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
-		nodeWrapper = new XPCNativeWrapper(target, 'localName', 'ownerDocument');
 		if (
 			aAction == this.ACTION_DISABLED ||
 			aEvent.button > 0 ||
-			nodeWrapper.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
+			target.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
 			)
 			return;
 
 		var b = aEvent.currentTarget;
 		if (!b) return;
 
-		var w = (new XPCNativeWrapper(nodeWrapper.ownerDocument, 'defaultView')).defaultView;
-
+		var w = target.ownerDocument.defaultView;
 		var uri = this.getClickedURI(w);
 		if (!uri || aAction & this.ACTION_SELECT) return;
-
 
 		var referrer = (
 					aAction & this.ACTION_STEALTH ||
@@ -801,24 +759,10 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', uri, null, referrer);
 		}
 		else {
-			var selectTab = !(aAction &this.ACTION_OPEN_IN_BACKGROUND_TAB);
-
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(w);
 			}
-
-			var t;
-			if ('loadOneTab' in b) { // Firefox 2.0
-				t = b.loadOneTab(uri, referrer, null, null, !selectTab);
-			}
-			else {
-				t = b.addTab(uri, referrer);
-				if (selectTab)
-					b.selectedTab = t;
-			}
-
-			if ('tabGroupsAvailable' in b && b.tabGroupsAvailable) // TBE
-				b.attachTabTo(t, b.selectedTab, true);
+			b.loadOneTab(uri, referrer, null, null, (aAction & this.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
 	
@@ -880,9 +824,6 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 					tab = b.addTab(uris[i]);
 
-					if (b.tabGroupsAvailable) // for TBE
-						tab.parentTab = current;
-
 					if (!selectTab) selectTab = tab;
 				}
 				else if (openInFlag == this.ACTION_OPEN_IN_CURRENT) {
@@ -905,10 +846,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
  
 	init : function() 
 	{
-		if (this.initialized) return;
-		this.initialized = true;
-
-		this.loadDefaultPrefs();
+		window.removeEventListener('load', this, false);
+		window.addEventListener('unload', this, false);
 
 		if ('nsContextMenu' in window) {
 			nsContextMenu.prototype.__textlink__initItems = nsContextMenu.prototype.initItems;
@@ -923,34 +862,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			b[i].addEventListener('keypress', this, true);
 		}
 	},
-	
-	loadDefaultPrefs : function() 
-	{
-		const DEFPrefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefService).getDefaultBranch(null);
-		function pref(aPrefstring, aValue) {
-			switch (typeof aValue)
-			{
-				case 'string':
-					DEFPrefs.setCharPref(aPrefstring, unescape(encodeURIComponent(aValue)));
-					break;
-				case 'number':
-					DEFPrefs.setIntPref(aPrefstring, parseInt(aValue));
-					break;
-				default:
-					DEFPrefs.setBoolPref(aPrefstring, aValue);
-					break;
-			}
-			prefs.push(aPrefstring);
-		}
-
-		var prefs = [];
-		eval(this.loadText('chrome://textlink/content/default.js'));
-
-		var nullPointer;
-		for (var i in prefs)
-			nullPointer = this.getPref(prefs[i]);
-	},
- 
+	 
 	// gContextMenu.initItems 
 	initItems : function()
 	{
@@ -998,9 +910,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
   
 	destroy : function() 
 	{
-		if (!this.initialized) return;
-		this.initialized = false;
-
+		window.removeEventListener('unload', this, false);
 		var b = this.browsers;
 		for (var i = 0; i < b.length; i++)
 		{
@@ -1011,36 +921,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
   
 // end of definition 
 };
+
+window.addEventListener('load', TextLinkService, false);
 }
- 
-// initialize 
-window.addEventListener('unload', function()
-{
-	if (!TextLinkService.initialized) return;
-
-	TextLinkService.destroy();
-},
-false);
-window.addEventListener('unload', function()
-{
-	if (!TextLinkService.initialized) return;
-
-	TextLinkService.destroy();
-},
-false);
-
-window.addEventListener('load', function()
-{
-	if (TextLinkService.initialized) return;
-
-	TextLinkService.init();
-},
-false);
-window.addEventListener('load', function()
-{
-	if (TextLinkService.initialized) return;
-
-	TextLinkService.init();
-},
-false);
  
