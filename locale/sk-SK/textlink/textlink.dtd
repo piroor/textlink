@@ -123,13 +123,3 @@
 <!ENTITY textlink.find_click_point.strict        "Politika detekcie">
 <!ENTITY textlink.find_click_point.strict.strict "Prísna (niekedy nemusí načítať internetovú adresu)">
 <!ENTITY textlink.find_click_point.strict.loose  "Mierna (niekedy nesprávne načíta adresu)">
-
-
-
-
-<!ENTITY textlink.group.about  "Informácie">
-<!ENTITY about.title       "O rozšírení Text Link">
-<!ENTITY about.name_before "Verzia rozšírenia Text Link ">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Odinštalovať">

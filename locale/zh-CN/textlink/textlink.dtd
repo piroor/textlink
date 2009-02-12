@@ -122,13 +122,3 @@
 <!ENTITY textlink.find_click_point.strict        "检测双击点的方式">
 <!ENTITY textlink.find_click_point.strict.strict "严格的（某些时候可能导致 URI 载入失败）">
 <!ENTITY textlink.find_click_point.strict.loose  "宽松的（某些时候可能错误地载入未点击的 URI）">
-
-
-
-
-<!ENTITY textlink.group.about  "关于">
-<!ENTITY about.title       "关于 Text Link">
-<!ENTITY about.name_before "Text Link 版本　">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "卸载">

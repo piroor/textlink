@@ -1,91 +1,611 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
-<?xul-overlay href="chrome://textlink/content/pref/prefOverlay.xul"?>
-<!DOCTYPE dialog SYSTEM "chrome://textlink/locale/">
-<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+<?xml-stylesheet href="chrome://textlink/content/pref/prefDialog.css" type="text/css"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://textlink/locale/">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		id="textlinkPrefDialog"
 		windowtype="textlink:preferences"
 		title="&textlink.title;"
-		buttons="accept,cancel"
-		ondialogaccept="apply();"
-		ondialogcancel="window.close();"
 		orient="vertical"
 		onload="init();">
 
-<script type="application/x-javascript"><![CDATA[
+<prefpane id="prefpane-general" label="&textlink.group.general;">
+	<preferences>
+		<preference id="textlink.actions.0.trigger.mouse"
+			name="textlink.actions.0.trigger.mouse"
+			type="string"/>
+		<preference id="textlink.actions.0.trigger.key"
+			name="textlink.actions.0.trigger.key"
+			type="string"/>
+		<preference id="textlink.actions.0.action"
+			name="textlink.actions.0.action"
+			type="int"/>
+		<preference id="textlink.actions.1.trigger.mouse"
+			name="textlink.actions.1.trigger.mouse"
+			type="string"/>
+		<preference id="textlink.actions.1.trigger.key"
+			name="textlink.actions.1.trigger.key"
+			type="string"/>
+		<preference id="textlink.actions.1.action"
+			name="textlink.actions.1.action"
+			type="int"/>
+		<preference id="textlink.actions.2.trigger.mouse"
+			name="textlink.actions.2.trigger.mouse"
+			type="string"/>
+		<preference id="textlink.actions.2.trigger.key"
+			name="textlink.actions.2.trigger.key"
+			type="string"/>
+		<preference id="textlink.actions.2.action"
+			name="textlink.actions.2.action"
+			type="int"/>
+		<preference id="textlink.actions.3.trigger.mouse"
+			name="textlink.actions.3.trigger.mouse"
+			type="string"/>
+		<preference id="textlink.actions.3.trigger.key"
+			name="textlink.actions.3.trigger.key"
+			type="string"/>
+		<preference id="textlink.actions.3.action"
+			name="textlink.actions.3.action"
+			type="int"/>
+		<preference id="textlink.actions.4.trigger.mouse"
+			name="textlink.actions.4.trigger.mouse"
+			type="string"/>
+		<preference id="textlink.actions.4.trigger.key"
+			name="textlink.actions.4.trigger.key"
+			type="string"/>
+		<preference id="textlink.actions.4.action"
+			name="textlink.actions.4.action"
+			type="int"/>
+		<preference id="textlink.contextmenu.openTextLink.current"
+			name="textlink.contextmenu.openTextLink.current"
+			type="bool"/>
+		<preference id="textlink.contextmenu.openTextLink.tab"
+			name="textlink.contextmenu.openTextLink.tab"
+			type="bool"/>
+		<preference id="textlink.contextmenu.openTextLink.window"
+			name="textlink.contextmenu.openTextLink.window"
+			type="bool"/>
+	</preferences>
 
-function init()
-{
-	initMacLabel();
+	<tabbox orient="vertical">
+		<tabs>
+			<tab label="&textlink.actions.tab0;"/>
+			<tab label="&textlink.actions.tab1;"/>
+			<tab label="&textlink.actions.tab2;"/>
+			<tab label="&textlink.actions.tab3;"/>
+			<tab label="&textlink.actions.tab4;"/>
+		</tabs>
+		<tabpanels>
 
-	TextLinkService.init();
+			<tabpanel orient="vertical">
+				<hbox align="center">
+					<label value="&textlink.trigger.mouse_before;"
+						control="textlink.actions.0.trigger.mouse-menulist"/>
+					<menulist id="textlink.actions.0.trigger.mouse-menulist"
+						preference="textlink.actions.0.trigger.mouse">
+						<menupopup>
+							<menuitem label="&textlink.trigger.mouse.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick;"
+								value="dblclick"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.mac;"
+								value="accel-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel.shift;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.shift.mac;"
+								value="accel-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt;"
+								value="alt-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt.shift;"
+								value="alt-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.shift;"
+								value="shift-dblclick"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.mouse_after;"
+						control="textlink.actions.0.trigger.mouse-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.trigger.key_before;"
+						control="textlink.actions.0.trigger.key-menulist"/>
+					<menulist id="textlink.actions.0.trigger.key-menulist"
+						preference="textlink.actions.0.trigger.key">
+						<menupopup>
+							<menuitem label="&textlink.trigger.key.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter;"
+								value="VK_ENTER"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter.accel;"
+								label-mac="&textlink.trigger.key.enter.accel.mac;"
+								value="accel-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.accel.shift;"
+								label-mac="&textlink.trigger.key.enter.accel.shift.mac;"
+								value="accel-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt;"
+								value="alt-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt.shift;"
+								value="alt-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.shift;"
+								value="shift-VK_ENTER"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.key_after;"
+						control="textlink.actions.0.trigger.key-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.action_before;"
+						control="textlink.actions.0.action-menulist"/>
+					<menulist id="textlink.actions.0.action-menulist"
+						preference="textlink.actions.0.action">
+						<menupopup>
+							<menuitem label="&textlink.action.blank;"   value="0"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.select;"  value="2"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current;" value="4"/>
+							<menuitem label="&textlink.action.window;"  value="8"/>
+							<menuitem label="&textlink.action.tab;"     value="16"/>
+							<menuitem label="&textlink.action.tabBackground;" value="32"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current.stealth;" value="5"/>
+							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
+							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
+							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.action_after;"
+						control="textlink.actions.0.action-menulist"/>
+				</hbox>
+			</tabpanel>
 
-	var node,
-		value;
-	for (var i in _elementIDs)
-	{
-		node  = document.getElementById(_elementIDs[i]);
-		value = TextLinkService.getPref(node.getAttribute('prefstring'));
+			<tabpanel orient="vertical">
+				<hbox align="center">
+					<label value="&textlink.trigger.mouse_before;"
+						control="textlink.actions.1.trigger.mouse-menulist"/>
+					<menulist id="textlink.actions.1.trigger.mouse-menulist"
+						preference="textlink.actions.1.trigger.mouse">
+						<menupopup>
+							<menuitem label="&textlink.trigger.mouse.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick;"
+								value="dblclick"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.mac;"
+								value="accel-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel.shift;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.shift.mac;"
+								value="accel-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt;"
+								value="alt-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt.shift;"
+								value="alt-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.shift;"
+								value="shift-dblclick"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.mouse_after;"
+						control="textlink.actions.1.trigger.mouse-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.trigger.key_before;"
+						control="textlink.actions.1.trigger.key-menulist"/>
+					<menulist id="textlink.actions.1.trigger.key-menulist"
+						preference="textlink.actions.1.trigger.key">
+						<menupopup>
+							<menuitem label="&textlink.trigger.key.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter;"
+								value="VK_ENTER"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter.accel;"
+								label-mac="&textlink.trigger.key.enter.accel.mac;"
+								value="accel-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.accel.shift;"
+								label-mac="&textlink.trigger.key.enter.accel.shift.mac;"
+								value="accel-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt;"
+								value="alt-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt.shift;"
+								value="alt-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.shift;"
+								value="shift-VK_ENTER"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.key_after;"
+						control="textlink.actions.1.trigger.key-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.action_before;"
+						control="textlink.actions.1.action-menulist"/>
+					<menulist id="textlink.actions.1.action-menulist"
+						preference="textlink.actions.1.action">
+						<menupopup>
+							<menuitem label="&textlink.action.blank;"   value="0"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.select;"  value="2"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current;" value="4"/>
+							<menuitem label="&textlink.action.window;"  value="8"/>
+							<menuitem label="&textlink.action.tab;"     value="16"/>
+							<menuitem label="&textlink.action.tabBackground;" value="32"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current.stealth;" value="5"/>
+							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
+							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
+							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.action_after;"
+						control="textlink.actions.1.action-menulist"/>
+				</hbox>
+			</tabpanel>
 
-		switch (typeof value)
-		{
-			case 'string':
-				node.value = value;
-				break;
-			case 'number':
-				var items = node.getElementsByAttribute('value', value);
-				if (items.length) node.selectedItem = items[0];
-				node.value = value;
-				break;
-			case 'boolean':
-				node.checked = value;
-				break;
-			default:
-				break;
-		}
-	}
+			<tabpanel orient="vertical">
+				<hbox align="center">
+					<label value="&textlink.trigger.mouse_before;"
+						control="textlink.actions.2.trigger.mouse-menulist"/>
+					<menulist id="textlink.actions.2.trigger.mouse-menulist"
+						preference="textlink.actions.2.trigger.mouse">
+						<menupopup>
+							<menuitem label="&textlink.trigger.mouse.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick;"
+								value="dblclick"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.mac;"
+								value="accel-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel.shift;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.shift.mac;"
+								value="accel-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt;"
+								value="alt-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt.shift;"
+								value="alt-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.shift;"
+								value="shift-dblclick"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.mouse_after;"
+						control="textlink.actions.2.trigger.mouse-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.trigger.key_before;"
+						control="textlink.actions.2.trigger.key-menulist"/>
+					<menulist id="textlink.actions.2.trigger.key-menulist"
+						preference="textlink.actions.2.trigger.key">
+						<menupopup>
+							<menuitem label="&textlink.trigger.key.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter;"
+								value="VK_ENTER"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter.accel;"
+								label-mac="&textlink.trigger.key.enter.accel.mac;"
+								value="accel-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.accel.shift;"
+								label-mac="&textlink.trigger.key.enter.accel.shift.mac;"
+								value="accel-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt;"
+								value="alt-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt.shift;"
+								value="alt-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.shift;"
+								value="shift-VK_ENTER"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.key_after;"
+						control="textlink.actions.2.trigger.key-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.action_before;"
+						control="textlink.actions.2.action-menulist"/>
+					<menulist id="textlink.actions.2.action-menulist"
+						preference="textlink.actions.2.action">
+						<menupopup>
+							<menuitem label="&textlink.action.blank;"   value="0"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.select;"  value="2"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current;" value="4"/>
+							<menuitem label="&textlink.action.window;"  value="8"/>
+							<menuitem label="&textlink.action.tab;"     value="16"/>
+							<menuitem label="&textlink.action.tabBackground;" value="32"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current.stealth;" value="5"/>
+							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
+							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
+							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.action_after;"
+						control="textlink.actions.2.action-menulist"/>
+				</hbox>
+			</tabpanel>
+
+			<tabpanel orient="vertical">
+				<hbox align="center">
+					<label value="&textlink.trigger.mouse_before;"
+						control="textlink.actions.3.trigger.mouse-menulist"/>
+					<menulist id="textlink.actions.3.trigger.mouse-menulist"
+						preference="textlink.actions.3.trigger.mouse">
+						<menupopup>
+							<menuitem label="&textlink.trigger.mouse.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick;"
+								value="dblclick"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.mac;"
+								value="accel-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel.shift;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.shift.mac;"
+								value="accel-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt;"
+								value="alt-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt.shift;"
+								value="alt-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.shift;"
+								value="shift-dblclick"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.mouse_after;"
+						control="textlink.actions.3.trigger.mouse-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.trigger.key_before;"
+						control="textlink.actions.3.trigger.key-menulist"/>
+					<menulist id="textlink.actions.3.trigger.key-menulist"
+						preference="textlink.actions.3.trigger.key">
+						<menupopup>
+							<menuitem label="&textlink.trigger.key.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter;"
+								value="VK_ENTER"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter.accel;"
+								label-mac="&textlink.trigger.key.enter.accel.mac;"
+								value="accel-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.accel.shift;"
+								label-mac="&textlink.trigger.key.enter.accel.shift.mac;"
+								value="accel-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt;"
+								value="alt-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt.shift;"
+								value="alt-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.shift;"
+								value="shift-VK_ENTER"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.key_after;"
+						control="textlink.actions.3.trigger.key-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.action_before;"
+						control="textlink.actions.3.action-menulist"/>
+					<menulist id="textlink.actions.3.action-menulist"
+						preference="textlink.actions.3.action">
+						<menupopup>
+							<menuitem label="&textlink.action.blank;"   value="0"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.select;"  value="2"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current;" value="4"/>
+							<menuitem label="&textlink.action.window;"  value="8"/>
+							<menuitem label="&textlink.action.tab;"     value="16"/>
+							<menuitem label="&textlink.action.tabBackground;" value="32"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current.stealth;" value="5"/>
+							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
+							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
+							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.action_after;"
+						control="textlink.actions.3.action-menulist"/>
+				</hbox>
+			</tabpanel>
+
+			<tabpanel orient="vertical">
+				<hbox align="center">
+					<label value="&textlink.trigger.mouse_before;"
+						control="textlink.actions.4.trigger.mouse-menulist"/>
+					<menulist id="textlink.actions.4.trigger.mouse-menulist"
+						preference="textlink.actions.4.trigger.mouse">
+						<menupopup>
+							<menuitem label="&textlink.trigger.mouse.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick;"
+								value="dblclick"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.mac;"
+								value="accel-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.accel.shift;"
+								label-mac="&textlink.trigger.mouse.dblclick.accel.shift.mac;"
+								value="accel-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt;"
+								value="alt-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.alt.shift;"
+								value="alt-shift-dblclick"/>
+							<menuitem label="&textlink.trigger.mouse.dblclick.shift;"
+								value="shift-dblclick"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.mouse_after;"
+						control="textlink.actions.4.trigger.mouse-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.trigger.key_before;"
+						control="textlink.actions.4.trigger.key-menulist"/>
+					<menulist id="textlink.actions.4.trigger.key-menulist"
+						preference="textlink.actions.4.trigger.key">
+						<menupopup>
+							<menuitem label="&textlink.trigger.key.ignore;"
+								value=""/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter;"
+								value="VK_ENTER"/>
+							<menuseparator/>
+							<menuitem label="&textlink.trigger.key.enter.accel;"
+								label-mac="&textlink.trigger.key.enter.accel.mac;"
+								value="accel-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.accel.shift;"
+								label-mac="&textlink.trigger.key.enter.accel.shift.mac;"
+								value="accel-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt;"
+								value="alt-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.alt.shift;"
+								value="alt-shift-VK_ENTER"/>
+							<menuitem label="&textlink.trigger.key.enter.shift;"
+								value="shift-VK_ENTER"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.trigger.key_after;"
+						control="textlink.actions.4.trigger.key-menulist"/>
+				</hbox>
+				<hbox align="center">
+					<label value="&textlink.action_before;"
+						control="textlink.actions.4.action-menulist"/>
+					<menulist id="textlink.actions.4.action-menulist"
+						preference="textlink.actions.4.action">
+						<menupopup>
+							<menuitem label="&textlink.action.blank;"   value="0"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.select;"  value="2"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current;" value="4"/>
+							<menuitem label="&textlink.action.window;"  value="8"/>
+							<menuitem label="&textlink.action.tab;"     value="16"/>
+							<menuitem label="&textlink.action.tabBackground;" value="32"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.current.stealth;" value="5"/>
+							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
+							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
+							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+						</menupopup>
+					</menulist>
+					<label value="&textlink.action_after;"
+						control="textlink.actions.4.action-menulist"/>
+				</hbox>
+			</tabpanel>
+
+		</tabpanels>
+	</tabbox>
+
+	<hbox align="center">
+		<spacer flex="1"/>
+		<button label="&textlink.actions.default;"
+			class="reset-button"
+			oncommand="resetActions()"/>
+	</hbox>
+
+	<groupbox orient="vertical">
+		<caption id="textlink.group.contextmenu"
+			label="&textlink.group.contextmenu;"/>
+		<checkbox id="textlink.contextmenu.openTextLink.current-check"
+			label="&textlink.context.current.pref;"
+			preference="textlink.contextmenu.openTextLink.current"/>
+		<checkbox id="textlink.contextmenu.openTextLink.tab-check"
+			label="&textlink.context.tab.pref;"
+			preference="textlink.contextmenu.openTextLink.tab"/>
+		<checkbox id="textlink.contextmenu.openTextLink.window-check"
+			label="&textlink.context.window.pref;"
+			preference="textlink.contextmenu.openTextLink.window"/>
+	</groupbox>
+
+</prefpane>
 
 
-	initFindClickedPointRadio();
-	onFindClickedPointRadioChanged();
+<prefpane id="prefpane-advanced" label="&textlink.group.advanced;">
+	<preferences>
+		<preference id="textlink.schemer"
+			name="textlink.schemer"
+			type="string"/>
+		<preference id="textlink.schemer.fixup.table"
+			name="textlink.schemer.fixup.table"
+			type="string"/>
+		<preference id="textlink.relative.enabled"
+			name="textlink.relative.enabled"
+			type="bool"/>
+		<preference id="textlink.multibyte.enabled"
+			name="textlink.multibyte.enabled"
+			type="bool"/>
+		<preference id="textlink.find_click_point.strict"
+			name="textlink.find_click_point.strict"
+			type="bool"/>
+	</preferences>
 
-	document.getElementById('uninstallBox').setAttribute('hidden',true);
-}
+	<groupbox orient="vertical">
+		<caption id="textlink.group.find-check"
+			label="&textlink.group.find;"/>
 
-function apply()
-{
-	var node,
-		prefstring,
-		value;
-	for (var i in _elementIDs)
-	{
-		node       = document.getElementById(_elementIDs[i]);
-		prefstring = node.getAttribute('prefstring');
-		value      = TextLinkService.getPref(prefstring);
-		switch (typeof value)
-		{
-			case 'string':
-				if (node.value != value)
-					TextLinkService.setPref(prefstring, String(node.value));
-				break;
-			case 'number':
-				if (node.value != value)
-					TextLinkService.setPref(prefstring, Number(node.value));
-				break;
-			case 'boolean':
-				if (node.checked != value)
-					TextLinkService.setPref(prefstring, node.checked != false);
-				break;
-			default:
-				break;
-		}
-	}
-	window.close();
-}
+		<label id="textlink.schemer.label"
+			value="&textlink.schemer;"
+			control="textlink.schemer-textbox"/>
+		<hbox align="center">
+			<spacer style="width:1em;"/>
+			<textbox id="textlink.schemer-textbox"
+				flex="1"
+				preference="textlink.schemer"/>
+			<button label="&textlink.schemer.default;"
+				class="reset-button"
+				oncommand="document.getElementById('textlink.schemer').value =
+							this.previousSibling.value =
+								getDefaultPref('textlink.schemer');"/>
+		</hbox>
 
-]]></script>
+		<label id="textlink.schemer.fixup.table.label"
+			value="&textlink.schemer.fixup.table;"
+			control="textlink.schemer.fixup.table-textbox"/>
+		<hbox align="center">
+			<spacer style="width:1em;"/>
+			<textbox id="textlink.schemer.fixup.table-textbox"
+				flex="1"
+				preference="textlink.schemer.fixup.table"/>
+			<button label="&textlink.schemer.fixup.table.default;"
+				class="reset-button"
+				oncommand="document.getElementById('textlink.schemer.fixup.table').value =
+							this.previousSibling.value =
+								getDefaultPref('textlink.schemer.fixup.table');"/>
+		</hbox>
 
-<box id="textlinkPrefs"/>
+		<checkbox id="textlink.relative.enabled-check"
+			label="&textlink.relative.enabled;"
+			preference="textlink.relative.enabled"/>
+		<checkbox id="textlink.multibyte.enabled-check"
+			label="&textlink.multibyte.enabled;"
+			preference="textlink.multibyte.enabled"/>
 
-</dialog>
+	</groupbox>
+
+	<groupbox orient="vertical">
+		<caption id="textlink.find_click_point.strict"
+			label="&textlink.find_click_point.strict;"/>
+		<radiogroup id="findClickedPointRadioGroup"
+			preference="textlink.find_click_point.strict">
+			<radio label="&textlink.find_click_point.strict.strict;"
+				value="true"/>
+			<radio label="&textlink.find_click_point.strict.loose;"
+				value="false"/>
+		</radiogroup>
+	</groupbox>
+
+</prefpane>
+
+<script type="application/x-javascript" src="chrome://textlink/content/globalOverlay.js"/>
+<script type="application/x-javascript" src="chrome://textlink/content/pref/prefDialog.js"/>
+
+</prefwindow>

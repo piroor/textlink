@@ -124,13 +124,3 @@
 <!ENTITY textlink.find_click_point.strict        "Criterio di rilevamento dei punti cliccati">
 <!ENTITY textlink.find_click_point.strict.strict "Rigido (a volte non carica gli URI)">
 <!ENTITY textlink.find_click_point.strict.loose  "Flessibile (a volte carica erroneamente URI non cliccati)">
-
-
-
-
-<!ENTITY textlink.group.about  "A proposito di">
-<!ENTITY about.title       "A proposito di Text Link">
-<!ENTITY about.name_before "Text Link Ver.">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Disinstalla">

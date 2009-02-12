@@ -123,13 +123,3 @@
 <!ENTITY textlink.find_click_point.strict        "Rozpoznawanie punktów kliknięcia">
 <!ENTITY textlink.find_click_point.strict.strict "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)">
 <!ENTITY textlink.find_click_point.strict.loose  "Swobodne (czasami otwiera adresy, które nie zostały kliknięte)">
-
-
-
-
-<!ENTITY textlink.group.about  "O…">
-<!ENTITY about.title       "O Text Link">
-<!ENTITY about.name_before "Wersja Text Link">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Odinstaluj">

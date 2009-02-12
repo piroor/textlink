@@ -123,13 +123,3 @@
 <!ENTITY textlink.find_click_point.strict        "A felismerés módja">
 <!ENTITY textlink.find_click_point.strict.strict "Szigorú (néha nem sikerül beolvasni a weboldalt)">
 <!ENTITY textlink.find_click_point.strict.loose  "Mérsékelt (néha a webcím helytelenül lesz beolvasva)">
-
-
-
-
-<!ENTITY textlink.group.about  "Információk">
-<!ENTITY about.title       "Text Link névjegye">
-<!ENTITY about.name_before "A Text Link kiterjesztés változata: ">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Eltávolítás">

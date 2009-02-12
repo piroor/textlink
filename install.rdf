@@ -201,29 +201,8 @@
     <em:targetApplication>
       <!-- Firefox -->
       <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                       em:minVersion="1.0"
-                       em:maxVersion="3.0.*" />
+                       em:minVersion="2.0"
+                       em:maxVersion="3.1b3pre" />
     </em:targetApplication>
-    <em:targetApplication>
-      <!-- Mozilla Suite -->
-      <RDF:Description em:id="{86c18b42-e466-45a9-ae7a-9b95ba6f5640}"
-                       em:minVersion="1.0"
-                       em:maxVersion="1.8+" />
-    </em:targetApplication>
-	<em:file>
-		<RDF:Description RDF:about="urn:mozilla:extension:file:textlink.jar">
-			<em:package>content/textlink/</em:package>
-			<em:locale>locale/en-US/textlink/</em:locale>
-			<em:locale>locale/ja-JP/textlink/</em:locale>
-			<em:locale>locale/fr-FR/textlink/</em:locale>
-			<em:locale>locale/sk-SK/textlink/</em:locale>
-			<em:locale>locale/zh-CN/textlink/</em:locale>
-			<em:locale>locale/zh-TW/textlink/</em:locale>
-			<em:locale>locale/it-IT/textlink/</em:locale>
-			<em:locale>locale/hu-HU/textlink/</em:locale>
-			<em:locale>locale/pl-PL/textlink/</em:locale>
-			<em:locale>locale/tr-TR/textlink/</em:locale>
-		</RDF:Description>
-	</em:file>
   </RDF:Description>
 </RDF:RDF>

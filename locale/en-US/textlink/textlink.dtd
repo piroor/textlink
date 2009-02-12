@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2008
+   - Portions created by the Initial Developer are Copyright (C) 2004-2009
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -123,13 +123,3 @@
 <!ENTITY textlink.find_click_point.strict        "Policy of detecting clicked points">
 <!ENTITY textlink.find_click_point.strict.strict "Strict (sometimes fails to load URIs)">
 <!ENTITY textlink.find_click_point.strict.loose  "Loose (sometimes wrongly loads non clicked URIs)">
-
-
-
-
-<!ENTITY textlink.group.about  "About">
-<!ENTITY about.title       "About Text Link">
-<!ENTITY about.name_before "Text Link Ver.">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Uninstall">

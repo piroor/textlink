@@ -124,13 +124,3 @@
 <!ENTITY textlink.find_click_point.strict        "Règle pour la détection des clics">
 <!ENTITY textlink.find_click_point.strict.strict "Stricte (quelquefois les URLs ne sont pas chargées)">
 <!ENTITY textlink.find_click_point.strict.loose  "Large (quelquefois des URLs non cliquées sont chargées à tord)">
-
-
-
-
-<!ENTITY textlink.group.about  "À propos">
-<!ENTITY about.title       "À propos de Text Link">
-<!ENTITY about.name_before "Version de Text Link ">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Désinstaller">

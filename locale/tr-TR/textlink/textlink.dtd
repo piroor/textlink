@@ -123,13 +123,3 @@
 <!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
 <!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">
 <!ENTITY textlink.find_click_point.strict.loose  "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)">
-
-
-
-
-<!ENTITY textlink.group.about  "Hakkında">
-<!ENTITY about.title       "Text Link Hakkında">
-<!ENTITY about.name_before "Text Link Ver.">
-<!ENTITY about.name_after  "">
-<!ENTITY about.destributed "http://piro.sakura.ne.jp/">
-<!ENTITY about.uninstall   "Kaldır">
