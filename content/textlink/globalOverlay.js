@@ -1,22 +1,23 @@
-var TextLinkService = 
-{
+var TextLinkService = { 
 	debug : false,
-
-//	findRangeSize : 512,
+	
+//	findRangeSize : 512, 
 	get findRangeSize()
 	{
 		return this.getPref('textlink.find_range_size');
 	},
-
-	ACTION_DISABLED               : 0,
+ 
+	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
 	ACTION_SELECT                 : 2,
 	ACTION_OPEN_IN_CURRENT        : 4,
 	ACTION_OPEN_IN_WINDOW         : 8,
 	ACTION_OPEN_IN_TAB            : 16,
 	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
-
-	get kURIPattern()
+ 
+// regexp 
+	
+	get kURIPattern() 
 	{
 		if (!this._kURIPattern)
 			this._kURIPattern = this.kURIPattern_base.replace(
@@ -30,8 +31,8 @@ var TextLinkService =
 		return this._kURIPattern;
 	},
 	_kURIPattern : null,
-
-	get kURIPatternRelative()
+ 
+	get kURIPatternRelative() 
 	{
 		if (!this._kURIPatternRelative)
 			this._kURIPatternRelative = this.kURIPatternRelative_base.replace(
@@ -42,8 +43,8 @@ var TextLinkService =
 		return this._kURIPatternRelative;
 	},
 	_kURIPatternRelative : null,
-
-	get kURIPatternMultibyte()
+ 
+	get kURIPatternMultibyte() 
 	{
 		if (!this._kURIPatternMultibyte)
 			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base.replace(
@@ -64,8 +65,8 @@ var TextLinkService =
 		return this._kURIPatternMultibyte;
 	},
 	_kURIPatternMultibyte : null,
-
-	get kURIPatternMultibyteRelative()
+ 
+	get kURIPatternMultibyteRelative() 
 	{
 		if (!this._kURIPatternMultibyteRelative)
 			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base.replace(
@@ -76,20 +77,20 @@ var TextLinkService =
 		return this._kURIPatternMultibyteRelative;
 	},
 	_kURIPatternMultibyteRelative : null,
-
-	kURIPattern_base : '\\(?([\\*\\+\\w]+:(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)',
+ 
+	kURIPattern_base : '\\(?([\\*\\+\\w]+:(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
 	kURIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
-
-	kURIPatternMultibyte_base : '[\\(\uff08]?([\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a](//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)',
+ 
+	kURIPatternMultibyte_base : '[\\(\uff08]?([\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a](//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
 	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
-
-	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
+ 
+	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+', 
 	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
-
-	kOnebyteArray : '-_.!~~*\'()acdefghijklmnopqrstuvwxyzACDEFGHIJKLMNOPQRSTUVWXYZ0123456789;/?:@&=+$,%#',
+ 
+	kOnebyteArray : '-_.!~~*\'()acdefghijklmnopqrstuvwxyzACDEFGHIJKLMNOPQRSTUVWXYZ0123456789;/?:@&=+$,%#', 
 	kMultibyteArray : '\uff0d\uff3f\uff0e\uff01\uffe3\uff5e\uff0a\u2019\uff08\uff09\uff41\uff43\uff44\uff45\uff46\uff47\uff48\uff49\uff4a\uff4b\uff4c\uff4d\uff4e\uff4f\uff50\uff51\uff52\uff53\uff54\uff55\uff56\uff57\uff58\uff59\uff5a\uff21\uff23\uff24\uff25\uff26\uff27\uff28\uff29\uff2a\uff2b\uff2c\uff2d\uff2e\uff2f\uff30\uff31\uff32\uff33\uff34\uff35\uff36\uff37\uff38\uff39\uff3a\uff10\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03',
-
-	// see http://www4.plala.or.jp/nomrax/TLD/
+ 
+	// see http://www4.plala.or.jp/nomrax/TLD/ 
 	kTopLevelDomains : [
 		// iTLD , gTLD
 		'arpa', 'int', 'nato', 'com', 'net', 'org', 'info', 'biz', 'name', 'pro', 'museum', 'coop', 'aero', 'edu', 'gov', 'mil',
@@ -120,7 +121,7 @@ var TextLinkService =
 		'yd', 'ye', 'yt', 'yu',
 		'za', 'zm', 'zr', 'zw'
 	],
-	
+  
 	get browser() 
 	{
 		return 'SplitBrowser' in window ? SplitBrowser.activeBrowser : gBrowser ;
@@ -243,29 +244,44 @@ var TextLinkService =
 	},
 	_Find : null,
   
-	// common functions 
+// utilities 
 	
-	makeURIFromSpec : function(aURI) 
+	getCurrentFrame : function(aFrame) 
 	{
-		try {
-			var newURI;
-			aURI = aURI || '';
-			if (aURI && String(aURI).match(/^file:/)) {
-				var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
-				newURI = this.IOService.newFileURI(tempLocalFile);
-			}
-			else {
-				newURI = this.IOService.newURI(aURI, null, null);
-			}
-
-			return newURI;
+		var frame = aFrame || document.commandDispatcher.focusedWindow;
+		if (!frame || frame.top != this.browser.contentWindow) {
+			frame = this.browser.contentWindow;
 		}
-		catch(e){
-		}
-		return null;
+		return frame;
 	},
  
+	evaluateXPath : function(aExpression, aContext, aType) 
+	{
+		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+		try {
+			var xpathResult = (aContext.ownerDocument || aContext || document).evaluate(
+					aExpression,
+					(aContext || document),
+					this.NSResolver,
+					aType,
+					null
+				);
+		}
+		catch(e) {
+			return {
+				singleNodeValue : null,
+				snapshotLength  : 0,
+				snapshotItem    : function() {
+					return null
+				}
+			};
+		}
+		return xpathResult;
+	},
+
+  
+// string operations 
+	
 	// from http://taken.s101.xrea.com/blog/article.php?id=510
 	convertFullWidthToHalfWidth : function(aString) 
 	{
@@ -291,6 +307,29 @@ var TextLinkService =
 		code += 0xFF00;
 		code -= 0x0020;
 		return String.fromCharCode(code);
+	},
+  
+// uri operations 
+	
+	makeURIFromSpec : function(aURI) 
+	{
+		try {
+			var newURI;
+			aURI = aURI || '';
+			if (aURI && String(aURI).match(/^file:/)) {
+				var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
+				newURI = this.IOService.newFileURI(tempLocalFile);
+			}
+			else {
+				newURI = this.IOService.newURI(aURI, null, null);
+			}
+
+			return newURI;
+		}
+		catch(e){
+		}
+		return null;
 	},
  
 	matchURIRegExp : function(aString) 
@@ -441,38 +480,157 @@ if (this.debug)
 		var baseURI = this.IOService.newURI(aSourceURI, null, null);
 		return this.IOService.newURI(aURI, null, baseURI).spec;
 	},
-  
-	getCurrentFrame : function(aFrame) 
+   
+// range operations 
+	
+	getSelectionURIRanges : function(aFrame, aMaxCount, aStrict) 
 	{
-		var frame = aFrame || document.commandDispatcher.focusedWindow;
-		if (!frame || frame.top != this.browser.contentWindow) {
-			frame = this.browser.contentWindow;
+		if (!aMaxCount) aMaxCount = -1;
+
+		var ranges = [];
+
+		var frame = this.getCurrentFrame(aFrame);
+		var selection = frame.getSelection();
+		if (!selection || !selection.rangeCount) return ranges;
+
+		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
+		{
+			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aMaxCount, aStrict));
+			if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
 		}
-		return frame;
+		return ranges;
+	},
+	
+	getURIRangesFromRange : function(aBaseRange, aMaxCount, aStrict) 
+	{
+		if (!aMaxCount) aMaxCount = -1;
+
+		var ranges = [];
+		var findRange = this.getFindRange(aBaseRange);
+		var uris = this.matchURIRegExp(findRange.toString());
+		if (!uris) {
+			return ranges;
+		}
+
+		var startPoint = findRange.cloneRange();
+		startPoint.collapse(true);
+		var endPoint = findRange.cloneRange();
+		endPoint.collapse(false);
+
+		var uriRange;
+		var uri;
+		var frame = aBaseRange.startContainer.ownerDocument.defaultView;
+		const max = uris.length;
+
+		var foundURIs = {};
+		var range;
+		for (var i = 0; i < max; i++)
+		{
+			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
+			uris[i] = uris[i].replace(/^\s+|\s+$/g, '');
+
+			uriRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
+			if (!uriRange) {
+//dump('NOT FOUND: '+uris[i]+'\n');
+				continue;
+			}
+//dump('FOUND RANGE: '+uriRange.toString()+'\n');
+			if (
+				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
+					aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) >= 0 &&
+					aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) <= 0
+				) ||
+				(!aStrict && ( // ダブルクリックで生じた選択範囲がURIと重なっているかどうか
+					( // 前の方で重なっている
+						aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) < 0 &&
+						aBaseRange.compareBoundaryPoints(Range.START_TO_END, uriRange) == 1
+					) ||
+					( // 後の方で重なっている
+						aBaseRange.compareBoundaryPoints(Range.END_TO_START, uriRange) < 0 &&
+						aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) > 0
+					)
+				))
+				) {
+				uri = this.fixupURI(uris[i], frame);
+				if (uri && !(uri in foundURIs)) {
+					foundURIs[uri] = true;
+					range = uriRange.cloneRange();
+					range = this.shrinkURIRange(range);
+					ranges.push({
+						range : range,
+						uri   : uri
+					});
+					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
+				}
+			}
+			startPoint.detach();
+			startPoint = uriRange;
+			startPoint.collapse(false);
+		}
+
+		findRange.detach();
+		startPoint.detach();
+		endPoint.detach();
+
+		return ranges;
 	},
  
-	evaluateXPath : function(aExpression, aContext, aType) 
+	getFindRange : function(aBaseRange) 
 	{
-		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
-		try {
-			var xpathResult = (aContext.ownerDocument || aContext || document).evaluate(
-					aExpression,
-					(aContext || document),
-					this.NSResolver,
-					aType,
-					null
-				);
+		var doc = aBaseRange.startContainer.ownerDocument;
+
+		var findRange = doc.createRange();
+		findRange.selectNode(doc.documentElement);
+
+		var count = 0;
+		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
+		var node, prevNode;
+
+		node     = aBaseRange.startContainer;
+		count    = aBaseRange.startOffset - node.textContent.length;
+		prevNode = null;
+		while (node && count < max)
+		{
+			count += node.textContent.length;
+			prevNode = node;
+
+			node = node.previousSibling || node.parentNode.previousSibling;
+			if (node)
+				while (node.hasChildNodes())
+					node = node.lastChild;
 		}
-		catch(e) {
-			return {
-				singleNodeValue : null,
-				snapshotLength  : 0,
-				snapshotItem    : function() {
-					return null
-				}
-			};
+		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
+
+		node     = aBaseRange.endContainer;
+		count    = aBaseRange.endOffset - node.textContent.length;
+		prevNode = null;
+		while (node && count < max)
+		{
+			count += node.textContent.length;
+			prevNode = node;
+
+			node = node.nextSibling || node.parentNode.nextSibling;
+			if (node)
+				while (node.hasChildNodes())
+					node = node.firstChild;
 		}
-		return xpathResult;
+		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
+
+//dump('FIND RANGE:: "'+findRange.toString()+'"\n');
+		return findRange;
+	},
+  
+	detachRanges : function(aRanges) 
+	{
+		aRanges.forEach(function(aRange) {
+			aRange.detach();
+		});
+	},
+ 
+	shrinkURIRange : function(aRange) 
+	{
+		// 前後の括弧等を取り除く処理
+		return aRange;
 	},
   
 	handleEvent : function(aEvent) 
@@ -560,150 +718,6 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		}
 
 		return false;
-	},
-  
-	getSelectionURIRanges : function(aFrame, aMaxCount, aStrict) 
-	{
-		if (!aMaxCount) aMaxCount = -1;
-
-		var ranges = [];
-
-		var frame = this.getCurrentFrame(aFrame);
-		var selection = frame.getSelection();
-		if (!selection || !selection.rangeCount) return ranges;
-
-		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
-		{
-			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aMaxCount, aStrict));
-			if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
-		}
-		return ranges;
-	},
-	
-	getURIRangesFromRange : function(aBaseRange, aMaxCount, aStrict) 
-	{
-		if (!aMaxCount) aMaxCount = -1;
-
-		var ranges = [];
-		var findRange = this.getFindRange(aBaseRange);
-		var uris = this.matchURIRegExp(findRange.toString());
-		if (!uris) {
-			return ranges;
-		}
-
-		var startPoint = findRange.cloneRange();
-		startPoint.collapse(true);
-		var endPoint = findRange.cloneRange();
-		endPoint.collapse(false);
-
-		var uriRange;
-		var uri;
-		var frame = aBaseRange.startContainer.ownerDocument.defaultView;
-		const max = uris.length;
-
-		var foundURIs = {};
-		var range;
-		for (var i = 0; i < max; i++)
-		{
-			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
-			uris[i] = uris[i].replace(/^\s+|\s+$/g, '');
-
-			uriRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
-			if (!uriRange) {
-//dump('NOT FOUND: '+uris[i]+'\n');
-				continue;
-			}
-//dump('FOUND RANGE: '+uriRange.toString()+'\n');
-			if (
-				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
-					aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) >= 0 &&
-					aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) <= 0
-				) ||
-				(!aStrict && ( // ダブルクリックで生じた選択範囲がURIと重なっているかどうか
-					( // 前の方で重なっている
-						aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) < 0 &&
-						aBaseRange.compareBoundaryPoints(Range.START_TO_END, uriRange) == 1
-					) ||
-					( // 後の方で重なっている
-						aBaseRange.compareBoundaryPoints(Range.END_TO_START, uriRange) < 0 &&
-						aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) > 0
-					)
-				))
-				) {
-				uri = this.fixupURI(uris[i], frame);
-				if (uri && !(uri in foundURIs)) {
-					foundURIs[uri] = true;
-					range = uriRange.cloneRange();
-//					this.shrinkURIRange(range); 前後の括弧を取り除く：TBD
-					ranges.push({
-						range : range,
-						uri   : uri
-					});
-					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
-				}
-			}
-			startPoint.detach();
-			startPoint = uriRange;
-			startPoint.collapse(false);
-		}
-
-		findRange.detach();
-		startPoint.detach();
-		endPoint.detach();
-
-		return ranges;
-	},
- 
-	getFindRange : function(aBaseRange) 
-	{
-		var doc = aBaseRange.startContainer.ownerDocument;
-
-		var findRange = doc.createRange();
-		findRange.selectNode(doc.documentElement);
-
-		var count = 0;
-		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
-		var node, prevNode;
-
-		node     = aBaseRange.startContainer;
-		count    = aBaseRange.startOffset - node.textContent.length;
-		prevNode = null;
-		while (node && count < max)
-		{
-			count += node.textContent.length;
-			prevNode = node;
-
-			node = node.previousSibling || node.parentNode.previousSibling;
-			if (node)
-				while (node.hasChildNodes())
-					node = node.lastChild;
-		}
-		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
-
-		node     = aBaseRange.endContainer;
-		count    = aBaseRange.endOffset - node.textContent.length;
-		prevNode = null;
-		while (node && count < max)
-		{
-			count += node.textContent.length;
-			prevNode = node;
-
-			node = node.nextSibling || node.parentNode.nextSibling;
-			if (node)
-				while (node.hasChildNodes())
-					node = node.firstChild;
-		}
-		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
-
-//dump('FIND RANGE:: "'+findRange.toString()+'"\n');
-		return findRange;
-	},
- 
-	detachRanges : function(aRanges) 
-	{
-		aRanges.forEach(function(aRange) {
-			aRange.detach();
-		});
 	},
   
 	openClickedURI : function(aEvent, aAction, aTrigger) 
