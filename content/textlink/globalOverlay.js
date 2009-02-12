@@ -1,20 +1,12 @@
-// start of definition 
-if (!window.TextLinkService) {
-
-var TextLinkService =
+var TextLinkService = 
 {
 	debug : false,
-
-	initialized : false,
 
 //	findRangeSize : 512,
 	get findRangeSize()
 	{
 		return this.getPref('textlink.find_range_size');
 	},
-
-
-	XULNS : 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul',
 
 	ACTION_DISABLED               : 0,
 	ACTION_STEALTH                : 1,
@@ -128,10 +120,10 @@ var TextLinkService =
 		'yd', 'ye', 'yt', 'yu',
 		'za', 'zm', 'zr', 'zw'
 	],
-	 
-	get browsers() 
+	
+	get browser() 
 	{
-		return document.getElementsByTagNameNS(this.XULNS, 'tabbrowser');
+		return 'SplitBrowser' in window ? SplitBrowser.activeBrowser : gBrowser ;
 	},
  
 	get browserURI() 
@@ -252,7 +244,7 @@ var TextLinkService =
 	_Find : null,
   
 	// common functions 
-	 
+	
 	makeURIFromSpec : function(aURI) 
 	{
 		try {
@@ -450,6 +442,15 @@ if (this.debug)
 		return this.IOService.newURI(aURI, null, baseURI).spec;
 	},
   
+	getCurrentFrame : function(aFrame) 
+	{
+		var frame = aFrame || document.commandDispatcher.focusedWindow;
+		if (!frame || frame.top != this.browser.contentWindow) {
+			frame = this.browser.contentWindow;
+		}
+		return frame;
+	},
+ 
 	evaluateXPath : function(aExpression, aContext, aType) 
 	{
 		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
@@ -482,8 +483,17 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 			case 'load':
 				this.init();
 				return;
+
 			case 'unload':
 				this.destroy();
+				return;
+
+			case 'SubBrowserAdded':
+				this.initBrowser(aEvent.originalTarget.browser);
+				return;
+
+			case 'SubBrowserRemoveRequest':
+				this.destroyBrowser(aEvent.originalTarget.browser);
 				return;
 		}
 
@@ -492,7 +502,7 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 			if (this.handleEventFor(aEvent, i)) return;
 		}
 	},
-	 
+	
 	handleEventFor : function(aEvent, aIndex) 
 	{
 		var trigger;
@@ -552,145 +562,108 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		return false;
 	},
   
-	FIND_CLICKED      : 1,
-	FIND_ALL_SELECTED : 2,
-	getSelectionURI : function(aMode, aWindow) 
+	getSelectionURIRanges : function(aFrame, aMaxCount, aStrict) 
 	{
-		var selectionURIs = [];
+		if (!aMaxCount) aMaxCount = -1;
 
-		var w = aWindow || document.commandDispatcher.focusedWindow;
-		if (!w || w.top != gBrowser.contentWindow) {
-			w = gBrowser.contentWindow;
+		var ranges = [];
+
+		var frame = this.getCurrentFrame(aFrame);
+		var selection = frame.getSelection();
+		if (!selection || !selection.rangeCount) return ranges;
+
+		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
+		{
+			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aMaxCount, aStrict));
+			if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
 		}
+		return ranges;
+	},
+	
+	getURIRangesFromRange : function(aBaseRange, aMaxCount, aStrict) 
+	{
+		if (!aMaxCount) aMaxCount = -1;
 
-		var sel = w.getSelection();
-		if (!sel) return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
-
-		var originalRange;
-		try {
-			originalRange = sel.getRangeAt(0);
-		}
-		catch(e) {
-			return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
-		}
-
-
-		var findRange = this.getFindRangeInWindow(w);
-
-		var selCon = w
-			.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-			.getInterface(Components.interfaces.nsIWebNavigation)
-			.QueryInterface(Components.interfaces.nsIDocShell)
-			.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-			.getInterface(Components.interfaces.nsISelectionDisplay)
-			.QueryInterface(Components.interfaces.nsISelectionController);
-
-		var documentSelection = selCon.getSelection(selCon.SELECTION_HIDDEN);
-		documentSelection.removeAllRanges();
-		documentSelection.addRange(findRange);
-
-		var uris = this.matchURIRegExp(documentSelection.toString());
-		documentSelection.removeAllRanges();
-
+		var ranges = [];
+		var findRange = this.getFindRange(aBaseRange);
+		var uris = this.matchURIRegExp(findRange.toString());
 		if (!uris) {
-			sel.removeAllRanges();
-			sel.addRange(originalRange);
-			return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
+			return ranges;
 		}
-
 
 		var startPoint = findRange.cloneRange();
 		startPoint.collapse(true);
-
 		var endPoint = findRange.cloneRange();
 		endPoint.collapse(false);
 
-
-		var foundRange;
+		var uriRange;
 		var uri;
-		const max    = uris.length;
-		const strict = (aMode == this.FIND_CLICKED) && this.getPref('textlink.find_click_point.strict');
+		var frame = aBaseRange.startContainer.ownerDocument.defaultView;
+		const max = uris.length;
 
-		var done = {};
+		var foundURIs = {};
 		for (var i = 0; i < max; i++)
 		{
 			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
 			uris[i] = uris[i].replace(/^\s+|\s+$/g, '');
 
-			foundRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
-			if (!foundRange) {
+			uriRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
+			if (!uriRange) {
 //dump('NOT FOUND: '+uris[i]+'\n');
 				continue;
 			}
-//dump('FOUND RANGE: '+foundRange.toString()+'\n');
+//dump('FOUND RANGE: '+uriRange.toString()+'\n');
 			if (
 				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
-					originalRange.compareBoundaryPoints(Range.START_TO_START, foundRange) >= 0 &&
-					originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange) <= 0
+					aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) >= 0 &&
+					aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) <= 0
 				) ||
-				(!strict && ( // ダブルクリックで生じた選択範囲がURIと重なっているかどうか
+				(!aStrict && ( // ダブルクリックで生じた選択範囲がURIと重なっているかどうか
 					( // 前の方で重なっている
-						originalRange.compareBoundaryPoints(Range.START_TO_START, foundRange) < 0 &&
-						originalRange.compareBoundaryPoints(Range.START_TO_END, foundRange) == 1
+						aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) < 0 &&
+						aBaseRange.compareBoundaryPoints(Range.START_TO_END, uriRange) == 1
 					) ||
 					( // 後の方で重なっている
-						originalRange.compareBoundaryPoints(Range.END_TO_START, foundRange) < 0 &&
-						originalRange.compareBoundaryPoints(Range.END_TO_END, foundRange) > 0
+						aBaseRange.compareBoundaryPoints(Range.END_TO_START, uriRange) < 0 &&
+						aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) > 0
 					)
 				))
 				) {
-				uri = this.fixupURI(uris[i], w);
-
-				if (uri && !(uri in done)) {
-					done[uri] = true;
-					if (aMode == this.FIND_CLICKED) {
-						foundRange = this.Find.Find(uri, findRange, startPoint, endPoint);
-						if (!foundRange)
-							foundRange = this.Find.Find(this.sanitizeURIString(uris[i]), findRange, startPoint, endPoint);
-
-						sel.removeAllRanges();
-						sel.addRange(foundRange);
-
-						findRange.detach();
-						startPoint.detach();
-						endPoint.detach();
-
-						return uri;
-					}
-					else
-						selectionURIs.push(uri);
+				uri = this.fixupURI(uris[i], frame);
+				if (uri && !(uri in foundURIs)) {
+					foundURIs[uri] = true;
+					ranges.push({
+						range : uriRange.cloneRange(),
+						uri   : uri
+					});
+					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
 				}
 			}
-
 			startPoint.detach();
-			startPoint = foundRange;
+			startPoint = uriRange;
 			startPoint.collapse(false);
 		}
-
-		sel.removeAllRanges();
-		sel.addRange(originalRange);
 
 		findRange.detach();
 		startPoint.detach();
 		endPoint.detach();
 
-		return aMode == this.FIND_CLICKED ? '' : selectionURIs ;
+		return ranges;
 	},
-	 
-	getFindRangeInWindow : function(aWindow) 
+ 
+	getFindRange : function(aBaseRange) 
 	{
-		var originalRange = aWindow.getSelection().getRangeAt(0);
+		var doc = aBaseRange.startContainer.ownerDocument;
 
-		var findRange = aWindow.document.createRange();
-		findRange.selectNode(aWindow.document.documentElement);
-
+		var findRange = doc.createRange();
+		findRange.selectNode(doc.documentElement);
 
 		var count = 0;
 		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
 		var node, prevNode;
 
-		node     = originalRange.startContainer;
-		count    = originalRange.startOffset - node.textContent.length;
+		node     = aBaseRange.startContainer;
+		count    = aBaseRange.startOffset - node.textContent.length;
 		prevNode = null;
 		while (node && count < max)
 		{
@@ -702,10 +675,10 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				while (node.hasChildNodes())
 					node = node.lastChild;
 		}
-		findRange.setStartBefore(prevNode || originalRange.startContainer);
+		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
 
-		node     = originalRange.endContainer;
-		count    = originalRange.endOffset - node.textContent.length;
+		node     = aBaseRange.endContainer;
+		count    = aBaseRange.endOffset - node.textContent.length;
 		prevNode = null;
 		while (node && count < max)
 		{
@@ -717,13 +690,19 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				while (node.hasChildNodes())
 					node = node.firstChild;
 		}
-		findRange.setEndAfter(prevNode || originalRange.endContainer);
-
+		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
 
 //dump('FIND RANGE:: "'+findRange.toString()+'"\n');
 		return findRange;
 	},
- 	 
+ 
+	detachRanges : function(aRanges) 
+	{
+		aRanges.forEach(function(aRange) {
+			aRange.detach();
+		});
+	},
+  
 	openClickedURI : function(aEvent, aAction, aTrigger) 
 	{
 if (this.debug) dump('TextLinkService.openClickedURI();\n');
@@ -739,16 +718,26 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		var b = aEvent.currentTarget;
 		if (!b) return;
 
-		var w = target.ownerDocument.defaultView;
-		var uri = this.getClickedURI(w);
-		if (!uri || aAction & this.ACTION_SELECT) return;
+		var frame = target.ownerDocument.defaultView;
 
+		var ranges = this.getSelectionURIRanges(frame, 1, this.getPref('textlink.find_click_point.strict'));
+		if (!ranges.length) return;
+
+		var range = ranges[0];
+
+		var selection = frame.getSelection();
+		selection.removeAllRanges();
+		selection.addRange(range.range);
+
+		if (aAction & this.ACTION_SELECT) return;
+
+		var uri = range.uri;
 		var referrer = (
 					aAction & this.ACTION_STEALTH ||
 					(b.selectedTab && b.selectedTab.referrerBlocked)
 				) ?
 					null :
-					this.makeURIFromSpec(w.location.href) ;
+					this.makeURIFromSpec(frame.location.href) ;
 
 		if (aAction & this.ACTION_OPEN_IN_CURRENT ||
 			uri.match(/^mailto:/) ||
@@ -760,25 +749,29 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		}
 		else {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
-				TreeStyleTabService.readyToOpenChildTab(w);
+				TreeStyleTabService.readyToOpenChildTab(frame);
 			}
 			b.loadOneTab(uri, referrer, null, null, (aAction & this.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
-	
-	getClickedURI : function(aWindow) 
-	{
-		return this.getSelectionURI(this.FIND_CLICKED, aWindow);
-	},
-  
+ 
 	openTextLinkIn : function(aOpenInFlag) 
 	{
-		var uris = this.getSelectionURI(this.FIND_ALL_SELECTED);
+		var frame = this.getCurrentFrame();
+		var uris = this.getSelectionURIRanges(frame);
 		if (!uris.length) return;
+
+//		var selection = frame.getSelection();
+//		selection.removeAllRanges();
+
+		uris = uris.map(function(aRange) {
+//				selection.addRange(aRange.range);
+				return aRange.uri;
+			});
 
 		var selectTab;
 		var tab;
-		var b = gBrowser;
+		var b = this.browser;
 
 		var current = b.selectedTab;
 
@@ -854,15 +847,19 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 			nsContextMenu.prototype.initItems = this.initItems;
 		}
 
-		var b = this.browsers;
-		for (var i = 0; i < b.length; i++)
-		{
-//			b[i].addEventListener('click', this, true);
-			b[i].addEventListener('dblclick', this, true);
-			b[i].addEventListener('keypress', this, true);
-		}
+		var appcontent = document.getElementById('appcontent');
+		appcontent.addEventListener('SubBrowserAdded', this, false);
+		appcontent.addEventListener('SubBrowserRemoveRequest', this, false);
+
+		this.initBrowser(gBrowser);
 	},
-	 
+	
+	initBrowser : function(aBrowser) 
+	{
+		aBrowser.addEventListener('dblclick', this, true);
+		aBrowser.addEventListener('keypress', this, true);
+	},
+ 
 	// gContextMenu.initItems 
 	initItems : function()
 	{
@@ -870,7 +867,10 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 		var TLS = TextLinkService;
 
-		var uris = TLS.getSelectionURI(this.FIND_ALL_SELECTED);
+		var uris = TLS.getSelectionURIRanges().map(function(aRange) {
+					aRange.range.detach();
+					return aRange.uri;
+				});
 
 		this.showItem('context-openTextLink-current',
 			uris.length && TLS.getPref('textlink.contextmenu.openTextLink.current'));
@@ -911,17 +911,21 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 	destroy : function() 
 	{
 		window.removeEventListener('unload', this, false);
-		var b = this.browsers;
-		for (var i = 0; i < b.length; i++)
-		{
-			b[i].removeEventListener('dblclick', this, true);
-			b[i].removeEventListener('keypress', this, true);
-		}
+
+		var appcontent = document.getElementById('appcontent');
+		appcontent.removeEventListener('SubBrowserAdded', this, false);
+		appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
+
+		this.destroyBrowser(gBrowser);
+	},
+	
+	destroyBrowser : function(aBrowser) 
+	{
+		aBrowser.removeEventListener('dblclick', this, true);
+		aBrowser.removeEventListener('keypress', this, true);
 	}
-  
-// end of definition 
-};
+   
+}; 
 
 window.addEventListener('load', TextLinkService, false);
-}
  
