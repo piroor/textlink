@@ -602,6 +602,7 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 		const max = uris.length;
 
 		var foundURIs = {};
+		var range;
 		for (var i = 0; i < max; i++)
 		{
 			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
@@ -632,8 +633,10 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				uri = this.fixupURI(uris[i], frame);
 				if (uri && !(uri in foundURIs)) {
 					foundURIs[uri] = true;
+					range = uriRange.cloneRange();
+//					this.shrinkURIRange(range); ‘OŒã‚ÌŠ‡ŒÊ‚ðŽæ‚èœ‚­FTBD
 					ranges.push({
-						range : uriRange.cloneRange(),
+						range : range,
 						uri   : uri
 					});
 					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
@@ -761,11 +764,18 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		var uris = this.getSelectionURIRanges(frame);
 		if (!uris.length) return;
 
-//		var selection = frame.getSelection();
-//		selection.removeAllRanges();
-
+		var selection = null;
+		if ('PlacesController' in window) {
+			selection = frame.getSelection();
+			selection.removeAllRanges();
+		}
 		uris = uris.map(function(aRange) {
-//				selection.addRange(aRange.range);
+				if (selection) {
+					selection.addRange(aRange.range);
+				}
+				else {
+					aRange.range.detach();
+				}
 				return aRange.uri;
 			});
 
