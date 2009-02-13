@@ -43,10 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "Otvoriť v novom okne: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Otvoriť všetko v nových oknách: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "K">
+<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "Otvoriť &lt;vybraný reťazec s internetovou adresou&gt;">
 <!ENTITY textlink.context.tab.pref     "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; na nových kartách">
 <!ENTITY textlink.context.window.pref  "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; v nových oknách">
+<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
 
 
 

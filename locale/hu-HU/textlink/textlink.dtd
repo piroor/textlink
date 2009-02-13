@@ -43,10 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "Megnyitás új ablakban: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Mindegyik megnyitása külön ablakban: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "y">
+<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.tab.pref     "Megnyitás új lapon &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.window.pref  "Megnyitás új ablakban &lt;webcímet tartalmazó szövegrész&gt;">
+<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
 
 
 

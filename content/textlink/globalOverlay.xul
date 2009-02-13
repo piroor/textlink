@@ -28,6 +28,13 @@
 		label-base-multiple="&textlink.openTextLink.window.multiple;"
 		accesskey="&textlink.openTextLink.window.accesskey;"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_WINDOW);"/>
+
+	<menuitem id="context-openTextLink-copy"
+		insertafter="context-copy"
+		label-base-single="&textlink.openTextLink.copy.single;"
+		label-base-multiple="&textlink.openTextLink.copy.multiple;"
+		accesskey="&textlink.openTextLink.copy.accesskey;"
+		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_COPY);"/>
 </popup>
 
 </overlay>

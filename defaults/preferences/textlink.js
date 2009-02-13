@@ -31,9 +31,10 @@ pref("textlink.actions.5.trigger.mouse", "");
 pref("textlink.actions.5.trigger.key",   "");
 // you can add more and more definitions!
 
-pref("textlink.contextmenu.openTextLink.current", true);
+pref("textlink.contextmenu.openTextLink.current", false);
 pref("textlink.contextmenu.openTextLink.window",  false);
 pref("textlink.contextmenu.openTextLink.tab",     true);
+pref("textlink.contextmenu.openTextLink.copy",    true);
 
 pref("textlink.schemer",                     "http https ftp news nntp telnet irc mms ed2k about file urn");
 pref("textlink.schemer.fixup.table",         "www=>http:\/\/www ftp.=>ftp:\/\/ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");

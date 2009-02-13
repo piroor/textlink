@@ -43,11 +43,15 @@
 <!ENTITY textlink.openTextLink.window.single     "新しいウィンドウで開く: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "すべて新しいウィンドウで開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
+<!ENTITY textlink.openTextLink.copy.single     "URIをコピー：&quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "すべてのURIをコピー：&quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 
 <!ENTITY textlink.context.current.pref "開く: &lt;選択範囲のURI&gt;">
 <!ENTITY textlink.context.tab.pref     "新しいタブで開く: &lt;選択範囲のURI&gt;">
 <!ENTITY textlink.context.window.pref  "新しいウィンドウで開く: &lt;選択範囲のURI&gt;">
+<!ENTITY textlink.context.copy.pref    "&lt;選択範囲のURI&gt;をコピー">
 
 
 

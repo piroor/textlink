@@ -10,6 +10,7 @@ var TextLinkService = {
 	contextItemCurrent             : true,
 	contextItemWindow              : true,
 	contextItemTab                 : true,
+	contextItemCopy                : true,
  
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
@@ -18,6 +19,7 @@ var TextLinkService = {
 	ACTION_OPEN_IN_WINDOW         : 8,
 	ACTION_OPEN_IN_TAB            : 16,
 	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
+	ACTION_COPY                   : 1024,
 
 	actions : {},
  
@@ -216,7 +218,14 @@ var TextLinkService = {
 		}
 		return xpathResult;
 	},
-
+ 
+	setClipBoard : function(aString) 
+	{
+		Components
+			.classes['@mozilla.org/widget/clipboardhelper;1']
+			.getService(Components.interfaces.nsIClipboardHelper)
+			.copyString(aString);
+	},
   
 // string operations 
 	
@@ -731,6 +740,10 @@ var TextLinkService = {
 			case 'textlink.contextmenu.openTextLink.tab':
 				this.contextItemTab = value;
 				return;
+
+			case 'textlink.contextmenu.openTextLink.copy':
+				this.contextItemCopy = value;
+				return;
 		}
 
 		var match = aData.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
@@ -783,6 +796,11 @@ var TextLinkService = {
 
 		if (aAction & this.ACTION_SELECT) return;
 
+		if (aAction & this.ACTION_COPY) {
+			this.setClipBoard(range.uri);
+			return;
+		}
+
 		var uri = range.uri;
 		var referrer = (
 					aAction & this.ACTION_STEALTH ||
@@ -828,6 +846,12 @@ var TextLinkService = {
 				return aRange.uri;
 			});
 
+		if (aOpenInFlag == this.ACTION_COPY) {
+			if (uris.length > 1) uris.push('');
+			this.setClipBoard(uris.join('\r\n'));
+			return;
+		}
+
 		var selectTab;
 		var tab;
 		var b = this.browser;
@@ -848,8 +872,9 @@ var TextLinkService = {
 					!PlacesController.prototype._confirmOpenTabs(uris.length) :
 					false
 			)
-			)
+			) {
 			return;
+		}
 
 		for (var i in uris)
 		{
@@ -929,6 +954,7 @@ var TextLinkService = {
 			textlink.contextmenu.openTextLink.current
 			textlink.contextmenu.openTextLink.window
 			textlink.contextmenu.openTextLink.tab
+			textlink.contextmenu.openTextLink.copy
 		]]>.toString()
 			.replace(/^\s+|\s+$/g, '')
 			.split(/\s+/);
@@ -969,6 +995,8 @@ var TextLinkService = {
 			uris.length && TLS.contextItemWindow);
 		this.showItem('context-openTextLink-tab',
 			uris.length && TLS.contextItemTab);
+		this.showItem('context-openTextLink-copy',
+			uris.length && TLS.contextItemCopy);
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -986,6 +1014,7 @@ var TextLinkService = {
 			TLS.setLabel('context-openTextLink-current', attr, targets);
 			TLS.setLabel('context-openTextLink-window',  attr, targets);
 			TLS.setLabel('context-openTextLink-tab',     attr, targets);
+			TLS.setLabel('context-openTextLink-copy',    attr, targets);
 		}
 	},
 	setLabel : function(aID, aAttr, aTargets)

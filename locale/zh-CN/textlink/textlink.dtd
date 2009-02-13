@@ -43,10 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "在新窗口中打开： &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "全部于新窗口中打开： &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
+<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "打开&lt;选定的 URI 串&gt;">
 <!ENTITY textlink.context.tab.pref     "在新标签中打开&lt;选定的 URI 串&gt; ">
 <!ENTITY textlink.context.window.pref  "在新窗口中打开&lt;选定的 URI 串&gt;">
+<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
 
 
 

@@ -43,10 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "Yeni Pencerede Aç: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Tümünü Yeni Pencerede Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "Y">
+<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "&lt;Seçili URL metnini&gt; Aç">
 <!ENTITY textlink.context.tab.pref     "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç">
 <!ENTITY textlink.context.window.pref  "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç">
+<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
 
 
 

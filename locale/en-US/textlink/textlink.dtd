@@ -43,10 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "Open in New Window: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Open All in New Windows: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
+<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "Open &lt;selected URI string&gt;">
 <!ENTITY textlink.context.tab.pref     "Open &lt;selected URI strings&gt; in New Tabs">
 <!ENTITY textlink.context.window.pref  "Open &lt;selected URI strings&gt; in New Windows">
+<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
 
 
 
