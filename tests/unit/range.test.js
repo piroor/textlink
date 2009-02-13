@@ -3,6 +3,7 @@ utils.include('common.inc.js');
 function setUp()
 {
 	sv = getNewService();
+	yield Do(utils.loadURI('../fixtures/testcase.html'));
 }
 
 function tearDown()
