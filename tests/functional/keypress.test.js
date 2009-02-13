@@ -268,8 +268,10 @@ var baseKeypress = {
 
 function testKeyActionsNormal()
 {
-	var keypress = { ctrlKey : true };
+	var keypress = {};
 	keypress.__proto__ = baseKeypress
+
+	keypress.ctrlKey = true;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertNoKeyActions(keypress, selectURI));
 
@@ -280,10 +282,12 @@ function testKeyActionsNormal()
 
 function testKeyActionsAccel()
 {
-	sv.actions.test.triggerMouse = 'accel-dblclick';
+	sv.actions.test.triggerKey = 'accel-VK_ENTER';
 
-	var keypress = { ctrlKey : false };
+	var keypress = {};
 	keypress.__proto__ = baseKeypress
+
+	keypress.ctrlKey = false;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertNoKeyActions(keypress, selectURI));
 
@@ -294,10 +298,12 @@ function testKeyActionsAccel()
 
 function testKeyActionsCtrl()
 {
-	sv.actions.test.triggerMouse = 'accel-dblclick';
+	sv.actions.test.triggerKey = 'accel-VK_ENTER';
 
-	var keypress = { ctrlKey : false };
+	var keypress = {};
 	keypress.__proto__ = baseKeypress
+
+	keypress.ctrlKey = false;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertNoKeyActions(keypress, selectURI));
 
@@ -308,10 +314,12 @@ function testKeyActionsCtrl()
 
 function testKeyActionsShift()
 {
-	sv.actions.test.triggerMouse = 'shift-dblclick';
+	sv.actions.test.triggerKey = 'shift-VK_ENTER';
 
-	var keypress = { shiftKey : false };
+	var keypress = {};
 	keypress.__proto__ = baseKeypress
+
+	keypress.ctrlKey = false;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertNoKeyActions(keypress, selectURI));
 
@@ -322,24 +330,27 @@ function testKeyActionsShift()
 
 function testKeyActionsShiftCtrl()
 {
-	sv.actions.test.triggerMouse = 'shift-ctrl-dblclick';
-	var keypress = { ctrlKey : false, shiftKey : false };
+	sv.actions.test.triggerKey = 'shift-ctrl-VK_ENTER';
+	var keypress = {};
 	keypress.__proto__ = baseKeypress
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	keypress.ctrlKey = false;
-	keypress.shiftKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.ctrlKey = true;
 	keypress.shiftKey = false;
+	keypress.ctrlKey = false;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	keypress.ctrlKey = true;
 	keypress.shiftKey = true;
+	keypress.ctrlKey = false;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
+
+	keypress.shiftKey = false;
+	keypress.ctrlKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
+
+	keypress.shiftKey = true;
+	keypress.ctrlKey = true;
 	yield Do(assertNoKeyActions(keypress, selectNotURI));
 	yield Do(assertKeyActions(keypress, selectURI));
 }
