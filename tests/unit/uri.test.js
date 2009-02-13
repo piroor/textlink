@@ -65,19 +65,20 @@ function test_matchURIRegExp()
 				fullWidth_relative_URI+'3'
 			];
 
+		var expected = [uris[0], uris[1], uris[2]];
+		if (aFullWidth) expected = expected.concat([uris[3], uris[4], uris[5]]);
+		if (aRelative) expected = expected.concat([uris[6], uris[7], uris[8]]);
+		if (aFullWidth && aRelative) expected = expected.concat([uris[9], uris[10], uris[11]]);
+
 		var match = sv.matchURIRegExp(
 				uris.map(function(aURI) { return '日本語'+aURI+'日本語'; })
 					.join('\n')
 			);
 		assert.isNotNull(match);
-		var expected = [uris[0], uris[1], uris[2]];
-		if (aFullWidth) expected = expected.concat([uris[3], uris[4], uris[5]]);
-		if (aRelative) expected = expected.concat([uris[6], uris[7], uris[8]]);
-		if (aFullWidth && aRelative) expected = expected.concat([uris[9], uris[10], uris[11]]);
 		assert.equals(expected.length, match.length);
-		for (var i = 0; i < count; i++)
+		for (var i = 0, maxi = match.length; i < maxi; i++)
 		{
-			assert.equals(uris[i], match[i]);
+			assert.equals(expected[i], match[i]);
 		}
 	}
 

@@ -335,21 +335,9 @@ var TextLinkService = {
 				return '';
 		}
 
-		while (
-			aURIComponent.match(/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/) ||
-			aURIComponent.match(/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/) ||
-			aURIComponent.match(/^[(\uff08](.+)[)\uff09]$/) ||
-			aURIComponent.match(/^[{\uff5b](.+)[}\uff5d]$/) ||
-			aURIComponent.match(/^[\[\uff3b](.+)[\]\uff3d]$/) ||
-			aURIComponent.match(/^[<\uff1c](.+)[>\uff1e]$/) ||
-			aURIComponent.match(/^[\uff62\u300c](.+)[\uff63\u300d]$/) ||
-			aURIComponent.match(/^\u226a(.+)\u226b$/) ||
-			aURIComponent.match(/^\u3008(.+)\u3009$/) ||
-			aURIComponent.match(/^\u300a(.+)\u300b$/) ||
-			aURIComponent.match(/^\u300e(.+)\u300f$/) ||
-			aURIComponent.match(/^\u3010(.+)\u3011$/) ||
-			aURIComponent.match(/^\u3014(.+)\u3015$/) ||
+		aURIComponent = this.removeParen(aURIComponent);
 
+		while (
 			aURIComponent.match(/^\((.*)$/) ||
 			aURIComponent.match(/^([^\(]*)\)$/) ||
 			aURIComponent.match(/^(.*)[\.,]$/) ||
@@ -358,10 +346,35 @@ var TextLinkService = {
 			aURIComponent.match(/^(.+)\s*\([^\)]+$/) ||
 			aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
 			aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/)
-			)
+			) {
 			aURIComponent = RegExp.$1;
+		}
+
+		aURIComponent = this.removeParen(aURIComponent);
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
+	},
+ 
+	removeParen : function(aInput) 
+	{
+		while (
+			aInput.match(/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/) ||
+			aInput.match(/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/) ||
+			aInput.match(/^[(\uff08](.+)[)\uff09]$/) ||
+			aInput.match(/^[{\uff5b](.+)[}\uff5d]$/) ||
+			aInput.match(/^[\[\uff3b](.+)[\]\uff3d]$/) ||
+			aInput.match(/^[<\uff1c](.+)[>\uff1e]$/) ||
+			aInput.match(/^[\uff62\u300c](.+)[\uff63\u300d]$/) ||
+			aInput.match(/^\u226a(.+)\u226b$/) ||
+			aInput.match(/^\u3008(.+)\u3009$/) ||
+			aInput.match(/^\u300a(.+)\u300b$/) ||
+			aInput.match(/^\u300e(.+)\u300f$/) ||
+			aInput.match(/^\u3010(.+)\u3011$/) ||
+			aInput.match(/^\u3014(.+)\u3015$/)
+			) {
+			aInput = RegExp.$1;
+		}
+		return aInput;
 	},
  
 	fixupSchemer : function(aURI) 
