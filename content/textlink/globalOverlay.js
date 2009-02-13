@@ -149,74 +149,6 @@ var TextLinkService = {
  
 	// XPConnect 
 	
-	get Prefs() 
-	{
-		if (!this._Prefs) {
-			this._Prefs = Components.classes['@mozilla.org/preferences;1'].getService(Components.interfaces.nsIPrefBranch);
-		}
-		return this._Prefs;
-	},
-	_Prefs : null,
-	
-	getPref : function(aPrefstring) 
-	{
-		try {
-			var type = this.Prefs.getPrefType(aPrefstring);
-			switch (type)
-			{
-				case this.Prefs.PREF_STRING:
-					return decodeURIComponent(escape(this.Prefs.getCharPref(aPrefstring)));
-					break;
-				case this.Prefs.PREF_INT:
-					return this.Prefs.getIntPref(aPrefstring);
-					break;
-				default:
-					return this.Prefs.getBoolPref(aPrefstring);
-					break;
-			}
-		}
-		catch(e) {
-		}
-
-		return null;
-	},
- 
-	setPref : function(aPrefstring, aNewValue) 
-	{
-		var type;
-		try {
-			type = typeof aNewValue;
-		}
-		catch(e) {
-			type = null;
-		}
-
-		switch (type)
-		{
-			case 'string':
-				this.Prefs.setCharPref(aPrefstring, unescape(encodeURIComponent(aNewValue)));
-				break;
-			case 'number':
-				this.Prefs.setIntPref(aPrefstring, parseInt(aNewValue));
-				break;
-			default:
-				this.Prefs.setBoolPref(aPrefstring, aNewValue);
-				break;
-		}
-		return true;
-	},
- 
-	clearPref : function(aPrefstring) 
-	{
-		try {
-			this.Prefs.clearUserPref(aPrefstring);
-		}
-		catch(e) {
-		}
-
-		return;
-	},
-  
 	get IOService() 
 	{
 		if (!this._IOService) {
@@ -951,5 +883,6 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
    
 }; 
 
+TextLinkService.__proto__ = window['piro.sakura.ne.jp'].prefs;
 window.addEventListener('load', TextLinkService, false);
  

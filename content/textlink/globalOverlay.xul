@@ -4,6 +4,7 @@
 <overlay
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+<script type="application/x-javascript" src="chrome://textlink/content/prefs.js"/>
 <script type="application/x-javascript" src="chrome://textlink/content/globalOverlay.js"/>
 
 <popup id="contentAreaContextMenu">
