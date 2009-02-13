@@ -15,3 +15,8 @@ function getNewService()
 
 	return obj;
 }
+
+function $(aId)
+{
+	return content.document.getElementById(aId);
+}

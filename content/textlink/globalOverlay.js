@@ -583,7 +583,7 @@ var TextLinkService = {
 	shrinkURIRange : function(aRange) 
 	{
 		var original = aRange.toString();
-		var uri = this.removeParen(original);
+		var uri = this.sanitizeURIString(original);
 		var startOffset = aRange.startOffset + original.indexOf(uri);
 		var endOffset = aRange.endOffset - original.lastIndexOf(uri);
 		if (startOffset != aRange.startOffset ||

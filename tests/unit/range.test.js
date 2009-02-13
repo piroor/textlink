@@ -10,17 +10,82 @@ function tearDown()
 {
 }
 
-function $(aId)
-{
-	return content.document.getElementById(aId);
-}
-
 function test_getSelectionURIRanges()
 {
 }
 
 function test_getURIRangesFromRange()
 {
+	var range = content.document.createRange();
+	range.selectNodeContents($('first'));
+
+	var ranges;
+
+	ranges = sv.getURIRangesFromRange(range, 1);
+	assert.equals(1, ranges.length);
+	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
+	assert.equals('http://www.mozilla.org/', ranges[0].uri);
+
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(7, ranges.length);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'ttp://ftp.netscape.com/pub/netscape6/',
+			'h++p://www.mozilla.com/',
+			'h**p://www.mozilla.com/firefox/'
+		],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'http://ftp.netscape.com/pub/netscape6/',
+			'http://www.mozilla.com/',
+			'http://www.mozilla.com/firefox/'
+		],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
+
+	range.selectNodeContents($('split'));
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(5, ranges.length);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'ttp://ftp.netscape.com/pub/netscape6/'
+		],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'http://ftp.netscape.com/pub/netscape6/'
+		],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
+
+	range.detach();
 }
 
 function test_getFindRange()
@@ -62,7 +127,7 @@ function test_shrinkURIRange()
 	range.setEnd(node, 33);
 	assert.equals('a(http://www.mozilla.org/)は', range.toString());
 	range = sv.shrinkURIRange(range);
-	assert.equals('a(http://www.mozilla.org/)は', range.toString());
+	assert.equals('http://www.mozilla.org/', range.toString());
 
 	range.detach();
 }
