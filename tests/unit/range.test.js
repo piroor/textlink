@@ -42,8 +42,8 @@ function test_shrinkURIRange()
 	assert.equals('http://www.mozilla.org/', range.toString());
 
 	range.setStart(node, 6);
-	range.setEnd(node, 33);
-	assert.equals('a(http://www.mozilla.org/)は', range.toString());
+	range.setEnd(node, 32);
+	assert.equals('a(http://www.mozilla.org/)', range.toString());
 	range = sv.shrinkURIRange(range);
 	assert.equals('http://www.mozilla.org/', range.toString());
 
@@ -72,6 +72,7 @@ function test_getURIRangesFromRange()
 {
 	var range = content.document.createRange();
 	range.selectNodeContents($('first'));
+	range.setEndAfter($('fullwidth'));
 
 	var ranges;
 
@@ -81,7 +82,7 @@ function test_getURIRangesFromRange()
 	assert.equals('http://www.mozilla.org/', ranges[0].uri);
 
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(7, ranges.length);
+	assert.equals(12, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -90,7 +91,12 @@ function test_getURIRangesFromRange()
 			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'ttp://ftp.netscape.com/pub/netscape6/',
 			'h++p://www.mozilla.com/',
-			'h**p://www.mozilla.com/firefox/'
+			'h**p://www.mozilla.com/firefox/',
+			'http://piro.sakura.ne.jp/',
+			'www.mozilla.org/products/firefox/',
+			'update.mozilla.org',
+			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／'
 		],
 		ranges.map(function(aRange) {
 			return aRange.range.toString();
@@ -104,7 +110,12 @@ function test_getURIRangesFromRange()
 			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'http://ftp.netscape.com/pub/netscape6/',
 			'http://www.mozilla.com/',
-			'http://www.mozilla.com/firefox/'
+			'http://www.mozilla.com/firefox/',
+			'http://piro.sakura.ne.jp/',
+			'http://www.mozilla.org/products/firefox/',
+			'http://update.mozilla.org',
+			'http://white.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/'
 		],
 		ranges.map(function(aRange) {
 			return aRange.uri;
@@ -148,12 +159,16 @@ function test_getSelectionURIRanges()
 	range1.selectNodeContents($('split'));
 
 	var range2 = content.document.createRange();
-	range2.selectNodeContents($('pre'));
+	range2.selectNodeContents($('fullwidth'));
+
+	var range3 = content.document.createRange();
+	range3.selectNodeContents($('pre'));
 
 	var selection = content.getSelection();
 	selection.removeAllRanges();
 	selection.addRange(range1);
 	selection.addRange(range2);
+	selection.addRange(range3);
 
 	var ranges;
 
@@ -163,7 +178,7 @@ function test_getSelectionURIRanges()
 	assert.equals('http://www.mozilla.org/', ranges[0].uri);
 
 	ranges = sv.getSelectionURIRanges(content);
-	assert.equals(11, ranges.length);
+	assert.equals(13, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -171,6 +186,8 @@ function test_getSelectionURIRanges()
 			'http://jt.mozilla.gr.jp/src-faq.html#1',
 			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'ttp://ftp.netscape.com/pub/netscape6/',
+			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
@@ -189,6 +206,8 @@ function test_getSelectionURIRanges()
 			'http://jt.mozilla.gr.jp/src-faq.html#1',
 			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'http://ftp.netscape.com/pub/netscape6/',
+			'http://white.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
