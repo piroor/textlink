@@ -99,7 +99,7 @@ function assertMouseActions(aClick)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_WINDOW;
 
 	action.fireMouseEvent(content, aClick);
-	yield 3000;
+	yield 300;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(unloaded);
@@ -186,7 +186,7 @@ function assertNoMouseActions(aClick)
 
 	var originalWindows = utils.getChromeWindows();
 	action.fireMouseEvent(content, aClick);
-	yield 3000;
+	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(unloaded);

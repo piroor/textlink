@@ -867,12 +867,7 @@ var TextLinkService = {
 
 		for (var i in uris)
 		{
-			if (
-				(
-					('isReallyBlank' in b.selectedTab) ? b.selectedTab.isReallyBlank :
-						(b.currentURI && b.currentURI.spec == 'about:blank')
-				)
-				) {
+			if (b.currentURI && b.currentURI.spec == 'about:blank') {
 				if ('TreeStyleTabService' in window) // Tree Style Tab
 					TreeStyleTabService.readyToOpenChildTab(b, true);
 				b.loadURI(uris[i]);

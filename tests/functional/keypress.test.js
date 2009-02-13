@@ -134,7 +134,7 @@ function assertKeyActions(aKeypress, aSelector)
 
 	aSelector();
 	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
-	yield 3000;
+	yield 300;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(unloaded);
@@ -228,7 +228,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	var originalWindows = utils.getChromeWindows();
 	aSelector();
 	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
-	yield 3000;
+	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(unloaded);
