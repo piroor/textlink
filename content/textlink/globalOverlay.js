@@ -579,7 +579,21 @@ var TextLinkService = {
  
 	shrinkURIRange : function(aRange) 
 	{
-		// ‘OŒã‚ÌŠ‡ŒÊ“™‚ğæ‚èœ‚­ˆ—
+		var original = aRange.toString();
+		var uri = this.removeParen(original);
+		var startOffset = aRange.startOffset + original.indexOf(uri);
+		var endOffset = aRange.endOffset - original.lastIndexOf(uri);
+		if (startOffset != aRange.startOffset ||
+			endOffset != aRange.endOffset) {
+			var backup = aRange.cloneRange();
+			try {
+				aRange.setStart(aRange.startContainer, startOffset);
+				aRange.setEnd(aRange.endContainer, endOffset);
+			}
+			catch(e) {
+				return backup;
+			}
+		}
 		return aRange;
 	},
   
