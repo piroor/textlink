@@ -553,10 +553,7 @@ var TextLinkService = {
 			count += node.textContent.length;
 			prevNode = node;
 
-			node = node.previousSibling || node.parentNode.previousSibling;
-			if (node)
-				while (node.hasChildNodes())
-					node = node.lastChild;
+			node = this.evaluateXPath('preceding::node()', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 		}
 		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
 
@@ -568,10 +565,7 @@ var TextLinkService = {
 			count += node.textContent.length;
 			prevNode = node;
 
-			node = node.nextSibling || node.parentNode.nextSibling;
-			if (node)
-				while (node.hasChildNodes())
-					node = node.firstChild;
+			node = this.evaluateXPath('following::node()', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 		}
 		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
 
@@ -600,8 +594,10 @@ var TextLinkService = {
 				aRange.setEnd(aRange.endContainer, endOffset);
 			}
 			catch(e) {
+				aRange.detach();
 				return backup;
 			}
+			backup.detach();
 		}
 		return aRange;
 	},
