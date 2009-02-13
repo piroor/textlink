@@ -573,13 +573,6 @@ var TextLinkService = {
 		return findRange;
 	},
   
-	detachRanges : function(aRanges) 
-	{
-		aRanges.forEach(function(aRange) {
-			aRange.detach();
-		});
-	},
- 
 	shrinkURIRange : function(aRange) 
 	{
 		var original = aRange.toString();
@@ -683,7 +676,7 @@ var TextLinkService = {
 				(trigger.indexOf('alt') > -1 == aEvent.altKey)
 			)
 			) {
-			this.openClickedURI(aEvent, this.actions[aKey].action, trigger);
+			this.openClickedURI(aEvent, this.actions[aKey].action);
 			return true;
 		}
 
@@ -766,7 +759,7 @@ var TextLinkService = {
 	},
 	domain : 'textlink.',
   
-	openClickedURI : function(aEvent, aAction, aTrigger) 
+	openClickedURI : function(aEvent, aAction) 
 	{
 		var target = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
@@ -822,7 +815,7 @@ var TextLinkService = {
 		}
 	},
  
-	openTextLinkIn : function(aOpenInFlag) 
+	openTextLinkIn : function(aAction) 
 	{
 		var frame = this.getCurrentFrame();
 		var uris = this.getSelectionURIRanges(frame);
@@ -843,7 +836,7 @@ var TextLinkService = {
 				return aRange.uri;
 			});
 
-		if (aOpenInFlag == this.ACTION_COPY) {
+		if (aAction == this.ACTION_COPY) {
 			if (uris.length > 1) uris.push('');
 			this.setClipBoard(uris.join('\r\n'));
 			return;
@@ -855,13 +848,12 @@ var TextLinkService = {
 
 		var current = b.selectedTab;
 
-		var openInFlag = aOpenInFlag;
-		if (openInFlag === void(0)) openInFlag = this.ACTION_OPEN_IN_CURRENT;
+		if (aAction === void(0)) aAction = this.ACTION_OPEN_IN_CURRENT;
 
 		if (
 			uris.length > 1 &&
-			(openInFlag == this.ACTION_OPEN_IN_TAB ||
-			openInFlag == this.ACTION_OPEN_IN_BACKGROUND_TAB) &&
+			(aAction == this.ACTION_OPEN_IN_TAB ||
+			aAction == this.ACTION_OPEN_IN_BACKGROUND_TAB) &&
 			(
 				('BookmarksCommand' in window && '_confirmOpenTabs' in BookmarksCommand) ? // Firefox 2.0
 					!BookmarksCommand._confirmOpenTabs(uris.length) :
@@ -887,12 +879,12 @@ var TextLinkService = {
 				if (!selectTab) selectTab = b.selectedTab;
 			}
 			else {
-				if (openInFlag == this.ACTION_OPEN_IN_WINDOW) {
+				if (aAction == this.ACTION_OPEN_IN_WINDOW) {
 					window.open(uris[i]);
 				}
-				else if (openInFlag == this.ACTION_OPEN_IN_TAB ||
-					openInFlag == this.ACTION_OPEN_IN_BACKGROUND_TAB ||
-					(openInFlag == this.ACTION_OPEN_IN_CURRENT && i > 0)) {
+				else if (aAction == this.ACTION_OPEN_IN_TAB ||
+					aAction == this.ACTION_OPEN_IN_BACKGROUND_TAB ||
+					(aAction == this.ACTION_OPEN_IN_CURRENT && i > 0)) {
 					if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
 						TreeStyleTabService.readyToOpenChildTab(b, true);
 
@@ -900,7 +892,7 @@ var TextLinkService = {
 
 					if (!selectTab) selectTab = tab;
 				}
-				else if (openInFlag == this.ACTION_OPEN_IN_CURRENT) {
+				else if (aAction == this.ACTION_OPEN_IN_CURRENT) {
 					b.loadURI(uris[i]);
 					selectTab = b.selectedTab;
 				}
@@ -911,7 +903,7 @@ var TextLinkService = {
 			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
-			openInFlag != this.ACTION_OPEN_IN_BACKGROUND_TAB) {
+			aAction != this.ACTION_OPEN_IN_BACKGROUND_TAB) {
 			b.selectedTab = selectTab;
 			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
 			if ('setFocusInternal' in b) b.setFocusInternal();
