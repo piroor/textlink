@@ -1,4 +1,14 @@
-var namespace = { window : { addEventListener : function() {} } };
+var namespace = {
+		window : {
+			addEventListener : function() {},
+			get gBrowser() {
+				return utils.gBrowser;
+			}
+		},
+		get gBrowser() {
+			return utils.gBrowser;
+		}
+	};
 utils.include('../../content/textlink/prefs.js', namespace, 'Shift_JIS');
 utils.include('../../content/textlink/globalOverlay.js', namespace, 'Shift_JIS');
 
