@@ -1,11 +1,16 @@
 var TextLinkService = { 
 	debug : false,
 	
-//	findRangeSize : 512, 
-	get findRangeSize()
-	{
-		return this.getPref('textlink.find_range_size');
-	},
+	schemer                        : '', 
+	schemerFixupTable              : '',
+	schemerFixupDefault            : 'http',
+	strict                         : true,
+	findRangeSize                  : 512,
+	shouldParseRelativePath        : false,
+	shouldParseMultibyteCharacters : true,
+	contextItemCurrent             : true,
+	contextItemWindow              : true,
+	contextItemTab                 : true,
  
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
@@ -14,6 +19,8 @@ var TextLinkService = {
 	ACTION_OPEN_IN_WINDOW         : 8,
 	ACTION_OPEN_IN_TAB            : 16,
 	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
+
+	actions : {},
  
 // regexp 
 	
@@ -266,16 +273,14 @@ var TextLinkService = {
  
 	matchURIRegExp : function(aString) 
 	{
-		var relative  = this.getPref('textlink.relative.enabled');
-
 		var regexp = [];
-		if (this.getPref('textlink.multibyte.enabled')) {
+		if (this.shouldParseMultibyteCharacters) {
 			regexp.push(this.kURIPatternMultibyte);
-			if (relative) regexp.push(this.kURIPatternMultibyteRelative);
+			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternMultibyteRelative);
 		}
 		else {
 			regexp.push(this.kURIPattern);
-			if (relative) regexp.push(this.kURIPatternRelative);
+			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternRelative);
 		}
 
 		return aString.match(new RegExp(regexp.join('|'), 'ig'));
@@ -284,7 +289,7 @@ var TextLinkService = {
 	fixupURI : function(aURIComponent, aWindow) 
 	{
 if (this.debug) dump('TEXT LINK URI DETECTING::\n  '+aURIComponent+'\n');
-		if (this.getPref('textlink.multibyte.enabled')) {
+		if (this.shouldParseMultibyteCharacters) {
 			aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 if (this.debug) dump('   (F2H) => '+aURIComponent+'\n');
 		}
@@ -296,7 +301,7 @@ if (this.debug) dump('   (Sanitized) => '+aURIComponent+'\n');
 		aURIComponent = this.fixupSchemer(aURIComponent);
 if (this.debug) dump('   (Fixup Schemer) => '+aURIComponent+'\n');
 
-		if (this.getPref('textlink.relative.enabled')) {
+		if (this.shouldParseRelativePath) {
 			aURIComponent = this.makeURIComplete(aURIComponent, aWindow.location.href);
 if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
 }
@@ -305,11 +310,11 @@ if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
 		if (
 			regexp.compile(
 				'('+
-				this.getPref('textlink.schemer')
-						.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-						.replace(/\?/g, '.')
-						.replace(/\*/g, '.+')
-						.replace(/[,\| \n\r\t]+/g, '|')+
+				this.schemer
+					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+					.replace(/\?/g, '.')
+					.replace(/\*/g, '.+')
+					.replace(/[,\| \n\r\t]+/g, '|')+
 				')'
 			).test(
 				aURIComponent.substr(0, aURIComponent.indexOf(':')).toLowerCase()
@@ -323,7 +328,7 @@ if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
 	sanitizeURIString : function(aURIComponent) 
 	{
 		// escape patterns like program codes like JavaScript etc.
-		if (this.getPref('textlink.relative.enabled')) {
+		if (this.shouldParseRelativePath) {
 			if (
 				(
 					aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
@@ -351,7 +356,7 @@ if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
  
 	fixupSchemer : function(aURI) 
 	{
-		var table = this.getPref('textlink.schemer.fixup.table')
+		var table = this.schemerFixupTable
 						.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
 		var regexp = new RegExp();
 
@@ -390,7 +395,7 @@ if (this.debug)
 				aURI = aURI.replace(target, RegExp.$2);
 		}
 		else if (!/^\w+:/.test(aURI)) {
-			var schemer = this.getPref('textlink.schemer.fixup.default');
+			var schemer = this.schemerFixupDefault;
 			if (schemer)
 				aURI = schemer+'://'+aURI;
 		}
@@ -587,28 +592,30 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				return;
 		}
 
-		for (var i = 0; this.getPref('textlink.actions.'+i+'.action') !== null; i++)
+		if (aEvent.originalTarget.ownerDocument == document ||
+			aEvent.originalTarget.ownerDocument.designMode == 'on') {
+			return;
+		}
+		for (var i in this.actions)
 		{
-			if (this.handleEventFor(aEvent, i)) return;
+			try {
+				if (this.handleEventFor(aEvent, i)) return;
+			}
+			catch(e) {
+			}
 		}
 	},
 	
-	handleEventFor : function(aEvent, aIndex) 
+	handleEventFor : function(aEvent, aKey) 
 	{
 		var trigger;
-
-		if (aEvent.originalTarget.ownerDocument == document) return false;
-
 		var node = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
-
-		var doc = node.ownerDocument;
-		if (node.ownerDocument.designMode == 'on') return false;
 
 		if (
 			(
 				(
 					aEvent.type == 'keypress' &&
-					(trigger = this.getPref('textlink.actions.'+aIndex+'.trigger.key').toLowerCase()) &&
+					(trigger = this.actions[aKey].triggerKey.toLowerCase()) &&
 					/(VK_[^-,|\s]+)/i.test(trigger) &&
 					aEvent['DOM_'+RegExp.$1.toUpperCase()] &&
 					(
@@ -622,7 +629,7 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 					node.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) < 0
 				) ||
 				(
-					(trigger = this.getPref('textlink.actions.'+aIndex+'.trigger.mouse').toLowerCase()) &&
+					(trigger = this.actions[aKey].triggerMouse.toLowerCase()) &&
 					(
 						aEvent.type == 'dblclick' ?
 							(aEvent.button == 0 && trigger.indexOf('dblclick') > -1) :
@@ -645,11 +652,82 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
 				(trigger.indexOf('alt') > -1 == aEvent.altKey)
 			)
 			) {
-			this.openClickedURI(aEvent, this.getPref('textlink.actions.'+aIndex+'.action'), trigger);
+			this.openClickedURI(aEvent, this.actions[aKey].action, trigger);
 			return true;
 		}
 
 		return false;
+	},
+ 
+	observe : function(aSubject, aTopic, aData) 
+	{
+		if (aTopic != 'nsPref:changed') return;
+
+		var value = this.getPref(aData);
+		switch (aData)
+		{
+			case 'textlink.schemer':
+				this.schemer = value;
+				return;
+
+			case 'textlink.schemer.fixup.table':
+				this.schemerFixupTable = value;
+				return;
+
+			case 'textlink.schemer.fixup.default':
+				this.schemerFixupDefault = value;
+				return;
+
+			case 'textlink.find_click_point.strict':
+				this.strict = value;
+				return;
+
+			case 'textlink.find_range_size':
+				this.findRangeSize = value;
+				return;
+
+			case 'textlink.relative.enabled':
+				this.shouldParseRelativePath = value;
+				return;
+
+			case 'textlink.multibyte.enabled':
+				this.shouldParseMultibyteCharacters = value;
+				return;
+
+			case 'textlink.contextmenu.openTextLink.current':
+				this.contextItemCurrent = value;
+				return;
+
+			case 'textlink.contextmenu.openTextLink.window':
+				this.contextItemWindow = value;
+				return;
+
+			case 'textlink.contextmenu.openTextLink.tab':
+				this.contextItemTab = value;
+				return;
+		}
+
+		var match = aData.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
+		if (!match) return;
+
+		var key = match[1];
+		if (!(key in this.actions)) {
+			this.actions[key] = {
+				action       : null,
+				triggerKey   : null,
+				triggerMouse : null
+			};
+		}
+
+		switch (match[2])
+		{
+			case 'action'       : this.actions[key].action = value; break;
+			case 'trigger.key'  : this.actions[key].triggerKey = value; break;
+			case 'trigger.mouse': this.actions[key].triggerMouse = value; break;
+		}
+		if (this.actions[key].action === null) {
+			delete this.actions[key];
+		}
 	},
   
 	openClickedURI : function(aEvent, aAction, aTrigger) 
@@ -669,7 +747,7 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 
 		var frame = target.ownerDocument.defaultView;
 
-		var ranges = this.getSelectionURIRanges(frame, 1, this.getPref('textlink.find_click_point.strict'));
+		var ranges = this.getSelectionURIRanges(frame, 1, this.strict);
 		if (!ranges.length) return;
 
 		var range = ranges[0];
@@ -798,6 +876,9 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
 
+		this.addPrefListener(this);
+		this.initPrefs();
+
 		if ('nsContextMenu' in window) {
 			nsContextMenu.prototype.__textlink__initItems = nsContextMenu.prototype.initItems;
 			nsContextMenu.prototype.initItems = this.initItems;
@@ -810,6 +891,35 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		this.initBrowser(gBrowser);
 	},
 	
+	initPrefs : function() 
+	{
+		var prefs = <![CDATA[
+			textlink.schemer
+			textlink.schemer.fixup.table
+			textlink.schemer.fixup.default
+			textlink.find_click_point.strict
+			textlink.find_range_size
+			textlink.relative.enabled
+			textlink.multibyte.enabled
+			textlink.contextmenu.openTextLink.current
+			textlink.contextmenu.openTextLink.window
+			textlink.contextmenu.openTextLink.tab
+		]]>.toString()
+			.replace(/^\s+|\s+$/g, '')
+			.split(/\s+/);
+
+		prefs = prefs.concat(
+				Components
+					.classes['@mozilla.org/preferences;1']
+					.getService(Components.interfaces.nsIPrefBranch)
+					.getChildList('textlink.actions.', {})
+			);
+
+		prefs.sort().forEach(function(aPref) {
+			this.observe(null, 'nsPref:changed', aPref);
+		}, this);
+	},
+ 
 	initBrowser : function(aBrowser) 
 	{
 		aBrowser.addEventListener('dblclick', this, true);
@@ -829,11 +939,11 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 				});
 
 		this.showItem('context-openTextLink-current',
-			uris.length && TLS.getPref('textlink.contextmenu.openTextLink.current'));
+			uris.length && TLS.contextItemCurrent);
 		this.showItem('context-openTextLink-window',
-			uris.length && TLS.getPref('textlink.contextmenu.openTextLink.window'));
+			uris.length && TLS.contextItemWindow);
 		this.showItem('context-openTextLink-tab',
-			uris.length && TLS.getPref('textlink.contextmenu.openTextLink.tab'));
+			uris.length && TLS.contextItemTab);
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -867,6 +977,8 @@ if (this.debug) dump('TextLinkService.openClickedURI();\n');
 	destroy : function() 
 	{
 		window.removeEventListener('unload', this, false);
+
+		this.removePrefListener(this);
 
 		var appcontent = document.getElementById('appcontent');
 		appcontent.removeEventListener('SubBrowserAdded', this, false);
