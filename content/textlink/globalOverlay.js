@@ -768,6 +768,7 @@ var TextLinkService = {
 			delete this.actions[key];
 		}
 	},
+	domain : 'textlink.',
   
 	openClickedURI : function(aEvent, aAction, aTrigger) 
 	{

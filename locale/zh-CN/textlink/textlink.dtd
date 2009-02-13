@@ -102,6 +102,7 @@
 <!ENTITY textlink.action.window.stealth        "在新窗口中载入该 URI (without HTTP_REFERER)">
 <!ENTITY textlink.action.tab.stealth           "在前台的新标签中载入该 URI (without HTTP_REFERER)">
 <!ENTITY textlink.action.tabBackground.stealth "在后台的新标签中载入该 URI (without HTTP_REFERER)">
+<!ENTITY textlink.action.copy          "copy it to the clipboard">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "重置">

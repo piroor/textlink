@@ -102,6 +102,7 @@
 <!ENTITY textlink.action.window.stealth        "便將它載入到新視窗。 (without HTTP_REFERER)">
 <!ENTITY textlink.action.tab.stealth           "便將它載入到新前景分頁。 (without HTTP_REFERER)">
 <!ENTITY textlink.action.tabBackground.stealth "便將它載入到新背景分頁。 (without HTTP_REFERER)">
+<!ENTITY textlink.action.copy          "copy it to the clipboard">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "重設">

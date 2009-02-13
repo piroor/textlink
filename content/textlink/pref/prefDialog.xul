@@ -65,6 +65,9 @@
 		<preference id="textlink.contextmenu.openTextLink.window"
 			name="textlink.contextmenu.openTextLink.window"
 			type="bool"/>
+		<preference id="textlink.contextmenu.openTextLink.copy"
+			name="textlink.contextmenu.openTextLink.copy"
+			type="bool"/>
 	</preferences>
 
 	<tabbox orient="vertical">
@@ -155,6 +158,8 @@
 							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -240,6 +245,8 @@
 							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -325,6 +332,8 @@
 							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -410,6 +419,8 @@
 							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -495,6 +506,8 @@
 							<menuitem label="&textlink.action.window.stealth;"  value="9"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"/>
+							<menuseparator/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -524,6 +537,9 @@
 		<checkbox id="textlink.contextmenu.openTextLink.window-check"
 			label="&textlink.context.window.pref;"
 			preference="textlink.contextmenu.openTextLink.window"/>
+		<checkbox id="textlink.contextmenu.openTextLink.copy-check"
+			label="&textlink.context.copy.pref;"
+			preference="textlink.contextmenu.openTextLink.copy"/>
 	</groupbox>
 
 </prefpane>
