@@ -1,5 +1,4 @@
 var TextLinkService = { 
-	debug : false,
 	
 	schemer                        : '', 
 	schemerFixupTable              : '',
@@ -286,25 +285,22 @@ var TextLinkService = {
 		return aString.match(new RegExp(regexp.join('|'), 'ig'));
 	},
  
-	fixupURI : function(aURIComponent, aWindow) 
+	fixupURI : function(aURIComponent, aBaseURI) 
 	{
-if (this.debug) dump('TEXT LINK URI DETECTING::\n  '+aURIComponent+'\n');
 		if (this.shouldParseMultibyteCharacters) {
 			aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
-if (this.debug) dump('   (F2H) => '+aURIComponent+'\n');
 		}
 
 		aURIComponent = this.sanitizeURIString(aURIComponent);
-if (this.debug) dump('   (Sanitized) => '+aURIComponent+'\n');
-		if (!aURIComponent) return null;
+		if (!aURIComponent) {
+			return null;
+		}
 
 		aURIComponent = this.fixupSchemer(aURIComponent);
-if (this.debug) dump('   (Fixup Schemer) => '+aURIComponent+'\n');
 
 		if (this.shouldParseRelativePath) {
-			aURIComponent = this.makeURIComplete(aURIComponent, aWindow.location.href);
-if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
-}
+			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
+		}
 
 		var regexp = new RegExp();
 		if (
@@ -340,6 +336,20 @@ if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
 		}
 
 		while (
+			aURIComponent.match(/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/) ||
+			aURIComponent.match(/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/) ||
+			aURIComponent.match(/^[(\uff08](.+)[)\uff09]$/) ||
+			aURIComponent.match(/^[{\uff5b](.+)[}\uff5d]$/) ||
+			aURIComponent.match(/^[\[\uff3b](.+)[\]\uff3d]$/) ||
+			aURIComponent.match(/^[<\uff1c](.+)[>\uff1e]$/) ||
+			aURIComponent.match(/^[\uff62\u300c](.+)[\uff63\u300d]$/) ||
+			aURIComponent.match(/^\u226a(.+)\u226b$/) ||
+			aURIComponent.match(/^\u3008(.+)\u3009$/) ||
+			aURIComponent.match(/^\u300a(.+)\u300b$/) ||
+			aURIComponent.match(/^\u300e(.+)\u300f$/) ||
+			aURIComponent.match(/^\u3010(.+)\u3011$/) ||
+			aURIComponent.match(/^\u3014(.+)\u3015$/) ||
+
 			aURIComponent.match(/^\((.*)$/) ||
 			aURIComponent.match(/^([^\(]*)\)$/) ||
 			aURIComponent.match(/^(.*)[\.,]$/) ||
@@ -372,16 +382,6 @@ if (this.debug) dump('   (Resolve Relative Path) => '+aURIComponent+'\n');
 					.replace(/([^|]+)\|/g,
 						'if (/^$1$/.test("'+target+'")) table = table.replace(/\\b$1\\s*=>/, "'+target+'=>");'
 				));
-
-if (this.debug)
-	dump('     fixupSchemer::\n'+
-		(targets+'|')
-					.replace(/([^|]+)\|/g,
-						'      if (/^$1$/.test("'+target+'")) table = table.replace(/\\b$1\\s=>/, "'+target+'=>");\n'
-				)+
-		'      table : '+table+'\n'+
-		'      regexp : '+'([,\\| \\n\\r\\t]|^)'+target.replace(/([\(\)\+\?\.\{\}])/g, '\\$1').replace(/\*/g, '.')+'\\s*=>\\s*([^,\\| \\n\\r\\t]+)\n'
-	);
 
 			if (table.match(
 					regexp.compile(
@@ -488,7 +488,7 @@ if (this.debug)
 					)
 				))
 				) {
-				uri = this.fixupURI(uris[i], frame);
+				uri = this.fixupURI(uris[i], frame.location.href);
 				if (uri && !(uri in foundURIs)) {
 					foundURIs[uri] = true;
 					range = uriRange.cloneRange();
@@ -572,7 +572,6 @@ if (this.debug)
   
 	handleEvent : function(aEvent) 
 	{
-if (this.debug) dump('TextLinkService.handleEvent();\n');
 		switch (aEvent.type)
 		{
 			case 'load':
@@ -732,7 +731,6 @@ if (this.debug) dump('TextLinkService.handleEvent();\n');
   
 	openClickedURI : function(aEvent, aAction, aTrigger) 
 	{
-if (this.debug) dump('TextLinkService.openClickedURI();\n');
 		var target = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
 		if (
