@@ -37,7 +37,37 @@ function tearDown()
 	utils.tearDownTestWindow();
 }
 
-function assertMouseActions(aClick)
+function selectURI()
+{
+	var selection = content.getSelection();
+	selection.removeAllRanges();
+
+	var range = content.document.createRange();
+	var textNode = content.document.getElementById('first').firstChild;
+	range.selectNode(textNode);
+	range.setStart(textNode, 12);
+	range.setEnd(textNode, 25);
+
+	selection.addRange(range);
+	assert.equals('://www.mozill', selection.toString());
+}
+
+function selectNotURI()
+{
+	var selection = content.getSelection();
+	selection.removeAllRanges();
+
+	var range = content.document.createRange();
+	var textNode = content.document.getElementById('first').firstChild;
+	range.selectNode(textNode);
+	range.setStart(textNode, 0);
+	range.setEnd(textNode, 3);
+
+	selection.addRange(range);
+	assert.equals('Moz', selection.toString());
+}
+
+function assertKeyActions(aKeypress, aSelector)
 {
 	assert.equals(1, tabs.length);
 
@@ -52,7 +82,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -62,7 +93,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_SELECT;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -72,7 +104,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_BACKGROUND_TAB;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
@@ -85,7 +118,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_TAB;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[1], gBrowser.selectedTab);
@@ -98,7 +132,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_WINDOW;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 3000;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -112,7 +147,8 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_COPY;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -123,13 +159,14 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_CURRENT;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.isTrue(unloaded);
 }
 
-function assertNoMouseActions(aClick)
+function assertNoKeyActions(aKeypress, aSelector)
 {
 	assert.equals(1, tabs.length);
 
@@ -144,7 +181,8 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -154,7 +192,8 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_SELECT;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -164,7 +203,8 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_BACKGROUND_TAB;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -174,7 +214,8 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_TAB;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -185,7 +226,8 @@ function assertNoMouseActions(aClick)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_WINDOW;
 
 	var originalWindows = utils.getChromeWindows();
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 3000;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -199,145 +241,106 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_COPY;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
 	assert.equals('test', utils.getClipBoard());
+	assert.isFalse(unloaded);
 
 	selection.removeAllRanges();
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_CURRENT;
 
-	action.fireMouseEvent(content, aClick);
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(unloaded);
 }
 
-var baseClick = {
-		type    : 'dblclick',
-		button  : 0,
-		detail  : 2,
-		x       : 0,
-		y       : 12,
-		validX  : 170,
-		invalidX : 10
+var baseKeypress = {
+		type    : 'keypress',
+		keyCode : Ci.nsIDOMKeyEvent.DOM_VK_ENTER
 	};
 
-function testMouseActionsNormal()
+function testKeyActionsNormal()
 {
-	var click = {};
-	click.__proto__ = baseClick
-	click.x = click.validX
+	var keypress = { ctrlKey : true };
+	keypress.__proto__ = baseKeypress
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.ctrlKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
-
-	click.ctrlKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertMouseActions(click));
+	keypress.ctrlKey = false;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertKeyActions(keypress, selectURI));
 }
 
-function testMouseActionsAccel()
+function testKeyActionsAccel()
 {
 	sv.actions.test.triggerMouse = 'accel-dblclick';
 
-	var click = {};
-	click.__proto__ = baseClick
+	var keypress = { ctrlKey : false };
+	keypress.__proto__ = baseKeypress
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.ctrlKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
-
-	click.ctrlKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertMouseActions(click));
+	keypress.ctrlKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertKeyActions(keypress, selectURI));
 }
 
-function testMouseActionsCtrl()
+function testKeyActionsCtrl()
 {
 	sv.actions.test.triggerMouse = 'accel-dblclick';
 
-	var click = {};
-	click.__proto__ = baseClick
+	var keypress = { ctrlKey : false };
+	keypress.__proto__ = baseKeypress
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.ctrlKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
-
-	click.ctrlKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertMouseActions(click));
+	keypress.ctrlKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertKeyActions(keypress, selectURI));
 }
 
-function testMouseActionsShift()
+function testKeyActionsShift()
 {
 	sv.actions.test.triggerMouse = 'shift-dblclick';
 
-	var click = {};
-	click.__proto__ = baseClick
+	var keypress = { shiftKey : false };
+	keypress.__proto__ = baseKeypress
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.shiftKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
-
-	click.shiftKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertMouseActions(click));
+	keypress.shiftKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertKeyActions(keypress, selectURI));
 }
 
-function testMouseActionsShiftCtrl()
+function testKeyActionsShiftCtrl()
 {
 	sv.actions.test.triggerMouse = 'shift-ctrl-dblclick';
-	var click = {};
-	click.__proto__ = baseClick
+	var keypress = { ctrlKey : false, shiftKey : false };
+	keypress.__proto__ = baseKeypress
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.shiftKey = false;
-	click.ctrlKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
+	keypress.ctrlKey = false;
+	keypress.shiftKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.shiftKey = true;
-	click.ctrlKey = false;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
+	keypress.ctrlKey = true;
+	keypress.shiftKey = false;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertNoKeyActions(keypress, selectURI));
 
-	click.shiftKey = false;
-	click.ctrlKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertNoMouseActions(click));
-
-	click.shiftKey = true;
-	click.ctrlKey = true;
-	click.x = click.invalidX
-	yield Do(assertNoMouseActions(click));
-	click.x = click.validX
-	yield Do(assertMouseActions(click));
+	keypress.ctrlKey = true;
+	keypress.shiftKey = true;
+	yield Do(assertNoKeyActions(keypress, selectNotURI));
+	yield Do(assertKeyActions(keypress, selectURI));
 }
 
