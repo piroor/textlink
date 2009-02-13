@@ -44,10 +44,17 @@ function testActions()
 	var selection = content.getSelection();
 	assert.equals('', selection.toString());
 
+	var unloaded = false;
+	content.addEventListener('unload', function(aEvent) {
+		aEvent.currentTarget.removeEventListener('unload', arguments.callee, false);
+		unloaded = true;
+	}, false);
+
 	action.fireMouseEvent(content, dblclick);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
+	assert.isFalse(unloaded);
 
 	selection.removeAllRanges();
 
@@ -57,6 +64,7 @@ function testActions()
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.isFalse(unloaded);
 
 	selection.removeAllRanges();
 
@@ -67,6 +75,7 @@ function testActions()
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
 	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.isFalse(unloaded);
 	gBrowser.removeTab(tabs[1]);
 	yield 100;
 
@@ -79,6 +88,7 @@ function testActions()
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[1], gBrowser.selectedTab);
 	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.isFalse(unloaded);
 	gBrowser.removeTab(tabs[1]);
 	yield 100;
 
@@ -91,11 +101,35 @@ function testActions()
 	yield 3000;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.isFalse(unloaded);
 	var windows = utils.getChromeWindows();
 	assert.equals(originalWindows.length+1, windows.length);
 	windows.forEach(function(aWindow) {
 		if (originalWindows.indexOf(aWindow) < 0)
 			aWindow.close();
 	});
+
+	utils.setClipBoard('test');
+	assert.equals('test', utils.getClipBoard());
+
+	selection.removeAllRanges();
+
+	sv.actions.test.action = sv.ACTION_COPY;
+
+	action.fireMouseEvent(content, dblclick);
+	yield 100;
+	assert.equals(1, tabs.length);
+	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.equals('http://www.mozilla.org/', utils.getClipBoard());
+	assert.isFalse(unloaded);
+
+	selection.removeAllRanges();
+
+	sv.actions.test.action = sv.ACTION_OPEN_IN_CURRENT;
+
+	action.fireMouseEvent(content, dblclick);
+	yield 300;
+	assert.equals(1, tabs.length);
+	assert.isTrue(unloaded);
 }
 
