@@ -155,6 +155,11 @@ var TextLinkService = {
 	},
 	_browserURI : null,
  
+	get tooltipBox() 
+	{
+		return document.getElementById('textLinkTooltip-selectedURI-box');
+	},
+ 
 	// XPConnect 
 	
 	get IOService() 
@@ -607,6 +612,10 @@ var TextLinkService = {
 				this.destroy();
 				return;
 
+			case 'popupshowing':
+				this.buildTooltip(aEvent);
+				return;
+
 			case 'SubBrowserAdded':
 				this.initBrowser(aEvent.originalTarget.browser);
 				return;
@@ -758,6 +767,30 @@ var TextLinkService = {
 		}
 	},
 	domain : 'textlink.',
+ 
+	buildTooltip : function(aEvent) 
+	{
+		var box = this.tooltipBox;
+
+		var range = document.createRange();
+		range.selectNodeContents(box);
+		range.deleteContents();
+
+		var fragment = document.createDocumentFragment();
+		this.getSelectionURIRanges().forEach(function(aRange) {
+			aRange.range.detach();
+			var line = document.createElement('description');
+			line.setAttribute('value', aRange.uri);
+			fragment.appendChild(line);
+		});
+		range.insertNode(fragment);
+		range.detach();
+
+		if (!box.hasChildNodes()) {
+			aEvent.stopPropagation();
+			aEvent.preventDefault();
+		}
+	},
   
 	openClickedURI : function(aEvent, aAction) 
 	{
