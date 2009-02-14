@@ -515,16 +515,19 @@ var TextLinkService = {
 					)
 				))
 				) {
-				uri = this.fixupURI(uris[i], frame.location.href);
+				range = uriRange.cloneRange();
+				range = this.shrinkURIRange(range);
+				uri = this.fixupURI(range.toString(), frame.location.href);
 				if (uri && !(uri in foundURIs)) {
 					foundURIs[uri] = true;
-					range = uriRange.cloneRange();
-					range = this.shrinkURIRange(range);
 					ranges.push({
 						range : range,
 						uri   : uri
 					});
 					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
+				}
+				else {
+					range.detach();
 				}
 			}
 			startPoint.detach();
