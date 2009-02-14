@@ -224,6 +224,9 @@ function test_sanitizeURIString()
 	);
 	assert_sanitizeURIString('www.example.com', 'www.example.com');
 	assert_sanitizeURIString('www.example.jp', 'www.example.jp');
+	assert_sanitizeURIString('www.example.jp', '...www.example.jp');
+	assert_sanitizeURIString('www.example.jp', ':www.example.jp');
+	assert_sanitizeURIString('www.example.jp', '/www.example.jp');
 	assert_sanitizeURIString_parens('www.example.com');
 	assert_sanitizeURIString_parens('www.example.com/directory');
 	assert_sanitizeURIString('MyClass.property.value', 'MyClass.property.value');

@@ -48,11 +48,11 @@ function test_shrinkURIRange()
 	assert.equals('http://www.mozilla.org/', range.toString());
 
 	range.selectNodeContents($('br'));
-	range.setStartAfter($('br').getElementsByTagName('br')[0]);
-	range.setEnd($('br').getElementsByTagName('br')[1].nextSibling, 7);
-	assert.equals('http://mozilla.jp/Mozilla', range.toString());
+	range.setStart($('br1').previousSibling, $('br1').previousSibling.length-3);
+	range.setEnd($('br2').nextSibling, 7);
+	assert.equals('...mozilla.jp/Mozilla', range.toString());
 	range = sv.shrinkURIRange(range);
-	assert.equals('http://mozilla.jp/', range.toString());
+	assert.equals('mozilla.jp/', range.toString());
 
 	range.detach();
 }
