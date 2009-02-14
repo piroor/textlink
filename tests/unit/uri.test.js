@@ -51,18 +51,18 @@ function test_matchURIRegExp()
 		assertURIMatch('日本語'+fullWidth_relative_URI+'日本語', fullWidth_relative_URI, aRelative && aFullWidth);
 
 		var uris = [
-				halfWidth_absolute_URI+'1',
-				halfWidth_absolute_URI+'2',
-				halfWidth_absolute_URI+'3',
-				fullWidth_absolute_URI+'1',
-				fullWidth_absolute_URI+'2',
-				fullWidth_absolute_URI+'3',
-				halfWidth_relative_URI+'1',
-				halfWidth_relative_URI+'2',
-				halfWidth_relative_URI+'3',
-				fullWidth_relative_URI+'1',
-				fullWidth_relative_URI+'2',
-				fullWidth_relative_URI+'3'
+				halfWidth_absolute_URI,
+				halfWidth_absolute_URI+'?query1=value1&query2=value2',
+				halfWidth_absolute_URI+'#hash',
+				fullWidth_absolute_URI,
+				fullWidth_absolute_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
+				fullWidth_absolute_URI+'＃ｈａｓｈ',
+				halfWidth_relative_URI,
+				halfWidth_relative_URI+'?query1=value1&query2=value2',
+				halfWidth_relative_URI+'#hash',
+				fullWidth_relative_URI,
+				fullWidth_relative_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
+				fullWidth_relative_URI+'＃ｈａｓｈ'
 			];
 
 		var expected = [uris[0], uris[1], uris[2]];
@@ -114,6 +114,11 @@ function test_makeURIComplete()
 		'./directory/page2',
 		'http://www.example.com/page/',
 		'http://www.example.com/page/directory/page2'
+	);
+	assert_makeURIComplete(
+		'page2?query',
+		'http://www.example.com/page',
+		'http://www.example.com/page2?query'
 	);
 }
 
@@ -196,6 +201,15 @@ function test_sanitizeURIString()
 	sv.shouldParseRelativePath = false;
 
 	assert_sanitizeURIString('http://www.example.com/', 'http://www.example.com/');
+	assert_sanitizeURIString('http://www.example.com/index', 'http://www.example.com/index');
+	assert_sanitizeURIString(
+		'http://www.example.com/index?query1=value1&query2=value2',
+		'http://www.example.com/index?query1=value1&query2=value2'
+	);
+	assert_sanitizeURIString(
+		'http://www.example.com/index#hash',
+		'http://www.example.com/index#hash'
+	);
 	assert_sanitizeURIString('www.example.com', 'www.example.com');
 	assert_sanitizeURIString('www.example.jp', 'www.example.jp');
 	assert_sanitizeURIString_parens('www.example.com');
@@ -206,6 +220,15 @@ function test_sanitizeURIString()
 	sv.shouldParseRelativePath = true;
 
 	assert_sanitizeURIString('http://www.example.com/', 'http://www.example.com/');
+	assert_sanitizeURIString('http://www.example.com/index', 'http://www.example.com/index');
+	assert_sanitizeURIString(
+		'http://www.example.com/index?query1=value1&query2=value2',
+		'http://www.example.com/index?query1=value1&query2=value2'
+	);
+	assert_sanitizeURIString(
+		'http://www.example.com/index#hash',
+		'http://www.example.com/index#hash'
+	);
 	assert_sanitizeURIString('www.example.com', 'www.example.com');
 	assert_sanitizeURIString('www.example.jp', 'www.example.jp');
 	assert_sanitizeURIString_parens('www.example.com/directory');
@@ -228,6 +251,15 @@ function test_fixupURI()
 	}
 
 	assertFixupInput('http://www.example.com/', 'http://www.example.com/');
+	assertFixupInput('http://www.example.com/index', 'http://www.example.com/index');
+	assertFixupInput(
+		'http://www.example.com/index?query1=value1&query2=value2',
+		'http://www.example.com/index?query1=value1&query2=value2'
+	);
+	assertFixupInput(
+		'http://www.example.com/index#hash',
+		'http://www.example.com/index#hash'
+	);
 	assertFixupInput('http://www.example.com', 'www.example.com');
 	assertFixupInput('http://www.example.com', '(www.example.com)');
 
