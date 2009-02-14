@@ -774,18 +774,19 @@ var TextLinkService = {
 	buildTooltip : function(aEvent) 
 	{
 		var box = this.tooltipBox;
+		var item = document.tooltipNode;
 
 		var range = document.createRange();
 		range.selectNodeContents(box);
 		range.deleteContents();
 
 		var fragment = document.createDocumentFragment();
-		this.getSelectionURIRanges().forEach(function(aRange) {
-			aRange.range.detach();
-			var line = document.createElement('description');
-			line.setAttribute('value', aRange.uri);
-			fragment.appendChild(line);
-		});
+		(item.getAttribute('textlink-uris') || '').split('\n')
+			.forEach(function(aURI) {
+				var line = document.createElement('description');
+				line.setAttribute('value', aURI);
+				fragment.appendChild(line);
+			});
 		range.insertNode(fragment);
 		range.detach();
 
@@ -1031,10 +1032,17 @@ var TextLinkService = {
 			var targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
 			var attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single' ;
 
-			TLS.setLabel('context-openTextLink-current', attr, targets);
-			TLS.setLabel('context-openTextLink-window',  attr, targets);
-			TLS.setLabel('context-openTextLink-tab',     attr, targets);
-			TLS.setLabel('context-openTextLink-copy',    attr, targets);
+			[
+				'context-openTextLink-current',
+				'context-openTextLink-window',
+				'context-openTextLink-tab',
+				'context-openTextLink-copy'
+			].forEach(function(aID) {
+				var item = this.setLabel(aID, attr, targets);
+				if (item) {
+					item.setAttribute('textlink-uris', uris.join('\n'));
+				}
+			}, TLS);
 		}
 	},
 	setLabel : function(aID, aAttr, aTargets)
@@ -1046,6 +1054,8 @@ var TextLinkService = {
 			base = base.replace(aTargets[i], aTargets[i+1]);
 
 		item.setAttribute('label', base);
+
+		return item;
 	},
   
 	destroy : function() 
