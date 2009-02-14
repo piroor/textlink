@@ -359,7 +359,11 @@ var TextLinkService = {
 			aURIComponent.match(/^([^\']*)\'$/) ||
 			aURIComponent.match(/^(.+)\s*\([^\)]+$/) ||
 			aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
-			aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/)
+			aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
+			(
+				!this.shouldParseRelativePath &&
+				aURIComponent.match(/^[\.\/:](.+)$/)
+			)
 			) {
 			aURIComponent = RegExp.$1;
 		}
@@ -587,26 +591,38 @@ var TextLinkService = {
 		var uri = this.sanitizeURIString(original);
 		var startOffset = aRange.startOffset + original.indexOf(uri);
 		var endOffset = aRange.endOffset - original.split('').reverse().join('').indexOf(uri.split('').reverse().join(''));
-		if (startOffset != aRange.startOffset ||
-			endOffset != aRange.endOffset) {
-			var backup = aRange.cloneRange();
-			try {
-				aRange.setStart(aRange.startContainer, startOffset);
-				aRange.setEnd(aRange.endContainer, endOffset);
-				backup.detach();
+		if (startOffset != aRange.startOffset) {
+			var startContainer = aRange.startContainer;
+			while (startContainer.textContent.length <= startOffset)
+			{
+				startOffset -= startContainer.textContent.length;
+				startContainer = this.evaluateXPath(
+						'(following::text() | descendant::text())[1]',
+						startContainer,
+						XPathResult.FIRST_ORDERED_NODE_TYPE
+					).singleNodeValue;
 			}
-			catch(e) {
-				aRange.detach();
-				aRange = backup;
+			aRange.setStart(startContainer, startOffset);
+		}
+		if (endOffset != aRange.endOffset) {
+			var endContainer = aRange.endContainer;
+			while (endContainer.textContent.length <= endOffset)
+			{
+				endOffset -= endContainer.textContent.length;
+				endContainer = this.evaluateXPath(
+						'(preceding::text() | descendant::text())[last()]',
+						endContainer,
+						XPathResult.FIRST_ORDERED_NODE_TYPE
+					).singleNodeValue;
 			}
+			aRange.setEnd(endContainer, endOffset);
 		}
 
 		// ‹­§‰üsˆÈ~‚ðØ‚è—Ž‚Æ‚·
 		var nodes = this.evaluateXPath(
 				'following::*[local-name()="br" or local-name()="BR"] | '+
 				'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
-				aRange.startContainer,
-				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+				aRange.startContainer
 			);
 		var br;
 		var brRange = aRange.startContainer.ownerDocument.createRange();
@@ -614,7 +630,7 @@ var TextLinkService = {
 		{
 			br = nodes.snapshotItem(i);
 			brRange.selectNode(br);
-			if (brRange.compareBoundaryPoints(Range.START_TO_END, aRange) <= 0) { // before
+			if (brRange.compareBoundaryPoints(Range.START_TO_START, aRange) <= 0) { // before
 				continue;
 			}
 			else if (brRange.compareBoundaryPoints(Range.END_TO_START, aRange) >= 0) { // after
