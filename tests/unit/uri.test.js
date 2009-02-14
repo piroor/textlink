@@ -70,16 +70,28 @@ function test_matchURIRegExp()
 		if (aRelative) expected = expected.concat([uris[6], uris[7], uris[8]]);
 		if (aFullWidth && aRelative) expected = expected.concat([uris[9], uris[10], uris[11]]);
 
-		var match = sv.matchURIRegExp(
-				uris.map(function(aURI) { return '日本語'+aURI+'日本語'; })
-					.join('\n')
-			);
-		assert.isNotNull(match);
-		assert.equals(expected.length, match.length);
-		for (var i = 0, maxi = match.length; i < maxi; i++)
+		function assertMatchURIs(aExpected, aInput)
 		{
-			assert.equals(expected[i], match[i]);
+			var match = sv.matchURIRegExp(aInput);
+			assert.isNotNull(match);
+			assert.equals(aExpected.length, match.length);
+			for (var i = 0, maxi = match.length; i < maxi; i++)
+			{
+				assert.equals(aExpected[i], match[i]);
+			}
 		}
+
+		assertMatchURIs(
+			expected,
+			uris.map(function(aURI) { return '日本語'+aURI+'日本語'; })
+				.join('\n')
+		);
+
+		assertMatchURIs(
+			expected,
+			uris.map(function(aURI) { return '"'+aURI+'"'; })
+				.join('\n')
+		);
 	}
 
 	assert_matchURIRegExp(false, false);
