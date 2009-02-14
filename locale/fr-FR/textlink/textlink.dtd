@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2006-2008
+   - Portions created by the Initial Developer are Copyright (C) 2006-2009
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): menet <menetriertm-forumozillazine@yahoo.fr>
@@ -44,19 +44,18 @@
 <!ENTITY textlink.openTextLink.window.single     "Ouvrir dans une nouvelle fenêtre : &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Ouvrir tout dans de nouvelles fenêtres : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "F">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.single     "Copier le lien : &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Copier tous les liens : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "Ouvrir le &lt;lien sélectionné&gt;">
 <!ENTITY textlink.context.tab.pref     "Ouvrir les &lt;liens sélectionnés&gt; dans de nouveaux onglets">
 <!ENTITY textlink.context.window.pref  "Ouvrir les &lt;liens sélectionnés&gt; dans de nouvelles fenêtres">
-<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
+<!ENTITY textlink.context.copy.pref    "Copier les &lt;liens sélectionnés&gt;">
 
 
 
 
-<!ENTITY textlink.tree  "Text Link">
 <!ENTITY textlink.title "Configuration de Text Link">
 
 
@@ -103,7 +102,7 @@
 <!ENTITY textlink.action.window.stealth        "l'ouvrir dans une nouvelle fenêtre (sans HTTP_REFERER).">
 <!ENTITY textlink.action.tab.stealth           "l'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
 <!ENTITY textlink.action.tabBackground.stealth "l'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
-<!ENTITY textlink.action.copy          "copy it to the clipboard">
+<!ENTITY textlink.action.copy          "le copier dans le presse-papiers">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Défaut">
