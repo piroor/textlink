@@ -47,6 +47,13 @@ function test_shrinkURIRange()
 	range = sv.shrinkURIRange(range);
 	assert.equals('http://www.mozilla.org/', range.toString());
 
+	range.selectNodeContents($('br'));
+	range.setStartAfter($('br').getElementsByTagName('br')[0]);
+	range.setEnd($('br').getElementsByTagName('br')[1].nextSibling, 7);
+	assert.equals('http://mozilla.jp/Mozilla', range.toString());
+	range = sv.shrinkURIRange(range);
+	assert.equals('http://mozilla.jp/', range.toString());
+
 	range.detach();
 }
 

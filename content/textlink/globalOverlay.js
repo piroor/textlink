@@ -593,13 +593,38 @@ var TextLinkService = {
 			try {
 				aRange.setStart(aRange.startContainer, startOffset);
 				aRange.setEnd(aRange.endContainer, endOffset);
+				backup.detach();
 			}
 			catch(e) {
 				aRange.detach();
-				return backup;
+				aRange = backup;
 			}
-			backup.detach();
 		}
+
+		// ‹­§‰üsˆÈ~‚ğØ‚è—‚Æ‚·
+		var nodes = this.evaluateXPath(
+				'following::*[local-name()="br" or local-name()="BR"] | '+
+				'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
+				aRange.startContainer,
+				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+			);
+		var br;
+		var brRange = aRange.startContainer.ownerDocument.createRange();
+		for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
+		{
+			br = nodes.snapshotItem(i);
+			brRange.selectNode(br);
+			if (brRange.compareBoundaryPoints(Range.START_TO_END, aRange) <= 0) { // before
+				continue;
+			}
+			else if (brRange.compareBoundaryPoints(Range.END_TO_START, aRange) >= 0) { // after
+				break;
+			}
+			aRange.setEndBefore(br);
+			break;
+		}
+		brRange.detach();
+
 		return aRange;
 	},
   
