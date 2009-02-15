@@ -949,11 +949,11 @@ var TextLinkService = {
 		}
 	},
  
-	openTextLinkIn : function(aAction) 
+	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.getCurrentFrame();
 		var uris = this.getSelectionURIRanges(
-				this.getEditableFromChild(aEvent.originalTarget) ||
+				this.getEditableFromChild(aTarget) ||
 				frame
 			);
 		if (!uris.length) return;
