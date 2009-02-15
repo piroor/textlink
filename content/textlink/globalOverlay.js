@@ -548,8 +548,7 @@ var TextLinkService = {
 	{
 		var doc = aBaseRange.startContainer.ownerDocument;
 
-		var findRange = doc.createRange();
-		findRange.selectNode(doc.documentElement);
+		var findRange = aBaseRange.cloneRange();
 
 		var count = 0;
 		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
@@ -569,7 +568,9 @@ var TextLinkService = {
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 		}
-		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
+		if (prevNode) {
+			findRange.setStartBefore(prevNode);
+		}
 
 		node     = aBaseRange.endContainer;
 		count    = aBaseRange.endOffset - node.textContent.length;
@@ -585,7 +586,9 @@ var TextLinkService = {
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 		}
-		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
+		if (prevNode) {
+			findRange.setEndAfter(prevNode);
+		}
 
 		return findRange;
 	},
@@ -630,7 +633,7 @@ var TextLinkService = {
 				aRange.startContainer
 			);
 		var br;
-		var brRange = aRange.startContainer.ownerDocument.createRange();
+		var brRange = aRange.cloneRange();
 		for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 		{
 			br = nodes.snapshotItem(i);
