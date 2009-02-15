@@ -86,6 +86,18 @@ function test_shrinkURIRange()
 	assert.equals('mozilla.jp/', range.toString());
 
 	range.detach();
+
+
+	var selection = getSelectionInEditable($('textarea'));
+	assert.equals(1, selection.rangeCount);
+	range = selection.getRangeAt(0).cloneRange();
+	selection.removeAllRanges();
+	range.setEndBefore(range.startContainer.childNodes[5]);
+	range.setStart(range.startContainer.childNodes[2], 4);
+	assert.equals('http://mozilla.jp/product/firefox/next line', range.toString());
+
+	range = sv.shrinkURIRange(range);
+	assert.equals('http://mozilla.jp/product/firefox/', range.toString());
 }
 
 function test_getFindRange()
@@ -101,6 +113,26 @@ function test_getFindRange()
 	var findRangeText = findRange.toString();
 	assert.compare(findRangeText.length, '>=', rangeText.length);
 	assert.contains(range, findRange);
+
+
+	var selection;
+
+	selection = getSelectionInEditable($('input'));
+	assert.equals(1, selection.rangeCount);
+	range = selection.getRangeAt(0);
+	findRange = sv.getFindRange(range);
+	findRangeText = findRange.toString();
+	assert.equals($('input').value, findRangeText);
+	assert.contains(range, findRange);
+
+	selection = getSelectionInEditable($('textarea'));
+	assert.equals(1, selection.rangeCount);
+	range = selection.getRangeAt(0);
+	findRange = sv.getFindRange(range);
+	findRangeText = findRange.toString();
+	assert.equals($('textarea').value.replace(/\n/g, ''), findRangeText);
+	assert.contains(range, findRange);
+
 
 	range.detach();
 	findRange.detach();
@@ -188,6 +220,42 @@ function test_getURIRangesFromRange()
 		})
 	);
 
+	var selection;
+
+	selection = getSelectionInEditable($('input'));
+	range = sv.getFindRange(selection.getRangeAt(0));
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(1, ranges.length);
+	assert.equals(
+		['http://www.mozilla.com/'],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		['http://www.mozilla.com/'],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
+
+	selection = getSelectionInEditable($('textarea'));
+	range = sv.getFindRange(selection.getRangeAt(0));
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(2, ranges.length);
+	assert.equals(
+		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
+
 	range.detach();
 }
 
@@ -259,4 +327,45 @@ function test_getSelectionURIRanges()
 	);
 
 	selection.removeAllRanges();
+
+
+	selection = getSelectionInEditable($('input'));
+	range = sv.getFindRange(selection.getRangeAt(0));
+	selection.removeAllRanges();
+	selection.addRange(range);
+	assert.equals($('input').value, range.toString());
+	ranges = sv.getSelectionURIRanges($('input'));
+	assert.equals(1, ranges.length);
+	assert.equals(
+		['http://www.mozilla.com/'],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		['http://www.mozilla.com/'],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
+
+	selection = getSelectionInEditable($('textarea'));
+	range = sv.getFindRange(selection.getRangeAt(0));
+	selection.removeAllRanges();
+	selection.addRange(range);
+	assert.equals($('textarea').value.replace(/\n/g, ''), range.toString());
+	ranges = sv.getSelectionURIRanges($('textarea'));
+	assert.equals(2, ranges.length);
+	assert.equals(
+		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		ranges.map(function(aRange) {
+			return aRange.range.toString();
+		})
+	);
+	assert.equals(
+		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		ranges.map(function(aRange) {
+			return aRange.uri;
+		})
+	);
 }

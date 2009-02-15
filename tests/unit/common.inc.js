@@ -30,3 +30,13 @@ function $(aId)
 {
 	return content.document.getElementById(aId);
 }
+
+function getSelectionInEditable(aNode)
+{
+	aNode.focus();
+	return aNode
+			.QueryInterface(Ci.nsIDOMNSEditableElement)
+			.editor
+			.selectionController
+			.getSelection(Ci.nsISelectionController.SELECTION_NORMAL);
+}
