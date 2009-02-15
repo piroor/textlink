@@ -114,6 +114,9 @@ function test_getFindRange()
 	assert.compare(findRangeText.length, '>=', rangeText.length);
 	assert.contains(range, findRange);
 
+	range.selectNode($('style').firstChild);
+	assert.notContains(range, findRange);
+
 
 	var selection;
 
