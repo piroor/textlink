@@ -499,10 +499,8 @@ var TextLinkService = {
 
 			uriRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
 			if (!uriRange) {
-//dump('NOT FOUND: '+uris[i]+'\n');
 				continue;
 			}
-//dump('FOUND RANGE: '+uriRange.toString()+'\n');
 			if (
 				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
 					aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) >= 0 &&
@@ -566,7 +564,7 @@ var TextLinkService = {
 			prevNode = node;
 
 			node = this.evaluateXPath(
-					'preceding::text()[not(ancestor::*[local-name()="head" or local-name()="HEAD")]',
+					'preceding::text()[not(ancestor::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
 					node,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
@@ -581,11 +579,14 @@ var TextLinkService = {
 			count += node.textContent.length;
 			prevNode = node;
 
-			node = this.evaluateXPath('following::text()', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+			node = this.evaluateXPath(
+					'following::text()[not(ancestor::*[contains(" style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
+					node,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
 		}
 		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
 
-//dump('FIND RANGE:: "'+findRange.toString()+'"\n');
 		return findRange;
 	},
   
