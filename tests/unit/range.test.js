@@ -24,6 +24,37 @@ function test_getCurrentFrame()
 	assert.equals(content.frames[0], sv.getCurrentFrame(content.frames[0]));
 }
 
+function test_getEditableFromChild()
+{
+	var input = $('input');
+	assert.equals(input, sv.getEditableFromChild(input));
+
+	var textarea = $('textarea');
+	assert.equals(textarea, sv.getEditableFromChild(textarea));
+	assert.equals(textarea, sv.getEditableFromChild(textarea.firstChild));
+
+	assert.equals(null, sv.getEditableFromChild(input.parentNode));
+}
+
+function test_getSelection()
+{
+	var windowSelection = content.getSelection();
+	assert.equals(windowSelection, sv.getSelection(content));
+	assert.equals(windowSelection, sv.getSelection());
+
+	var selection = sv.getSelection($('input'));
+	assert.isNotNull(selection);
+	assert.notEquals(windowSelection, selection);
+	assert.equals(
+		selection,
+		$('input')
+			.QueryInterface(Ci.nsIDOMNSEditableElement)
+			.editor
+			.selectionController
+			.getSelection(Ci.nsISelectionController.SELECTION_NORMAL)
+	);
+}
+
 function test_shrinkURIRange()
 {
 	var range = content.document.createRange();

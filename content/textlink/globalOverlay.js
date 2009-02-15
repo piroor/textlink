@@ -200,6 +200,32 @@ var TextLinkService = {
 		return frame;
 	},
  
+	getSelection : function(aFrameOrEditable) 
+	{
+		var Ci = Components.interfaces;
+		if (!aFrameOrEditable || aFrameOrEditable instanceof Ci.nsIDOMWindow) {
+			return this.getCurrentFrame(aFrameOrEditable).getSelection();
+		}
+		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
+			return aFrameOrEditable
+					.QueryInterface(Ci.nsIDOMNSEditableElement)
+					.editor
+					.selectionController
+					.getSelection(Ci.nsISelectionController.SELECTION_NORMAL);
+		}
+		return null;
+	},
+ 
+	getEditableFromChild : function(aNode)
+	{
+		if (!aNode) return null;
+		return this.evaluateXPath(
+				'ancestor-or-self::*[contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))][1]',
+				aNode,
+				XPathResult.FIRST_ORDERED_NODE_TYPE
+			).singleNodeValue;
+	},
+ 
 	evaluateXPath : function(aExpression, aContext, aType) 
 	{
 		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
@@ -451,14 +477,13 @@ var TextLinkService = {
    
 // range operations 
 	
-	getSelectionURIRanges : function(aFrame, aMaxCount, aStrict) 
+	getSelectionURIRanges : function(aFrameOrEditable, aMaxCount, aStrict) 
 	{
 		if (!aMaxCount) aMaxCount = -1;
 
 		var ranges = [];
 
-		var frame = this.getCurrentFrame(aFrame);
-		var selection = frame.getSelection();
+		var selection = this.getSelection(aFrameOrEditable);
 		if (!selection || !selection.rangeCount) return ranges;
 
 		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
@@ -474,10 +499,17 @@ var TextLinkService = {
 		if (!aMaxCount) aMaxCount = -1;
 
 		var ranges = [];
+
 		var findRange = this.getFindRange(aBaseRange);
 		var uris = this.matchURIRegExp(findRange.toString());
 		if (!uris) {
 			return ranges;
+		}
+
+		var editable = this.getEditableFromChild(findRange.startContainer);
+		if (editable) {
+			findRange = editable.ownerDocument.createRange();
+			findRange.selectNode(editable);
 		}
 
 		var startPoint = findRange.cloneRange();
@@ -501,21 +533,22 @@ var TextLinkService = {
 			if (!uriRange) {
 				continue;
 			}
-			if (
-				( // ダブルクリックで生じた選択範囲がURIの中にあるかどうか
-					aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) >= 0 &&
-					aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) <= 0
-				) ||
-				(!aStrict && ( // ダブルクリックで生じた選択範囲がURIと重なっているかどうか
-					( // 前の方で重なっている
-						aBaseRange.compareBoundaryPoints(Range.START_TO_START, uriRange) < 0 &&
-						aBaseRange.compareBoundaryPoints(Range.START_TO_END, uriRange) == 1
-					) ||
-					( // 後の方で重なっている
-						aBaseRange.compareBoundaryPoints(Range.END_TO_START, uriRange) < 0 &&
-						aBaseRange.compareBoundaryPoints(Range.END_TO_END, uriRange) > 0
-					)
-				))
+			if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
+				   NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
+				   nsIDOMNSRangeのcomparePointを使う */
+				aStrict ?
+				(
+					(aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 &&
+					aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
+					(uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 &&
+					uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
+				) :
+				(
+					aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 ||
+					aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0 ||
+					uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 ||
+					uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0
+				)
 				) {
 				range = uriRange.cloneRange();
 				range = this.shrinkURIRange(range);
@@ -546,9 +579,27 @@ var TextLinkService = {
  
 	getFindRange : function(aBaseRange) 
 	{
-		var doc = aBaseRange.startContainer.ownerDocument;
-
 		var findRange = aBaseRange.cloneRange();
+
+		if (this.getEditableFromChild(findRange.startContainer)) {
+			var root = this.evaluateXPath(
+					'ancestor-or-self::node()[parent::*[contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))]]',
+					findRange.startContainer,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
+			// setStartBefore causes error...
+			findRange.setStart(this.evaluateXPath(
+					'preceding-sibling::node()[1]',
+					root,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue || root, 0);
+			findRange.setEndAfter(this.evaluateXPath(
+					'(child::node()[last()] | following-sibling::node()[last()])[1]',
+					root,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue || root);
+			return findRange;
+		}
 
 		var count = 0;
 		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
@@ -633,21 +684,21 @@ var TextLinkService = {
 				aRange.startContainer
 			);
 		var br;
-		var brRange = aRange.cloneRange();
+		/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
+		   NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
+		   nsIDOMNSRangeのcomparePointを使う */
 		for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 		{
 			br = nodes.snapshotItem(i);
-			brRange.selectNode(br);
-			if (brRange.compareBoundaryPoints(Range.START_TO_START, aRange) <= 0) { // before
+			if (aRange.comparePoint(br, 0) < 0) { // before
 				continue;
 			}
-			else if (brRange.compareBoundaryPoints(Range.END_TO_START, aRange) >= 0) { // after
+			else if (aRange.comparePoint(br, 0) > 0) { // after
 				break;
 			}
 			aRange.setEndBefore(br);
 			break;
 		}
-		brRange.detach();
 
 		return aRange;
 	},
@@ -878,10 +929,7 @@ var TextLinkService = {
 		}
 
 		var uri = range.uri;
-		var referrer = (
-					aAction & this.ACTION_STEALTH ||
-					(b.selectedTab && b.selectedTab.referrerBlocked)
-				) ?
+		var referrer = (aAction & this.ACTION_STEALTH) ?
 					null :
 					this.makeURIFromSpec(frame.location.href) ;
 
@@ -904,7 +952,10 @@ var TextLinkService = {
 	openTextLinkIn : function(aAction) 
 	{
 		var frame = this.getCurrentFrame();
-		var uris = this.getSelectionURIRanges(frame);
+		var uris = this.getSelectionURIRanges(
+				this.getEditableFromChild(aEvent.originalTarget) ||
+				frame
+			);
 		if (!uris.length) return;
 
 		var selection = null;
@@ -1054,7 +1105,8 @@ var TextLinkService = {
 
 		var TLS = TextLinkService;
 
-		var uris = TLS.getSelectionURIRanges().map(function(aRange) {
+		var uris = TLS.getSelectionURIRanges(TLS.getEditableFromChild(document.popupNode))
+				.map(function(aRange) {
 					aRange.range.detach();
 					return aRange.uri;
 				});
