@@ -565,7 +565,11 @@ var TextLinkService = {
 			count += node.textContent.length;
 			prevNode = node;
 
-			node = this.evaluateXPath('preceding::node()[text()]', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+			node = this.evaluateXPath(
+					'preceding::text()[not(ancestor::*[local-name()="head" or local-name()="HEAD")]',
+					node,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
 		}
 		findRange.setStartBefore(prevNode || aBaseRange.startContainer);
 
@@ -577,7 +581,7 @@ var TextLinkService = {
 			count += node.textContent.length;
 			prevNode = node;
 
-			node = this.evaluateXPath('following::node()[text()]', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+			node = this.evaluateXPath('following::text()', node, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 		}
 		findRange.setEndAfter(prevNode || aBaseRange.endContainer);
 
