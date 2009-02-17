@@ -653,39 +653,38 @@ var TextLinkService = {
 
 		var count = 0;
 		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
-		var node, prevNode;
+		var nodes, node, prevNode, i;
 
+		nodes = this.evaluateXPath(
+				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				aBaseRange.startContainer
+			);
 		node     = aBaseRange.startContainer;
 		count    = aBaseRange.startOffset - node.textContent.length;
 		prevNode = null;
-		while (node && count < max)
+		for (i = 0, maxi = nodes.snapshotLength; i < maxi && node && count < max; i++)
 		{
 			count += node.textContent.length;
 			prevNode = node;
-
-			node = this.evaluateXPath(
-					'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-					node,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue;
+			node = nodes.snapshotItem(i);
 		}
 		if (prevNode) {
 			findRange.setStartBefore(prevNode);
 		}
 
+		nodes = this.evaluateXPath(
+				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')] | '+
+				'descendant::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				aBaseRange.endContainer
+			);
 		node     = aBaseRange.endContainer;
 		count    = aBaseRange.endOffset - node.textContent.length;
 		prevNode = null;
-		while (node && count < max)
+		for (i = nodes.snapshotLength-1; i > -1 && node && count < max; i--)
 		{
 			count += node.textContent.length;
 			prevNode = node;
-
-			node = this.evaluateXPath(
-					'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-					node,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue;
+			node = nodes.snapshotItem(i);
 		}
 		if (prevNode) {
 			findRange.setEndAfter(prevNode);
