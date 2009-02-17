@@ -22,6 +22,9 @@ var TextLinkService = {
 	ACTION_COPY                   : 1024,
 
 	actions : {},
+
+	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))',
+	kIGNORE_TEXT_CONDITION : 'ancestor::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
  
 // regexp 
 	
@@ -220,10 +223,57 @@ var TextLinkService = {
 	{
 		if (!aNode) return null;
 		return this.evaluateXPath(
-				'ancestor-or-self::*[contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))][1]',
+				'ancestor-or-self::*['+this.kINPUT_FIELD_CONDITITON+'][1]',
 				aNode,
 				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
+	},
+ 
+	getTextContentFromRange : function(aRange)
+	{
+		try {
+			var range = aRange.cloneRange();
+			range.collapse(true);
+			var nodes = this.evaluateXPath(
+					'following::text()['+this.kIGNORE_TEXT_CONDITION+'] | '+
+					'following::*[local-name()="br" or local-name()="BR"] | '+
+					'descendant-or-self::text()['+this.kIGNORE_TEXT_CONDITION+'] | '+
+					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
+					aRange.startContainer
+				);
+			var node;
+			var value;
+			var result = [];
+			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
+			{
+				node = nodes.snapshotItem(i);
+
+				if (aRange.comparePoint(node, node.textContent.length) < 0) {
+					continue;
+				}
+				else if (aRange.comparePoint(node, 0) > 0) {
+					break;
+				}
+
+				range.setEndBefore(node);
+				result.push(range.toString());
+
+				if (node.nodeType == Node.ELEMENT_NODE) {
+					result.push('\n');
+				}
+
+				range.selectNode(node);
+				range.collapse(false);
+			}
+			range.setEnd(aRange.endContainer, aRange.endOffset);
+			result.push(range.toString());
+			range.detach();
+			return result.join('');
+		}
+		catch(e) {
+		}
+		// fallback
+		return aRange.toString();
 	},
  
 	evaluateXPath : function(aExpression, aContext, aType) 
@@ -501,7 +551,7 @@ var TextLinkService = {
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
-		var uris = this.matchURIRegExp(findRange.toString());
+		var uris = this.matchURIRegExp(this.getTextContentFromRange(findRange));
 		if (!uris) {
 			return ranges;
 		}
@@ -583,7 +633,7 @@ var TextLinkService = {
 
 		if (this.getEditableFromChild(findRange.startContainer)) {
 			var root = this.evaluateXPath(
-					'ancestor-or-self::node()[parent::*[contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))]]',
+					'ancestor-or-self::node()[parent::*['+this.kINPUT_FIELD_CONDITITON+']]',
 					findRange.startContainer,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
@@ -614,7 +664,7 @@ var TextLinkService = {
 			prevNode = node;
 
 			node = this.evaluateXPath(
-					'preceding::text()[not(ancestor::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
+					'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 					node,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
@@ -632,7 +682,7 @@ var TextLinkService = {
 			prevNode = node;
 
 			node = this.evaluateXPath(
-					'following::text()[not(ancestor::*[contains(" style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
+					'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 					node,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;

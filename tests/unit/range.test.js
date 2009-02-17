@@ -55,6 +55,31 @@ function test_getSelection()
 	);
 }
 
+function test_getTextContentFromRange()
+{
+	var range = content.document.createRange();
+
+	range.selectNodeContents($('first'));
+	assert.equals(
+		<![CDATA[Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。
+詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。
+Mozillaは Netscape Communicator 5.0になる予定でしたが、NGLayoutという全く新しいレイアウトエンジンttp://jt.mozilla.gr.jp/newlayout/gecko.htmlを採用するという方針転換を行ったために開発が遅れてしまい、 Netscape 6 ttp://ftp.netscape.com/pub/netscape6/がリリースされたのは計画スタートから2年も経ってからのことでした。
+そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。]]>.toString(),
+		sv.getTextContentFromRange(range)
+	);
+
+	range.selectNodeContents($('br'));
+	assert.equals(
+		<![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。
+...
+mozilla.jp/
+Mozilla Japanのサイト。]]>.toString(),
+		sv.getTextContentFromRange(range)
+	);
+
+	range.detach();
+}
+
 function test_shrinkURIRange()
 {
 	var range = content.document.createRange();
