@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{54BB9F3F-07E5-486c-9B39-C7398B99391C}"
                    em:name="Text Link"
-                   em:version="3.0.2009021801"
+                   em:version="3.0.2009021901"
                    em:creator="SHIMODA Hiroshi"
                    em:description="Allows URI texts written in webpages to be loaded by double clicks."
                    em:iconURL="chrome://textlink/content/icon.png"
@@ -17,7 +17,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
 
@@ -38,7 +38,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -55,7 +55,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -72,7 +72,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -89,7 +89,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -106,7 +106,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -123,7 +123,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -140,7 +140,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -157,7 +157,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -174,7 +174,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>
@@ -182,7 +182,7 @@
     <em:localized>
       <RDF:Description em:locale="tr-TR"
                        em:name="Text Link"
-                       em:description="Web sayfalarýndaki link özelliði olmayan URL metinlerinin çift týklanarak açýlmasýný saðlar."
+                       em:description="Web sayfalarındaki link özelliği olmayan URL metinlerinin çift tıklanarak açılmasını sağlar."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
 		<em:translator>menet (fr-FR)</em:translator>
@@ -191,7 +191,7 @@
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU locale)</em:translator>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
       </RDF:Description>

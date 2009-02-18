@@ -43,14 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "Yeni Pencerede Aç: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Tümünü Yeni Pencerede Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "Y">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
+<!ENTITY textlink.openTextLink.copy.single     "URL'yi Kopyala: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Tüm URL'leri Kopyala: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "K">
 
 <!ENTITY textlink.context.current.pref "&lt;Seçili URL metnini&gt; Aç">
 <!ENTITY textlink.context.tab.pref     "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç">
 <!ENTITY textlink.context.window.pref  "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç">
-<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
+<!ENTITY textlink.context.copy.pref    "&lt;Seçili URL metnini&gt; Kopyala">
 
 
 
@@ -92,16 +92,16 @@
 
 <!ENTITY textlink.action_before "">
 <!ENTITY textlink.action.blank         "hiçbir şey yapma.">
-<!ENTITY textlink.action.select        "seç onu.">
+<!ENTITY textlink.action.select        "onu seç.">
 <!ENTITY textlink.action.current       "seçili sekmede aç.">
 <!ENTITY textlink.action.window        "yeni pencerede aç.">
 <!ENTITY textlink.action.tab           "yeni ön plan sekmede aç.">
 <!ENTITY textlink.action.tabBackground "yeni arka plan sekmede aç.">
 <!ENTITY textlink.action.current.stealth       "seçili sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.window.stealth        "yeni pencerede aç (HTTP_REFERER olmadan).">
-<!ENTITY textlink.action.tab.stealth           "eni ön plan sekmede aç (HTTP_REFERER olmadan).">
+<!ENTITY textlink.action.tab.stealth           "yeni ön plan sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.tabBackground.stealth "yeni arka plan sekmede aç (HTTP_REFERER olmadan).">
-<!ENTITY textlink.action.copy          "copy it to the clipboard">
+<!ENTITY textlink.action.copy          "onu panoya kopyala.">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Sıfırla">
@@ -116,13 +116,13 @@
 
 <!ENTITY textlink.group.find        "URL Algılanması">
 
-<!ENTITY textlink.schemer             "Bunlarla başlayan metinleri URL olarak tanı: (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.schemer             "Bunlarla başlayan metinleri URL olarak tanı: (örn. &quot;http,ftp,mailto&quot;)">
 <!ENTITY textlink.schemer.default     "Sıfırla">
-<!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (örn. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Sıfırla">
 
 <!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır">
-<!ENTITY textlink.multibyte.enabled   "Multi-byte karakterleri ayrıştır">
+<!ENTITY textlink.multibyte.enabled   "Çoklu-bayt karakterleri ayrıştır">
 
 <!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
 <!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">
