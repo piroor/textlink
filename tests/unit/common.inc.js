@@ -19,9 +19,11 @@ function getNewService()
 	var obj = {};
 	obj.__proto__ = namespace.TextLinkService;
 
-	obj.schemer = 'http https ftp news nntp telnet irc mms ed2k about file urn';
-	obj.schemerFixupTable = 'www=>http:\/\/www ftp.=>ftp:\/\/ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https';
-	obj.schemerFixupDefault = 'http';
+	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');
+	for (var i in prefs)
+	{
+		obj.observe(null, 'nsPref:changed', i);
+	}
 
 	return obj;
 }
