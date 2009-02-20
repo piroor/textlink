@@ -661,7 +661,7 @@ var TextLinkService = {
 			);
 		node     = aBaseRange.startContainer;
 		count    = aBaseRange.startOffset - node.textContent.length;
-		prevNode = null;
+		prevNode = node;
 		for (i = 0, maxi = nodes.snapshotLength; i < maxi && node && count < max; i++)
 		{
 			count += node.textContent.length;
@@ -679,7 +679,7 @@ var TextLinkService = {
 			);
 		node     = aBaseRange.endContainer;
 		count    = aBaseRange.endOffset - node.textContent.length;
-		prevNode = null;
+		prevNode = node;
 		for (i = nodes.snapshotLength-1; i > -1 && node && count < max; i--)
 		{
 			count += node.textContent.length;
