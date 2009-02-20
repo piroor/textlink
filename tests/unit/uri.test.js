@@ -12,8 +12,8 @@ function tearDown()
 function test_matchURIRegExp()
 {
 	var noURI = 'テキスト';
-	var halfWidth_absolute_URI = 'http://www.example.com/~page';
-	var fullWidth_absolute_URI = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｐａｇｅ';
+	var halfWidth_absolute_URI = 'http://www.example.com/';
+	var fullWidth_absolute_URI = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／';
 	var halfWidth_relative_URI = '../directory/file';
 	var fullWidth_relative_URI = '．．／ｄｉｒｅｃｔｏｒｙ／ｆｉｌｅ';
 
@@ -52,23 +52,29 @@ function test_matchURIRegExp()
 
 		var uris = [
 				halfWidth_absolute_URI,
+				halfWidth_absolute_URI+'~user/',
 				halfWidth_absolute_URI+'?query1=value1&query2=value2',
 				halfWidth_absolute_URI+'#hash',
 				fullWidth_absolute_URI,
+				fullWidth_absolute_URI+'\u301cｕｓｅｒ／',
+				fullWidth_absolute_URI+'\uff5eｕｓｅｒ／',
 				fullWidth_absolute_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
 				fullWidth_absolute_URI+'＃ｈａｓｈ',
 				halfWidth_relative_URI,
+				halfWidth_relative_URI+'~user/',
 				halfWidth_relative_URI+'?query1=value1&query2=value2',
 				halfWidth_relative_URI+'#hash',
 				fullWidth_relative_URI,
+				fullWidth_relative_URI+'\u301cｕｓｅｒ／',
+				fullWidth_relative_URI+'\uff5eｕｓｅｒ／',
 				fullWidth_relative_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
 				fullWidth_relative_URI+'＃ｈａｓｈ'
 			];
 
-		var expected = [uris[0], uris[1], uris[2]];
-		if (aFullWidth) expected = expected.concat([uris[3], uris[4], uris[5]]);
-		if (aRelative) expected = expected.concat([uris[6], uris[7], uris[8]]);
-		if (aFullWidth && aRelative) expected = expected.concat([uris[9], uris[10], uris[11]]);
+		var expected = [uris[0], uris[1], uris[2], uris[3]];
+		if (aFullWidth) expected = expected.concat([uris[4], uris[5], uris[6], uris[7], uris[8]]);
+		if (aRelative) expected = expected.concat([uris[9], uris[10], uris[11], uris[12]]);
+		if (aFullWidth && aRelative) expected = expected.concat([uris[13], uris[14], uris[15], uris[16], uris[17]]);
 
 		function assertMatchURIs(aExpected, aInput)
 		{
