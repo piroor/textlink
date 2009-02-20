@@ -13,7 +13,7 @@ function test_matchURIRegExp()
 {
 	var noURI = 'テキスト';
 	var halfWidth_absolute_URI = 'http://www.example.com/~page';
-	var fullWidth_absolute_URI = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／〜ｐａｇｅ';
+	var fullWidth_absolute_URI = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｐａｇｅ';
 	var halfWidth_relative_URI = '../directory/file';
 	var fullWidth_relative_URI = '．．／ｄｉｒｅｃｔｏｒｙ／ｆｉｌｅ';
 

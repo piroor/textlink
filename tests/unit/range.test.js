@@ -193,8 +193,10 @@ function test_getURIRangesFromRange()
 			'http://piro.sakura.ne.jp/',
 			'www.mozilla.org/products/firefox/',
 			'update.mozilla.org',
-			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
-			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／'
+			// \u301cは波ダッシュの正しい文字コード。
+			// \uff5eは全角チルダ。
+			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／'
 		],
 		ranges.map(function(aRange) {
 			return aRange.range.toString();
@@ -320,8 +322,8 @@ function test_getSelectionURIRanges()
 			'http://jt.mozilla.gr.jp/src-faq.html#1',
 			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'ttp://ftp.netscape.com/pub/netscape6/',
-			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
-			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／',
+			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',

@@ -20,6 +20,9 @@ function test_convertFullWidthToHalfWidth()
 	assertConvert('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
 	assertConvert('http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
 	assertConvert('http：／／www．example．com／');
+
+	assert.equals('http://www.example.com/~dash/', sv.convertFullWidthToHalfWidth('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\u301cｄａｓｈ／'));
+	assert.equals('http://www.example.com/~dash/', sv.convertFullWidthToHalfWidth('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／'));
 }
 
 function test_convertHalfWidthToFullWidthh()
@@ -33,4 +36,5 @@ function test_convertHalfWidthToFullWidthh()
 	assertConvert('http://www.example.com/');
 	assertConvert('http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
 	assertConvert('http：／／www．example．com／');
+	assert.equals('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／', sv.convertHalfWidthToFullWidth('http://www.example.com/~dash/'));
 }
