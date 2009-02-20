@@ -3,8 +3,6 @@ var sv;
 var tabs;
 var originalWindows;
 
-var isLinux = navigator.platform.toLowerCase().indexOf('linux') > -1;
-
 function setUp()
 {
 	utils.loadPrefs('../../defaults/preferences/textlink.js');
@@ -142,22 +140,20 @@ function assertKeyActions(aKeypress, aSelector)
 	assert.isFalse(unloaded);
 	assert.equals(originalWindows.length+1, utils.getChromeWindows().length);
 
-	if (!isLinux) {
-		utils.setClipBoard('test');
-		assert.equals('test', utils.getClipBoard());
+	utils.setClipBoard('test');
+	assert.equals('test', utils.getClipBoard());
 
-		selection.removeAllRanges();
+	selection.removeAllRanges();
 
-		sv.actions.test.action = sv.ACTION_COPY;
+	sv.actions.test.action = sv.ACTION_COPY;
 
-		aSelector();
-		action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
-		yield 100;
-		assert.equals(1, tabs.length);
-		assert.equals('http://www.mozilla.org/', selection.toString());
-		assert.equals('http://www.mozilla.org/', utils.getClipBoard());
-		assert.isFalse(unloaded);
-	}
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	yield 100;
+	assert.equals(1, tabs.length);
+	assert.equals('http://www.mozilla.org/', selection.toString());
+	assert.equals('http://www.mozilla.org/', utils.getClipBoard());
+	assert.isFalse(unloaded);
 
 	selection.removeAllRanges();
 
@@ -238,22 +234,20 @@ function assertNoKeyActions(aKeypress, aSelector)
 	assert.isFalse(unloaded);
 	assert.equals(originalWindows.length, utils.getChromeWindows().length);
 
-	if (!isLinux) {
-		utils.setClipBoard('test');
-		assert.equals('test', utils.getClipBoard());
+	utils.setClipBoard('test');
+	assert.equals('test', utils.getClipBoard());
 
-		selection.removeAllRanges();
+	selection.removeAllRanges();
 
-		sv.actions.test.action = sv.ACTION_COPY;
+	sv.actions.test.action = sv.ACTION_COPY;
 
-		aSelector();
-		action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
-		yield 100;
-		assert.equals(1, tabs.length);
-		assert.notEquals('http://www.mozilla.org/', selection.toString());
-		assert.equals('test', utils.getClipBoard());
-		assert.isFalse(unloaded);
-	}
+	aSelector();
+	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	yield 100;
+	assert.equals(1, tabs.length);
+	assert.notEquals('http://www.mozilla.org/', selection.toString());
+	assert.equals('test', utils.getClipBoard());
+	assert.isFalse(unloaded);
 
 	selection.removeAllRanges();
 
