@@ -180,7 +180,7 @@ function test_getURIRangesFromRange()
 	assert.equals('http://www.mozilla.org/', ranges[0].uri);
 
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(12, ranges.length);
+	assert.equals(13, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -193,10 +193,9 @@ function test_getURIRangesFromRange()
 			'http://piro.sakura.ne.jp/',
 			'www.mozilla.org/products/firefox/',
 			'update.mozilla.org',
-			// \u301cは波ダッシュの正しい文字コード。
-			// \uff5eは全角チルダ。
 			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
-			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／'
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／'
 		],
 		ranges.map(function(aRange) {
 			return aRange.range.toString();
@@ -215,7 +214,8 @@ function test_getURIRangesFromRange()
 			'http://www.mozilla.org/products/firefox/',
 			'http://update.mozilla.org',
 			'http://white.sakura.ne.jp/~piro/',
-			'http://www98.sakura.ne.jp/~piro/'
+			'http://www98.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/entrance/'
 		],
 		ranges.map(function(aRange) {
 			return aRange.uri;
@@ -314,7 +314,7 @@ function test_getSelectionURIRanges()
 	assert.equals('http://www.mozilla.org/', ranges[0].uri);
 
 	ranges = sv.getSelectionURIRanges(content);
-	assert.equals(13, ranges.length);
+	assert.equals(14, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -324,6 +324,7 @@ function test_getSelectionURIRanges()
 			'ttp://ftp.netscape.com/pub/netscape6/',
 			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
@@ -344,6 +345,7 @@ function test_getSelectionURIRanges()
 			'http://ftp.netscape.com/pub/netscape6/',
 			'http://white.sakura.ne.jp/~piro/',
 			'http://www98.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/entrance/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
