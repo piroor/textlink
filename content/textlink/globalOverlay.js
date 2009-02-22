@@ -23,8 +23,9 @@ var TextLinkService = {
 
 	actions : {},
 
-	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))',
-	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
+	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))',
+	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " "))',
+	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " "))]',
  
 // regexp 
 	
@@ -226,25 +227,30 @@ var TextLinkService = {
 			).singleNodeValue;
 	},
  
-	getTextContentFromRange : function(aRange)
+	getTextContentFromRange : function(aRange, aLazy)
 	{
 		try {
 			var range = aRange.cloneRange();
 			range.collapse(true);
 			var nodes = this.evaluateXPath(
-					'following::text() | ' +
-					'following::*[local-name()="br" or local-name()="BR"] | ' +
-					'descendant-or-self::text() | ' +
-					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
+					(aLazy ?
+						('following::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
+						 'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+']') :
+						'following::text() | descendant-or-self::text() '
+					) +
+					' | following::*[local-name()="br" or local-name()="BR"]' +
+					' | descendant-or-self::*[local-name()="br" or local-name()="BR"]',
 					aRange.startContainer
 				);
 			var node;
 			var value;
 			var result = [];
-			var selCon = this.getSelectionController(
-					this.getEditableFromChild(aRange.startContainer) ||
-					aRange.startContainer.ownerDocument.defaultView
-				);
+			var selCon = aLazy ?
+					null :
+					this.getSelectionController(
+						this.getEditableFromChild(aRange.startContainer) ||
+						aRange.startContainer.ownerDocument.defaultView
+					);
 			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 			{
 				node = nodes.snapshotItem(i);
@@ -259,10 +265,11 @@ var TextLinkService = {
 				range.setEndBefore(node);
 				result.push(range.toString());
 
-				if (node.nodeType == Node.ELEMENT_NODE) {
+				if (node.nodeType == Node.ELEMENT_NODE &&
+					node.localName.toLowerCase() == 'br') {
 					result.push('\n');
 				}
-				else if (selCon.checkVisibility(node, 0, 0)) {
+				else if (!aLazy && selCon.checkVisibility(node, 0, 0)) {
 					result.push(node.nodeValue);
 				}
 

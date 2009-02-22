@@ -59,8 +59,8 @@ function test_getTextContentFromRange()
 {
 	var range = content.document.createRange();
 
-	range.selectNodeContents($('first'));
-	range.setEndAfter($('hidden'));
+	range.setStartBefore($('hidden1'));
+	range.setEndAfter($('hidden2'));
 
 	var text = <![CDATA[Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。
 詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。
