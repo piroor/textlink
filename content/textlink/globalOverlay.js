@@ -4,7 +4,8 @@ var TextLinkService = {
 	schemerFixupTable              : '',
 	schemerFixupDefault            : 'http',
 	strict                         : true,
-	findRangeSize                  : 512,
+	findRangeSize                  : 256,
+	findRangeStrict                : true,
 	shouldParseRelativePath        : false,
 	shouldParseMultibyteCharacters : true,
 	contextItemCurrent             : true,
@@ -227,16 +228,16 @@ var TextLinkService = {
 			).singleNodeValue;
 	},
  
-	getTextContentFromRange : function(aRange, aLazy)
+	getTextContentFromRange : function(aRange)
 	{
 		try {
 			var range = aRange.cloneRange();
 			range.collapse(true);
 			var nodes = this.evaluateXPath(
-					(aLazy ?
+					(this.findRangeStrict ?
+						'following::text() | descendant-or-self::text() ' :
 						('following::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
-						 'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+']') :
-						'following::text() | descendant-or-self::text() '
+						 'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+']')
 					) +
 					' | following::*[local-name()="br" or local-name()="BR"]' +
 					' | descendant-or-self::*[local-name()="br" or local-name()="BR"]',
@@ -245,12 +246,12 @@ var TextLinkService = {
 			var node;
 			var value;
 			var result = [];
-			var selCon = aLazy ?
-					null :
+			var selCon = this.findRangeStrict ?
 					this.getSelectionController(
 						this.getEditableFromChild(aRange.startContainer) ||
 						aRange.startContainer.ownerDocument.defaultView
-					);
+					) :
+					null ;
 			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 			{
 				node = nodes.snapshotItem(i);
@@ -269,7 +270,7 @@ var TextLinkService = {
 					node.localName.toLowerCase() == 'br') {
 					result.push('\n');
 				}
-				else if (!aLazy && selCon.checkVisibility(node, 0, 0)) {
+				else if (this.findRangeStrict && selCon.checkVisibility(node, 0, 0)) {
 					result.push(node.nodeValue);
 				}
 
@@ -905,8 +906,12 @@ var TextLinkService = {
 				this.strict = value;
 				return;
 
-			case 'textlink.find_range_size':
+			case 'textlink.findRange.size':
 				this.findRangeSize = value;
+				return;
+
+			case 'textlink.findRange.strict':
+				this.findRangeStrict = value;
 				return;
 
 			case 'textlink.relative.enabled':
@@ -1156,7 +1161,8 @@ var TextLinkService = {
 			textlink.schemer.fixup.table
 			textlink.schemer.fixup.default
 			textlink.find_click_point.strict
-			textlink.find_range_size
+			textlink.findRange.size
+			textlink.findRange.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
 			textlink.contextmenu.openTextLink.current
