@@ -24,7 +24,6 @@ var TextLinkService = {
 	actions : {},
 
 	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))',
-	kIGNORE_NODES_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED br BR ", concat(" ", local-name(), " "))',
 	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
  
 // regexp 
@@ -233,13 +232,19 @@ var TextLinkService = {
 			var range = aRange.cloneRange();
 			range.collapse(true);
 			var nodes = this.evaluateXPath(
-					'following::*['+this.kIGNORE_NODES_CONDITION+'] | '+
-					'descendant-or-self::*['+this.kIGNORE_NODES_CONDITION+']',
+					'following::text() | ' +
+					'following::*[local-name()="br" or local-name()="BR"] | ' +
+					'descendant-or-self::text() | ' +
+					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
 					aRange.startContainer
 				);
 			var node;
 			var value;
 			var result = [];
+			var selCon = this.getSelectionController(
+					this.getEditableFromChild(aRange.startContainer) ||
+					aRange.startContainer.ownerDocument.defaultView
+				);
 			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 			{
 				node = nodes.snapshotItem(i);
@@ -257,6 +262,9 @@ var TextLinkService = {
 				if (node.nodeType == Node.ELEMENT_NODE) {
 					result.push('\n');
 				}
+				else if (selCon.checkVisibility(node, 0, 0)) {
+					result.push(node.nodeValue);
+				}
 
 				range.selectNode(node);
 				range.collapse(false);
@@ -270,6 +278,31 @@ var TextLinkService = {
 		}
 		// fallback
 		return aRange.toString();
+	},
+	getSelectionController : function(aTarget)
+	{
+		if (!aTarget) return null;
+
+		const nsIDOMNSEditableElement = Components.interfaces.nsIDOMNSEditableElement;
+		const nsIDOMWindow = Components.interfaces.nsIDOMWindow;
+		try {
+			return (aTarget instanceof nsIDOMNSEditableElement) ?
+						aTarget.QueryInterface(nsIDOMNSEditableElement)
+							.editor
+							.selectionController :
+					(aTarget instanceof nsIDOMWindow) ?
+						aTarget
+							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+							.getInterface(Components.interfaces.nsIWebNavigation)
+							.QueryInterface(Components.interfaces.nsIDocShell)
+							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+							.getInterface(Components.interfaces.nsISelectionDisplay)
+							.QueryInterface(Components.interfaces.nsISelectionController) :
+					null;
+		}
+		catch(e) {
+		}
+		return null;
 	},
  
 	evaluateXPath : function(aExpression, aContext, aType) 
