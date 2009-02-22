@@ -615,6 +615,7 @@ var TextLinkService = {
 			startPoint.detach();
 			startPoint = uriRange;
 			startPoint.collapse(false);
+			findRange.setStart(startPoint.startContainer, startPoint.startOffset);
 		}
 
 		findRange.detach();
