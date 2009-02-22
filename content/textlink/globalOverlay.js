@@ -24,7 +24,8 @@ var TextLinkService = {
 	actions : {},
 
 	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox TEXTBOX ", concat(" ", local-name(), " "))',
-	kIGNORE_TEXT_CONDITION : 'ancestor::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
+	kIGNORE_NODES_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED br BR ", concat(" ", local-name(), " "))',
+	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED ", concat(" ", local-name(), " "))]',
  
 // regexp 
 	
@@ -232,10 +233,8 @@ var TextLinkService = {
 			var range = aRange.cloneRange();
 			range.collapse(true);
 			var nodes = this.evaluateXPath(
-					'following::text()['+this.kIGNORE_TEXT_CONDITION+'] | '+
-					'following::*[local-name()="br" or local-name()="BR"] | '+
-					'descendant-or-self::text()['+this.kIGNORE_TEXT_CONDITION+'] | '+
-					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
+					'following::*['+this.kIGNORE_NODES_CONDITION+'] | '+
+					'descendant-or-self::*['+this.kIGNORE_NODES_CONDITION+']',
 					aRange.startContainer
 				);
 			var node;
