@@ -527,7 +527,7 @@ var TextLinkService = {
    
 // range operations 
 	
-	getSelectionURIRanges : function(aFrameOrEditable, aMaxCount, aStrict) 
+	getSelectionURIRanges : function(aFrameOrEditable, aStrict) 
 	{
 		if (!aMaxCount) aMaxCount = -1;
 
@@ -538,16 +538,14 @@ var TextLinkService = {
 
 		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
 		{
-			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aMaxCount, aStrict));
+			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aStrict));
 			if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
 		}
 		return ranges;
 	},
 	
-	getURIRangesFromRange : function(aBaseRange, aMaxCount, aStrict) 
+	getURIRangesFromRange : function(aBaseRange, aStrict) 
 	{
-		if (!aMaxCount) aMaxCount = -1;
-
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
@@ -607,7 +605,7 @@ var TextLinkService = {
 							range : range,
 							uri   : uri
 						});
-						if (aMaxCount > 0 && ranges.length >= aMaxCount) {
+						if (aBaseRange.collapsed) {
 							return true;
 						}
 						else {
@@ -986,7 +984,7 @@ var TextLinkService = {
 
 		var frame = target.ownerDocument.defaultView;
 
-		var ranges = this.getSelectionURIRanges(frame, 1, this.strict);
+		var ranges = this.getSelectionURIRanges(frame, this.strict);
 		if (!ranges.length) return;
 
 		var range = ranges[0];

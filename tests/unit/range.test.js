@@ -62,11 +62,24 @@ function test_getTextContentFromRange()
 	range.setStartBefore($('hidden1'));
 	range.setEndAfter($('hidden2'));
 
-	var text = <![CDATA[Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。
+	var text = <![CDATA[非表示のテキスト。
+http://piro.sakura.ne.jp/
+http://www.mozilla.org/
+www.mozilla.org/products/firefox/
+http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8
+Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。
 詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。
 Mozillaは Netscape Communicator 5.0になる予定でしたが、NGLayoutという全く新しいレイアウトエンジンttp://jt.mozilla.gr.jp/newlayout/gecko.htmlを採用するという方針転換を行ったために開発が遅れてしまい、 Netscape 6 ttp://ftp.netscape.com/pub/netscape6/がリリースされたのは計画スタートから2年も経ってからのことでした。
-そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。]]>.toString();
-	assert.notEquals(text, range.toString());
+そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。
+非表示のテキスト。
+http://piro.sakura.ne.jp/latest/
+http://piro.sakura.ne.jp/latest/blosxom/mozilla/
+http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/
+ttp://piro.sakura.ne.jp/latest/blosxom/webtech/
+ttp://piro.sakura.ne.jp/xul/
+ttp://piro.sakura.ne.jp/xul/tips/
+]]>.toString();
+	assert.equals(text, range.toString());
 	assert.equals(text, sv.getTextContentFromRange(range));
 
 	range.selectNodeContents($('br'));
@@ -175,11 +188,6 @@ function test_getURIRangesFromRange()
 
 	var ranges;
 
-	ranges = sv.getURIRangesFromRange(range, 1);
-	assert.equals(1, ranges.length);
-	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
-	assert.equals('http://www.mozilla.org/', ranges[0].uri);
-
 	ranges = sv.getURIRangesFromRange(range);
 	assert.equals(13, ranges.length);
 	assert.equals(
@@ -222,6 +230,13 @@ function test_getURIRangesFromRange()
 			return aRange.uri;
 		})
 	);
+
+	range.setStart($('first').firstChild, 10);
+	range.collapse(true);
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(1, ranges.length);
+	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
+	assert.equals('http://www.mozilla.org/', ranges[0].uri);
 
 	range.selectNodeContents($('split'));
 	ranges = sv.getURIRangesFromRange(range);
