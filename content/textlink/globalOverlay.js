@@ -218,7 +218,34 @@ var TextLinkService = {
 		return null;
 	},
  
-	getEditableFromChild : function(aNode)
+	getSelectionController : function(aTarget) 
+	{
+		if (!aTarget) return null;
+
+		const nsIDOMNSEditableElement = Components.interfaces.nsIDOMNSEditableElement;
+		const nsIDOMWindow = Components.interfaces.nsIDOMWindow;
+		try {
+			return (aTarget instanceof nsIDOMNSEditableElement) ?
+						aTarget.QueryInterface(nsIDOMNSEditableElement)
+							.editor
+							.selectionController :
+					(aTarget instanceof nsIDOMWindow) ?
+						aTarget
+							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+							.getInterface(Components.interfaces.nsIWebNavigation)
+							.QueryInterface(Components.interfaces.nsIDocShell)
+							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+							.getInterface(Components.interfaces.nsISelectionDisplay)
+							.QueryInterface(Components.interfaces.nsISelectionController) :
+					null;
+		}
+		catch(e) {
+		}
+		return null;
+	},
+s
+ 
+	getEditableFromChild : function(aNode) 
 	{
 		if (!aNode) return null;
 		return this.evaluateXPath(
@@ -228,7 +255,7 @@ var TextLinkService = {
 			).singleNodeValue;
 	},
  
-	getTextContentFromRange : function(aRange)
+	getTextContentFromRange : function(aRange) 
 	{
 		try {
 			var range = aRange.cloneRange();
@@ -286,31 +313,6 @@ var TextLinkService = {
 		}
 		// fallback
 		return aRange.toString();
-	},
-	getSelectionController : function(aTarget)
-	{
-		if (!aTarget) return null;
-
-		const nsIDOMNSEditableElement = Components.interfaces.nsIDOMNSEditableElement;
-		const nsIDOMWindow = Components.interfaces.nsIDOMWindow;
-		try {
-			return (aTarget instanceof nsIDOMNSEditableElement) ?
-						aTarget.QueryInterface(nsIDOMNSEditableElement)
-							.editor
-							.selectionController :
-					(aTarget instanceof nsIDOMWindow) ?
-						aTarget
-							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-							.getInterface(Components.interfaces.nsIWebNavigation)
-							.QueryInterface(Components.interfaces.nsIDocShell)
-							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-							.getInterface(Components.interfaces.nsISelectionDisplay)
-							.QueryInterface(Components.interfaces.nsISelectionController) :
-					null;
-		}
-		catch(e) {
-		}
-		return null;
 	},
  
 	evaluateXPath : function(aExpression, aContext, aType) 
@@ -638,8 +640,7 @@ var TextLinkService = {
 					uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0
 				)
 				) {
-				range = uriRange.cloneRange();
-				range = this.shrinkURIRange(range);
+				range = this.shrinkURIRange(uriRange);
 				uri = this.fixupURI(range.toString(), frame.location.href);
 				if (uri && !(uri in foundURIs)) {
 					foundURIs[uri] = true;
@@ -653,10 +654,6 @@ var TextLinkService = {
 					range.detach();
 				}
 			}
-			startPoint.detach();
-			startPoint = uriRange;
-			startPoint.collapse(false);
-			findRange.setStart(startPoint.startContainer, startPoint.startOffset);
 		}
 
 		findRange.detach();
