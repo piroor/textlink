@@ -5,7 +5,6 @@ var TextLinkService = {
 	schemerFixupDefault            : 'http',
 	strict                         : true,
 	findRangeSize                  : 256,
-	findRangeStrict                : true,
 	shouldParseRelativePath        : false,
 	shouldParseMultibyteCharacters : true,
 	contextItemCurrent             : true,
@@ -218,33 +217,6 @@ var TextLinkService = {
 		return null;
 	},
  
-	getSelectionController : function(aTarget) 
-	{
-		if (!aTarget) return null;
-
-		const nsIDOMNSEditableElement = Components.interfaces.nsIDOMNSEditableElement;
-		const nsIDOMWindow = Components.interfaces.nsIDOMWindow;
-		try {
-			return (aTarget instanceof nsIDOMNSEditableElement) ?
-						aTarget.QueryInterface(nsIDOMNSEditableElement)
-							.editor
-							.selectionController :
-					(aTarget instanceof nsIDOMWindow) ?
-						aTarget
-							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-							.getInterface(Components.interfaces.nsIWebNavigation)
-							.QueryInterface(Components.interfaces.nsIDocShell)
-							.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-							.getInterface(Components.interfaces.nsISelectionDisplay)
-							.QueryInterface(Components.interfaces.nsISelectionController) :
-					null;
-		}
-		catch(e) {
-		}
-		return null;
-	},
-s
- 
 	getEditableFromChild : function(aNode) 
 	{
 		if (!aNode) return null;
@@ -261,24 +233,15 @@ s
 			var range = aRange.cloneRange();
 			range.collapse(true);
 			var nodes = this.evaluateXPath(
-					(this.findRangeStrict ?
-						'following::text() | descendant-or-self::text() ' :
-						('following::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
-						 'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+']')
-					) +
-					' | following::*[local-name()="br" or local-name()="BR"]' +
-					' | descendant-or-self::*[local-name()="br" or local-name()="BR"]',
+					'following::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
+					'following::*[local-name()="br" or local-name()="BR"] | ' +
+					'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
+					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
 					aRange.startContainer
 				);
 			var node;
 			var value;
 			var result = [];
-			var selCon = this.findRangeStrict ?
-					this.getSelectionController(
-						this.getEditableFromChild(aRange.startContainer) ||
-						aRange.startContainer.ownerDocument.defaultView
-					) :
-					null ;
 			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 			{
 				node = nodes.snapshotItem(i);
@@ -296,9 +259,6 @@ s
 				if (node.nodeType == Node.ELEMENT_NODE &&
 					node.localName.toLowerCase() == 'br') {
 					result.push('\n');
-				}
-				else if (this.findRangeStrict && selCon.checkVisibility(node, 0, 0)) {
-					result.push(node.nodeValue);
 				}
 
 				range.selectNode(node);
@@ -596,71 +556,100 @@ s
 			return ranges;
 		}
 
+		var findTerms = [];
+		uris.forEach(function(aURI) {
+			if (typeof aURI != 'string') aURI = aURI[0];
+			aURI = aURI.replace(/^\s+|\s+$/g, '');
+			if (findTerms.indexOf(aURI) < 0) {
+				findTerms.push(aURI);
+			}
+		});
+
 		var editable = this.getEditableFromChild(findRange.startContainer);
 		if (editable) {
 			findRange = editable.ownerDocument.createRange();
 			findRange.selectNode(editable);
 		}
 
-		var startPoint = findRange.cloneRange();
-		startPoint.collapse(true);
-		var endPoint = findRange.cloneRange();
-		endPoint.collapse(false);
-
-		var uriRange;
-		var uri;
 		var frame = aBaseRange.startContainer.ownerDocument.defaultView;
-		const max = uris.length;
-
 		var foundURIs = {};
-		var range;
-		for (var i = 0; i < max; i++)
-		{
-			if (typeof uris[i] != 'string') uris[i] = uris[i][0];
-			uris[i] = uris[i].replace(/^\s+|\s+$/g, '');
+		findTerms.some(function(aURI) {
+			var startPoint = findRange.cloneRange();
+			startPoint.collapse(true);
+			var endPoint = findRange.cloneRange();
+			endPoint.collapse(false);
+			var uriRange, uri;
+			while (uriRange = this.Find.Find(aURI, findRange, startPoint, endPoint))
+			{
+				if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
+					   NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
+					   nsIDOMNSRangeのcomparePointを使う */
+					aStrict ?
+					(
+						(aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 &&
+						aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
+						(uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 &&
+						uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
+					) :
+					(
+						aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 ||
+						aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0 ||
+						uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 ||
+						uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0
+					)
+					) {
+					range = uriRange.cloneRange();
+					range = this.shrinkURIRange(range);
+					uri = this.fixupURI(range.toString(), frame.location.href);
+					if (uri && !(uri in foundURIs)) {
+						foundURIs[uri] = true;
+						ranges.push({
+							range : range,
+							uri   : uri
+						});
+						if (aMaxCount > 0 && ranges.length >= aMaxCount) {
+							return true;
+						}
+						else {
+							break;
+						}
+					}
+					else {
+						range.detach();
+					}
+				}
+				startPoint.selectNode(uriRange.endContainer);
+				startPoint.setEnd(uriRange.endContainer, uriRange.endOffset);
+				startPoint.collapse(false);
+			}
+			startPoint.detach();
+			endPoint.detach();
+		}, this);
 
-			uriRange = this.Find.Find(uris[i], findRange, startPoint, endPoint);
-			if (!uriRange) {
-				continue;
-			}
-			if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
-				   NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
-				   nsIDOMNSRangeのcomparePointを使う */
-				aStrict ?
-				(
-					(aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 &&
-					aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
-					(uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 &&
-					uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
-				) :
-				(
-					aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 ||
-					aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0 ||
-					uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 ||
-					uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0
-				)
-				) {
-				range = this.shrinkURIRange(uriRange);
-				uri = this.fixupURI(range.toString(), frame.location.href);
-				if (uri && !(uri in foundURIs)) {
-					foundURIs[uri] = true;
-					ranges.push({
-						range : range,
-						uri   : uri
-					});
-					if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
-				}
-				else {
-					range.detach();
-				}
-			}
-		}
+		ranges.sort(this.compareRangePosition);
 
 		findRange.detach();
-		startPoint.detach();
-		endPoint.detach();
 
 		return ranges;
+	},
+	compareRangePosition : function(aBase, aTarget) 
+	{
+		var base = aBase.range;
+		var target = aTarget.range;
+		if (
+			base.startContainer.ownerDocument != target.startContainer.ownerDocument
+			)
+			return 0;
+
+		try {
+			if (base.comparePoint(target.endContainer, target.endOffset) < 0)
+				return -1;
+			else if (base.comparePoint(target.startContainer, target.startOffset) > 0)
+				return 1;
+		}
+		catch(e) {
+		}
+		return 0;
 	},
  
 	getFindRange : function(aBaseRange) 
@@ -903,12 +892,8 @@ s
 				this.strict = value;
 				return;
 
-			case 'textlink.findRange.size':
+			case 'textlink.find_range_size':
 				this.findRangeSize = value;
-				return;
-
-			case 'textlink.findRange.strict':
-				this.findRangeStrict = value;
 				return;
 
 			case 'textlink.relative.enabled':
@@ -1158,8 +1143,7 @@ s
 			textlink.schemer.fixup.table
 			textlink.schemer.fixup.default
 			textlink.find_click_point.strict
-			textlink.findRange.size
-			textlink.findRange.strict
+			textlink.find_range_size
 			textlink.relative.enabled
 			textlink.multibyte.enabled
 			textlink.contextmenu.openTextLink.current
