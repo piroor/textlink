@@ -1,27 +1,10 @@
+utils.include('common.inc.js');
+
 var uris, positions;
-var win, sv, tabs, originalWindows;
 
 function setUp()
 {
-	utils.loadPrefs('../../defaults/preferences/textlink.js');
-	utils.setPref('browser.tabs.warnOnClose', false);
-
-	yield Do(utils.setUpTestWindow());
-	yield Do(utils.addTab('../fixtures/testcase.txt', { selected : true }));
-	gBrowser.removeAllTabsBut(gBrowser.selectedTab);
-
-	win = utils.getTestWindow();
-	sv = win.TextLinkService;
-	tabs = gBrowser.mTabs;
-	originalWindows = utils.getChromeWindows();
-
-	sv.actions = {
-		test : {
-			action       : sv.ACTION_OPEN_IN_TAB,
-			triggerKey   : 'VK_ENTER',
-			triggerMouse : 'dblclick'
-		}
-	};
+	yield Do(commonSetUp('../fixtures/testcase.txt'));
 
 	positions = [];
 	uris = [
@@ -36,6 +19,7 @@ function setUp()
 	uris.forEach(function(aURI, aIndex) {
 		var text = container.firstChild;
 		var position = text.textContent.indexOf(aURI);
+		assert.notEquals(-1, position, aURI+'\n'+text.textContent);
 		var range = content.document.createRange();
 		range.setStart(text, position);
 		range.setEnd(text, position + aURI.length, aURI);
@@ -60,13 +44,7 @@ function setUp()
 
 function tearDown()
 {
-	var windows = utils.getChromeWindows();
-	windows.forEach(function(aWindow) {
-		if (originalWindows.indexOf(aWindow) < 0)
-			aWindow.close();
-	});
-
-	utils.tearDownTestWindow();
+	yield Do(commonTearDown());
 }
 
 function testPlainText()

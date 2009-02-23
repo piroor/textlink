@@ -1,21 +1,8 @@
-var win;
-var sv;
-var tabs;
-var originalWindows;
+utils.include('common.inc.js');
 
 function setUp()
 {
-	utils.loadPrefs('../../defaults/preferences/textlink.js');
-	utils.setPref('browser.tabs.warnOnClose', false);
-
-	yield Do(utils.setUpTestWindow());
-	yield Do(utils.addTab('../fixtures/testcase.html', { selected : true }));
-	gBrowser.removeAllTabsBut(gBrowser.selectedTab);
-
-	win = utils.getTestWindow();
-	sv = win.TextLinkService;
-	tabs = gBrowser.mTabs;
-	originalWindows = utils.getChromeWindows();
+	yield Do(commonSetUp());
 
 	var selection = content.getSelection();
 	selection.removeAllRanges();
@@ -36,13 +23,7 @@ function setUp()
 
 function tearDown()
 {
-	var windows = utils.getChromeWindows();
-	windows.forEach(function(aWindow) {
-		if (originalWindows.indexOf(aWindow) < 0)
-			aWindow.close();
-	});
-
-	utils.tearDownTestWindow();
+	yield Do(commonTearDown());
 }
 
 var uris = [
@@ -111,17 +92,11 @@ function testCopy()
 
 function testOpenInCurrent()
 {
-	var unloaded = false;
-	content.addEventListener('unload', function(aEvent) {
-		aEvent.currentTarget.removeEventListener('unload', arguments.callee, false);
-		unloaded = true;
-	}, false);
-
 	sv.openTextLinkIn(sv.ACTION_OPEN_IN_CURRENT);
 	yield 300;
 	assert.equals(uris.length, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
-	assert.isTrue(unloaded);
+	assert.isTrue(isFirstTabUnloaded());
 }
 
 function testOpenInTabs()

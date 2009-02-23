@@ -1,40 +1,13 @@
-var win;
-var sv;
-var tabs;
-var originalWindows;
+utils.include('common.inc.js');
 
 function setUp()
 {
-	utils.loadPrefs('../../defaults/preferences/textlink.js');
-	utils.setPref('browser.tabs.warnOnClose', false);
-
-	yield Do(utils.setUpTestWindow());
-	yield Do(utils.addTab('../fixtures/testcase.html', { selected : true }));
-	gBrowser.removeAllTabsBut(gBrowser.selectedTab);
-
-	win = utils.getTestWindow();
-	sv = win.TextLinkService;
-	tabs = gBrowser.mTabs;
-	originalWindows = utils.getChromeWindows();
-
-	sv.actions = {
-		test : {
-			action       : sv.ACTION_DISABLED,
-			triggerKey   : 'VK_ENTER',
-			triggerMouse : 'dblclick'
-		}
-	};
+	yield Do(commonSetUp());
 }
 
 function tearDown()
 {
-	var windows = utils.getChromeWindows();
-	windows.forEach(function(aWindow) {
-		if (originalWindows.indexOf(aWindow) < 0)
-			aWindow.close();
-	});
-
-	utils.tearDownTestWindow();
+	yield Do(commonTearDown());
 }
 
 function assertMouseActions(aClick)
@@ -44,19 +17,13 @@ function assertMouseActions(aClick)
 	var selection = content.getSelection();
 	selection.removeAllRanges();
 
-	var unloaded = false;
-	content.addEventListener('unload', function(aEvent) {
-		aEvent.currentTarget.removeEventListener('unload', arguments.callee, false);
-		unloaded = true;
-	}, false);
-
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
 	action.fireMouseEvent(content, aClick);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -66,7 +33,7 @@ function assertMouseActions(aClick)
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -77,7 +44,7 @@ function assertMouseActions(aClick)
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
 	assert.equals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 	gBrowser.removeTab(tabs[1]);
 	yield 100;
 
@@ -90,7 +57,7 @@ function assertMouseActions(aClick)
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[1], gBrowser.selectedTab);
 	assert.equals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 	gBrowser.removeTab(tabs[1]);
 	yield 100;
 
@@ -102,7 +69,7 @@ function assertMouseActions(aClick)
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 	assert.equals(originalWindows.length+1, utils.getChromeWindows().length);
 
 	utils.setClipBoard('test');
@@ -117,7 +84,7 @@ function assertMouseActions(aClick)
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
 	assert.equals('http://www.mozilla.org/', utils.getClipBoard());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -126,7 +93,7 @@ function assertMouseActions(aClick)
 	action.fireMouseEvent(content, aClick);
 	yield 300;
 	assert.equals(1, tabs.length);
-	assert.isTrue(unloaded);
+	assert.isTrue(isFirstTabUnloaded());
 }
 
 function assertNoMouseActions(aClick)
@@ -136,19 +103,13 @@ function assertNoMouseActions(aClick)
 	var selection = content.getSelection();
 	selection.removeAllRanges();
 
-	var unloaded = false;
-	content.addEventListener('unload', function(aEvent) {
-		aEvent.currentTarget.removeEventListener('unload', arguments.callee, false);
-		unloaded = true;
-	}, false);
-
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
 	action.fireMouseEvent(content, aClick);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -158,7 +119,7 @@ function assertNoMouseActions(aClick)
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -168,7 +129,7 @@ function assertNoMouseActions(aClick)
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -178,7 +139,7 @@ function assertNoMouseActions(aClick)
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 
 	selection.removeAllRanges();
 
@@ -189,7 +150,7 @@ function assertNoMouseActions(aClick)
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 	assert.equals(originalWindows.length, utils.getChromeWindows().length);
 
 	utils.setClipBoard('test');
@@ -203,7 +164,7 @@ function assertNoMouseActions(aClick)
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 	assert.equals('test', utils.getClipBoard());
 
 	selection.removeAllRanges();
@@ -214,7 +175,7 @@ function assertNoMouseActions(aClick)
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
-	assert.isFalse(unloaded);
+	assert.isFalse(isFirstTabUnloaded());
 }
 
 var baseClick = {
