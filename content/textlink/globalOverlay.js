@@ -529,17 +529,17 @@ var TextLinkService = {
 	
 	getSelectionURIRanges : function(aFrameOrEditable, aStrict) 
 	{
-		if (!aMaxCount) aMaxCount = -1;
-
 		var ranges = [];
 
 		var selection = this.getSelection(aFrameOrEditable);
 		if (!selection || !selection.rangeCount) return ranges;
 
+		var range;
 		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
 		{
-			ranges = ranges.concat(this.getURIRangesFromRange(selection.getRangeAt(i), aStrict));
-			if (aMaxCount > 0 && ranges.length >= aMaxCount) break;
+			range = selection.getRangeAt(i);
+			ranges = ranges.concat(this.getURIRangesFromRange(range, aStrict));
+			if (range.collapsed && ranges.length) break;
 		}
 		return ranges;
 	},
@@ -640,9 +640,9 @@ var TextLinkService = {
 			return 0;
 
 		try {
-			if (base.comparePoint(target.endContainer, target.endOffset) < 0)
+			if (base.comparePoint(target.startContainer, target.startOffset) > 0)
 				return -1;
-			else if (base.comparePoint(target.startContainer, target.startOffset) > 0)
+			else if (base.comparePoint(target.endContainer, target.endOffset) < 0)
 				return 1;
 		}
 		catch(e) {

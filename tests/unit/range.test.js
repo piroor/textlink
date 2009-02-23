@@ -189,7 +189,6 @@ function test_getURIRangesFromRange()
 	var ranges;
 
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(13, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -240,7 +239,6 @@ function test_getURIRangesFromRange()
 
 	range.selectNodeContents($('split'));
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(5, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -271,7 +269,6 @@ function test_getURIRangesFromRange()
 	selection = getSelectionInEditable($('input'));
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(1, ranges.length);
 	assert.equals(
 		['http://www.mozilla.com/'],
 		ranges.map(function(aRange) {
@@ -288,7 +285,6 @@ function test_getURIRangesFromRange()
 	selection = getSelectionInEditable($('textarea'));
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(2, ranges.length);
 	assert.equals(
 		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
 		ranges.map(function(aRange) {
@@ -307,6 +303,18 @@ function test_getURIRangesFromRange()
 
 function test_getSelectionURIRanges()
 {
+	var ranges;
+	var selection = content.getSelection();
+	selection.removeAllRanges();
+
+	var rangeCollapsed = content.document.createRange();
+	rangeCollapsed.setStart($('split').firstChild, 60);
+	selection.addRange(rangeCollapsed);
+	ranges = sv.getSelectionURIRanges(content);
+	assert.equals(1, ranges.length);
+	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
+	assert.equals('http://www.mozilla.org/', ranges[0].uri);
+
 	var range1 = content.document.createRange();
 	range1.selectNodeContents($('split'));
 
@@ -316,21 +324,12 @@ function test_getSelectionURIRanges()
 	var range3 = content.document.createRange();
 	range3.selectNodeContents($('pre'));
 
-	var selection = content.getSelection();
 	selection.removeAllRanges();
 	selection.addRange(range1);
 	selection.addRange(range2);
 	selection.addRange(range3);
 
-	var ranges;
-
-	ranges = sv.getSelectionURIRanges(content, 1);
-	assert.equals(1, ranges.length);
-	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
-	assert.equals('http://www.mozilla.org/', ranges[0].uri);
-
 	ranges = sv.getSelectionURIRanges(content);
-	assert.equals(14, ranges.length);
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -383,7 +382,6 @@ function test_getSelectionURIRanges()
 	selection.addRange(range);
 	assert.equals($('input').value, range.toString());
 	ranges = sv.getSelectionURIRanges($('input'));
-	assert.equals(1, ranges.length);
 	assert.equals(
 		['http://www.mozilla.com/'],
 		ranges.map(function(aRange) {
@@ -403,7 +401,6 @@ function test_getSelectionURIRanges()
 	selection.addRange(range);
 	assert.equals($('textarea').value.replace(/\n/g, ''), range.toString());
 	ranges = sv.getSelectionURIRanges($('textarea'));
-	assert.equals(2, ranges.length);
 	assert.equals(
 		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
 		ranges.map(function(aRange) {
