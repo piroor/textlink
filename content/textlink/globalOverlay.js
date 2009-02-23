@@ -576,7 +576,7 @@ var TextLinkService = {
 			startPoint.collapse(true);
 			var endPoint = findRange.cloneRange();
 			endPoint.collapse(false);
-			var uriRange, uri;
+			var uriRange, uri, nextChar, nextNode;
 			while (uriRange = this.Find.Find(aURI, findRange, startPoint, endPoint))
 			{
 				if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
@@ -597,8 +597,32 @@ var TextLinkService = {
 					)
 					) {
 					range = uriRange.cloneRange();
-					range = this.shrinkURIRange(range);
-					uri = this.fixupURI(range.toString(), frame.location.href);
+					uri = range.toString();
+
+					// 他のURI文字列の一部にマッチしてしまった場合を除外する。
+					// 次の1文字を足してまだURI文字列の正規表現にマッチするのなら、
+					// このRangeは別のもっと長いURI文字列の一部と見なせる。
+					if (range.endContainer.textContent.length > range.endOffset) {
+						nextChar = range.endContainer.textContent[range.endOffset];
+					}
+					else {
+						nextNode = this.evaluateXPath(
+								'following::text() | following::*[local-name()="br" or local-name()="BR"]',
+								range.endContainer,
+								XPathResult.FIRST_ORDERED_NODE_TYPE
+							).singleNodeValue;
+						nextChar = (nextNode && nextNode.textContent) ?
+							nextNode.textContent[0] :
+							'' ;
+					}
+					if (this.matchURIRegExp(uri+nextChar)[0] == uri) {
+						range = this.shrinkURIRange(range);
+						uri = this.fixupURI(range.toString(), frame.location.href);
+					}
+					else {
+						uri = null;
+					}
+
 					if (uri && !(uri in foundURIs)) {
 						foundURIs[uri] = true;
 						ranges.push({
