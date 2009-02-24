@@ -652,27 +652,21 @@ var TextLinkService = {
 			term = terms[i];
 			while (termRange = this.Find.Find(term, findRange, startPoint, endPoint))
 			{
-				if (this.containsRange(aBaseRange, termRange, aStrict)) {
+				if (this._containsRange(aBaseRange, termRange, aStrict)) {
 					range = this.shrinkURIRange(termRange.cloneRange());
 					uri = this.fixupURI(range.toString(), baseURI);
 					if (uri && !(uri in foundURIs)) {
 						// 既に見つかったより長いURI文字列の一部である場合は除外する。
+						let uriRange = { range : range, uri : uri };
 						posRange.setEnd(range.startContainer, range.startOffset);
-						let start = posRange.toString().length;
-						let end   = start + term.length;
-						if (!ranges.some(function(aRange) {
-								return (aRange.start >= start && aRange.end <= end) ||
-										(aRange.start <= start && aRange.end >= end);
-							})) {
+						uriRange.start = posRange.toString().length;
+						uriRange.end = uriRange.start + term.length;
+						if (!ranges.some(this._checkRangeFound, uriRange)) {
 							foundURIs[uri] = true;
-							ranges.push({
-								range : range,
-								uri   : uri,
-								start : start,
-								end   : end
-							});
+							ranges.push(uriRange);
 							break;
 						}
+						uriRange = null;
 					}
 					range.detach();
 				}
@@ -682,7 +676,7 @@ var TextLinkService = {
 			if (ranges.length && aBaseRange.collapsed) break;
 		}
 
-		ranges.sort(this.compareRangePosition);
+		ranges.sort(this._compareRangePosition);
 
 		findRange.detach();
 		posRange.detach();
@@ -691,7 +685,7 @@ var TextLinkService = {
 
 		return ranges;
 	},
-	containsRange : function(aBase, aTarget, aStrict)
+	_containsRange : function(aBase, aTarget, aStrict)
 	{/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
 	    NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
 	    nsIDOMNSRangeのcomparePointを使う */
@@ -709,24 +703,14 @@ var TextLinkService = {
 				aTarget.comparePoint(aBase.endContainer, aBase.endOffset) == 0
 			);
 	},
-	compareRangePosition : function(aBase, aTarget) 
+	_checkRangeFound : function(aRange)
 	{
-		var base = aBase.range;
-		var target = aTarget.range;
-		if (
-			base.startContainer.ownerDocument != target.startContainer.ownerDocument
-			)
-			return 0;
-
-		try {
-			if (base.comparePoint(target.startContainer, target.startOffset) > 0)
-				return -1;
-			else if (base.comparePoint(target.endContainer, target.endOffset) < 0)
-				return 1;
-		}
-		catch(e) {
-		}
-		return 0;
+		return (aRange.start >= this.start && aRange.end <= this.end) ||
+				(aRange.start <= this.start && aRange.end >= this.end);
+	},
+	_compareRangePosition : function(aA, aB) 
+	{
+		return aA.start - aB.start;
 	},
  
 	getFindRange : function(aBaseRange) 
