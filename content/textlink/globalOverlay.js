@@ -1191,8 +1191,10 @@ var TextLinkService = {
 		}
 
 		var appcontent = document.getElementById('appcontent');
-		appcontent.addEventListener('SubBrowserAdded', this, false);
-		appcontent.addEventListener('SubBrowserRemoveRequest', this, false);
+		if (appcontent) {
+			appcontent.addEventListener('SubBrowserAdded', this, false);
+			appcontent.addEventListener('SubBrowserRemoveRequest', this, false);
+		}
 
 		this.initBrowser(gBrowser);
 	},
@@ -1301,8 +1303,10 @@ var TextLinkService = {
 		this.removePrefListener(this);
 
 		var appcontent = document.getElementById('appcontent');
-		appcontent.removeEventListener('SubBrowserAdded', this, false);
-		appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
+		if (appcontent) {
+			appcontent.removeEventListener('SubBrowserAdded', this, false);
+			appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
+		}
 
 		this.destroyBrowser(gBrowser);
 	},
