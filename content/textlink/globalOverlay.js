@@ -1,16 +1,60 @@
 var TextLinkService = { 
 	
-	schemer                        : '', 
-	schemerFixupTable              : '',
-	schemerFixupDefault            : 'http',
-	strict                         : true,
-	findRangeSize                  : 256,
-	shouldParseRelativePath        : false,
-	shouldParseMultibyteCharacters : true,
-	contextItemCurrent             : true,
-	contextItemWindow              : true,
-	contextItemTab                 : true,
-	contextItemCopy                : true,
+	schemerFixupDefault : 'http',
+	strict              : true,
+	findRangeSize       : 256,
+	contextItemCurrent  : true,
+	contextItemWindow   : true,
+	contextItemTab      : true,
+	contextItemCopy     : true,
+
+	get schemer()
+	{
+		return this._schemer;
+	},
+	set schemer(val)
+	{
+		this._schemer = val;
+		this._schemerRegExp = null;
+		return val;
+	},
+	_schemer : '', 
+
+	get schemerFixupTable()
+	{
+		return this._schemerFixupTable;
+	},
+	set schemerFixupTable(val)
+	{
+		this._schemerFixupTable = val;
+		this._table = null;
+		return val;
+	},
+	_schemerFixupTable : '',
+
+	get shouldParseRelativePath()
+	{
+		return this._shouldParseRelativePath;
+	},
+	set shouldParseRelativePath(val)
+	{
+		this._shouldParseRelativePath = val;
+		this._URIMatchingRegExp = null;
+		return val;
+	},
+	_shouldParseRelativePath : false,
+
+	get shouldParseMultibyteCharacters()
+	{
+		return this._shouldParseMultibyteCharacters;
+	},
+	set shouldParseMultibyteCharacters(val)
+	{
+		this._shouldParseMultibyteCharacters = val;
+		this._URIMatchingRegExp = null;
+		return val;
+	},
+	_shouldParseMultibyteCharacters : true,
  
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
@@ -256,8 +300,7 @@ var TextLinkService = {
 				range.setEndBefore(node);
 				result.push(range.toString());
 
-				if (node.nodeType == Node.ELEMENT_NODE &&
-					node.localName.toLowerCase() == 'br') {
+				if (node.localName.toLowerCase() == 'br') {
 					result.push('\n');
 				}
 
@@ -362,18 +405,21 @@ var TextLinkService = {
  
 	matchURIRegExp : function(aString) 
 	{
-		var regexp = [];
-		if (this.shouldParseMultibyteCharacters) {
-			regexp.push(this.kURIPatternMultibyte);
-			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternMultibyteRelative);
+		if (!this._URIMatchingRegExp) {
+			var regexp = [];
+			if (this.shouldParseMultibyteCharacters) {
+				regexp.push(this.kURIPatternMultibyte);
+				if (this.shouldParseRelativePath) regexp.push(this.kURIPatternMultibyteRelative);
+			}
+			else {
+				regexp.push(this.kURIPattern);
+				if (this.shouldParseRelativePath) regexp.push(this.kURIPatternRelative);
+			}
+			this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 		}
-		else {
-			regexp.push(this.kURIPattern);
-			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternRelative);
-		}
-
-		return aString.match(new RegExp(regexp.join('|'), 'ig'));
+		return aString.match(this._URIMatchingRegExp);
 	},
+	_URIMatchingRegExp : null,
  
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
@@ -392,9 +438,8 @@ var TextLinkService = {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
-		var regexp = new RegExp();
-		if (
-			regexp.compile(
+		if (!this._schemerRegExp) {
+			this._schemerRegExp = new RegExp(
 				'('+
 				this.schemer
 					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
@@ -402,23 +447,28 @@ var TextLinkService = {
 					.replace(/\*/g, '.+')
 					.replace(/[,\| \n\r\t]+/g, '|')+
 				')'
-			).test(
+			);
+		}
+		if (this._schemerRegExp.test(
 				aURIComponent.substr(0, aURIComponent.indexOf(':')).toLowerCase()
-			)
-			)
+			))
 			return aURIComponent;
 
 		return null;
 	},
+	_schemerRegExp : null,
 	
 	sanitizeURIString : function(aURIComponent) 
 	{
 		// escape patterns like program codes like JavaScript etc.
+		if (!this._topLevelDomainsRegExp) {
+			this._topLevelDomainsRegExp = new RegExp('^(' + this.kTopLevelDomains.join('|') + ')$');
+		}
 		if (this.shouldParseRelativePath) {
 			if (
 				(
 					aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
-					!RegExp.$2.match(new RegExp(['^(', this.kTopLevelDomains.join('|'), ')$'].join('')))
+					!RegExp.$2.match(this._topLevelDomainsRegExp)
 				) ||
 				aURIComponent.match(/(\(\)|\([^\/]+\)|[;\.,])$/)
 				)
@@ -448,6 +498,7 @@ var TextLinkService = {
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
 	},
+	_topLevelDomainsRegExp : null,
  
 	removeParen : function(aInput) 
 	{
@@ -473,33 +524,34 @@ var TextLinkService = {
  
 	fixupSchemer : function(aURI) 
 	{
-		var table = this.schemerFixupTable
+		if (!this._table) {
+			this._table = this.schemerFixupTable
 						.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
-		var regexp = new RegExp();
-
-		var targets = table.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
+			this._targets = this._table.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
 						.replace(/([\(\)\+\.\{\}])/g, '\\$1')
 						.replace(/\?/g, '.')
 						.replace(/\*/g, '.+')
 						.replace(/\s*[,\| \n\r\t]+\s*/g, '|');
+			this._targetsRegExp = new RegExp('^('+this._targets+')');
+		}
 
-		if (aURI.match(regexp.compile('^('+targets+')', 'g'))) {
-			var target = RegExp.$1;
-			eval((targets+'|')
+		var match = aURI.match(this._targetsRegExp);
+		if (match) {
+			var target = match[1];
+			var table = this._table;
+			eval((this._targets+'|')
 					.replace(/([^|]+)\|/g,
 						'if (/^$1$/.test("'+target+'")) table = table.replace(/\\b$1\\s*=>/, "'+target+'=>");'
 				));
-
-			if (table.match(
-					regexp.compile(
-						'([,\\| \\n\\r\\t]|^)'+
-						target.replace(/([\(\)\+\?\.\{\}])/g, '\\$1')
-							.replace(/\?/g, '.')
-							.replace(/\*/g, '.+')+
-						'\\s*=>\\s*([^,\\| \\n\\r\\t]+)'
-					)
-				))
-				aURI = aURI.replace(target, RegExp.$2);
+			match = table.match(new RegExp(
+					'(?:[,\\| \\n\\r\\t]|^)'+
+					target.replace(/([\(\)\+\?\.\{\}])/g, '\\$1')
+						.replace(/\?/g, '.')
+						.replace(/\*/g, '.+')+
+					'\\s*=>\\s*([^,\\| \\n\\r\\t]+)'
+				));
+			if (match)
+				aURI = aURI.replace(target, match[1]);
 		}
 		else if (!/^\w+:/.test(aURI)) {
 			var schemer = this.schemerFixupDefault;
@@ -509,6 +561,9 @@ var TextLinkService = {
 
 		return aURI;
 	},
+	_table : null,
+	_targets : null,
+	_targetsRegExp : null,
  
 	// 相対パスの解決 
 	makeURIComplete : function(aURI, aSourceURI)
@@ -549,95 +604,66 @@ var TextLinkService = {
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
-		var uris = this.matchURIRegExp(this.getTextContentFromRange(findRange));
-		if (!uris) {
+		var mayBeURIs = this.matchURIRegExp(this.getTextContentFromRange(findRange));
+		if (!mayBeURIs) {
 			return ranges;
 		}
 
-		var findTerms = [];
-		uris.forEach(function(aURI) {
-			if (typeof aURI != 'string') aURI = aURI[0];
-			aURI = aURI.replace(/^\s+|\s+$/g, '');
-			if (findTerms.indexOf(aURI) < 0) {
-				findTerms.push(aURI);
+		var terms = [];
+		mayBeURIs.forEach(function(aTerm) {
+			if (typeof aTerm != 'string') aTerm = aTerm[0];
+			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
+			if (terms.indexOf(aTerm) < 0) {
+				terms.push(aTerm);
 			}
 		});
 		// 文字列長が長いものから先にサーチする（部分一致を除外するため）
-		findTerms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
+		terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 
 		var editable = this.getEditableFromChild(findRange.startContainer);
 		if (editable) {
+			findRange.detach();
 			findRange = editable.ownerDocument.createRange();
 			findRange.selectNode(editable);
 		}
 		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
 		var foundURIs = {};
-		findTerms.some(function(aURI) {
-			let startPoint = findRange.cloneRange();
-			startPoint.collapse(true);
-			let endPoint = findRange.cloneRange();
-			endPoint.collapse(false);
-			let uriRange, uri, nextChar, nextNode;
-			while (uriRange = this.Find.Find(aURI, findRange, startPoint, endPoint))
+
+		var startPoint = findRange.cloneRange();
+		startPoint.collapse(true);
+		var endPoint = findRange.cloneRange();
+		endPoint.collapse(false);
+		var posRange;
+		if (editable) {
+			var root = editable.QueryInterface(Components.interfaces.nsIDOMNSEditableElement)
+					.editor
+					.rootElement;
+			posRange = root.ownerDocument.createRange();
+			posRange.selectNodeContents(root);
+		}
+		else {
+			posRange = findRange.cloneRange()
+		}
+
+		var termRange, term, uri;
+		for (let i in terms)
+		{
+			startPoint.setStart(findRange.startContainer, findRange.startOffset);
+			term = terms[i];
+			while (termRange = this.Find.Find(term, findRange, startPoint, endPoint))
 			{
-				if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
-					   NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
-					   nsIDOMNSRangeのcomparePointを使う */
-					aStrict ?
-					(
-						(aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 &&
-						 aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
-						(uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 &&
-						 uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
-					) :
-					(
-						aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 ||
-						aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0 ||
-						uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 ||
-						uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0
-					)
-					) {
-					range = uriRange.cloneRange();
-					uri = range.toString();
-
-					// 他のURI文字列の一部にマッチしてしまった場合を除外する。
-					// 次の1文字を足してまだURI文字列の正規表現にマッチするのなら、
-					// このRangeは別のもっと長いURI文字列の一部と見なせる。
-					if (range.endContainer.textContent.length > range.endOffset) {
-						nextChar = range.endContainer.textContent[range.endOffset];
-					}
-					else {
-						nextNode = this.evaluateXPath(
-								'following::text() | following::*[local-name()="br" or local-name()="BR"]',
-								range.endContainer,
-								XPathResult.FIRST_ORDERED_NODE_TYPE
-							).singleNodeValue;
-						nextChar = (nextNode && nextNode.textContent) ?
-							nextNode.textContent[0] :
-							'' ;
-					}
-					if (this.matchURIRegExp(uri+nextChar)[0] == uri) {
-						range = this.shrinkURIRange(range);
-						uri = this.fixupURI(range.toString(), baseURI);
-					}
-					else {
-						uri = null;
-					}
-
+				if (this.containsRange(aBaseRange, termRange, aStrict)) {
+					range = this.shrinkURIRange(termRange.cloneRange());
+					uri = this.fixupURI(range.toString(), baseURI);
 					if (uri && !(uri in foundURIs)) {
 						// 既に見つかったより長いURI文字列の一部である場合は除外する。
-						let posRange = findRange.cloneRange();
 						posRange.setEnd(range.startContainer, range.startOffset);
 						let start = posRange.toString().length;
-						posRange.setEnd(range.endContainer, range.endOffset);
-						let end   = posRange.toString().length;
-						if (ranges.some(function(aRange) {
+						let end   = start + term.length;
+						if (!ranges.some(function(aRange) {
 								return (aRange.start >= start && aRange.end <= end) ||
-										(aRange.start < start && aRange.end > end);
+										(aRange.start <= start && aRange.end >= end);
 							})) {
-							range.detach();
-						}
-						else {
 							foundURIs[uri] = true;
 							ranges.push({
 								range : range,
@@ -648,29 +674,40 @@ var TextLinkService = {
 							break;
 						}
 					}
-					else {
-						range.detach();
-					}
+					range.detach();
 				}
-				startPoint.selectNode(uriRange.endContainer);
-				startPoint.setEnd(uriRange.endContainer, uriRange.endOffset);
-				startPoint.collapse(false);
+				startPoint.setStart(termRange.endContainer, termRange.endOffset);
 			}
-			if (uriRange) uriRange.detach();
-			startPoint.detach();
-			endPoint.detach();
-
-			return (ranges.length && aBaseRange.collapsed);
-		}, this);
+			if (termRange) termRange.detach();
+			if (ranges.length && aBaseRange.collapsed) break;
+		}
 
 		ranges.sort(this.compareRangePosition);
 
 		findRange.detach();
+		posRange.detach();
+		startPoint.detach();
+		endPoint.detach();
 
 		return ranges;
 	},
-	getURIRangeFromRange : function(aURI, aBaseURI, aFindRange, aBaseRange, aStrict, aFoundURIs)
-	{
+	containsRange : function(aBase, aTarget, aStrict)
+	{/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
+	    NS_ERROR_DOM_WRONG_DOCUMENT_ERR例外が発生してしまうので、代わりに
+	    nsIDOMNSRangeのcomparePointを使う */
+		return 	aStrict ?
+			(
+				(aBase.comparePoint(aTarget.startContainer, aTarget.startOffset) == 0 &&
+				 aBase.comparePoint(aTarget.endContainer, aTarget.endOffset) == 0) ||
+				(aTarget.comparePoint(aBase.startContainer, aBase.startOffset) == 0 &&
+				 aTarget.comparePoint(aBase.endContainer, aBase.endOffset) == 0)
+			) :
+			(
+				aBase.comparePoint(aTarget.startContainer, aTarget.startOffset) == 0 ||
+				aBase.comparePoint(aTarget.endContainer, aTarget.endOffset) == 0 ||
+				aTarget.comparePoint(aBase.startContainer, aBase.startOffset) == 0 ||
+				aTarget.comparePoint(aBase.endContainer, aBase.endOffset) == 0
+			);
 	},
 	compareRangePosition : function(aBase, aTarget) 
 	{
@@ -783,33 +820,16 @@ var TextLinkService = {
 	{
 		var original = aRange.toString();
 		var uri = this.sanitizeURIString(original);
-		var startOffset = aRange.startOffset + original.indexOf(uri);
-		var endOffset = aRange.endOffset - original.split('').reverse().join('').indexOf(uri.split('').reverse().join(''));
-		if (startOffset != aRange.startOffset) {
-			var startContainer = aRange.startContainer;
-			while (startContainer.textContent.length <= startOffset)
-			{
-				startOffset -= startContainer.textContent.length;
-				startContainer = this.evaluateXPath(
-						'(following::text() | descendant::text())[1]',
-						startContainer,
-						XPathResult.FIRST_ORDERED_NODE_TYPE
-					).singleNodeValue;
-			}
-			aRange.setStart(startContainer, startOffset);
-		}
-		if (endOffset != aRange.endOffset) {
-			var endContainer = aRange.endContainer;
-			while (endContainer.textContent.length <= endOffset)
-			{
-				endOffset -= endContainer.textContent.length;
-				endContainer = this.evaluateXPath(
-						'(preceding::text() | descendant::text())[last()]',
-						endContainer,
-						XPathResult.FIRST_ORDERED_NODE_TYPE
-					).singleNodeValue;
-			}
-			aRange.setEnd(endContainer, endOffset);
+		if (original != uri) {
+			var startPoint = aRange.cloneRange();
+			startPoint.collapse(true);
+			var endPoint = aRange.cloneRange();
+			endPoint.collapse(false);
+			var newRange = this.Find.Find(uri, aRange, startPoint, endPoint);
+			aRange.detach();
+			startPoint.detach();
+			endPoint.detach();
+			aRange = newRange;
 		}
 
 		// 強制改行以降を切り落とす
