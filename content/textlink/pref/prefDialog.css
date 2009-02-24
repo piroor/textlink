@@ -1,25 +1,3 @@
-hbox, box[orient="horizontal"], row {
-	-moz-box-align: center;
-}
-
-checkbox {
-	-moz-box-flex: 1;
-}
-
-separator
-{
-	height: 0;
-	border: thin -moz-bg-inset;
-	margin-left: 0.5em;
-	margin-right: 0.5em;
-}
-
-.scrollbox
-{
-	border: thin -moz-bg-inset;
-	overflow: auto;
-}
-
 .reset-button {
 	min-width: 0;
 }
