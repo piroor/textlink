@@ -562,21 +562,22 @@ var TextLinkService = {
 				findTerms.push(aURI);
 			}
 		});
+		// 文字列長が長いものから先にサーチする（部分一致を除外するため）
+		findTerms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 
 		var editable = this.getEditableFromChild(findRange.startContainer);
 		if (editable) {
 			findRange = editable.ownerDocument.createRange();
 			findRange.selectNode(editable);
 		}
-
-		var frame = aBaseRange.startContainer.ownerDocument.defaultView;
+		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
 		var foundURIs = {};
 		findTerms.some(function(aURI) {
-			var startPoint = findRange.cloneRange();
+			let startPoint = findRange.cloneRange();
 			startPoint.collapse(true);
-			var endPoint = findRange.cloneRange();
+			let endPoint = findRange.cloneRange();
 			endPoint.collapse(false);
-			var uriRange, uri, nextChar, nextNode;
+			let uriRange, uri, nextChar, nextNode;
 			while (uriRange = this.Find.Find(aURI, findRange, startPoint, endPoint))
 			{
 				if (/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
@@ -585,9 +586,9 @@ var TextLinkService = {
 					aStrict ?
 					(
 						(aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 &&
-						aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
+						 aBaseRange.comparePoint(uriRange.endContainer, uriRange.endOffset) == 0) ||
 						(uriRange.comparePoint(aBaseRange.startContainer, aBaseRange.startOffset) == 0 &&
-						uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
+						 uriRange.comparePoint(aBaseRange.endContainer, aBaseRange.endOffset) == 0)
 					) :
 					(
 						aBaseRange.comparePoint(uriRange.startContainer, uriRange.startOffset) == 0 ||
@@ -617,22 +618,33 @@ var TextLinkService = {
 					}
 					if (this.matchURIRegExp(uri+nextChar)[0] == uri) {
 						range = this.shrinkURIRange(range);
-						uri = this.fixupURI(range.toString(), frame.location.href);
+						uri = this.fixupURI(range.toString(), baseURI);
 					}
 					else {
 						uri = null;
 					}
 
 					if (uri && !(uri in foundURIs)) {
-						foundURIs[uri] = true;
-						ranges.push({
-							range : range,
-							uri   : uri
-						});
-						if (aBaseRange.collapsed) {
-							return true;
+						// 既に見つかったより長いURI文字列の一部である場合は除外する。
+						let posRange = findRange.cloneRange();
+						posRange.setEnd(range.startContainer, range.startOffset);
+						let start = posRange.toString().length;
+						posRange.setEnd(range.endContainer, range.endOffset);
+						let end   = posRange.toString().length;
+						if (ranges.some(function(aRange) {
+								return (aRange.start >= start && aRange.end <= end) ||
+										(aRange.start < start && aRange.end > end);
+							})) {
+							range.detach();
 						}
 						else {
+							foundURIs[uri] = true;
+							ranges.push({
+								range : range,
+								uri   : uri,
+								start : start,
+								end   : end
+							});
 							break;
 						}
 					}
@@ -644,8 +656,11 @@ var TextLinkService = {
 				startPoint.setEnd(uriRange.endContainer, uriRange.endOffset);
 				startPoint.collapse(false);
 			}
+			if (uriRange) uriRange.detach();
 			startPoint.detach();
 			endPoint.detach();
+
+			return (ranges.length && aBaseRange.collapsed);
 		}, this);
 
 		ranges.sort(this.compareRangePosition);
@@ -653,6 +668,9 @@ var TextLinkService = {
 		findRange.detach();
 
 		return ranges;
+	},
+	getURIRangeFromRange : function(aURI, aBaseURI, aFindRange, aBaseRange, aStrict, aFoundURIs)
+	{
 	},
 	compareRangePosition : function(aBase, aTarget) 
 	{
@@ -700,41 +718,62 @@ var TextLinkService = {
 
 		var count = 0;
 		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
-		var nodes, node, prevNode, i;
+		var nodes, node, prevNode, offset;
 
+		node   = aBaseRange.startContainer;
+		offset = Math.max(aBaseRange.startOffset - max, 0);
+		count  = aBaseRange.startOffset;
+		if (node.nodeType == Node.ELEMENT_NODE) {
+			node = this.evaluateXPath(
+					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
+					node.childNodes.item(aBaseRange.startOffset) || node.firstChild,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
+			offset = 0;
+			count  = 0;
+		}
 		nodes = this.evaluateXPath(
 				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-				aBaseRange.startContainer
+				node
 			);
-		node     = aBaseRange.startContainer;
-		count    = aBaseRange.startOffset - node.textContent.length;
-		prevNode = node;
-		for (i = 0, maxi = nodes.snapshotLength; i < maxi && node && count < max; i++)
+		for (let i = nodes.snapshotLength-1; i > -1; i--)
 		{
-			count += node.textContent.length;
 			prevNode = node;
 			node = nodes.snapshotItem(i);
+			if (!node || count >= max) break;
+			count += node.textContent.length;
+			offset = count - max;
 		}
 		if (prevNode) {
-			findRange.setStartBefore(prevNode);
+			findRange.setStart(prevNode, Math.min(prevNode.textContent.length, Math.max(offset, 0)));
 		}
 
+		node   = aBaseRange.endContainer;
+		offset = Math.min(aBaseRange.endOffset + max, node.textContent.length);
+		count  = node.textContent.length - aBaseRange.endOffset;
+		if (node.nodeType == Node.ELEMENT_NODE) {
+			node = this.evaluateXPath(
+					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
+					node.childNodes.item(aBaseRange.endOffset) || node.lastChild,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
+			offset = node ? node.textContent.length : 0 ;
+			count  = 0;
+		}
 		nodes = this.evaluateXPath(
-				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')] | '+
-				'descendant::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-				aBaseRange.endContainer
+				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				node
 			);
-		node     = aBaseRange.endContainer;
-		count    = aBaseRange.endOffset - node.textContent.length;
-		prevNode = node;
-		for (i = nodes.snapshotLength-1; i > -1 && node && count < max; i--)
+		for (let i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 		{
-			count += node.textContent.length;
 			prevNode = node;
 			node = nodes.snapshotItem(i);
+			if (!node || count >= max) break;
+			count += node.textContent.length;
+			offset = node.textContent.length - (count - max);
 		}
 		if (prevNode) {
-			findRange.setEndAfter(prevNode);
+			findRange.setEnd(prevNode, Math.min(prevNode.textContent.length, Math.max(offset, 0)));
 		}
 
 		return findRange;
