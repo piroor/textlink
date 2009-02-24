@@ -1242,11 +1242,14 @@ var TextLinkService = {
 
 		var TLS = TextLinkService;
 
-		var uris = TLS.getSelectionURIRanges(TLS.getEditableFromChild(document.popupNode))
-				.map(function(aRange) {
-					aRange.range.detach();
-					return aRange.uri;
-				});
+		var uris = (TLS.contextItemCurrent || TLS.contextItemWindow ||
+					TLS.contextItemTab || TLS.contextItemCopy) ?
+				TLS.getSelectionURIRanges(TLS.getEditableFromChild(document.popupNode))
+					.map(function(aRange) {
+						aRange.range.detach();
+						return aRange.uri;
+					}) :
+				[] ;
 
 		this.showItem('context-openTextLink-current',
 			uris.length && TLS.contextItemCurrent);
