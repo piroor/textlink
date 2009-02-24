@@ -621,8 +621,6 @@
 
 </prefpane>
 
-<script type="application/x-javascript" src="chrome://textlink/content/prefs.js"/>
-<script type="application/x-javascript" src="chrome://textlink/content/globalOverlay.js"/>
 <script type="application/x-javascript" src="chrome://textlink/content/pref/prefDialog.js"/>
 
 </prefwindow>
