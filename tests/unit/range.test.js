@@ -187,6 +187,12 @@ function test_getURIRangesFromRange()
 	range.setEndAfter($('fullwidth'));
 
 	var ranges;
+	var rangesToString = function(aRange) {
+			return aRange.range.toString();
+		};
+	var rangesToURI = function(aRange) {
+			return aRange.uri;
+		};
 
 	ranges = sv.getURIRangesFromRange(range);
 	assert.equals(
@@ -205,9 +211,7 @@ function test_getURIRangesFromRange()
 			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／'
 		],
-		ranges.map(function(aRange) {
-			return aRange.range.toString();
-		})
+		ranges.map(rangesToString)
 	);
 	assert.equals(
 		[
@@ -225,17 +229,32 @@ function test_getURIRangesFromRange()
 			'http://www98.sakura.ne.jp/~piro/',
 			'http://www98.sakura.ne.jp/~piro/entrance/'
 		],
-		ranges.map(function(aRange) {
-			return aRange.uri;
-		})
+		ranges.map(rangesToURI)
 	);
+
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
+
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
+	assert.equals(['ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／'], ranges.map(rangesToString));
+	assert.equals(['http://www98.sakura.ne.jp/~piro/entrance/'], ranges.map(rangesToURI));
+
 
 	range.setStart($('first').firstChild, 10);
 	range.collapse(true);
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(1, ranges.length);
-	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
-	assert.equals('http://www.mozilla.org/', ranges[0].uri);
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
+
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
+
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
+	assert.equals(['h**p://www.mozilla.com/firefox/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.com/firefox/'], ranges.map(rangesToURI));
+
 
 	range.selectNodeContents($('split'));
 	ranges = sv.getURIRangesFromRange(range);
@@ -247,9 +266,7 @@ function test_getURIRangesFromRange()
 			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'ttp://ftp.netscape.com/pub/netscape6/'
 		],
-		ranges.map(function(aRange) {
-			return aRange.range.toString();
-		})
+		ranges.map(rangesToString)
 	);
 	assert.equals(
 		[
@@ -259,43 +276,36 @@ function test_getURIRangesFromRange()
 			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
 			'http://ftp.netscape.com/pub/netscape6/'
 		],
-		ranges.map(function(aRange) {
-			return aRange.uri;
-		})
+		ranges.map(rangesToURI)
 	);
+
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
+
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(['ttp://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToString));
+	assert.equals(['http://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToURI));
+
 
 	var selection;
 
 	selection = getSelectionInEditable($('input'));
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
-	assert.equals(
-		['http://www.mozilla.com/'],
-		ranges.map(function(aRange) {
-			return aRange.range.toString();
-		})
-	);
-	assert.equals(
-		['http://www.mozilla.com/'],
-		ranges.map(function(aRange) {
-			return aRange.uri;
-		})
-	);
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
 
 	selection = getSelectionInEditable($('textarea'));
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
 	assert.equals(
 		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
-		ranges.map(function(aRange) {
-			return aRange.range.toString();
-		})
+		ranges.map(rangesToString)
 	);
 	assert.equals(
 		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
-		ranges.map(function(aRange) {
-			return aRange.uri;
-		})
+		ranges.map(rangesToURI)
 	);
 
 	range.detach();

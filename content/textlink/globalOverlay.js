@@ -586,7 +586,7 @@ var TextLinkService = {
 	FIND_LAST   : 4,
 	FIND_SINGLE : 6,
 	
-	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict) 
+	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash) 
 	{
 		var ranges = [];
 		if (!aMode) aMode = this.FIND_ALL;
@@ -594,17 +594,31 @@ var TextLinkService = {
 		var selection = this.getSelection(aFrameOrEditable);
 		if (!selection || !selection.rangeCount) return ranges;
 
-		var range;
-		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
-		{
-			range = selection.getRangeAt(i);
-			ranges = ranges.concat(this.getURIRangesFromRange(range, aMode, aStrict));
-			if (range.collapsed && ranges.length) break;
+		if (aMode == this.FIND_LAST) {
+			for (var i = selection.rangeCount-1; i > -1; i--)
+			{
+				let range = selection.getRangeAt(i);
+				ranges = ranges.concat(this.getURIRangesFromRange(range, aMode, aStrict, aExceptionsHash));
+				if (ranges.length) break;
+			}
+		}
+		else {
+			for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
+			{
+				let range = selection.getRangeAt(i);
+				ranges = ranges.concat(this.getURIRangesFromRange(range, aMode, aStrict, aExceptionsHash));
+				if (
+					ranges.length &&
+					(range.collapsed || aMode & this.FIND_SINGLE)
+					) {
+					break;
+				}
+			}
 		}
 		return ranges;
 	},
 	
-	getURIRangesFromRange : function(aBaseRange, aMode, aStrict) 
+	getURIRangesFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
 	{
 		if (!aMode) aMode = this.FIND_ALL;
 		var ranges = [];
@@ -619,15 +633,26 @@ var TextLinkService = {
 			// 文字列長が長いものから先にサーチする（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
+		else if (aMode == this.FIND_LAST) {
+			terms.reverse();
+		}
 
 		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
+
 		var foundURIsHash = {};
+		if (aExceptionsHash) {
+			for (var i in aExceptionsHash)
+			{
+				foundURIsHash[i] = true;
+			}
+		}
+
 		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange);
 
-		for (let i in terms)
-		{
+		this.Find.findBackwards = aMode == this.FIND_LAST;
+		terms.some(function(aTerm) {
 			let range = this._findFirstRangeForTerm(
-					terms[i],
+					aTerm,
 					rangeSet,
 					baseURI,
 					aStrict,
@@ -638,13 +663,11 @@ var TextLinkService = {
 				ranges.push(range);
 				foundURIsHash[range.uri] = true;
 			}
-			if (
+			return (
 				ranges.length &&
 				(aBaseRange.collapsed || aMode & this.FIND_SINGLE)
-				) {
-				break;
-			}
-		}
+				);
+		}, this);
 
 		if (aMode == this.FIND_ALL) {
 			ranges.sort(this._compareRangePosition);
