@@ -581,10 +581,15 @@ var TextLinkService = {
 	},
    
 // range operations 
+	FIND_ALL    : 1,
+	FIND_FIRST  : 2,
+	FIND_LAST   : 4,
+	FIND_SINGLE : 6,
 	
-	getSelectionURIRanges : function(aFrameOrEditable, aStrict) 
+	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict) 
 	{
 		var ranges = [];
+		if (!aMode) aMode = this.FIND_ALL;
 
 		var selection = this.getSelection(aFrameOrEditable);
 		if (!selection || !selection.rangeCount) return ranges;
@@ -593,23 +598,69 @@ var TextLinkService = {
 		for (var i = 0, maxi = selection.rangeCount; i < maxi; i++)
 		{
 			range = selection.getRangeAt(i);
-			ranges = ranges.concat(this.getURIRangesFromRange(range, aStrict));
+			ranges = ranges.concat(this.getURIRangesFromRange(range, aMode, aStrict));
 			if (range.collapsed && ranges.length) break;
 		}
 		return ranges;
 	},
 	
-	getURIRangesFromRange : function(aBaseRange, aStrict) 
+	getURIRangesFromRange : function(aBaseRange, aMode, aStrict) 
 	{
+		if (!aMode) aMode = this.FIND_ALL;
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
-		var mayBeURIs = this.matchURIRegExp(this.getTextContentFromRange(findRange));
-		if (!mayBeURIs) {
+		var terms = this._getFindTermsFromRange(findRange);
+		if (!terms.length) {
 			return ranges;
 		}
 
+		if (aMode == this.FIND_ALL) {
+			// 文字列長が長いものから先にサーチする（部分一致を除外するため）
+			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
+		}
+
+		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
+		var foundURIsHash = {};
+		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange);
+
+		for (let i in terms)
+		{
+			let range = this._findFirstRangeForTerm(
+					terms[i],
+					rangeSet,
+					baseURI,
+					aStrict,
+					ranges,
+					foundURIsHash
+				);
+			if (range) {
+				ranges.push(range);
+				foundURIsHash[range.uri] = true;
+			}
+			if (
+				ranges.length &&
+				(aBaseRange.collapsed || aMode & this.FIND_SINGLE)
+				) {
+				break;
+			}
+		}
+
+		if (aMode == this.FIND_ALL) {
+			ranges.sort(this._compareRangePosition);
+		}
+
+		this._destroyRangeSet(rangeSet);
+
+		return ranges;
+	},
+	_getFindTermsFromRange : function(aRange)
+	{
 		var terms = [];
+		var mayBeURIs = this.matchURIRegExp(this.getTextContentFromRange(aRange));
+		if (!mayBeURIs) {
+			return terms;
+		}
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
@@ -617,8 +668,11 @@ var TextLinkService = {
 				terms.push(aTerm);
 			}
 		});
-		// 文字列長が長いものから先にサーチする（部分一致を除外するため）
-		terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
+		return terms;
+	},
+	_getRangeSetFromRange : function(aBaseRange, aFindRange)
+	{
+		var findRange = aFindRange || this.getFindRange(aBaseRange);
 
 		var editable = this.getEditableFromChild(findRange.startContainer);
 		if (editable) {
@@ -626,8 +680,6 @@ var TextLinkService = {
 			findRange = editable.ownerDocument.createRange();
 			findRange.selectNode(editable);
 		}
-		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
-		var foundURIs = {};
 
 		var startPoint = findRange.cloneRange();
 		startPoint.collapse(true);
@@ -645,45 +697,60 @@ var TextLinkService = {
 			posRange = findRange.cloneRange()
 		}
 
-		var termRange, term, uri;
-		for (let i in terms)
+		return {
+				findRange  : findRange,
+				startPoint : startPoint,
+				endPoint   : endPoint,
+				base       : aBaseRange,
+				position   : posRange
+			};
+	},
+	_destroyRangeSet : function(aRangeSet)
+	{
+		aRangeSet.findRange.detach();
+		aRangeSet.startPoint.detach();
+		aRangeSet.endPoint.detach();
+		aRangeSet.position.detach();
+		delete aRangeSet.findRange;
+		delete aRangeSet.startPoint;
+		delete aRangeSet.endPoint;
+		delete aRangeSet.position;
+		delete aRangeSet.base;
+	},
+	_findFirstRangeForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash)
+	{
+		if (!aFoundURIsHash) aFoundURIsHash = {};
+		if (!aRanges) aRanges = [];
+		aRangeSet.startPoint.setStart(aRangeSet.findRange.startContainer, aRangeSet.findRange.startOffset);
+		aRangeSet.startPoint.collapse(true);
+		aRangeSet.endPoint.setStart(aRangeSet.findRange.endContainer, aRangeSet.findRange.endOffset);
+		aRangeSet.endPoint.collapse(true);
+		var termRange, range, uri;
+		var uriRange = null;
+		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
 		{
-			startPoint.setStart(findRange.startContainer, findRange.startOffset);
-			term = terms[i];
-			while (termRange = this.Find.Find(term, findRange, startPoint, endPoint))
-			{
-				if (this._containsRange(aBaseRange, termRange, aStrict)) {
-					range = this.shrinkURIRange(termRange.cloneRange());
-					uri = this.fixupURI(range.toString(), baseURI);
-					if (uri && !(uri in foundURIs)) {
-						// 既に見つかったより長いURI文字列の一部である場合は除外する。
-						let uriRange = { range : range, uri : uri };
-						posRange.setEnd(range.startContainer, range.startOffset);
-						uriRange.start = posRange.toString().length;
-						uriRange.end = uriRange.start + term.length;
-						if (!ranges.some(this._checkRangeFound, uriRange)) {
-							foundURIs[uri] = true;
-							ranges.push(uriRange);
-							break;
-						}
+			if (this._containsRange(aRangeSet.base, termRange, aStrict)) {
+				range = this.shrinkURIRange(termRange.cloneRange());
+				uri = this.fixupURI(range.toString(), aBaseURI);
+				if (uri && !(uri in aFoundURIsHash)) {
+					// 既に見つかったより長いURI文字列の一部である場合は除外する。
+					uriRange = { range : range, uri : uri };
+					aRangeSet.position.setEnd(range.startContainer, range.startOffset);
+					uriRange.start = aRangeSet.position.toString().length;
+					uriRange.end = uriRange.start + aTerm.length;
+					if (!aRanges.some(this._checkRangeFound, uriRange)) {
+						break;
+					}
+					else {
 						uriRange = null;
 					}
-					range.detach();
 				}
-				startPoint.setStart(termRange.endContainer, termRange.endOffset);
+				range.detach();
 			}
-			if (termRange) termRange.detach();
-			if (ranges.length && aBaseRange.collapsed) break;
+			aRangeSet.startPoint.setStart(termRange.endContainer, termRange.endOffset);
 		}
-
-		ranges.sort(this._compareRangePosition);
-
-		findRange.detach();
-		posRange.detach();
-		startPoint.detach();
-		endPoint.detach();
-
-		return ranges;
+		if (termRange) termRange.detach();
+		return uriRange;
 	},
 	_containsRange : function(aBase, aTarget, aStrict)
 	{/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に
@@ -1051,7 +1118,7 @@ var TextLinkService = {
 
 		var frame = target.ownerDocument.defaultView;
 
-		var ranges = this.getSelectionURIRanges(frame, this.strict);
+		var ranges = this.getSelectionURIRanges(frame, this.FIND_FIRST, this.strict);
 		if (!ranges.length) return;
 
 		var range = ranges[0];
@@ -1091,10 +1158,7 @@ var TextLinkService = {
 	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.getCurrentFrame();
-		var uris = this.getSelectionURIRanges(
-				this.getEditableFromChild(aTarget) ||
-				frame
-			);
+		var uris = this.getSelectionURIRanges(this.getEditableFromChild(aTarget) || frame	);
 		if (!uris.length) return;
 
 		var selection = null;
