@@ -661,7 +661,7 @@ var TextLinkService = {
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
-		var terms = this._getFindTermsFromRange(findRange);
+		var terms = this._getFindTermsFromRange(findRange, aMode);
 		if (!terms.length) {
 			return ranges;
 		}
@@ -669,9 +669,6 @@ var TextLinkService = {
 		if (aMode == this.FIND_ALL) {
 			// 文字列長が長いものから先にサーチする（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
-		}
-		else if (aMode == this.FIND_LAST) {
-			terms.reverse();
 		}
 
 		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
@@ -719,12 +716,15 @@ var TextLinkService = {
 
 		return ranges;
 	},
-	_getFindTermsFromRange : function(aRange)
+	_getFindTermsFromRange : function(aRange, aMode)
 	{
 		var terms = [];
 		var mayBeURIs = this.matchURIRegExp(this.getTextContentFromRange(aRange));
 		if (!mayBeURIs) {
 			return terms;
+		}
+		if (aMode == this.FIND_LAST) {
+			mayBeURIs = Array.slice(mayBeURIs).reverse();
 		}
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
