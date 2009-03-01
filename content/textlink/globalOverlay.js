@@ -786,6 +786,13 @@ var TextLinkService = {
 	{
 		if (!aFoundURIsHash) aFoundURIsHash = {};
 		if (!aRanges) aRanges = [];
+		if (this.Find.findBackwards) {
+			aRangeSet.startPoint.setStart(aRangeSet.findRange.endContainer, aRangeSet.findRange.endOffset);
+		}
+		else {
+			aRangeSet.startPoint.setStart(aRangeSet.findRange.startContainer, aRangeSet.findRange.startOffset);
+		}
+		aRangeSet.startPoint.collapse(true);
 		var termRange, range, uri;
 		var uriRange = null;
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
