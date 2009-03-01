@@ -52,6 +52,8 @@ var TextLinkService = {
 	{
 		this._shouldParseMultibyteCharacters = val;
 		this._URIMatchingRegExp = null;
+		this._URIPartRegExp_start = null;
+		this._URIPartRegExp_end = null;
 		return val;
 	},
 	_shouldParseMultibyteCharacters : true,
@@ -421,6 +423,32 @@ var TextLinkService = {
 	},
 	_URIMatchingRegExp : null,
  
+	getURIPartFromStart : function(aString) 
+	{
+		this._updateURIPartRegExp();
+		var match = aString.match(this._URIPartRegExp_start);
+		return match ? match[1] : '' ;
+	},
+	getURIPartFromEnd : function(aString) 
+	{
+		this._updateURIPartRegExp();
+		var match = aString.match(this._URIPartRegExp_end);
+		return match ? match[1] : '' ;
+	},
+	_URIPartRegExp_start : null,
+	_URIPartRegExp_end : null,
+	_updateURIPartRegExp : function()
+	{
+		if (this._URIPartRegExp_start && this._URIPartRegExp_end)
+			return;
+
+		var base = this.shouldParseMultibyteCharacters ?
+				this.kURIPatternMultibyte_part :
+				this.kURIPattern_part ;
+		this._URIPartRegExp_start = new RegExp('^('+base+')', 'i');
+		this._URIPartRegExp_end   = new RegExp('('+base+')$', 'i');
+	},
+ 
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
 		if (this.shouldParseMultibyteCharacters) {
@@ -648,6 +676,11 @@ var TextLinkService = {
 		}
 
 		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange);
+		if (aMode == this.FIND_LAST) {
+			var oldStart = rangeSet.startPoint;
+			rangeSet.startPoint = rangeSet.endPoint;
+			rangeSet.endPoint = oldStart;
+		}
 
 		this.Find.findBackwards = aMode == this.FIND_LAST;
 		terms.some(function(aTerm) {
@@ -744,10 +777,6 @@ var TextLinkService = {
 	{
 		if (!aFoundURIsHash) aFoundURIsHash = {};
 		if (!aRanges) aRanges = [];
-		aRangeSet.startPoint.setStart(aRangeSet.findRange.startContainer, aRangeSet.findRange.startOffset);
-		aRangeSet.startPoint.collapse(true);
-		aRangeSet.endPoint.setStart(aRangeSet.findRange.endContainer, aRangeSet.findRange.endOffset);
-		aRangeSet.endPoint.collapse(true);
 		var termRange, range, uri;
 		var uriRange = null;
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
@@ -770,7 +799,12 @@ var TextLinkService = {
 				}
 				range.detach();
 			}
-			aRangeSet.startPoint.setStart(termRange.endContainer, termRange.endOffset);
+			if (this.Find.findBackwards) {
+				aRangeSet.startPoint.setEnd(termRange.startContainer, termRange.startOffset);
+			}
+			else {
+				aRangeSet.startPoint.setStart(termRange.endContainer, termRange.endOffset);
+			}
 		}
 		if (termRange) termRange.detach();
 		return uriRange;
@@ -827,65 +861,98 @@ var TextLinkService = {
 			return findRange;
 		}
 
-		var count = 0;
-		var max   = Math.ceil(Math.abs(this.findRangeSize)/2);
-		var nodes, node, prevNode, offset;
+		var nodes, node, lastNode, offset, string;
 
-		node   = aBaseRange.startContainer;
-		offset = Math.max(aBaseRange.startOffset - max, 0);
-		count  = aBaseRange.startOffset;
-		if (node.nodeType == Node.ELEMENT_NODE) {
-			node = this.evaluateXPath(
-					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
-					node.childNodes.item(aBaseRange.startOffset) || node.firstChild,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue;
-			offset = 0;
-			count  = 0;
-		}
-		nodes = this.evaluateXPath(
-				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-				node
-			);
-		for (let i = nodes.snapshotLength-1; i > -1; i--)
-		{
-			prevNode = node;
-			node = nodes.snapshotItem(i);
-			if (!node || count >= max) break;
-			count += node.textContent.length;
-			offset = count - max;
-		}
-		if (prevNode) {
-			findRange.setStart(prevNode, Math.min(prevNode.textContent.length, Math.max(offset, 0)));
+		var expandToBefore = aBaseRange.collapsed;
+		var expandToAfter  = aBaseRange.collapsed;
+		if (!aBaseRange.collapsed) {
+			string = aBaseRange.toString();
+			expandToBefore = this.getURIPartFromStart(string);
+			expandToAfter  = this.getURIPartFromEnd(string);
 		}
 
-		node   = aBaseRange.endContainer;
-		offset = Math.min(aBaseRange.endOffset + max, node.textContent.length);
-		count  = node.textContent.length - aBaseRange.endOffset;
-		if (node.nodeType == Node.ELEMENT_NODE) {
-			node = this.evaluateXPath(
-					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
-					node.childNodes.item(aBaseRange.endOffset) || node.lastChild,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue;
-			offset = node ? node.textContent.length : 0 ;
-			count  = 0;
+		var expandRange = aBaseRange.cloneRange();
+
+		if (expandToBefore) {
+			expandRange.setEnd(aBaseRange.startContainer, aBaseRange.startOffset);
+			node   = aBaseRange.startContainer;
+			offset = aBaseRange.startOffset;
+			if (node.nodeType == Node.ELEMENT_NODE) {
+				node = this.evaluateXPath(
+						'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
+						node.childNodes.item(aBaseRange.startOffset) || node.firstChild,
+						XPathResult.FIRST_ORDERED_NODE_TYPE
+					).singleNodeValue;
+				offset = 0;
+			}
+			nodes = this.evaluateXPath(
+					'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+					node
+				);
+			let i = nodes.snapshotLength-1;
+			while (true)
+			{
+				lastNode = node;
+				expandRange.setStart(lastNode, 0);
+				string = expandRange.toString();
+				let part = this.getURIPartFromEnd(string);
+				if (!part.length || i < 0) {
+					break;
+				}
+				if (part.length < string.length) {
+					offset = string.length - part.length;
+					break;
+				}
+				node = nodes.snapshotItem(i--);
+				offset = node.textContent.length;
+				expandRange.selectNode(node);
+			}
+			if (lastNode != aBaseRange.startContainer || offset != aBaseRange.startOffset) {
+				findRange.setStart(lastNode, offset);
+			}
 		}
-		nodes = this.evaluateXPath(
-				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-				node
-			);
-		for (let i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
-		{
-			prevNode = node;
-			node = nodes.snapshotItem(i);
-			if (!node || count >= max) break;
-			count += node.textContent.length;
-			offset = node.textContent.length - (count - max);
+
+		if (expandToAfter) {
+			expandRange.setStart(aBaseRange.endContainer, aBaseRange.endOffset);
+			node   = aBaseRange.endContainer;
+			offset = aBaseRange.endOffset;
+			if (node.nodeType == Node.ELEMENT_NODE) {
+				node = this.evaluateXPath(
+						'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
+						node.childNodes.item(aBaseRange.endOffset) || node.lastChild,
+						XPathResult.FIRST_ORDERED_NODE_TYPE
+					).singleNodeValue;
+				offset = node ? node.textContent.length : 0 ;
+			}
+			nodes = this.evaluateXPath(
+					'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+					node
+				);
+			let i = 0,
+				maxi = nodes.snapshotLength;
+			while (true)
+			{
+				lastNode = node;
+				expandRange.setEnd(lastNode, lastNode.textContent.length);
+				string = expandRange.toString();
+				let part = this.getURIPartFromStart(string);
+				if (!part.length || i >= maxi) {
+					break;
+				}
+				if (part.length < string.length) {
+					offset = expandRange.startOffset + part.length;
+					break;
+				}
+				node = nodes.snapshotItem(i++);
+				offset = 0;
+				expandRange.selectNode(node);
+			}
+			if (lastNode != aBaseRange.endContainer || offset != aBaseRange.endOffset) {
+				findRange.setEnd(lastNode, offset);
+			}
 		}
-		if (prevNode) {
-			findRange.setEnd(prevNode, Math.min(prevNode.textContent.length, Math.max(offset, 0)));
-		}
+
+		expandRange.detach();
 
 		return findRange;
 	},
@@ -899,7 +966,10 @@ var TextLinkService = {
 			startPoint.collapse(true);
 			var endPoint = aRange.cloneRange();
 			endPoint.collapse(false);
+			var findBackwards = this.Find.findBackwards;
+			this.Find.findBackwards = false;
 			var newRange = this.Find.Find(uri, aRange, startPoint, endPoint);
+			this.Find.findBackwards = findBackwards
 			aRange.detach();
 			startPoint.detach();
 			endPoint.detach();

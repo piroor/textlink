@@ -153,6 +153,11 @@ function test_getFindRange()
 	assert.compare(findRangeText.length, '>=', rangeText.length);
 	assert.contains(range, findRange);
 
+	range.setStart(node, 15);
+	range.collapse(true);
+	findRange = sv.getFindRange(range);
+	assert.equals('Mozilla(http://www.mozilla.org/)', findRange.toString());
+
 	range.selectNode($('style').firstChild);
 	assert.notContains(range, findRange);
 
@@ -252,8 +257,8 @@ function test_getURIRangesFromRange()
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
 	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
-	assert.equals(['h**p://www.mozilla.com/firefox/'], ranges.map(rangesToString));
-	assert.equals(['http://www.mozilla.com/firefox/'], ranges.map(rangesToURI));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
 
 	range.selectNodeContents($('split'));
@@ -279,11 +284,11 @@ function test_getURIRangesFromRange()
 		ranges.map(rangesToURI)
 	);
 
-	ranges = sv.getURIRangesFromRange(range);
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
-	ranges = sv.getURIRangesFromRange(range);
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
 	assert.equals(['ttp://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToString));
 	assert.equals(['http://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToURI));
 
@@ -293,6 +298,12 @@ function test_getURIRangesFromRange()
 	selection = getSelectionInEditable($('input'));
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
+	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
 
@@ -307,6 +318,12 @@ function test_getURIRangesFromRange()
 		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
 		ranges.map(rangesToURI)
 	);
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
+	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToString));
+	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToURI));
+	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
+	assert.equals(['http://mozilla.jp/product/firefox/'], ranges.map(rangesToString));
+	assert.equals(['http://mozilla.jp/product/firefox/'], ranges.map(rangesToURI));
 
 	range.detach();
 }
