@@ -2,7 +2,6 @@ var TextLinkService = {
 	
 	schemerFixupDefault : 'http',
 	strict              : true,
-	findRangeSize       : 256,
 	contextItemCurrent  : true,
 	contextItemWindow   : true,
 	contextItemTab      : true,
@@ -647,16 +646,12 @@ var TextLinkService = {
 	},
 	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash)
 	{
-var before = Date.now();
 		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash);
-Application.console.log('FIRST : '+(Date.now() - before));
 		return ranges.length ? ranges[0] : null ;
 	},
 	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash)
 	{
-var before = Date.now();
 		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash);
-Application.console.log('LAST : '+(Date.now() - before));
 		return ranges.length ? ranges[0] : null ;
 	},
 	
@@ -1131,10 +1126,6 @@ Application.console.log('LAST : '+(Date.now() - before));
 				this.strict = value;
 				return;
 
-			case 'textlink.find_range_size':
-				this.findRangeSize = value;
-				return;
-
 			case 'textlink.relative.enabled':
 				this.shouldParseRelativePath = value;
 				return;
@@ -1381,7 +1372,6 @@ Application.console.log('LAST : '+(Date.now() - before));
 			textlink.schemer.fixup.table
 			textlink.schemer.fixup.default
 			textlink.find_click_point.strict
-			textlink.find_range_size
 			textlink.relative.enabled
 			textlink.multibyte.enabled
 			textlink.contextmenu.openTextLink.current
