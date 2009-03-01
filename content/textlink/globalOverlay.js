@@ -1465,9 +1465,9 @@ var TextLinkService = {
 				'context-openTextLink-copy'
 			].forEach(function(aID) {
 				var item = this.setLabel(aID, attr, targets);
-				if (item) {
-					item.setAttribute('textlink-uris', uris.join('\n'));
-				}
+//				if (item) {
+//					item.setAttribute('textlink-uris', uris.join('\n'));
+//				}
 			}, TLS);
 		}
 	},
