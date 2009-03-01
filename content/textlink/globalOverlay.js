@@ -1417,18 +1417,22 @@ var TextLinkService = {
 		var uris = [];
 		if (TLS.contextItemCurrent || TLS.contextItemWindow ||
 			TLS.contextItemTab || TLS.contextItemCopy) {
-			var target = TLS.getEditableFromChild(document.popupNode);
-			var first = TLS.getFirstSelectionURIRange(target);
-			var found = {};
-			if (first) {
-				uris.push(first.uri);
-				first.range.detach();
-				found[first.uri] = true;
+			try {
+				var target = TLS.getEditableFromChild(document.popupNode);
+				var first = TLS.getFirstSelectionURIRange(target);
+				var found = {};
+				if (first) {
+					uris.push(first.uri);
+					first.range.detach();
+					found[first.uri] = true;
+				}
+				var last = TLS.getLastSelectionURIRange(target, false, found);
+				if (last) {
+					uris.push(last.uri);
+					last.range.detach();
+				}
 			}
-			var last = TLS.getLastSelectionURIRange(target, false, found);
-			if (last) {
-				uris.push(last.uri);
-				last.range.detach();
+			catch(e) {
 			}
 		}
 
