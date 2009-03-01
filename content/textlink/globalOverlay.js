@@ -645,6 +645,20 @@ var TextLinkService = {
 		}
 		return ranges;
 	},
+	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash)
+	{
+var before = Date.now();
+		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash);
+Application.console.log('FIRST : '+(Date.now() - before));
+		return ranges.length ? ranges[0] : null ;
+	},
+	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash)
+	{
+var before = Date.now();
+		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash);
+Application.console.log('LAST : '+(Date.now() - before));
+		return ranges.length ? ranges[0] : null ;
+	},
 	
 	getURIRangesFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
 	{
@@ -682,7 +696,7 @@ var TextLinkService = {
 			rangeSet.endPoint = oldStart;
 		}
 
-		this.Find.findBackwards = aMode == this.FIND_LAST;
+		this.Find.findBackwards = (aMode == this.FIND_LAST);
 		terms.some(function(aTerm) {
 			let range = this._findFirstRangeForTerm(
 					aTerm,
@@ -1403,14 +1417,23 @@ var TextLinkService = {
 
 		var TLS = TextLinkService;
 
-		var uris = (TLS.contextItemCurrent || TLS.contextItemWindow ||
-					TLS.contextItemTab || TLS.contextItemCopy) ?
-				TLS.getSelectionURIRanges(TLS.getEditableFromChild(document.popupNode))
-					.map(function(aRange) {
-						aRange.range.detach();
-						return aRange.uri;
-					}) :
-				[] ;
+		var uris = [];
+		if (TLS.contextItemCurrent || TLS.contextItemWindow ||
+			TLS.contextItemTab || TLS.contextItemCopy) {
+			var target = TLS.getEditableFromChild(document.popupNode);
+			var first = TLS.getFirstSelectionURIRange(target);
+			var found = {};
+			if (first) {
+				uris.push(first.uri);
+				first.range.detach();
+				found[first.uri] = true;
+			}
+			var last = TLS.getLastSelectionURIRange(target, false, found);
+			if (last) {
+				uris.push(last.uri);
+				last.range.detach();
+			}
+		}
 
 		this.showItem('context-openTextLink-current',
 			uris.length && TLS.contextItemCurrent);
