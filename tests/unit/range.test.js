@@ -131,7 +131,7 @@ function test_shrinkURIRange()
 	assert.equals(1, selection.rangeCount);
 	range = selection.getRangeAt(0).cloneRange();
 	selection.removeAllRanges();
-	range.setEndBefore(range.startContainer.childNodes[5]);
+	range.selectNode(range.startContainer.childNodes[4]);
 	range.setStart(range.startContainer.childNodes[2], 4);
 	assert.equals('http://mozilla.jp/product/firefox/next line', range.toString());
 

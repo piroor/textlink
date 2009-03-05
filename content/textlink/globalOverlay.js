@@ -890,6 +890,7 @@ var TextLinkService = {
 		var expandRange = aBaseRange.cloneRange();
 
 		if (expandToBefore) {
+			expandRange.selectNode(aBaseRange.startContainer);
 			expandRange.setEnd(aBaseRange.startContainer, aBaseRange.startOffset);
 			node   = aBaseRange.startContainer;
 			offset = aBaseRange.startOffset;
@@ -909,15 +910,19 @@ var TextLinkService = {
 			while (true)
 			{
 				lastNode = node;
-				expandRange.setStart(lastNode, 0);
-				string = expandRange.toString();
-				let part = this.getURIPartFromEnd(string);
-				if (!part.length || i < 0) {
-					break;
+				try{ // Firefox 2 sometimes fails...
+					expandRange.setStart(lastNode, 0);
+					string = expandRange.toString();
+					let part = this.getURIPartFromEnd(string);
+					if (!part.length || i < 0) {
+						break;
+					}
+					if (part.length < string.length) {
+						offset = string.length - part.length;
+						break;
+					}
 				}
-				if (part.length < string.length) {
-					offset = string.length - part.length;
-					break;
+				catch(e){
 				}
 				node = nodes.snapshotItem(i--);
 				offset = node.textContent.length;
@@ -929,6 +934,7 @@ var TextLinkService = {
 		}
 
 		if (expandToAfter) {
+			expandRange.selectNode(aBaseRange.endContainer);
 			expandRange.setStart(aBaseRange.endContainer, aBaseRange.endOffset);
 			node   = aBaseRange.endContainer;
 			offset = aBaseRange.endOffset;
@@ -949,15 +955,19 @@ var TextLinkService = {
 			while (true)
 			{
 				lastNode = node;
-				expandRange.setEnd(lastNode, lastNode.textContent.length);
-				string = expandRange.toString();
-				let part = this.getURIPartFromStart(string);
-				if (!part.length || i >= maxi) {
-					break;
+				try{ // Firefox 2 sometimes fails...
+					expandRange.setEnd(lastNode, lastNode.textContent.length);
+					string = expandRange.toString();
+					let part = this.getURIPartFromStart(string);
+					if (!part.length || i >= maxi) {
+						break;
+					}
+					if (part.length < string.length) {
+						offset = expandRange.startOffset + part.length;
+						break;
+					}
 				}
-				if (part.length < string.length) {
-					offset = expandRange.startOffset + part.length;
-					break;
+				catch(e) {
 				}
 				node = nodes.snapshotItem(i++);
 				offset = 0;
