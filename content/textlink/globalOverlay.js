@@ -1,5 +1,4 @@
 var TextLinkService = { 
-	kURIS : 'textlink-uris',
 	
 	schemerFixupDefault : 'http',
 	strict              : true,
@@ -800,10 +799,15 @@ var TextLinkService = {
 				uri = this.fixupURI(range.toString(), aBaseURI);
 				if (uri && !(uri in aFoundURIsHash)) {
 					// Šù‚ÉŒ©‚Â‚©‚Á‚½‚æ‚è’·‚¢URI•¶š—ñ‚Ìˆê•”‚Å‚ ‚éê‡‚ÍœŠO‚·‚éB
-					uriRange = { range : range, uri : uri };
 					aRangeSet.position.setEnd(range.startContainer, range.startOffset);
-					uriRange.start = aRangeSet.position.toString().length;
-					uriRange.end = uriRange.start + aTerm.length;
+					let start = aRangeSet.position.toString().length;
+					uriRange = {
+						range : range,
+						uri   : uri,
+						start : start,
+						end   : start + aTerm.length,
+						base  : aRangeSet.base
+					};
 					if (!aRanges.some(this._checkRangeFound, uriRange)) {
 						break;
 					}
@@ -848,7 +852,8 @@ var TextLinkService = {
 	},
 	_compareRangePosition : function(aA, aB)
 	{
-		return aA.start - aB.start;
+		return (aA.base == aB.base) ? (aA.start - aB.start) :
+				(aA.base.comparePoint(aB.base.startContainer, aB.base.startOffset) < 0) ? 1 : -1 ;
 	},
 	
 	getFindRange : function(aBaseRange) 
@@ -986,35 +991,18 @@ var TextLinkService = {
 		if (!aMode) aMode = this.FIND_ALL;
 
 		var ranges = [];
-		var selection = this.getSelection(aFrameOrEditable);
-		if (!selection || !selection.rangeCount)
-			return ranges;
+		try {
+			var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash);
+			while(true)
+			{
+				ranges.push(iterator.next());
+			}
+		}
+		catch(e) {
+		}
 
-		var count, end, step;
-		if (aMode == this.FIND_LAST) {
-			count = selection.rangeCount-1;
-			end   = -1;
-			step  = -1;
-		}
-		else {
-			count = 0;
-			end   = selection.rangeCount;
-			step  = 1;
-		}
-		for (; count != end; count += step)
-		{
-			let range = selection.getRangeAt(parseInt(count));
-			try {
-				ranges = ranges.concat(this.getURIRangesFromRange(range, aMode, aStrict, aExceptionsHash));
-			}
-			catch(e) {
-			}
-			if (
-				ranges.length &&
-				(range.collapsed || aMode & this.FIND_SINGLE)
-				) {
-				break;
-			}
+		if (aMode == this.FIND_ALL) {
+			ranges.sort(this._compareRangePosition);
 		}
 
 		return ranges;
@@ -1268,26 +1256,46 @@ var TextLinkService = {
  
 	buildTooltip : function(aEvent) 
 	{
-		var box = this.tooltipBox;
+		if (this.tooltip.buildTimer) {
+			window.clearInterval(this.tooltip.buildTimer);
+		}
+		this.tooltip.buildTimer = window.setInterval(function(aSelf) {
+			if (aSelf.updateTooltip()) return;
+			window.clearInterval(aSelf.tooltip.buildTimer);
+			aSelf.tooltip.buildTimer = null;
+		}, 1, this);
+	},
+	updateTooltip : function()
+	{
+		var iterator = this.tooltip.findURIsIterator;
+		if (!iterator) return false;
 
+		var box = this.tooltipBox;
 		var range = document.createRange();
 		range.selectNodeContents(box);
 		range.deleteContents();
 
+		var ranges = this.tooltip.foundURIRanges;
+		try {
+			ranges.push(iterator.next());
+		}
+		catch(e if e instanceof StopIteration) {
+		}
+		catch(e) {
+			return false;
+		}
+		ranges.sort(this._compareRangePosition);
+
 		var fragment = document.createDocumentFragment();
-		(this.tooltip.getAttribute(this.kURIS) || '').split('\n')
-			.forEach(function(aURI) {
-				var line = document.createElement('description');
-				line.setAttribute('value', aURI);
-				fragment.appendChild(line);
-			});
+		ranges.forEach(function(aRange) {
+			var line = document.createElement('description');
+			line.setAttribute('value', aRange.uri);
+			fragment.appendChild(line);
+		});
+
 		range.insertNode(fragment);
 		range.detach();
-
-		if (!box.hasChildNodes()) {
-			aEvent.stopPropagation();
-			aEvent.preventDefault();
-		}
+		return true;
 	},
   
 	openClickedURI : function(aEvent, aAction) 
@@ -1520,6 +1528,9 @@ var TextLinkService = {
 			uris.length && TLS.contextItemTab);
 		this.showItem('context-openTextLink-copy',
 			uris.length && TLS.contextItemCopy);
+
+		TLS.tooltip.findURIsIterator = null;
+		TLS.tooltip.foundURIRanges = [];
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -1545,7 +1556,6 @@ var TextLinkService = {
 
 			TLS.tooltip.findURIsIterator = TLS.getURIRangesIterator(target)
 		}
-		TLS.tooltip.removeAttribute(TLS.kURIS);
 	},
 	setLabel : function(aID, aAttr, aTargets)
 	{
