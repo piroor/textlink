@@ -660,16 +660,36 @@ var TextLinkService = {
 		if (!aMode) aMode = this.FIND_ALL;
 		var ranges = [];
 
-		var findRange = this.getFindRange(aBaseRange);
-		var terms = this._getFindTermsFromRange(findRange, aMode);
-		if (!terms.length) {
+		try {
+			var iterator = this.getURIRangesIteratorFromRange(aBaseRange, aMode, aStrict, aExceptionsHash);
+			while(true)
+			{
+				ranges.push(iterator.next());
+			}
+		}
+		catch(e if e instanceof StopIteration) {
+		}
+		catch(e if e == this.ERRROR_NO_URI_RANGE) {
 			return ranges;
 		}
 
 		if (aMode == this.FIND_ALL) {
-			// 文字列長が長いものから先にサーチする（部分一致を除外するため）
-			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
+			ranges.sort(this._compareRangePosition);
 		}
+
+		return ranges;
+	},
+	ERRROR_FIND_MODE_NOT_SPECIFIED : new Error('you must specify find mode'),
+	ERRROR_NO_URI_RANGE : new Error('there is no range maybe URI'),
+	getURIRangesIteratorFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
+	{
+		if (!aMode) throw this.ERRROR_FIND_MODE_NOT_SPECIFIED;
+		var ranges = [];
+
+		var findRange = this.getFindRange(aBaseRange);
+		var terms = this._getFindTermsFromRange(findRange, aMode);
+		if (!terms.length)
+			throw this.ERRROR_NO_URI_RANGE;
 
 		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
 
@@ -681,40 +701,30 @@ var TextLinkService = {
 			}
 		}
 
-		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange);
-		if (aMode == this.FIND_LAST) {
-			var oldStart = rangeSet.startPoint;
-			rangeSet.startPoint = rangeSet.endPoint;
-			rangeSet.endPoint = oldStart;
-		}
+		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
 
 		this.Find.findBackwards = (aMode == this.FIND_LAST);
-		terms.some(function(aTerm) {
+		var findOnlyFirst = aBaseRange.collapsed || aMode & this.FIND_SINGLE;
+		for (var i in terms)
+		{
 			let range = this._findFirstRangeForTerm(
-					aTerm,
+					terms[i],
 					rangeSet,
 					baseURI,
 					aStrict,
 					ranges,
 					foundURIsHash
 				);
-			if (range) {
-				ranges.push(range);
-				foundURIsHash[range.uri] = true;
-			}
-			return (
-				ranges.length &&
-				(aBaseRange.collapsed || aMode & this.FIND_SINGLE)
-				);
-		}, this);
+			if (!range) continue;
 
-		if (aMode == this.FIND_ALL) {
-			ranges.sort(this._compareRangePosition);
+			ranges.push(range);
+			foundURIsHash[range.uri] = true;
+			yield range;
+
+			if (ranges.length && findOnlyFirst) break;
 		}
 
 		this._destroyRangeSet(rangeSet);
-
-		return ranges;
 	},
 	_getFindTermsFromRange : function(aRange, aMode)
 	{
@@ -733,9 +743,13 @@ var TextLinkService = {
 				terms.push(aTerm);
 			}
 		});
+		if (aMode == this.FIND_ALL) {
+			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
+			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
+		}
 		return terms;
 	},
-	_getRangeSetFromRange : function(aBaseRange, aFindRange)
+	_getRangeSetFromRange : function(aBaseRange, aFindRange, aMode)
 	{
 		var findRange = aFindRange || this.getFindRange(aBaseRange);
 
@@ -747,9 +761,10 @@ var TextLinkService = {
 		}
 
 		var startPoint = findRange.cloneRange();
-		startPoint.collapse(true);
+		startPoint.collapse(aMode != this.FIND_LAST);
 		var endPoint = findRange.cloneRange();
-		endPoint.collapse(false);
+		endPoint.collapse(aMode == this.FIND_LAST);
+
 		var posRange;
 		if (editable) {
 			var root = editable.QueryInterface(Components.interfaces.nsIDOMNSEditableElement)
@@ -1467,9 +1482,9 @@ var TextLinkService = {
 				'context-openTextLink-copy'
 			].forEach(function(aID) {
 				var item = this.setLabel(aID, attr, targets);
-//				if (item) {
-//					item.setAttribute('textlink-uris', uris.join('\n'));
-//				}
+				if (item) {
+					item.removeAttribute('textlink-uris', '');
+				}
 			}, TLS);
 		}
 	},
