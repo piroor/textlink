@@ -1276,18 +1276,10 @@ var TextLinkService = {
 		var uris = this.getSelectionURIRanges(this.getEditableFromChild(aTarget) || frame	);
 		if (!uris.length) return;
 
-		var selection = null;
-		if ('PlacesController' in window) {
-			selection = frame.getSelection();
-			selection.removeAllRanges();
-		}
+		var selection = frame.getSelection();
+		selection.removeAllRanges();
 		uris = uris.map(function(aRange) {
-				if (selection) {
-					selection.addRange(aRange.range);
-				}
-				else {
-					aRange.range.detach();
-				}
+				selection.addRange(aRange.range);
 				return aRange.uri;
 			});
 
