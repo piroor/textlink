@@ -185,6 +185,33 @@ function test_getFindRange()
 	findRange.detach();
 }
 
+test_getFindRange_plainText.setUp = function()
+{
+	yield Do(utils.loadURI('../fixtures/testcase.txt'));
+}
+function test_getFindRange_plainText()
+{
+	var range = content.document.createRange();
+	var node = content.document.getElementsByTagName('pre')[0].firstChild;
+	range.setStart(node, 7);
+	range.setEnd(node, 32);
+	var rangeText = range.toString();
+	assert.equals('(http://www.mozilla.org/)', rangeText);
+
+	var findRange = sv.getFindRange(range);
+	var findRangeText = findRange.toString();
+	assert.compare(findRangeText.length, '>=', rangeText.length);
+	assert.contains(range, findRange);
+
+	range.setStart(node, 15);
+	range.collapse(true);
+	findRange = sv.getFindRange(range);
+	assert.equals('Mozilla(http://www.mozilla.org/)', findRange.toString());
+
+	range.detach();
+	findRange.detach();
+}
+
 function test_getURIRangesFromRange()
 {
 	var range = content.document.createRange();

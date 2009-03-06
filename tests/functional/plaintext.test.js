@@ -50,19 +50,20 @@ function tearDown()
 function testPlainText()
 {
 	var selection = content.getSelection();
-	uris.forEach(function(aURI, aIndex) {
+	for (var i = 0, maxi = uris.length; i < maxi; i++)
+	{
 		gBrowser.removeAllTabsBut(tabs[0]);
 		action.fireMouseEvent(
 			content,
 			{ type : 'dblclick',
 			  button : 0,
-			  screenX : positions[aIndex].x,
-			  screenY : positions[aIndex].y }
+			  screenX : positions[i].x,
+			  screenY : positions[i].y }
 		);
 		yield 100;
-		assert.equals(2, tabs.length, aURI);
-		assert.equals(tabs[1], gBrowser.selectedTab, aURI);
-		assert.equals(aURI, selection.toString(), aURI);
-	});
+		assert.equals(2, tabs.length, uris[i]);
+		assert.equals(tabs[1], gBrowser.selectedTab, uris[i]);
+		assert.equals(uris[i], selection.toString(), uris[i]);
+	}
 }
 
