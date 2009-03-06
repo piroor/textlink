@@ -917,13 +917,15 @@ var TextLinkService = {
 					expandRange.setStart(lastNode, 0);
 					string = expandRange.toString();
 					let part = this.getURIPartFromEnd(string);
-					if (!part.length || i < 0) {
-						break;
-					}
-					if (part.length < string.length) {
+					if (!part.length) break;
+					if (
+						part.length < string.length ||
+						(part.length == string.length && i == -1)
+						) {
 						offset = string.length - part.length;
 						break;
 					}
+					if (i == -1) break;
 				}
 				catch(e){
 				}
@@ -962,13 +964,15 @@ var TextLinkService = {
 					expandRange.setEnd(lastNode, lastNode.textContent.length);
 					string = expandRange.toString();
 					let part = this.getURIPartFromStart(string);
-					if (!part.length || i >= maxi) {
-						break;
-					}
-					if (part.length < string.length) {
+					if (!part.length) break;
+					if (
+						part.length < string.length ||
+						(part.length == string.length && i == maxi)
+						) {
 						offset = expandRange.startOffset + part.length;
 						break;
 					}
+					if (i == maxi) break;
 				}
 				catch(e) {
 				}
