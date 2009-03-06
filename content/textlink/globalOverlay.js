@@ -930,6 +930,7 @@ var TextLinkService = {
 				catch(e){
 				}
 				node = nodes.snapshotItem(i--);
+				if (!node) break;
 				offset = node.textContent.length;
 				expandRange.selectNode(node);
 			}
@@ -977,6 +978,7 @@ var TextLinkService = {
 				catch(e) {
 				}
 				node = nodes.snapshotItem(i++);
+				if (!node) break;
 				offset = 0;
 				expandRange.selectNode(node);
 			}
