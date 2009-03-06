@@ -9,7 +9,8 @@
 
 <popupset id="mainPopupSet">
 	<tooltip id="textLinkTooltip-selectedURI"
-		onpopupshowing="TextLinkService.handleEvent(event);">
+		onpopupshowing="TextLinkService.handleEvent(event);"
+		onpopuphiding="TextLinkService.handleEvent(event);">
 		<vbox id="textLinkTooltip-selectedURI-box"/>
 	</tooltip>
 </popupset>

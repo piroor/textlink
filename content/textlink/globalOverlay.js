@@ -1110,6 +1110,10 @@ var TextLinkService = {
 				this.buildTooltip(aEvent);
 				return;
 
+			case 'popuphiding':
+				this.destroyTooltip();
+				return;
+
 			case 'SubBrowserAdded':
 				this.initBrowser(aEvent.originalTarget.browser);
 				return;
@@ -1274,10 +1278,7 @@ var TextLinkService = {
 		var iterator = this.tooltip.findURIsIterator;
 		if (!iterator) return false;
 
-		var box = this.tooltipBox;
-		var range = document.createRange();
-		range.selectNodeContents(box);
-		range.deleteContents();
+		this.destroyTooltip();
 
 		var ranges = this.tooltip.foundURIRanges;
 		try {
@@ -1297,9 +1298,15 @@ var TextLinkService = {
 			fragment.appendChild(line);
 		});
 
-		range.insertNode(fragment);
-		range.detach();
+		this.tooltipBox.appendChild(fragment);
 		return true;
+	},
+	destroyTooltip : function()
+	{
+		var range = document.createRange();
+		range.selectNodeContents(this.tooltipBox);
+		range.deleteContents();
+		range.detach();
 	},
   
 	openClickedURI : function(aEvent, aAction) 
