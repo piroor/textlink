@@ -1269,40 +1269,82 @@ var TextLinkService = {
 	{
 		if (this.tooltip.buildTimer) {
 			window.clearInterval(this.tooltip.buildTimer);
+			this.tooltip.buildTimer = null;
 		}
+
+		var target = this.getEditableFromChild(document.popupNode);
+		var selection = this.getSelection(target);
+		selection = selection ?
+			[
+				document.popupNode.ownerDocument.defaultView.location.href,
+				(function() {
+					var positions = [];
+					for (let i = 0, maxi = selection.rangeCount; i < maxi; i++)
+					{
+						let range = selection.getRangeAt(i);
+						let position = range.cloneRange();
+						position.collapse(true);
+						try {
+							position.setStartBefore(range.startContainer.ownerDocument.documentElement);
+							positions.push(position.toString().length+'+'+range.toString().length);
+						}
+						catch(e) {
+						}
+					}
+					return positions.join(',');
+				})(),
+				selection.toString()
+			].join('\n') :
+			null ;
+
+		if (this.tooltip.lastSelection != selection) {
+			this.tooltip.findURIsIterator = this.getURIRangesIterator(target);
+			this.tooltip.foundURIRanges   = [];
+			this.tooltip.lastSelection    = selection;
+		}
+
 		this.tooltip.buildTimer = window.setInterval(function(aSelf) {
 			if (aSelf.updateTooltip()) return;
 			window.clearInterval(aSelf.tooltip.buildTimer);
-			aSelf.tooltip.buildTimer = null;
+			aSelf.tooltip.buildTimer       = null;
+			aSelf.tooltip.foundURIRanges.forEach(function(aRange) {
+				aRange.range.detach();
+			});
+			aSelf.tooltip.foundURIRanges   = [];
+			aSelf.tooltip.findURIsIterator = null;
 		}, 1, this);
 	},
 	updateTooltip : function()
 	{
-		var iterator = this.tooltip.findURIsIterator;
-		if (!iterator) return false;
-
 		this.destroyTooltip();
 
-		var ranges = this.tooltip.foundURIRanges;
-		try {
-			ranges.push(iterator.next());
+		var iterator = this.tooltip.findURIsIterator;
+		if (iterator) {
+			var ranges = this.tooltip.foundURIRanges;
+			try {
+				ranges.push(iterator.next());
+			}
+			catch(e if e instanceof StopIteration) {
+			}
+			catch(e) {
+				return false;
+			}
+			ranges.sort(this._compareRangePosition);
+
+			this.tooltip.foundURIs = ranges.map(function(aRange) {
+				return aRange.uri;
+			});
 		}
-		catch(e if e instanceof StopIteration) {
-		}
-		catch(e) {
-			return false;
-		}
-		ranges.sort(this._compareRangePosition);
 
 		var fragment = document.createDocumentFragment();
-		ranges.forEach(function(aRange) {
+		this.tooltip.foundURIs.forEach(function(aURI) {
 			var line = document.createElement('description');
-			line.setAttribute('value', aRange.uri);
+			line.setAttribute('value', aURI);
 			fragment.appendChild(line);
 		});
 
 		this.tooltipBox.appendChild(fragment);
-		return true;
+		return iterator;
 	},
 	destroyTooltip : function()
 	{
@@ -1542,9 +1584,6 @@ var TextLinkService = {
 			uris.length && TLS.contextItemTab);
 		this.showItem('context-openTextLink-copy',
 			uris.length && TLS.contextItemCopy);
-
-		TLS.tooltip.findURIsIterator = null;
-		TLS.tooltip.foundURIRanges = [];
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -1567,8 +1606,6 @@ var TextLinkService = {
 			].forEach(function(aID) {
 				var item = this.setLabel(aID, attr, targets);
 			}, TLS);
-
-			TLS.tooltip.findURIsIterator = TLS.getURIRangesIterator(target)
 		}
 	},
 	setLabel : function(aID, aAttr, aTargets)
