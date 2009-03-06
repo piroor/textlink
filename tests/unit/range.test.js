@@ -355,6 +355,90 @@ function test_getURIRangesFromRange()
 	range.detach();
 }
 
+test_getURIRangesFromRange_plainText.setUp = function()
+{
+	yield Do(utils.loadURI('../fixtures/testcase.txt'));
+}
+function test_getURIRangesFromRange_plainText()
+{
+	var range = content.document.createRange();
+	range.selectNodeContents(content.document.body);
+
+	var ranges;
+	var rangesToString = function(aRange) {
+			return aRange.range.toString();
+		};
+	var rangesToURI = function(aRange) {
+			return aRange.uri;
+		};
+
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'ttp://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'ttp://ftp.netscape.com/pub/netscape6/',
+			'h++p://www.mozilla.com/',
+			'h**p://www.mozilla.com/firefox/',
+			'http://piro.sakura.ne.jp/',
+			'www.mozilla.org/products/firefox/',
+			'update.mozilla.org',
+			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
+			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／',
+			'www.google.com',
+			'www.google.ca',
+			'addons.mozilla.org',
+			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
+			'mozilla.jp',
+			'http://piro.sakura.ne.jp/latest/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
+			'ttp://piro.sakura.ne.jp/latest/blosxom/webtech/',
+			'ttp://piro.sakura.ne.jp/xul/',
+			'ttp://piro.sakura.ne.jp/xul/tips/',
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/'
+		],
+		ranges.map(rangesToString)
+	);
+	assert.equals(
+		[
+			'http://www.mozilla.org/',
+			'http://www.netscape.com/',
+			'http://jt.mozilla.gr.jp/src-faq.html#1',
+			'http://jt.mozilla.gr.jp/newlayout/gecko.html',
+			'http://ftp.netscape.com/pub/netscape6/',
+			'http://www.mozilla.com/',
+			'http://www.mozilla.com/firefox/',
+			'http://piro.sakura.ne.jp/',
+			'http://www.mozilla.org/products/firefox/',
+			'http://update.mozilla.org',
+			'http://white.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/',
+			'http://www98.sakura.ne.jp/~piro/entrance/',
+			'http://www.google.com',
+			'http://www.google.ca',
+			'http://addons.mozilla.org',
+			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
+			'http://mozilla.jp',
+			'http://piro.sakura.ne.jp/latest/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
+			'http://piro.sakura.ne.jp/latest/blosxom/webtech/',
+			'http://piro.sakura.ne.jp/xul/',
+			'http://piro.sakura.ne.jp/xul/tips/',
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/'
+		],
+		ranges.map(rangesToURI)
+	);
+
+	range.detach();
+}
+
 function test_getSelectionURIRanges()
 {
 	var ranges;

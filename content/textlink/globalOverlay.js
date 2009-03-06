@@ -821,8 +821,9 @@ var TextLinkService = {
 				aRangeSet.startPoint.setEnd(termRange.startContainer, termRange.startOffset);
 			}
 			else {
-				aRangeSet.startPoint.setStart(termRange.endContainer, termRange.endOffset);
+				aRangeSet.startPoint.setEnd(termRange.endContainer, termRange.endOffset);
 			}
+			aRangeSet.startPoint.collapse(false);
 		}
 		if (termRange) termRange.detach();
 		return uriRange;
