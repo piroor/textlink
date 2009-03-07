@@ -2,6 +2,8 @@ utils.include('common.inc.js');
 
 function setUp()
 {
+	utils.setPref('intl.accept_languages', 'ja,en-us,en');
+	utils.setPref('intl.charset.detector', 'ja_parallel_state_machine');
 	sv = getNewService();
 	yield Do(utils.loadURI('../fixtures/testcase.html'));
 }

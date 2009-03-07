@@ -27,7 +27,8 @@ function setUp()
 
 		var span = content.document.createElement('span');
 		span.appendChild(range.extractContents());
-		range.insertNode(span);
+//		range.insertNode(span); // this sometimes inserts a blank text node ("") unexpectedly...
+		container.insertBefore(span, container.childNodes[1]);
 		assert.equals(3, container.childNodes.length, aURI);
 		var box = content.document.getBoxObjectFor(span);
 		positions.push({ x : box.screenX, y : box.screenY });
