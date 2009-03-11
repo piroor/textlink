@@ -1115,6 +1115,7 @@ var TextLinkService = {
 
 			case 'popuphiding':
 				this.destroyTooltip();
+				this.stopProgressiveBuildTooltip();
 				return;
 
 			case 'SubBrowserAdded':
@@ -1267,10 +1268,7 @@ var TextLinkService = {
  
 	buildTooltip : function(aEvent) 
 	{
-		if (this.tooltip.buildTimer) {
-			window.clearInterval(this.tooltip.buildTimer);
-			this.tooltip.buildTimer = null;
-		}
+		this.stopProgressiveBuildTooltip();
 
 		var target = this.getEditableFromChild(document.popupNode);
 		var selection = this.getSelection(target);
@@ -1313,6 +1311,13 @@ var TextLinkService = {
 			aSelf.tooltip.foundURIRanges   = [];
 			aSelf.tooltip.findURIsIterator = null;
 		}, 1, this);
+	},
+	stopProgressiveBuildTooltip : function()
+	{
+		if (this.tooltip.buildTimer) {
+			window.clearInterval(this.tooltip.buildTimer);
+			this.tooltip.buildTimer = null;
+		}
 	},
 	updateTooltip : function()
 	{
