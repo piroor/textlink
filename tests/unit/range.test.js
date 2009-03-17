@@ -57,6 +57,8 @@ function test_getSelection()
 	);
 }
 
+var textEncoderEnabled = '@mozilla.org/layout/documentEncoder;1?type=text/plain' in Cc &&
+						'nsIDocumentEncoder' in Ci;
 function test_getTextContentFromRange()
 {
 	var range = content.document.createRange();
@@ -81,17 +83,38 @@ ttp://piro.sakura.ne.jp/latest/blosxom/webtech/
 ttp://piro.sakura.ne.jp/xul/
 ttp://piro.sakura.ne.jp/xul/tips/
 ]]>.toString();
-	assert.equals(text, range.toString());
-	assert.equals(text, sv.getTextContentFromRange(range));
 
-	range.selectNodeContents($('br'));
-	assert.equals(
-		<![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。
+	var formattedText = <![CDATA[非表示のテキスト。 http://piro.sakura.ne.jp/ http://www.mozilla.org/ www.mozilla.org/products/firefox/ http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8
+
+Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。 詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。 Mozillaは Netscape Communicator 5.0になる予定でしたが、NGLayoutという全く新しいレイアウトエンジンttp://jt.mozilla.gr.jp/newlayout/gecko.htmlを採用するという方針転換を行ったために開発が遅れてしまい、 Netscape 6 ttp://ftp.netscape.com/pub/netscape6/がリリースされたのは計画スタートから2年も経ってからのことでした。 そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。
+
+非表示のテキスト。 http://piro.sakura.ne.jp/latest/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/ ttp://piro.sakura.ne.jp/latest/blosxom/webtech/ ttp://piro.sakura.ne.jp/xul/ ttp://piro.sakura.ne.jp/xul/tips/ ]]>.toString();
+
+	assert.equals(text, range.toString());
+	if (textEncoderEnabled) {
+		assert.equals(formattedText, sv.getTextContentFromRange(range));
+	}
+	else {
+		assert.equals(text, sv.getTextContentFromRange(range));
+	}
+
+
+	text = <![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。
 ...
 mozilla.jp/
-Mozilla Japanのサイト。]]>.toString(),
-		sv.getTextContentFromRange(range)
-	);
+Mozilla Japanのサイト。]]>.toString();
+
+	formattedText = <![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。 ...
+mozilla.jp/
+Mozilla Japanのサイト。]]>.toString();
+
+	range.selectNodeContents($('br'));
+	if (textEncoderEnabled) {
+		assert.equals(formattedText, sv.getTextContentFromRange(range));
+	}
+	else {
+		assert.equals(text, sv.getTextContentFromRange(range));
+	}
 
 	range.detach();
 }

@@ -325,21 +325,22 @@ var TextLinkService = {
  
 	rangeToString : function(aRange) 
 	{
-		if (this._textEncoder) {
+		var encoder = this._textEncoder;
+		if (encoder) {
 			try {
-				this._textEncoder.init(
+				encoder.init(
 					aRange.startContainer.ownerDocument,
 					'text/plain',
-					this._textEncoder.OutputBodyOnly
+					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
 				);
-				this._textEncoder.setRange(aRange);
-				var result = this._textEncoder.encodeToString();
-				this._textEncoder.init(
+				encoder.setRange(aRange);
+				var result = encoder.encodeToString();
+				encoder.init(
 					document,
 					'text/plain',
-					this._textEncoder.OutputBodyOnly
+					encoder.OutputBodyOnly
 				);
-				this._textEncoder.setRange(null);
+				encoder.setRange(null);
 				return result;
 			}
 			catch(e) {
