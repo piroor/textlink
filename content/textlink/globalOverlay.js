@@ -881,7 +881,7 @@ var TextLinkService = {
 			return findRange;
 		}
 
-		var nodes, node, lastNode, offset, string;
+		var nodes, node, lastNode, offset, string, baseBlock;
 
 		var expandToBefore = aBaseRange.collapsed;
 		var expandToAfter  = aBaseRange.collapsed;
@@ -906,6 +906,7 @@ var TextLinkService = {
 					).singleNodeValue;
 				offset = 0;
 			}
+			baseBlock = this._getParentBlock(node);
 			nodes = this.evaluateXPath(
 					'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 					node
@@ -914,6 +915,7 @@ var TextLinkService = {
 			while (true)
 			{
 				lastNode = node;
+				if (this._getParentBlock(lastNode) != baseBlock) break;
 				try{ // Firefox 2 sometimes fails...
 					expandRange.setStart(lastNode, 0);
 					string = expandRange.toString();
@@ -953,6 +955,7 @@ var TextLinkService = {
 					).singleNodeValue;
 				offset = node ? node.textContent.length : 0 ;
 			}
+			baseBlock = this._getParentBlock(node);
 			nodes = this.evaluateXPath(
 					'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 					node
@@ -962,6 +965,7 @@ var TextLinkService = {
 			while (true)
 			{
 				lastNode = node;
+				if (this._getParentBlock(lastNode) != baseBlock) break;
 				try{ // Firefox 2 sometimes fails...
 					expandRange.setEnd(lastNode, lastNode.textContent.length);
 					string = expandRange.toString();
@@ -991,6 +995,18 @@ var TextLinkService = {
 		expandRange.detach();
 
 		return findRange;
+	},
+	_getParentBlock : function(aNode)
+	{
+		var win = aNode.ownerDocument.defaultView;
+		if (aNode.nodeType != Node.ELEMENT_NODE) aNode = aNode.parentNode;
+		while (aNode)
+		{
+			let display = win.getComputedStyle(aNode, null).getPropertyValue('display');
+			if (display != 'inline') break;
+			aNode = aNode.parentNode;
+		}
+		return aNode;
 	},
   
 	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash) 
