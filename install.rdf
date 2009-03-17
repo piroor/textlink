@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{54BB9F3F-07E5-486c-9B39-C7398B99391C}"
                    em:name="Text Link"
-                   em:version="3.0.2009031701"
+                   em:version="3.0.2009031801"
                    em:creator="SHIMODA Hiroshi"
                    em:description="Allows URI texts written in webpages to be loaded by double clicks."
                    em:iconURL="chrome://textlink/content/icon.png"
