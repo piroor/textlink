@@ -756,18 +756,12 @@ var TextLinkService = {
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
-
-			var termForCheck = this.shouldParseMultibyteCharacters ?
-					this.convertFullWidthToHalfWidth(aTerm) :
-					aTerm ;
-
 			aTerm = this.sanitizeURIString(aTerm);
-			termForCheck = this.sanitizeURIString(termForCheck);
 			if (
-				termForCheck &&
+				aTerm &&
 				(
-					!this.shouldParseRelativePath ||
-					this.isLoadableSchemer(this.fixupSchemer(termForCheck))
+					this.shouldParseRelativePath ||
+					this.isLoadableSchemer(this.fixupSchemer(this.convertFullWidthToHalfWidth(aTerm)))
 				) &&
 				terms.indexOf(aTerm) < 0
 				) {
