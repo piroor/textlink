@@ -753,17 +753,22 @@ var TextLinkService = {
 		if (aMode == this.FIND_LAST) {
 			mayBeURIs = Array.slice(mayBeURIs).reverse();
 		}
-		var checker = this.shouldParseRelativePath ?
-					null :
-				this.shouldParseMultibyteCharacters ?
-					this._isTermLoadableFullWidth :
-					this._isTermLoadableHalfWidth ;
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
+
+			var termForCheck = this.shouldParseMultibyteCharacters ?
+					this.convertFullWidthToHalfWidth(aTerm) :
+					aTerm ;
+
 			aTerm = this.sanitizeURIString(aTerm);
+			termForCheck = this.sanitizeURIString(termForCheck);
 			if (
-				(!checker || checker.call(this, aTerm)) &&
+				termForCheck &&
+				(
+					!this.shouldParseRelativePath ||
+					this.isLoadableSchemer(this.fixupSchemer(termForCheck))
+				) &&
 				terms.indexOf(aTerm) < 0
 				) {
 				terms.push(aTerm);
@@ -774,14 +779,6 @@ var TextLinkService = {
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
 		return terms;
-	},
-	_isTermLoadableHalfWidth : function(aTerm)
-	{
-		return this.isLoadableSchemer(this.fixupSchemer(aTerm));
-	},
-	_isTermLoadableFullWidth : function(aTerm)
-	{
-		return this.isLoadableSchemer(this.fixupSchemer(this.convertFullWidthToHalfWidth(aTerm)));
 	},
 	_getRangeSetFromRange : function(aBaseRange, aFindRange, aMode)
 	{
