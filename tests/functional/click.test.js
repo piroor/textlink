@@ -65,12 +65,13 @@ function assertMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_WINDOW;
 
+	assert.equals(0, browserWindowCount);
 	action.fireMouseEvent(content, aClick);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(isFirstTabUnloaded());
-	assert.equals(originalWindows.length+1, utils.getChromeWindows().length);
+	assert.equals(1, browserWindowCount);
 
 	utils.setClipBoard('test');
 	assert.equals('test', utils.getClipBoard());
@@ -145,13 +146,12 @@ function assertNoMouseActions(aClick)
 
 	sv.actions.test.action = sv.ACTION_OPEN_IN_WINDOW;
 
-	var originalWindows = utils.getChromeWindows();
 	action.fireMouseEvent(content, aClick);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(isFirstTabUnloaded());
-	assert.equals(originalWindows.length, utils.getChromeWindows().length);
+	assert.equals(0, browserWindowCount);
 
 	utils.setClipBoard('test');
 	assert.equals('test', utils.getClipBoard());

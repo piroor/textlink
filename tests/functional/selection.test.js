@@ -141,13 +141,11 @@ function testOpenInBackgroundTabs()
 
 function testOpenInWindows()
 {
+	assert.equals(0, browserWindowCount);
 	sv.openTextLinkIn(sv.ACTION_OPEN_IN_WINDOW);
 	yield 100;
 	assert.equals(1, tabs.length);
-	assert.equals(
-		originalWindows.length + uris.length,
-		utils.getChromeWindows().length
-	);
+	assert.equals(uris.length, browserWindowCount);
 
 	assertSelectionRanges(content, uris, ranges);
 }

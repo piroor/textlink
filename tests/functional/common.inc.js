@@ -3,6 +3,7 @@ var sv;
 var tabs;
 var originalWindows;
 var unloaded;
+var browserWindowCount;
 
 function commonSetUp(aPath)
 {
@@ -18,7 +19,6 @@ function commonSetUp(aPath)
 	win = utils.getTestWindow();
 	sv = win.TextLinkService;
 	tabs = gBrowser.mTabs;
-	originalWindows = utils.getChromeWindows();
 
 	sv.actions = {
 		test : {
@@ -33,16 +33,19 @@ function commonSetUp(aPath)
 		aEvent.currentTarget.removeEventListener('unload', arguments.callee, true);
 		unloaded = true;
 	}, true);
+
+	browserWindowCount = 0;
+	win.open = win.__proto__.open = function() {
+		browserWindowCount++;
+	};
+	win.openDialog = win.__proto__.openDialog = function(aURI) {
+		if (aURI == win.location.href) browserWindowCount++;
+	};
+	assert.equals(0, browserWindowCount);
 }
 
 function commonTearDown()
 {
-	var windows = utils.getChromeWindows();
-	windows.forEach(function(aWindow) {
-		if (originalWindows.indexOf(aWindow) < 0)
-			aWindow.close();
-	});
-
 	utils.tearDownTestWindow();
 }
 
