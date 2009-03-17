@@ -90,7 +90,6 @@ Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次�
 
 非表示のテキスト。 http://piro.sakura.ne.jp/latest/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/ ttp://piro.sakura.ne.jp/latest/blosxom/webtech/ ttp://piro.sakura.ne.jp/xul/ ttp://piro.sakura.ne.jp/xul/tips/ ]]>.toString();
 
-	assert.equals(text, range.toString());
 	if (textEncoderEnabled) {
 		assert.equals(formattedText, sv.getTextContentFromRange(range));
 	}

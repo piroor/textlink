@@ -278,6 +278,27 @@ var TextLinkService = {
  
 	getTextContentFromRange : function(aRange) 
 	{
+		var encoder = this._textEncoder;
+		if (encoder) { // Firefox 3 or later
+			try {
+				encoder.init(
+					aRange.startContainer.ownerDocument,
+					'text/plain',
+					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
+				);
+				encoder.setRange(aRange);
+				var result = encoder.encodeToString();
+				encoder.init(
+					document,
+					'text/plain',
+					encoder.OutputBodyOnly
+				);
+				encoder.setRange(null);
+				return result;
+			}
+			catch(e) {
+			}
+		}
 		try {
 			var range = aRange.cloneRange();
 			range.collapse(true);
@@ -303,7 +324,7 @@ var TextLinkService = {
 				}
 
 				range.setEndBefore(node);
-				result.push(this.rangeToString(range));
+				result.push(range.toString());
 
 				if (node.localName.toLowerCase() == 'br') {
 					result.push('\n');
@@ -313,42 +334,17 @@ var TextLinkService = {
 				range.collapse(false);
 			}
 			range.setEnd(aRange.endContainer, aRange.endOffset);
-			result.push(this.rangeToString(range));
+			result.push(range.toString());
 			range.detach();
 			return result.join('');
 		}
 		catch(e) {
 		}
 		// fallback
-		return this.rangeToString(aRange)
-	},
- 
-	rangeToString : function(aRange) 
-	{
-		var encoder = this._textEncoder;
-		if (encoder) {
-			try {
-				encoder.init(
-					aRange.startContainer.ownerDocument,
-					'text/plain',
-					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
-				);
-				encoder.setRange(aRange);
-				var result = encoder.encodeToString();
-				encoder.init(
-					document,
-					'text/plain',
-					encoder.OutputBodyOnly
-				);
-				encoder.setRange(null);
-				return result;
-			}
-			catch(e) {
-			}
-		}
 		return aRange.toString();
 	},
-	get _textEncoder()
+ 
+	get _textEncoder() 
 	{
 		if (this.__textEncoder === void(0)) {
 			try {
