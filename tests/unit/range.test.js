@@ -122,30 +122,11 @@ Mozilla Japanのサイト。]]>.toString();
 function test_shrinkURIRange()
 {
 	var range = content.document.createRange();
-	var node = $('first').firstChild;
-
-	range.setStart(node, 7);
-	range.setEnd(node, 32);
-	assert.equals('(http://www.mozilla.org/)', range.toString());
-	range = sv.shrinkURIRange(range);
-	assert.equals('http://www.mozilla.org/', range.toString());
-
-	range.setStart(node, 8);
-	range.setEnd(node, 31);
-	assert.equals('http://www.mozilla.org/', range.toString());
-	range = sv.shrinkURIRange(range);
-	assert.equals('http://www.mozilla.org/', range.toString());
-
-	range.setStart(node, 6);
-	range.setEnd(node, 32);
-	assert.equals('a(http://www.mozilla.org/)', range.toString());
-	range = sv.shrinkURIRange(range);
-	assert.equals('http://www.mozilla.org/', range.toString());
 
 	range.selectNodeContents($('br'));
-	range.setStart($('br1').previousSibling, $('br1').previousSibling.length-3);
+	range.setStartAfter($('br1'));
 	range.setEnd($('br2').nextSibling, 7);
-	assert.equals('...mozilla.jp/Mozilla', range.toString());
+	assert.equals('mozilla.jp/Mozilla', range.toString());
 	range = sv.shrinkURIRange(range);
 	assert.equals('mozilla.jp/', range.toString());
 

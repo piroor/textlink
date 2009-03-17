@@ -487,6 +487,23 @@ var TextLinkService = {
 		this._URIPartRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
  
+	isLoadableSchemer : function(aURI) 
+	{
+		if (!this._schemerRegExp) {
+			this._schemerRegExp = new RegExp(
+				'('+
+				this.schemer
+					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+					.replace(/\?/g, '.')
+					.replace(/\*/g, '.+')
+					.replace(/[,\| \n\r\t]+/g, '|')+
+				')'
+			);
+		}
+		return this._schemerRegExp.test(aURI.substr(0, aURI.indexOf(':')).toLowerCase());
+	},
+	_schemerRegExp : null,
+ 
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
 		if (this.shouldParseMultibyteCharacters) {
@@ -504,25 +521,8 @@ var TextLinkService = {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
-		if (!this._schemerRegExp) {
-			this._schemerRegExp = new RegExp(
-				'('+
-				this.schemer
-					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-					.replace(/\?/g, '.')
-					.replace(/\*/g, '.+')
-					.replace(/[,\| \n\r\t]+/g, '|')+
-				')'
-			);
-		}
-		if (this._schemerRegExp.test(
-				aURIComponent.substr(0, aURIComponent.indexOf(':')).toLowerCase()
-			))
-			return aURIComponent;
-
-		return null;
+		return this.isLoadableSchemer(aURIComponent) ? aURIComponent : null ;
 	},
-	_schemerRegExp : null,
 	
 	sanitizeURIString : function(aURIComponent) 
 	{
@@ -753,18 +753,35 @@ var TextLinkService = {
 		if (aMode == this.FIND_LAST) {
 			mayBeURIs = Array.slice(mayBeURIs).reverse();
 		}
+		var checker = this.shouldParseRelativePath ?
+					null :
+				this.shouldParseMultibyteCharacters ?
+					this._isTermLoadableFullWidth :
+					this._isTermLoadableHalfWidth ;
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
-			if (terms.indexOf(aTerm) < 0) {
+			aTerm = this.sanitizeURIString(aTerm);
+			if (
+				(!checker || checker.call(this, aTerm)) &&
+				terms.indexOf(aTerm) < 0
+				) {
 				terms.push(aTerm);
 			}
-		});
+		}, this);
 		if (aMode == this.FIND_ALL) {
 			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
 		return terms;
+	},
+	_isTermLoadableHalfWidth : function(aTerm)
+	{
+		return this.isLoadableSchemer(this.fixupSchemer(aTerm));
+	},
+	_isTermLoadableFullWidth : function(aTerm)
+	{
+		return this.isLoadableSchemer(this.fixupSchemer(this.convertFullWidthToHalfWidth(aTerm)));
 	},
 	_getRangeSetFromRange : function(aBaseRange, aFindRange, aMode)
 	{
@@ -1105,23 +1122,6 @@ var TextLinkService = {
   
 	shrinkURIRange : function(aRange) 
 	{
-		var original = aRange.toString();
-		var uri = this.sanitizeURIString(original);
-		if (original != uri) {
-			var startPoint = aRange.cloneRange();
-			startPoint.collapse(true);
-			var endPoint = aRange.cloneRange();
-			endPoint.collapse(false);
-			var findBackwards = this.Find.findBackwards;
-			this.Find.findBackwards = false;
-			var newRange = this.Find.Find(uri, aRange, startPoint, endPoint);
-			this.Find.findBackwards = findBackwards
-			aRange.detach();
-			startPoint.detach();
-			endPoint.detach();
-			aRange = newRange;
-		}
-
 		// 強制改行以降を切り落とす
 		var nodes = this.evaluateXPath(
 				'following::*[local-name()="br" or local-name()="BR"] | '+
