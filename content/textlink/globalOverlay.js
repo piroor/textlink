@@ -303,7 +303,7 @@ var TextLinkService = {
 				}
 
 				range.setEndBefore(node);
-				result.push(range.toString());
+				result.push(this.rangeToString(range));
 
 				if (node.localName.toLowerCase() == 'br') {
 					result.push('\n');
@@ -313,14 +313,52 @@ var TextLinkService = {
 				range.collapse(false);
 			}
 			range.setEnd(aRange.endContainer, aRange.endOffset);
-			result.push(range.toString());
+			result.push(this.rangeToString(range));
 			range.detach();
 			return result.join('');
 		}
 		catch(e) {
 		}
 		// fallback
+		return this.rangeToString(aRange)
+	},
+ 
+	rangeToString : function(aRange) 
+	{
+		if (this._textEncoder) {
+			try {
+				this._textEncoder.init(
+					aRange.startContainer.ownerDocument,
+					'text/plain',
+					this._textEncoder.OutputBodyOnly
+				);
+				this._textEncoder.setRange(aRange);
+				var result = this._textEncoder.encodeToString();
+				this._textEncoder.init(
+					document,
+					'text/plain',
+					this._textEncoder.OutputBodyOnly
+				);
+				this._textEncoder.setRange(null);
+				return result;
+			}
+			catch(e) {
+			}
+		}
 		return aRange.toString();
+	},
+	get _textEncoder()
+	{
+		if (this.__textEncoder === void(0)) {
+			try {
+				this.__textEncoder = Components.classes['@mozilla.org/layout/documentEncoder;1?type=text/plain']
+										.createInstance(Components.interfaces.nsIDocumentEncoder);
+			}
+			catch(e) {
+				this.__textEncoder = null;
+			}
+		}
+		return this.__textEncoder;
 	},
  
 	evaluateXPath : function(aExpression, aContext, aType) 

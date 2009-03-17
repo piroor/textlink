@@ -141,6 +141,24 @@ function test_shrinkURIRange()
 	assert.equals('http://mozilla.jp/product/firefox/', range.toString());
 }
 
+function assert_getFindRangeFromBlockContents(aNode)
+{
+	var range = aNode.ownerDocument.createRange();
+	range.selectNodeContents(aNode);
+	var full = range.toString();
+	var findRange = sv.getFindRange(range);
+	assert.equals(full, findRange.toString());
+
+	findRange.detach();
+
+	range.setStart(aNode.firstChild, 3);
+	range.setEnd(aNode.firstChild, 5);
+	findRange = sv.getFindRange(range);
+	assert.equals(full, findRange.toString());
+
+	findRange.detach();
+	range.detach();
+}
 function test_getFindRange()
 {
 	var range = content.document.createRange();
@@ -181,6 +199,16 @@ function test_getFindRange()
 	findRangeText = findRange.toString();
 	assert.equals($('textarea').value.replace(/\n/g, ''), findRangeText);
 	assert.contains(range, findRange);
+
+
+	// インライン要素以外を文字列の切れ目として識別できるかどうか？
+	assert_getFindRangeFromBlockContents($('table-cell1'));
+	assert_getFindRangeFromBlockContents($('table-cell2'));
+	assert_getFindRangeFromBlockContents($('table-cell3'));
+
+	assert_getFindRangeFromBlockContents($('span-block1'));
+	assert_getFindRangeFromBlockContents($('span-block2'));
+	assert_getFindRangeFromBlockContents($('span-block3'));
 
 
 	range.detach();
