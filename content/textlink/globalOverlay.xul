@@ -6,6 +6,9 @@
 
 <script type="application/x-javascript" src="chrome://textlink/content/prefs.js"/>
 <script type="application/x-javascript; version=1.7" src="chrome://textlink/content/globalOverlay.js"/>
+<script type="application/x-javascript; version=1.7"><![CDATA[
+window.addEventListener('load', TextLinkService, false);
+]]></script>
 
 <popupset id="mainPopupSet">
 	<tooltip id="textLinkTooltip-selectedURI"

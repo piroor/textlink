@@ -1692,5 +1692,4 @@ var TextLinkService = {
 }; 
 
 TextLinkService.__proto__ = window['piro.sakura.ne.jp'].prefs;
-window.addEventListener('load', TextLinkService, false);
  
