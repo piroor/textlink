@@ -650,6 +650,8 @@ var TextLinkService = {
 	FIND_ALL    : 1,
 	FIND_FIRST  : 2,
 	FIND_LAST   : 4,
+	ALLOW_SAME_URIS : 8,
+
 	FIND_SINGLE : 6,
 
 	ERRROR_FIND_MODE_NOT_SPECIFIED : new Error('you must specify find mode'),
@@ -720,23 +722,32 @@ var TextLinkService = {
 		}
 
 		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
+		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 
 		this.Find.findBackwards = (aMode == this.FIND_LAST);
-		for (var i in terms)
+		for (let i in terms)
 		{
-			let range = this._findFirstRangeForTerm(
+			let rangesForTerm = this._findRangesForTerm(
 					terms[i],
 					rangeSet,
 					baseURI,
 					aStrict,
 					ranges,
-					foundURIsHash
+					foundURIsHash,
+					aMode
 				);
-			if (!range) continue;
+			if (!rangesForTerm.length) continue;
 
-			ranges.push(range);
-			foundURIsHash[range.uri] = true;
-			yield range;
+			ranges = ranges.concat(rangesForTerm);
+			if (shouldReturnSingleResult) {
+				rangesForTerm.forEach(function(aRange) {
+					foundURIsHash[aRange.uri] = true;
+				});
+			}
+			for (let i in rangesForTerm)
+			{
+				yield rangesForTerm[i];
+			}
 
 			if (ranges.length && findOnlyFirst) break;
 		}
@@ -822,7 +833,7 @@ var TextLinkService = {
 		delete aRangeSet.position;
 		delete aRangeSet.base;
 	},
-	_findFirstRangeForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash)
+	_findRangesForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash, aMode)
 	{
 		if (!aFoundURIsHash) aFoundURIsHash = {};
 		if (!aRanges) aRanges = [];
@@ -834,7 +845,9 @@ var TextLinkService = {
 		}
 		aRangeSet.startPoint.collapse(true);
 		var termRange, range, uri;
+		var uriRanges = [];
 		var uriRange = null;
+		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
 		{
 			if (this._containsRange(aRangeSet.base, termRange, aStrict)) {
@@ -852,13 +865,14 @@ var TextLinkService = {
 						base  : aRangeSet.base
 					};
 					if (!aRanges.some(this._checkRangeFound, uriRange)) {
-						break;
+						uriRanges.push(uriRange);
+						if (shouldReturnSingleResult) break;
 					}
 					else {
 						uriRange = null;
 					}
 				}
-				range.detach();
+				if (shouldReturnSingleResult) range.detach();
 			}
 			if (this.Find.findBackwards) {
 				aRangeSet.startPoint.setEnd(termRange.startContainer, termRange.startOffset);
@@ -869,7 +883,7 @@ var TextLinkService = {
 			aRangeSet.startPoint.collapse(false);
 		}
 		if (termRange) termRange.detach();
-		return uriRange;
+		return uriRanges;
 	},
 	_containsRange : function(aBase, aTarget, aStrict)
 	{/* nsIDOMRangeのcompareBoundaryPointsを使うと、テキスト入力欄内のRangeの比較時に

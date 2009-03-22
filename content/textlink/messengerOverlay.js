@@ -61,7 +61,10 @@ var TextLinkMessengerService = {
 		var doc = this.browser.contentDocument;
 		var range = doc.createRange();
 		range.selectNodeContents(doc.body);
-		var uriRanges = this.getURIRangesFromRange(range);
+		var uriRanges = this.getURIRangesFromRange(
+				range,
+				this.FIND_ALL | this.ALLOW_SAME_URIS
+			);
 		uriRanges.reverse().forEach(function(aRange) {
 			if (!this.getParentLink(aRange.range.startContainer)) {
 				let text = aRange.range.toString();
