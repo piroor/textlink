@@ -150,29 +150,32 @@
 						preference="textlink.actions.0.action">
 						<menupopup>
 							<menuitem label="&textlink.action.blank;"   value="0"/>
-							<menuseparator/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.select;"  value="2"/>
-							<menuseparator/>
 							<menuitem label="&textlink.action.openByBrowser;"  value="4"
-								class="messenger"/>
+								class="product-messenger"/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.current;" value="4"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window;"  value="8"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab;"     value="16"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground;" value="32"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.current.stealth;" value="5"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window.stealth;"  value="9"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -246,29 +249,32 @@
 						preference="textlink.actions.1.action">
 						<menupopup>
 							<menuitem label="&textlink.action.blank;"   value="0"/>
-							<menuseparator/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.select;"  value="2"/>
-							<menuseparator/>
 							<menuitem label="&textlink.action.openByBrowser;"  value="4"
-								class="messenger"/>
+								class="product-messenger"/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.current;" value="4"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window;"  value="8"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab;"     value="16"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground;" value="32"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.current.stealth;" value="5"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window.stealth;"  value="9"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -342,29 +348,32 @@
 						preference="textlink.actions.2.action">
 						<menupopup>
 							<menuitem label="&textlink.action.blank;"   value="0"/>
-							<menuseparator/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.select;"  value="2"/>
-							<menuseparator/>
 							<menuitem label="&textlink.action.openByBrowser;"  value="4"
-								class="messenger"/>
+								class="product-messenger"/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.current;" value="4"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window;"  value="8"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab;"     value="16"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground;" value="32"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.current.stealth;" value="5"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window.stealth;"  value="9"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -438,29 +447,32 @@
 						preference="textlink.actions.3.action">
 						<menupopup>
 							<menuitem label="&textlink.action.blank;"   value="0"/>
-							<menuseparator/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.select;"  value="2"/>
-							<menuseparator/>
 							<menuitem label="&textlink.action.openByBrowser;"  value="4"
-								class="messenger"/>
+								class="product-messenger"/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.current;" value="4"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window;"  value="8"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab;"     value="16"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground;" value="32"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.current.stealth;" value="5"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window.stealth;"  value="9"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
+							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
 					<label value="&textlink.action_after;"
@@ -534,29 +546,31 @@
 						preference="textlink.actions.4.action">
 						<menupopup>
 							<menuitem label="&textlink.action.blank;"   value="0"/>
-							<menuseparator/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.select;"  value="2"/>
-							<menuseparator/>
 							<menuitem label="&textlink.action.openByBrowser;"  value="4"
-								class="messenger"/>
+								class="product-messenger"/>
+							<menuseparator
+								class="product-browser"/>
 							<menuitem label="&textlink.action.current;" value="4"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window;"  value="8"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab;"     value="16"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground;" value="32"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.current.stealth;" value="5"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.window.stealth;"  value="9"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tab.stealth;"     value="17"
-								class="browser"/>
+								class="product-browser"/>
 							<menuitem label="&textlink.action.tabBackground.stealth;" value="33"
-								class="browser"/>
-							<menuseparator class="browser"/>
+								class="product-browser"/>
+							<menuseparator class="product-browser"/>
 							<menuitem label="&textlink.action.copy;"  value="1024"/>
 						</menupopup>
 					</menulist>
@@ -575,7 +589,7 @@
 	</hbox>
 	</vbox>
 
-	<groupbox orient="vertical" class="browser">
+	<groupbox orient="vertical" class="product-browser">
 		<caption id="textlink.group.contextmenu"
 			label="&textlink.group.contextmenu;"/>
 		<checkbox id="textlink.contextmenu.openTextLink.current-check"
@@ -592,7 +606,7 @@
 			preference="textlink.contextmenu.openTextLink.copy"/>
 	</groupbox>
 
-	<vbox class="messenger">
+	<vbox class="product-messenger">
 		<checkbox id="textlink.messenger.linkify-check"
 			label="&textlink.messenger.linkify;"
 			preference="textlink.messenger.linkify"/>
@@ -655,7 +669,7 @@
 		</hbox>
 
 		<checkbox id="textlink.relative.enabled-check"
-			class="browser"
+			class="product-browser"
 			label="&textlink.relative.enabled;"
 			preference="textlink.relative.enabled"/>
 		<checkbox id="textlink.multibyte.enabled-check"
@@ -678,6 +692,6 @@
 
 </prefpane>
 
-<script type="application/x-javascript" src="chrome://textlink/content/pref/prefDialog.js"/>
+<script type="application/x-javascript; version=1.7" src="chrome://textlink/content/pref/prefDialog.js"/>
 
 </prefwindow>

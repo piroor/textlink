@@ -1,6 +1,66 @@
 function init()
 {
+	initForProduct();
 	initMacLabel();
+}
+
+function initForProduct()
+{
+	var XULAppInfo = Components
+			.classes['@mozilla.org/xre/app-info;1']
+			.getService(Components.interfaces.nsIXULAppInfo);
+	var product;
+	switch (XULAppInfo.ID)
+	{
+		case '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}':
+			product = 'browser';
+			break;
+		case '{3550f703-e582-4d05-9a08-453d09bdfdc6}':
+			product = 'messenger';
+			break;
+		default:
+			return;
+	}
+
+	var defaultAction = 4; // load in current
+
+	var nodes = evaluateXPath('/descendant::*[starts-with(@class, "product-")]');
+	for (let i = nodes.snapshotLength-1; i > -1; i--)
+	{
+		let node = nodes.snapshotItem(i);
+
+		let target = node.getAttribute('class').replace('product-', '');
+		if (target == product) continue;
+
+		node.setAttribute('collapsed', true);
+
+		switch (node.localName)
+		{
+			case 'menuitem':
+				let menulist = evaluateXPath(
+						'ancestor::*[local-name()="menulist"]',
+						node,
+						XPathResult.FIRST_ORDERED_NODE_TYPE
+					).singleNodeValue;
+				if (menulist && menulist.selectedItem == node)
+					menulist.value = defaultAction;
+				break;
+
+			default:
+				break;
+		}
+	}
+}
+
+function evaluateXPath(aExpression, aContext, aType)
+{
+	return document.evaluate(
+			aExpression,
+			aContext || document,
+			null,
+			aType || XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+			null
+		);
 }
 
 function initMacLabel()
