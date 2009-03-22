@@ -250,7 +250,7 @@ function test_getURIRangesFromRange()
 {
 	var range = content.document.createRange();
 	range.selectNodeContents($('first'));
-	range.setEndAfter($('fullwidth'));
+	range.setEndAfter($('prefix'));
 
 	var ranges;
 	var rangesToString = function(aRange) {
@@ -275,7 +275,8 @@ function test_getURIRangesFromRange()
 			'update.mozilla.org',
 			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
-			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／'
+			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／',
+			'http://www.example.com/'
 		],
 		ranges.map(rangesToString)
 	);
@@ -293,7 +294,8 @@ function test_getURIRangesFromRange()
 			'http://update.mozilla.org',
 			'http://white.sakura.ne.jp/~piro/',
 			'http://www98.sakura.ne.jp/~piro/',
-			'http://www98.sakura.ne.jp/~piro/entrance/'
+			'http://www98.sakura.ne.jp/~piro/entrance/',
+			'http://www.example.com/'
 		],
 		ranges.map(rangesToURI)
 	);
@@ -303,8 +305,8 @@ function test_getURIRangesFromRange()
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
 	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
-	assert.equals(['ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／'], ranges.map(rangesToString));
-	assert.equals(['http://www98.sakura.ne.jp/~piro/entrance/'], ranges.map(rangesToURI));
+	assert.equals(['http://www.example.com/'], ranges.map(rangesToString));
+	assert.equals(['http://www.example.com/'], ranges.map(rangesToURI));
 
 
 	range.setStart($('first').firstChild, 10);
