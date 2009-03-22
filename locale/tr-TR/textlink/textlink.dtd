@@ -102,6 +102,7 @@
 <!ENTITY textlink.action.tab.stealth           "yeni ön plan sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.tabBackground.stealth "yeni arka plan sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.copy          "onu panoya kopyala.">
+<!ENTITY textlink.action.openByBrowser "open by browser">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Sıfırla">

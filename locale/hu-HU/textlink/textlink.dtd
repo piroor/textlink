@@ -102,6 +102,7 @@
 <!ENTITY textlink.action.tab.stealth           "beolvasás új lapon, előtérben (HTTP_REFERER nélkül)">
 <!ENTITY textlink.action.tabBackground.stealth "beolvasás új lapon, háttérben (HTTP_REFERER nélkül)">
 <!ENTITY textlink.action.copy          "copy it to the clipboard">
+<!ENTITY textlink.action.openByBrowser "open by browser">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Törlés">

@@ -103,6 +103,7 @@
 <!ENTITY textlink.action.tab.stealth           "l'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
 <!ENTITY textlink.action.tabBackground.stealth "l'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
 <!ENTITY textlink.action.copy          "le copier dans le presse-papiers">
+<!ENTITY textlink.action.openByBrowser "open by browser">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Défaut">

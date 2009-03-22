@@ -102,6 +102,7 @@
 <!ENTITY textlink.action.tab.stealth           "load it in a New Foreground Tab (without HTTP_REFERER).">
 <!ENTITY textlink.action.tabBackground.stealth "load it in a New Background Tab (without HTTP_REFERER).">
 <!ENTITY textlink.action.copy          "copy it to the clipboard">
+<!ENTITY textlink.action.openByBrowser "open by browser">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Reset">

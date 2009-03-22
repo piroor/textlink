@@ -103,6 +103,7 @@
 <!ENTITY textlink.action.tab.stealth           "新しい最前面のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action.tabBackground.stealth "新しい背後のタブで開く（リファラを通知しない）">
 <!ENTITY textlink.action.copy          "クリップボードにコピーする">
+<!ENTITY textlink.action.openByBrowser "ブラウザで開く">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "初期値に戻す">
