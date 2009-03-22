@@ -77,10 +77,16 @@ var TextLinkService = {
 	get kURIPattern() 
 	{
 		if (!this._kURIPattern)
-			this._kURIPattern = this.kURIPattern_base.replace(
+			this._kURIPattern = this.kURIPattern_base
+				.replace(
+					/%SCHEMER_PATTERN%/g,
+					this.kSchemerPattern
+				)
+				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPattern_part
-				).replace(
+				)
+				.replace(
 					/%DOMAIN_PATTERN%/g,
 					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')\\b'
 				);
@@ -137,7 +143,12 @@ var TextLinkService = {
 	get kURIPatternMultibyteRelative() 
 	{
 		if (!this._kURIPatternMultibyteRelative)
-			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base.replace(
+			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base
+				.replace(
+					/%SCHEMER_PATTERN%/g,
+					this.kSchemerPatternMultibyte
+				)
+				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPatternMultibyte_part
 				);
