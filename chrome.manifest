@@ -2,8 +2,8 @@ content	textlink	jar:chrome/textlink.jar!/content/textlink/
 
 overlay	chrome://browser/content/browser.xul	chrome://textlink/content/globalOverlay.xul
 
-overlay	chrome://messenger/content/messenger.xul	chrome://xulmigemo/content/messengerOverlay.xul
-overlay	chrome://messenger/content/messageWindow.xul	chrome://xulmigemo/content/messengerOverlay.xul
+overlay	chrome://messenger/content/messenger.xul	chrome://textlink/content/messengerOverlay.xul
+overlay	chrome://messenger/content/messageWindow.xul	chrome://textlink/content/messengerOverlay.xul
 
 locale	textlink	en-US	jar:chrome/textlink.jar!/locale/en-US/textlink/
 locale	textlink	ja-JP	jar:chrome/textlink.jar!/locale/ja-JP/textlink/
