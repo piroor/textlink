@@ -1502,20 +1502,26 @@ var TextLinkService = {
 		var referrer = (aAction & this.ACTION_STEALTH) ?
 					null :
 					this.makeURIFromSpec(frame.location.href) ;
+		this.loadURI(uri, referrer, aAction);
+	},
+	loadURI : function(aURI, aReferrer, aEvent, aAction)
+	{
+		var b = aEvent.currentTarget;
+		var frame = aEvent.originalTarget.ownerDocument.defaultView;
 
 		if (aAction & this.ACTION_OPEN_IN_CURRENT ||
-			uri.match(/^mailto:/) ||
+			aURI.match(/^mailto:/) ||
 			b.localName != 'tabbrowser') {
-			b.loadURI(uri, referrer);
+			b.loadURI(aURI, aReferrer);
 		}
 		else if (aAction & this.ACTION_OPEN_IN_WINDOW) {
-			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', uri, null, referrer);
+			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', aURI, null, aReferrer);
 		}
 		else {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(frame);
 			}
-			b.loadOneTab(uri, referrer, null, null, (aAction & this.ACTION_OPEN_IN_BACKGROUND_TAB));
+			b.loadOneTab(aURI, aReferrer, null, null, (aAction & this.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
  

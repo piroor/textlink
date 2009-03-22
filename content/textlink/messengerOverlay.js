@@ -35,6 +35,13 @@ var TextLinkMessengerService = {
 		this.handleUserActionEvents(aEvent);
 	},
  
+	loadURI : function(aURI)
+	{
+		Components.classes['@mozilla.org/uriloader/external-protocol-service;1']
+			.getService(Components.interfaces.nsIExternalProtocolService)
+			.loadUrl(this.makeURIFromSpec(aURI));
+	},
+ 
 	onContentLoad : function() 
 	{
 		if (
