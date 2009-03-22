@@ -7,6 +7,8 @@ var TextLinkMessengerService = {
  
 	get isPlainTextMessage()
 	{
+		// ‚±‚ê‚Å‚Í³‚µ‚­”»•Ê‚Å‚«‚È‚¢B
+		// —vEŒŸ“¢
 		return this.evaluateXPath(
 				'/descendant::*[local-name()="DIV" and @class="moz-text-plain"]',
 				this.browser.contentDocument,
