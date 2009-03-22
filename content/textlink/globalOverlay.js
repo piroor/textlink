@@ -1230,6 +1230,10 @@ var TextLinkService = {
 				return;
 		}
 
+		this.handleUserActionEvents(aEvent);
+	},
+	handleUserActionEvents : function(aEvent)
+	{
 		if (aEvent.originalTarget.ownerDocument == document ||
 			aEvent.originalTarget.ownerDocument.designMode == 'on') {
 			return;

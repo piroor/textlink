@@ -5,6 +5,15 @@ var TextLinkMessengerService = {
 		return document.getElementById('messagepane');
 	},
  
+	get isPlainTextMessage()
+	{
+		return this.evaluateXPath(
+				'/descendant::*[local-name()="DIV" and @class="moz-text-plain"]',
+				this.browser.contentDocument,
+				XPathResult.FIRST_ORDERED_NODE_TYPE
+			).singleNodeValue;
+	},
+ 
 	handleEvent : function(aEvent) 
 	{
 		switch (aEvent.type)
@@ -22,11 +31,18 @@ var TextLinkMessengerService = {
 				this.destroy();
 				return;
 		}
+
+		this.handleUserActionEvents(aEvent);
 	},
  
 	onContentLoad : function() 
 	{
-		if (!this.getPref('textlink.messenger.linkify')) return;
+		if (
+			!this.isPlainTextMessage ||
+			!this.getPref('textlink.messenger.linkify')
+			)
+			return;
+
 		this.unlinkifyAutoLinks();
 		this.linkify();
 	},
@@ -95,6 +111,8 @@ var TextLinkMessengerService = {
 		this.addPrefListener(this);
 		this.initPrefs();
 
+		this.browser.addEventListener('dblclick', this, true);
+		this.browser.addEventListener('keypress', this, true);
 		this.browser.addEventListener('load', this, true);
 	},
  
@@ -104,6 +122,8 @@ var TextLinkMessengerService = {
 
 		this.removePrefListener(this);
 
+		this.browser.removeEventListener('dblclick', this, true);
+		this.browser.removeEventListener('keypress', this, true);
 		this.browser.removeEventListener('load', this, true);
 	}
   
