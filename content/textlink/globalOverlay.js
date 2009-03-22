@@ -92,7 +92,12 @@ var TextLinkService = {
 	get kURIPatternRelative() 
 	{
 		if (!this._kURIPatternRelative)
-			this._kURIPatternRelative = this.kURIPatternRelative_base.replace(
+			this._kURIPatternRelative = this.kURIPatternRelative_base
+				.replace(
+					/%SCHEMER_PATTERN%/g,
+					this.kSchemerPattern
+				)
+				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPattern_part
 				);
@@ -104,10 +109,16 @@ var TextLinkService = {
 	get kURIPatternMultibyte() 
 	{
 		if (!this._kURIPatternMultibyte)
-			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base.replace(
+			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base
+				.replace(
+					/%SCHEMER_PATTERN%/g,
+					this.kSchemerPatternMultibyte
+				)
+				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPatternMultibyte_part
-				).replace(
+				)
+				.replace(
 					/%DOMAIN_PATTERN%/g,
 					'[0-9a-z\\.-]+[\\.]('+this.kTopLevelDomains.join('|')+')\\b'
 /*
@@ -135,11 +146,14 @@ var TextLinkService = {
 	},
 	_kURIPatternMultibyteRelative : null,
  
-	kURIPattern_base : '\\(?([\\*\\+\\w]+:(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
+	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
 	kURIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
  
-	kURIPatternMultibyte_base : '[\\(\uff08]?([\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a](//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
+	kURIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
 	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
+ 
+	kSchemerPattern : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
  
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+', 
 	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
@@ -504,6 +518,23 @@ var TextLinkService = {
 	},
 	_schemerRegExp : null,
  
+	hasSchemer : function(aInput)
+	{
+		return this._firstSchemerRegExp.test(aInput);
+	},
+	removeSchemer : function(aInput)
+	{
+		return aInput.replace(this._firstSchemerRegExp, '');
+	},
+	get _firstSchemerRegExp()
+	{
+		if (!this.__firstSchemerRegExp) {
+			this.__firstSchemerRegExp = new RegExp('^'+this.kSchemerPatternMultibyte, 'i');
+		}
+		return this.__firstSchemerRegExp;
+	},
+	__firstSchemerRegExp : null,
+ 
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
 		if (this.shouldParseMultibyteCharacters) {
@@ -667,7 +698,7 @@ var TextLinkService = {
 			throw ERRROR_NO_URI_RANGE;
 
 		var count, end, step;
-		if (aMode == this.FIND_LAST) {
+		if (aMode & this.FIND_LAST) {
 			count = selection.rangeCount-1;
 			end   = -1;
 			step  = -1;
@@ -724,7 +755,7 @@ var TextLinkService = {
 		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
 		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 
-		this.Find.findBackwards = (aMode == this.FIND_LAST);
+		this.Find.findBackwards = (aMode & this.FIND_LAST);
 		for (let i in terms)
 		{
 			let rangesForTerm = this._findRangesForTerm(
@@ -761,25 +792,30 @@ var TextLinkService = {
 		if (!mayBeURIs) {
 			return terms;
 		}
-		if (aMode == this.FIND_LAST) {
+		if (aMode & this.FIND_LAST) {
 			mayBeURIs = Array.slice(mayBeURIs).reverse();
 		}
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
 			aTerm = this.sanitizeURIString(aTerm);
-			if (
-				aTerm &&
-				(
-					this.shouldParseRelativePath ||
-					this.isLoadableSchemer(this.fixupSchemer(this.convertFullWidthToHalfWidth(aTerm)))
-				) &&
-				terms.indexOf(aTerm) < 0
-				) {
-				terms.push(aTerm);
+			if (!aTerm || terms.indexOf(aTerm) > -1) return;
+
+			if (!this.shouldParseRelativePath && this.hasSchemer(aTerm)) {
+				let termForCheck = this.convertFullWidthToHalfWidth(aTerm);
+				while (this.hasSchemer(termForCheck))
+				{
+					termForCheck = this.fixupSchemer(termForCheck);
+					if (this.isLoadableSchemer(termForCheck)) break;
+					termForCheck = this.removeSchemer(termForCheck);
+					aTerm = this.removeSchemer(aTerm);
+				}
+				if (!this.hasSchemer(termForCheck)) return;
 			}
+
+			if (terms.indexOf(aTerm) < 0) terms.push(aTerm);
 		}, this);
-		if (aMode == this.FIND_ALL) {
+		if (aMode & this.FIND_ALL) {
 			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
@@ -797,9 +833,9 @@ var TextLinkService = {
 		}
 
 		var startPoint = findRange.cloneRange();
-		startPoint.collapse(aMode != this.FIND_LAST);
+		startPoint.collapse(!(aMode & this.FIND_LAST));
 		var endPoint = findRange.cloneRange();
-		endPoint.collapse(aMode == this.FIND_LAST);
+		endPoint.collapse(aMode & this.FIND_LAST);
 
 		var posRange;
 		if (editable) {
@@ -1081,7 +1117,7 @@ var TextLinkService = {
 		catch(e) {
 		}
 
-		if (aMode == this.FIND_ALL) {
+		if (aMode & this.FIND_ALL) {
 			ranges.sort(this._compareRangePosition);
 		}
 
@@ -1118,7 +1154,7 @@ var TextLinkService = {
 			return ranges;
 		}
 
-		if (aMode == this.FIND_ALL) {
+		if (aMode & this.FIND_ALL) {
 			ranges.sort(this._compareRangePosition);
 		}
 

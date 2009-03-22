@@ -66,18 +66,18 @@ var TextLinkMessengerService = {
 				this.FIND_ALL | this.ALLOW_SAME_URIS
 			);
 		uriRanges.reverse().forEach(function(aRange) {
-			if (!this.getParentLink(aRange.range.startContainer)) {
-				let text = aRange.range.toString();
+			if (!this._getParentLink(aRange.range.startContainer)) {
 				let link = doc.createElement('a');
 				link.setAttribute('href', aRange.uri);
 				link.appendChild(aRange.range.extractContents());
 				aRange.range.insertNode(link);
+				link.textContent = decodeURIComponent(link.textContent);
 			}
 			aRange.range.detach();
 		}, this);
 		range.detach();
 	},
-	getParentLink : function(aNode)
+	_getParentLink : function(aNode)
 	{
 		return this.evaluateXPath(
 				'ancestor-or-self::*[@href]',
