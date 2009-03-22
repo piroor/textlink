@@ -68,8 +68,12 @@
 		<preference id="textlink.contextmenu.openTextLink.copy"
 			name="textlink.contextmenu.openTextLink.copy"
 			type="bool"/>
+		<preference id="textlink.messenger.linkify"
+			name="textlink.messenger.linkify"
+			type="bool"/>
 	</preferences>
 
+	<vbox>
 	<tabbox orient="vertical">
 		<tabs>
 			<tab label="&textlink.actions.tab0;"/>
@@ -517,15 +521,15 @@
 
 		</tabpanels>
 	</tabbox>
-
 	<hbox align="center">
 		<spacer flex="1"/>
 		<button label="&textlink.actions.default;"
 			class="reset-button"
 			oncommand="resetActions()"/>
 	</hbox>
+	</vbox>
 
-	<groupbox orient="vertical">
+	<groupbox orient="vertical" class="browser">
 		<caption id="textlink.group.contextmenu"
 			label="&textlink.group.contextmenu;"/>
 		<checkbox id="textlink.contextmenu.openTextLink.current-check"
@@ -541,6 +545,12 @@
 			label="&textlink.context.copy.pref;"
 			preference="textlink.contextmenu.openTextLink.copy"/>
 	</groupbox>
+
+	<vbox class="messenger">
+		<checkbox id="textlink.messenger.linkify-check"
+			label="&textlink.messenger.linkify;"
+			preference="textlink.messenger.linkify"/>
+	</vbox>
 
 </prefpane>
 
@@ -599,6 +609,7 @@
 		</hbox>
 
 		<checkbox id="textlink.relative.enabled-check"
+			class="browser"
 			label="&textlink.relative.enabled;"
 			preference="textlink.relative.enabled"/>
 		<checkbox id="textlink.multibyte.enabled-check"

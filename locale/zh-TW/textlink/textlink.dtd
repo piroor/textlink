@@ -110,6 +110,9 @@
 <!ENTITY textlink.group.contextmenu    "有 URI 文字被選取時，額外的右鍵選單項目">
 
 
+<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+
+
 
 <!ENTITY textlink.group.advanced    "進階">
 

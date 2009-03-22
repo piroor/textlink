@@ -113,6 +113,9 @@
 <!ENTITY textlink.group.contextmenu    "URI文字列を選択したときのコンテキストメニューに以下の項目を加える">
 
 
+<!ENTITY textlink.messenger.linkify    "プレーンテキストのメッセージ中のURI文字列をリンクにする">
+
+
 
 <!ENTITY textlink.group.advanced    "詳細">
 

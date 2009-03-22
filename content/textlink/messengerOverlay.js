@@ -26,6 +26,7 @@ var TextLinkMessengerService = {
  
 	onContentLoad : function() 
 	{
+		if (!this.getPref('textlink.messenger.linkify')) return;
 		this.unlinkifyAutoLinks();
 		this.linkify();
 	},

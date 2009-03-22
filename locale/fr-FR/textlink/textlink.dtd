@@ -112,6 +112,9 @@
 <!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsqu'une URL est sélectionnée">
 
 
+<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+
+
 
 <!ENTITY textlink.group.advanced    "Avancé">
 

@@ -111,6 +111,9 @@
 <!ENTITY textlink.group.contextmenu    "Dodatkowe elementy menu kontekstowego kiedy zaznaczono adres URI">
 
 
+<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+
+
 
 <!ENTITY textlink.group.advanced    "Zawansowane">
 
