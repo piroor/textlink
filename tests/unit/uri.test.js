@@ -286,3 +286,26 @@ function test_fixupURI()
 
 	assertInvalidInput('svn://www.example.com/');
 }
+
+function test_hasSchemer()
+{
+	assert.isTrue(sv.hasSchemer('http://www.example.com/'));
+	assert.isTrue(sv.hasSchemer('ttp://www.example.com/'));
+	assert.isTrue(sv.hasSchemer('URL:http://www.example.com/'));
+	assert.isFalse(sv.hasSchemer('www.example.com/'));
+	assert.isFalse(sv.hasSchemer('www.example.com?URL=http://www.example.com/'));
+}
+
+function test_removeSchemer()
+{
+	function assertRemvoeSchemer(aExpected, aInput)
+	{
+		assert.equals(aExpected, sv.removeSchemer(aInput));
+	}
+
+	assertRemvoeSchemer('//www.example.com/', 'http://www.example.com/');
+	assertRemvoeSchemer('//www.example.com/', 'ttp://www.example.com/');
+	assertRemvoeSchemer('http://www.example.com/', 'URL:http://www.example.com/');
+	assertRemvoeSchemer('www.example.com/', 'www.example.com/');
+	assertRemvoeSchemer('www.example.com?URL=http://www.example.com/', 'www.example.com?URL=http://www.example.com/');
+}
