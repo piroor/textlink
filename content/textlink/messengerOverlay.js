@@ -7,13 +7,12 @@ var TextLinkMessengerService = {
  
 	get isPlainTextMessage()
 	{
-		// Ç±ÇÍÇ≈ÇÕê≥ÇµÇ≠îªï Ç≈Ç´Ç»Ç¢ÅB
-		// óvÅEåüì¢
-		return this.evaluateXPath(
-				'/descendant::*[local-name()="DIV" and @class="moz-text-plain"]',
-				this.browser.contentDocument,
-				XPathResult.FIRST_ORDERED_NODE_TYPE
-			).singleNodeValue;
+		return this.getPref('mailnews.display.html_as') == 1 ||
+				this.evaluateXPath(
+					'/descendant::*[local-name()="BODY"]/child::*[@class="moz-text-plain"]',
+					this.browser.contentDocument,
+					XPathResult.BOOLEAN_TYPE
+				).booleanValue;
 	},
  
 	handleEvent : function(aEvent) 
