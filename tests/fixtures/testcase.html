@@ -71,21 +71,24 @@ ttp://piro.sakura.ne.jp/xul/
 ttp://piro.sakura.ne.jp/xul/tips/
 
 </pre>
-<pre id="pre-with-linebreaks">http://piro.sakura.ne.jp/latest/
-http://piro.sakura.ne.jp/latest/blosxom/
-mozilla/
-http://piro.sakura.ne.jp/latest/blosxom/
-mozilla/xul/</pre>
-<pre id="wrapped-message" wrap="">折り返されたURI：
-http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/
-fff/ggg/hhh/iii/jjj/kkkk/hhh/iii
 
-</pre><blockquote type="cite"><pre wrap="" id="message-quoted-part-1"><span class="moz-txt-citetags">&gt; </span>これはURI。http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/
-<span class="moz-txt-citetags">&gt; </span>ggg/hhh/iii/jjj/kkkk/hhh/iii てすとてすとー
-</pre></blockquote><pre wrap=""><!---->
-</pre><blockquote type="cite"><blockquote type="cite"><pre wrap="" id="message-quoted-part-2"><span class="moz-txt-citetags">&gt; &gt; </span>これはURI。http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/
-<span class="moz-txt-citetags">&gt; &gt; </span>ggg/hhh/iii/jjj/kkkk/hhh/iii てすとてすとー
-</pre></blockquote></blockquote>
+<pre id="pre-with-linebreaks">http://piro.sakura.ne.jp/latest/<br class="splitter" />
+<br class="splitter" />http://piro.sakura.ne.jp/latest/blosxom/<br class="splitter" />
+<br class="splitter" />mozilla/<br class="splitter" />
+<br class="splitter" />http://piro.sakura.ne.jp/latest/blosxom/<br class="splitter" />
+<br class="splitter" />mozilla/xul/</pre>
+<br class="splitter" /><br class="splitter" />
+<pre id="wrapped-message" wrap="">折り返されたURI：<br class="splitter" />
+<br class="splitter" />http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/<br class="splitter" />
+<br class="splitter" />fff/ggg/hhh/iii/jjj/kkkk/hhh/iii<br class="splitter" />
+<br class="splitter" />
+<br class="splitter" /></pre><blockquote type="cite"><pre wrap="" id="message-quoted-part"><span class="moz-txt-citetags">&gt; </span>これはURI。http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/<br class="splitter" />
+<span class="moz-txt-citetags">&gt; </span>ggg/hhh/iii/jjj/kkkk/hhh/iii てすとてすとー<br class="splitter" />
+<br class="splitter" /></pre></blockquote><pre wrap=""><!---->
+</pre><blockquote type="cite"><blockquote type="cite"><pre wrap="" id="message-quoted-part-2"><span class="moz-txt-citetags">&gt; &gt; </span>これはURI。http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/<br class="splitter" />
+<br class="splitter" /><span class="moz-txt-citetags">&gt; &gt; </span>ggg/hhh/iii/jjj/kkkk/hhh/iii てすとてすとー<br class="splitter" />
+<br class="splitter" /></pre></blockquote></blockquote>
+
 <p><input id="input" type="text" size="60" value="URI: http://www.mozilla.com/" /></p>
 <textarea id="textarea" cols="60" rows="5">
 英語：http://getfirefox.com/
@@ -113,4 +116,21 @@ next line
 	id="span-block3"
 	style="display:block">http://piro.<em>sakura</em>.ne.jp/latest/blosxom/mozilla/xul</span></p>
 </body>
+
+<script type="text/javascript">//<![CDATA[
+	var splitters = document.evaluate(
+			'/descendant::*[@class="splitter"]',
+			document,
+			null,
+			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+			null
+		);
+	var splitter;
+	for (var i = splitters.snapshotLength-1; i > -1; i--)
+	{
+		splitter = splitters.snapshotItem(i);
+		splitter.parentNode.removeChild(splitter);
+	}
+//]]></script>
+
 </html>

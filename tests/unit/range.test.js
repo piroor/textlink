@@ -145,24 +145,6 @@ function test_shrinkURIRange()
 	assert.equals('http://mozilla.jp/product/firefox/', range.toString());
 }
 
-function assert_getFindRangeFromBlockContents(aNode)
-{
-	var range = aNode.ownerDocument.createRange();
-	range.selectNodeContents(aNode);
-	var full = range.toString();
-	var findRange = sv.getFindRange(range);
-	assert.equals(full, findRange.toString());
-
-	findRange.detach();
-
-	range.setStart(aNode.firstChild, 3);
-	range.setEnd(aNode.firstChild, 5);
-	findRange = sv.getFindRange(range);
-	assert.equals(full, findRange.toString());
-
-	findRange.detach();
-	range.detach();
-}
 function test_getFindRange()
 {
 	var range = content.document.createRange();
@@ -206,6 +188,25 @@ function test_getFindRange()
 
 
 	// インライン要素以外を文字列の切れ目として識別できるかどうか？
+	function assert_getFindRangeFromBlockContents(aNode)
+	{
+		var range = aNode.ownerDocument.createRange();
+		range.selectNodeContents(aNode);
+		var full = range.toString();
+		var findRange = sv.getFindRange(range);
+		assert.equals(full, findRange.toString());
+
+		findRange.detach();
+
+		range.setStart(aNode.firstChild, 3);
+		range.setEnd(aNode.firstChild, 5);
+		findRange = sv.getFindRange(range);
+		assert.equals(full, findRange.toString());
+
+		findRange.detach();
+		range.detach();
+	}
+
 	assert_getFindRangeFromBlockContents($('table-cell1'));
 	assert_getFindRangeFromBlockContents($('table-cell2'));
 	assert_getFindRangeFromBlockContents($('table-cell3'));
@@ -214,9 +215,63 @@ function test_getFindRange()
 	assert_getFindRangeFromBlockContents($('span-block2'));
 	assert_getFindRangeFromBlockContents($('span-block3'));
 
-
 	range.detach();
 	findRange.detach();
+
+
+	// 改行を含む場合
+	function assert_getFindRangeMultiline(aExpected, aRange)
+	{
+		var range = sv.getFindRange(aRange);
+		assert.equals(aExpected, range.toString());
+		range.detach();
+	}
+
+	range = content.document.createRange();
+
+	node = $('pre-with-linebreaks');
+	range.selectNode(node.firstChild);
+	assert.equals('http://piro.sakura.ne.jp/latest/', range.toString());
+	sv.acceptMultilineURI = false;
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/\n', range);
+	sv.acceptMultilineURI = true;
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/\n', range);
+
+	range.selectNode(node.childNodes[2]);
+	assert.equals('http://piro.sakura.ne.jp/latest/blosxom/', range.toString());
+	sv.acceptMultilineURI = false;
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\n', range);
+	sv.acceptMultilineURI = true;
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\nmozilla/\n', range);
+
+	range.selectNode(node.childNodes[4]);
+	assert.equals('mozilla/', range.toString());
+	sv.acceptMultilineURI = false;
+	assert_getFindRangeMultiline('mozilla/\n', range);
+	sv.acceptMultilineURI = true;
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\nmozilla/\n', range);
+
+	node = $('wrapped-message');
+	range.selectNode(node.childNodes[2]);
+	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/', range.toString());
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/\nfff/ggg/hhh/iii/jjj/kkkk/hhh/iii\n\n> ', range);
+
+	range.selectNode(node.childNodes[4]);
+	assert.equals('fff/ggg/hhh/iii/jjj/kkkk/hhh/iii', range.toString());
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/\nfff/ggg/hhh/iii/jjj/kkkk/hhh/iii\n\n> ', range);
+
+	node = $('message-quoted-part');
+	range.selectNode(node.childNodes[1]);
+	range.setStart(node.childNodes[1], 7);
+	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/\n> ggg/hhh/iii/jjj/kkkk/hhh/iii', range);
+
+	range.selectNode(node.childNodes[4]);
+	range.setEnd(node.childNodes[4], 28);
+	assert.equals('ggg/hhh/iii/jjj/kkkk/hhh/iii', range.toString());
+	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/\n> ggg/hhh/iii/jjj/kkkk/hhh/iii', range);
+
+	range.detach();
 }
 
 test_getFindRange_plainText.setUp = function()
@@ -632,43 +687,30 @@ function test__getFollowingPartRanges()
 		});
 	}
 
-	var node = $('pre-with-linebreaks').firstChild;
+	var node = $('pre-with-linebreaks');
 	var range = content.document.createRange();
-	range.setStart(node, 0);
-	range.setEnd(node, 32);
+	range.selectNode(node.firstChild);
 	assert.equals('http://piro.sakura.ne.jp/latest/', range.toString());
-
 	sv.acceptMultilineURI = false;
 	assertGetFollowingPartRanges([], range);
-
 	sv.acceptMultilineURI = true;
 	assertGetFollowingPartRanges([], range);
 
-	range.setEnd(node, 73);
-	range.setStart(node, 33);
+	range.selectNode(node.childNodes[2]);
 	assert.equals('http://piro.sakura.ne.jp/latest/blosxom/', range.toString());
-
 	sv.acceptMultilineURI = false;
 	assertGetFollowingPartRanges([], range);
-
 	sv.acceptMultilineURI = true;
 	assertGetFollowingPartRanges(['mozilla/'], range);
 
 	node = $('wrapped-message');
-	range.setStart(node.firstChild, 11);
-	range.setEnd(node.firstChild, 61);
+	range.selectNode(node.childNodes[2]);
 	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/', range.toString());
 	assertGetFollowingPartRanges(['fff/ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
 
-	node = $('message-quoted-part-1');
+	node = $('message-quoted-part');
+	range.selectNode(node.childNodes[1]);
 	range.setStart(node.childNodes[1], 7);
-	range.setEnd(node.childNodes[1], 61);
-	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
-	assertGetFollowingPartRanges(['ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
-
-	node = $('message-quoted-part-2');
-	range.setStart(node.childNodes[1], 7);
-	range.setEnd(node.childNodes[1], 61);
 	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
 	assertGetFollowingPartRanges(['ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
 

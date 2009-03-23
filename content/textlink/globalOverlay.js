@@ -493,6 +493,11 @@ var TextLinkService = {
 		code -= 0x0020;
 		return String.fromCharCode(code);
 	},
+ 
+	reverseString : function(aString)
+	{
+		return aString.split('').reverse().join('');
+	},
   
 // uri operations 
 	
@@ -522,47 +527,47 @@ var TextLinkService = {
 		this._updateURIRegExp();
 		return aString.match(this._URIMatchingRegExp);
 	},
-	getMatchedAbsoluteURI : function(aString) 
+	isHeadOfNewURI : function(aString) 
 	{
 		this._updateURIRegExp();
-		var match = aString.match(this._URIMatchingRegExp_absolute);
+		var match = aString.match(this._URIMatchingRegExp_fromHead);
 		match = match ? match[1] : '' ;
-		return this.hasSchemer(match) ? match : '' ;
+		return this.hasSchemer(match) ? match == aString : false ;
 	},
 	_URIMatchingRegExp : null,
-	_URIMatchingRegExp_absolute : null,
+	_URIMatchingRegExp_fromHead : null,
 	_updateURIRegExp : function()
 	{
 		if (this._URIMatchingRegExp) return;
 		var regexp = [];
 		if (this.shouldParseMultibyteCharacters) {
-			this._URIMatchingRegExp_absolute = new RegExp(this.kURIPatternMultibyte, 'i');
+			this._URIMatchingRegExp_fromHead = new RegExp(this.kURIPatternMultibyte, 'i');
 			regexp.push(this.kURIPatternMultibyte);
 			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternMultibyteRelative);
 		}
 		else {
-			this._URIMatchingRegExp_absolute = new RegExp(this.kURIPattern, 'i');
+			this._URIMatchingRegExp_fromHead = new RegExp(this.kURIPattern, 'i');
 			regexp.push(this.kURIPattern);
 			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternRelative);
 		}
 		this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 	},
  
-	getURIPartFromStart : function(aString, aIncludeAbsoluteURI) 
+	getURIPartFromStart : function(aString, aIncludeURIHead) 
 	{
 		this._updateURIPartRegExp();
 		var match = aString.match(this._URIPartRegExp_start);
 		var part = match ? match[1] : '' ;
-		return (aIncludeAbsoluteURI || part != this.getMatchedAbsoluteURI(part)) ?
+		return (aIncludeURIHead || !this.isHeadOfNewURI(part)) ?
 				part :
 				'' ;
 	},
-	getURIPartFromEnd : function(aString, aIncludeAbsoluteURI)
+	getURIPartFromEnd : function(aString, aIncludeURIHead)
 	{
 		this._updateURIPartRegExp();
 		var match = aString.match(this._URIPartRegExp_end);
 		var part = match ? match[1] : '' ;
-		return (aIncludeAbsoluteURI || part != this.getMatchedAbsoluteURI(part)) ?
+		return (aIncludeURIHead || !this.isHeadOfNewURI(part)) ?
 				part :
 				'' ;
 	},
@@ -1096,12 +1101,14 @@ var TextLinkService = {
 			expandToBefore = this.getURIPartFromStart(string, true);
 			expandToAfter  = this.getURIPartFromEnd(string, true);
 		}
-		if (expandToBefore) this._expandURIRangeToBefore(findRange);
-		if (expandToAfter) this._expandURIRangeToAfter(findRange, null, true);
+		if (expandToBefore)
+			this._expandURIRangeToBefore(findRange);
+		if (expandToAfter)
+			this._expandURIRangeToAfter(findRange, null, this.isHeadOfNewURI(findRange.toString()));
 
 		return findRange;
 	},
-	_expandURIRangeToBefore : function(aRange)
+	_expandURIRangeToBefore : function(aRange, aHeadIsFound)
 	{
 		var expandRange = aRange.cloneRange();
 		expandRange.selectNode(aRange.startContainer);
@@ -1118,23 +1125,47 @@ var TextLinkService = {
 				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 				node
 			);
+		var mayBeURI = aRange.toString();
 		var i = nodes.snapshotLength-1,
+			headPartIsFound = aHeadIsFound || this.isHeadOfNewURI(mayBeURI),
 			lastNode;
-		while (true)
+		while (!headPartIsFound)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
-				let part = this.getURIPartFromEnd(string);
-				if (!part.length) break;
-				if (
-					part.length < string.length ||
-					(part.length == string.length && i == -1)
-					) {
-					offset = string.length - part.length/* + delta*/;
-					break;
+				if (this.acceptMultilineURI) {
+					let originalString = string;
+					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
+					delta = this.reverseString(originalString).indexOf(this.reverseString(string));
+
+					originalString = string;
+					string = string.replace(this.URIExceptionPattern_end, '');
+					if (this.reverseString(originalString).indexOf(this.reverseString(string)) != 0) {
+						string = '';
+						delta = 0;
+					}
+				}
+				if (!this.acceptMultilineURI || string) {
+					let part = this.getURIPartFromEnd(string, !headPartIsFound);
+					if (!part.length) break;
+					mayBeURI = part + mayBeURI;
+					if (!headPartIsFound && this.isHeadOfNewURI(mayBeURI)) headPartIsFound = true;
+					if (
+						part.length < string.length ||
+						(part.length == string.length && i == -1)
+						) {
+						offset = string.length - part.length + delta;
+						break;
+					}
+					else if (headPartIsFound) {
+						offset = 0;
+						break;
+					}
+				}
+				else {
 				}
 				if (i == -1) break;
 			}
@@ -1145,13 +1176,16 @@ var TextLinkService = {
 			offset = node.textContent.length;
 			expandRange.selectNode(node);
 		}
-		if (lastNode != aRange.startContainer || offset != aRange.startOffset) {
+		if (
+			lastNode &&
+			(lastNode != aRange.startContainer || offset != aRange.startOffset)
+			) {
 			aRange.setStart(lastNode, offset);
 		}
 
 		expandRange.detach();
 	},
-	_expandURIRangeToAfter : function(aRange, aRanges, aFirstPartIsAbsolute)
+	_expandURIRangeToAfter : function(aRange, aRanges, aHeadIsFound)
 	{
 		var expandRange = aRange.cloneRange();
 		expandRange.selectNode(aRange.endContainer);
@@ -1168,8 +1202,10 @@ var TextLinkService = {
 				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 				node
 			);
+		var mayBeURI = aRange.toString();
 		var i = 0,
 			maxi = nodes.snapshotLength,
+			headPartIsFound = aHeadIsFound || this.isHeadOfNewURI(mayBeURI.split('\n')[0]),
 			lastNode;
 		while (true)
 		{
@@ -1198,8 +1234,10 @@ var TextLinkService = {
 					}
 				}
 				if (!this.acceptMultilineURI || string) {
-					let part = this.getURIPartFromStart(string, aFirstPartIsAbsolute && i == 0);
+					let part = this.getURIPartFromStart(string, !headPartIsFound);
 					if (!part.length) break;
+					mayBeURI += part;
+					if (!headPartIsFound && this.isHeadOfNewURI(mayBeURI)) headPartIsFound = true;
 					let partRange;
 					if (aRanges) {
 						partRange = expandRange.cloneRange();
@@ -1227,6 +1265,7 @@ var TextLinkService = {
 		}
 		if (
 			!aRanges &&
+			lastNode &&
 			(lastNode != aRange.endContainer || offset != aRange.endOffset)
 			) {
 			aRange.setEnd(lastNode, offset);

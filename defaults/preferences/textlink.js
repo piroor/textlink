@@ -45,7 +45,7 @@ pref("textlink.schemer.fixup.default", "http");
 pref("textlink.relative.enabled",    false);
 pref("textlink.multibyte.enabled",   true);
 pref("textlink.multiline.enabled",   false);
-pref("textlink.part.exception",      "-+|=+|(-=)+-?|(=-)=?|\\#+|\\++|\\*+|~+|/+|[+-]?\\d+:\\d+(:\\d+)?");
+pref("textlink.part.exception",      "-+|=+|(-=)+-?|(=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(:\\d+)?");
 
 pref("textlink.find_click_point.strict", true);
 
