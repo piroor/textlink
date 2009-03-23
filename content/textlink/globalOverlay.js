@@ -7,6 +7,8 @@ var TextLinkService = {
 	contextItemTab      : true,
 	contextItemCopy     : true,
 
+	shouldRecognizeLineBreaksAsBoundaryPoints : true,
+
 	get schemer()
 	{
 		return this._schemer;
@@ -69,8 +71,8 @@ var TextLinkService = {
 	actions : {},
 
 	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))',
-	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " "))',
-	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " "))]',
+	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or @class="moz-txt-citetags"',
+	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or @class="moz-txt-citetags"]',
  
 // regexp 
 	
@@ -305,23 +307,9 @@ var TextLinkService = {
 	{
 		var encoder = this._textEncoder;
 		if (encoder) { // Firefox 3 or later
-			try {
-				encoder.init(
-					aRange.startContainer.ownerDocument,
-					'text/plain',
-					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
-				);
-				encoder.setRange(aRange);
-				var result = encoder.encodeToString();
-				encoder.init(
-					document,
-					'text/plain',
-					encoder.OutputBodyOnly
-				);
-				encoder.setRange(null);
+			var result = this._getTextContentFromRange(aRange, true);
+			if (result) {
 				return result;
-			}
-			catch(e) {
 			}
 		}
 		try {
@@ -349,7 +337,7 @@ var TextLinkService = {
 				}
 
 				range.setEndBefore(node);
-				result.push(range.toString());
+				result.push(this._getTextContentFromRange(range));
 
 				if (node.localName.toLowerCase() == 'br') {
 					result.push('\n');
@@ -359,7 +347,7 @@ var TextLinkService = {
 				range.collapse(false);
 			}
 			range.setEnd(aRange.endContainer, aRange.endOffset);
-			result.push(range.toString());
+			result.push(this._getTextContentFromRange(range, true));
 			range.detach();
 			return result.join('');
 		}
@@ -368,7 +356,33 @@ var TextLinkService = {
 		// fallback
 		return aRange.toString();
 	},
- 
+	_getTextContentFromRange : function(aRange, aFinal)
+	{
+		var encoder = this._textEncoder;
+		if (encoder) {
+			try {
+				encoder.init(
+					aRange.startContainer.ownerDocument,
+					'text/plain',
+					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
+				);
+				encoder.setRange(aRange);
+				var result = encoder.encodeToString();
+				if (aFinal) {
+					encoder.init(
+						document,
+						'text/plain',
+						encoder.OutputBodyOnly
+					);
+					encoder.setRange(null);
+				}
+				return result;
+			}
+			catch(e) {
+			}
+		}
+		return aRange.toString();
+	},
 	get _textEncoder() 
 	{
 		if (this.__textEncoder === void(0)) {
@@ -891,35 +905,52 @@ var TextLinkService = {
 			aRangeSet.startPoint.setStart(aRangeSet.findRange.startContainer, aRangeSet.findRange.startOffset);
 		}
 		aRangeSet.startPoint.collapse(true);
-		var termRange, range, uri;
+		var termRange;
 		var uriRanges = [];
 		var uriRange = null;
 		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
+		FIND_URI_RANGE:
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
 		{
 			if (this._containsRange(aRangeSet.base, termRange, aStrict)) {
-				range = this.shrinkURIRange(termRange.cloneRange());
-				uri = this.fixupURI(range.toString(), aBaseURI);
+				let range = this.shrinkURIRange(termRange.cloneRange());
+				let uri = this.fixupURI(range.toString(), aBaseURI);
+				let ranges = this._getFollowingPartRanges(range);
+				if (ranges.length) {
+					ranges.forEach(function(aRange) {
+						uri += this.convertFullWidthToHalfWidth(aRange.toString());
+					}, this);
+				}
+				ranges.unshift(range);
 				if (uri && !(uri in aFoundURIsHash)) {
-					// 既に見つかったより長いURI文字列の一部である場合は除外する。
-					aRangeSet.position.setEnd(range.startContainer, range.startOffset);
-					let start = aRangeSet.position.toString().length;
-					uriRange = {
-						range : range,
-						uri   : uri,
-						start : start,
-						end   : start + aTerm.length,
-						base  : aRangeSet.base
-					};
-					if (!aRanges.some(this._checkRangeFound, uriRange)) {
+					for (let i = 0, maxi = ranges.length; i < maxi; i++)
+					{
+						// 既に見つかったより長いURI文字列の一部である場合は除外する。
+						let range = ranges[i];
+						aRangeSet.position.setEnd(range.startContainer, range.startOffset);
+						let start = aRangeSet.position.toString().length;
+						uriRange = {
+							range  : range,
+							uri    : uri,
+							start  : start,
+							end    : start + aTerm.length,
+							base   : aRangeSet.base
+						};
+
+						if (aRanges.some(this._checkRangeFound, uriRange))
+							continue;
+
 						uriRanges.push(uriRange);
-						if (shouldReturnSingleResult) break;
-					}
-					else {
-						uriRange = null;
+						if (shouldReturnSingleResult) {
+							break FIND_URI_RANGE;
+						}
 					}
 				}
-				if (shouldReturnSingleResult) range.detach();
+				if (shouldReturnSingleResult) {
+					ranges.forEach(function(aRange) {
+						aRange.detach();
+					});
+				}
 			}
 			if (this.Find.findBackwards) {
 				aRangeSet.startPoint.setEnd(termRange.startContainer, termRange.startOffset);
@@ -960,6 +991,11 @@ var TextLinkService = {
 		return (aA.base == aB.base) ? (aA.start - aB.start) :
 				(aA.base.comparePoint(aB.base.startContainer, aB.base.startOffset) < 0) ? 1 : -1 ;
 	},
+	// for Thunderbird (placeholder)
+	_getFollowingPartRanges : function(aRange)
+	{
+		return [];
+	},
 	
 	getFindRange : function(aBaseRange) 
 	{
@@ -985,120 +1021,140 @@ var TextLinkService = {
 			return findRange;
 		}
 
-		var nodes, node, lastNode, offset, string, baseBlock;
-
 		var expandToBefore = aBaseRange.collapsed;
 		var expandToAfter  = aBaseRange.collapsed;
 		if (!aBaseRange.collapsed) {
-			string = aBaseRange.toString();
+			var string = aBaseRange.toString();
 			expandToBefore = this.getURIPartFromStart(string);
 			expandToAfter  = this.getURIPartFromEnd(string);
 		}
+		if (expandToBefore) this._expandURIRangeToBefore(findRange);
+		if (expandToAfter) this._expandURIRangeToAfter(findRange);
 
-		var expandRange = aBaseRange.cloneRange();
+		return findRange;
+	},
+	_expandURIRangeToBefore : function(aRange)
+	{
+		var expandRange = aRange.cloneRange();
+		expandRange.selectNode(aRange.startContainer);
+		expandRange.setEnd(aRange.startContainer, aRange.startOffset);
 
-		if (expandToBefore) {
-			expandRange.selectNode(aBaseRange.startContainer);
-			expandRange.setEnd(aBaseRange.startContainer, aBaseRange.startOffset);
-			node   = aBaseRange.startContainer;
-			offset = aBaseRange.startOffset;
-			if (node.nodeType == Node.ELEMENT_NODE) {
-				node = this.evaluateXPath(
-						'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
-						node.childNodes.item(aBaseRange.startOffset) || node.firstChild,
-						XPathResult.FIRST_ORDERED_NODE_TYPE
-					).singleNodeValue;
-				offset = 0;
-			}
-			baseBlock = this._getParentBlock(node);
-			nodes = this.evaluateXPath(
-					'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-					node
-				);
-			let i = nodes.snapshotLength-1;
-			while (true)
-			{
-				lastNode = node;
-				if (this._getParentBlock(lastNode) != baseBlock) break;
-				try{ // Firefox 2 sometimes fails...
-					expandRange.setStart(lastNode, 0);
-					string = expandRange.toString();
-					let part = this.getURIPartFromEnd(string);
-					if (!part.length) break;
-					if (
-						part.length < string.length ||
-						(part.length == string.length && i == -1)
-						) {
-						offset = string.length - part.length;
-						break;
-					}
-					if (i == -1) break;
-				}
-				catch(e){
-				}
-				node = nodes.snapshotItem(i--);
-				if (!node) break;
-				offset = node.textContent.length;
-				expandRange.selectNode(node);
-			}
-			if (lastNode != aBaseRange.startContainer || offset != aBaseRange.startOffset) {
-				findRange.setStart(lastNode, offset);
-			}
+		var node   = aRange.startContainer;
+		var offset = aRange.startOffset;
+		if (node.nodeType == Node.ELEMENT_NODE) {
+			node = this.evaluateXPath(
+					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
+					node.childNodes.item(aRange.startOffset) || node.firstChild,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
+			offset = 0;
 		}
-
-		if (expandToAfter) {
-			expandRange.selectNode(aBaseRange.endContainer);
-			expandRange.setStart(aBaseRange.endContainer, aBaseRange.endOffset);
-			node   = aBaseRange.endContainer;
-			offset = aBaseRange.endOffset;
-			if (node.nodeType == Node.ELEMENT_NODE) {
-				node = this.evaluateXPath(
-						'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
-						node.childNodes.item(aBaseRange.endOffset) || node.lastChild,
-						XPathResult.FIRST_ORDERED_NODE_TYPE
-					).singleNodeValue;
-				offset = node ? node.textContent.length : 0 ;
+		var baseBlock = this.shouldRecognizeLineBreaksAsBoundaryPoints ?
+				this._getParentBlock(node) :
+				null ;
+		var nodes = this.evaluateXPath(
+				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				node
+			);
+		var i = nodes.snapshotLength-1,
+			lastNode;
+		while (true)
+		{
+			lastNode = node;
+			if (
+				this.shouldRecognizeLineBreaksAsBoundaryPoints &&
+				this._getParentBlock(lastNode) != baseBlock
+				) {
+				break;
 			}
-			baseBlock = this._getParentBlock(node);
-			nodes = this.evaluateXPath(
-					'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
-					node
-				);
-			let i = 0,
-				maxi = nodes.snapshotLength;
-			while (true)
-			{
-				lastNode = node;
-				if (this._getParentBlock(lastNode) != baseBlock) break;
-				try{ // Firefox 2 sometimes fails...
-					expandRange.setEnd(lastNode, lastNode.textContent.length);
-					string = expandRange.toString();
-					let part = this.getURIPartFromStart(string);
-					if (!part.length) break;
-					if (
-						part.length < string.length ||
-						(part.length == string.length && i == maxi)
-						) {
-						offset = expandRange.startOffset + part.length;
-						break;
-					}
-					if (i == maxi) break;
+			try{ // Firefox 2 sometimes fails...
+				expandRange.setStart(lastNode, 0);
+				let string = expandRange.toString();
+				let part = this.getURIPartFromEnd(string);
+				if (!part.length) break;
+				if (
+					part.length < string.length ||
+					(part.length == string.length && i == -1)
+					) {
+					offset = string.length - part.length;
+					break;
 				}
-				catch(e) {
-				}
-				node = nodes.snapshotItem(i++);
-				if (!node) break;
-				offset = 0;
-				expandRange.selectNode(node);
+				if (i == -1) break;
 			}
-			if (lastNode != aBaseRange.endContainer || offset != aBaseRange.endOffset) {
-				findRange.setEnd(lastNode, offset);
+			catch(e){
 			}
+			node = nodes.snapshotItem(i--);
+			if (!node) break;
+			offset = node.textContent.length;
+			expandRange.selectNode(node);
+		}
+		if (lastNode != aRange.startContainer || offset != aRange.startOffset) {
+			aRange.setStart(lastNode, offset);
 		}
 
 		expandRange.detach();
+	},
+	_expandURIRangeToAfter : function(aRange)
+	{
+		var expandRange = aRange.cloneRange();
+		expandRange.selectNode(aRange.endContainer);
+		expandRange.setStart(aRange.endContainer, aRange.endOffset);
 
-		return findRange;
+		var node   = aRange.endContainer;
+		var offset = aRange.endOffset;
+		if (node.nodeType == Node.ELEMENT_NODE) {
+			node = this.evaluateXPath(
+					'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
+					node.childNodes.item(aRange.endOffset) || node.lastChild,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
+			offset = node ? node.textContent.length : 0 ;
+		}
+		var baseBlock = this.shouldRecognizeLineBreaksAsBoundaryPoints ?
+				this._getParentBlock(node) :
+				null ;
+		var nodes = this.evaluateXPath(
+				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				node
+			);
+		var i = 0,
+			maxi = nodes.snapshotLength,
+			lastNode;
+		while (true)
+		{
+			lastNode = node;
+			if (
+				this.shouldRecognizeLineBreaksAsBoundaryPoints &&
+				this._getParentBlock(lastNode) != baseBlock
+				) {
+				break;
+			}
+			try{ // Firefox 2 sometimes fails...
+				expandRange.setEnd(lastNode, lastNode.textContent.length);
+				let string = expandRange.toString();
+				let part = this.getURIPartFromStart(string);
+				if (!part.length) break;
+				if (
+					part.length < string.length ||
+					(part.length == string.length && i == maxi)
+					) {
+					offset = expandRange.startOffset + part.length;
+					break;
+				}
+				if (i == maxi) break;
+			}
+			catch(e) {
+			}
+			node = nodes.snapshotItem(i++);
+			if (!node) break;
+			offset = 0;
+			expandRange.selectNode(node);
+		}
+		if (lastNode != aRange.endContainer || offset != aRange.endOffset) {
+			aRange.setEnd(lastNode, offset);
+		}
+
+		expandRange.detach();
 	},
 	_getParentBlock : function(aNode)
 	{

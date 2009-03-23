@@ -15,6 +15,17 @@ var TextLinkMessengerService = {
 				).booleanValue;
 	},
  
+	get shouldRecognizeLineBreaksAsBoundaryPoints()
+	{
+		return !this.isPlainTextMessage;
+	},
+ 
+	_getFollowingPartRanges : function(aRange)
+	{
+		var ranges = [];
+		return ranges;
+	},
+ 
 	handleEvent : function(aEvent) 
 	{
 		switch (aEvent.type)
