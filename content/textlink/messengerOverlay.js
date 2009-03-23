@@ -1,5 +1,7 @@
 var TextLinkMessengerService = { 
 	
+	canUseDocumentEncoder : false,
+ 
 	get browser() 
 	{
 		return document.getElementById('messagepane');

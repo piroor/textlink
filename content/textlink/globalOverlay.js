@@ -8,6 +8,7 @@ var TextLinkService = {
 	contextItemCopy     : true,
 
 	acceptMultilineURI : false,
+	canUseDocumentEncoder : true,
 
 	get schemer()
 	{
@@ -71,8 +72,8 @@ var TextLinkService = {
 	actions : {},
 
 	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))',
-	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or @class="moz-txt-citetags"',
-	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or @class="moz-txt-citetags"]',
+	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"',
+	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]',
  
 // regexp 
 	
@@ -341,7 +342,7 @@ var TextLinkService = {
 	getTextContentFromRange : function(aRange) 
 	{
 		var encoder = this._textEncoder;
-		if (encoder) { // Firefox 3 or later
+		if (encoder && this.canUseDocumentEncoder) { // Firefox 3 or later
 			var result = this._getTextContentFromRange(aRange, true);
 			if (result) {
 				return result;
