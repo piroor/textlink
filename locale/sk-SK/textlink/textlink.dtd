@@ -125,8 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Opraviť poškodené internetové adresy pomocou nasledovných pravidiel: (napr. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Vymazať">
 
-<!ENTITY textlink.relative.enabled    "Rozložiť relatívne cesty">
+<!ENTITY textlink.relative.enabled    "Rozložiť relatívne cesty (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Rozložiť viacnásobné slabiky">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Politika detekcie">
 <!ENTITY textlink.find_click_point.strict.strict "Prísna (niekedy nemusí načítať internetovú adresu)">

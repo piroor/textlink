@@ -629,6 +629,9 @@
 		<preference id="textlink.multibyte.enabled"
 			name="textlink.multibyte.enabled"
 			type="bool"/>
+		<preference id="textlink.multiline.enabled"
+			name="textlink.multiline.enabled"
+			type="bool"/>
 		<preference id="textlink.find_click_point.strict"
 			name="textlink.find_click_point.strict"
 			type="bool"/>
@@ -675,6 +678,11 @@
 		<checkbox id="textlink.multibyte.enabled-check"
 			label="&textlink.multibyte.enabled;"
 			preference="textlink.multibyte.enabled"/>
+
+		<checkbox id="textlink.multiline.enabled-check"
+			class="product-messenger"
+			label="&textlink.multiline.enabled;"
+			preference="textlink.multiline.enabled"/>
 
 	</groupbox>
 

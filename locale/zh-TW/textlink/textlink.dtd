@@ -124,8 +124,9 @@
 <!ENTITY textlink.schemer.fixup.table "依下列規則修復損毀的 URI: (例如: &quot;ttp=>http, ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "重設">
 
-<!ENTITY textlink.relative.enabled    "剖析相對路徑">
+<!ENTITY textlink.relative.enabled    "剖析相對路徑 (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "剖析多位元組字元 (multi-byte characters)">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "滑鼠點擊偵測方式">
 <!ENTITY textlink.find_click_point.strict.strict "嚴格 (有時無法載入 URI)">

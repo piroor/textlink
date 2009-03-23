@@ -125,8 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (örn. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Sıfırla">
 
-<!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır">
+<!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Çoklu-bayt karakterleri ayrıştır">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
 <!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">

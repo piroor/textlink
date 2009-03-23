@@ -124,8 +124,9 @@
 <!ENTITY textlink.schemer.fixup.table "使用以下规则修复拼写错误的 URI：（例如 &quot;ttp=>http、ttps=>https&quot;）">
 <!ENTITY textlink.schemer.fixup.table.default "重置">
 
-<!ENTITY textlink.relative.enabled    "解析相关的路径">
+<!ENTITY textlink.relative.enabled    "解析相关的路径 (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "解析多字节的字符">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "检测双击点的方式">
 <!ENTITY textlink.find_click_point.strict.strict "严格的（某些时候可能导致 URI 载入失败）">

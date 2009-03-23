@@ -125,8 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Hiányos webcímek javítása a következő szabályok segítségével: (pl. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Törlés">
 
-<!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása">
+<!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Összetett karakterek szétválasztása">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "A felismerés módja">
 <!ENTITY textlink.find_click_point.strict.strict "Szigorú (néha nem sikerül beolvasni a weboldalt)">

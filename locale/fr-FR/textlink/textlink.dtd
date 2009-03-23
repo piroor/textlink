@@ -126,8 +126,9 @@
 <!ENTITY textlink.schemer.fixup.table         "Corriger les URLs coupées, en utilisant les règles suivantes : (ex. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Défaut">
 
-<!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs">
+<!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Analyser les caractères multi-octet">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Règle pour la détection des clics">
 <!ENTITY textlink.find_click_point.strict.strict "Stricte (quelquefois les URLs ne sont pas chargées)">

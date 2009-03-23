@@ -126,8 +126,9 @@
 <!ENTITY textlink.schemer.fixup.table "Correggi gli URI errati secondo le seguenti regole: (es. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Resetta">
 
-<!ENTITY textlink.relative.enabled    "Analizza percorsi relativi">
+<!ENTITY textlink.relative.enabled    "Analizza percorsi relativi (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Analizza caratteri multi-byte">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Criterio di rilevamento dei punti cliccati">
 <!ENTITY textlink.find_click_point.strict.strict "Rigido (a volte non carica gli URI)">

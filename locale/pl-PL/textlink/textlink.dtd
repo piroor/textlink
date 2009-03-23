@@ -125,8 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Popraw błędne adresy przy pomocy następujących reguł: (np. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Przywróć domyślne">
 
-<!ENTITY textlink.relative.enabled    "Odczytuj adresy względne">
+<!ENTITY textlink.relative.enabled    "Odczytuj adresy względne (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Odczytuj znaki kilkubajtowe">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Rozpoznawanie punktów kliknięcia">
 <!ENTITY textlink.find_click_point.strict.strict "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)">

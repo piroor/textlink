@@ -125,8 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Fix up broken URI, with following rules: (ex. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Reset">
 
-<!ENTITY textlink.relative.enabled    "Parse relative paths">
+<!ENTITY textlink.relative.enabled    "Parse relative paths (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Parse multi-byte characters">
+<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
 
 <!ENTITY textlink.find_click_point.strict        "Policy of detecting clicked points">
 <!ENTITY textlink.find_click_point.strict.strict "Strict (sometimes fails to load URIs)">
