@@ -71,6 +71,9 @@
 		<preference id="textlink.messenger.linkify"
 			name="textlink.messenger.linkify"
 			type="bool"/>
+		<preference id="textlink.multiline.enabled"
+			name="textlink.multiline.enabled"
+			type="bool"/>
 	</preferences>
 
 	<vbox>
@@ -610,6 +613,12 @@
 		<checkbox id="textlink.messenger.linkify-check"
 			label="&textlink.messenger.linkify;"
 			preference="textlink.messenger.linkify"/>
+		<hbox>
+			<spacer style="width:1em;"/>
+			<checkbox id="textlink.multiline.enabled-check"
+				label="&textlink.multiline.enabled;"
+				preference="textlink.multiline.enabled"/>
+		</hbox>
 	</vbox>
 
 </prefpane>
@@ -628,9 +637,6 @@
 			type="bool"/>
 		<preference id="textlink.multibyte.enabled"
 			name="textlink.multibyte.enabled"
-			type="bool"/>
-		<preference id="textlink.multiline.enabled"
-			name="textlink.multiline.enabled"
 			type="bool"/>
 		<preference id="textlink.find_click_point.strict"
 			name="textlink.find_click_point.strict"
@@ -678,11 +684,6 @@
 		<checkbox id="textlink.multibyte.enabled-check"
 			label="&textlink.multibyte.enabled;"
 			preference="textlink.multibyte.enabled"/>
-
-		<checkbox id="textlink.multiline.enabled-check"
-			class="product-messenger"
-			label="&textlink.multiline.enabled;"
-			preference="textlink.multiline.enabled"/>
 
 	</groupbox>
 
