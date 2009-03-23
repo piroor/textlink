@@ -553,23 +553,18 @@ var TextLinkService = {
 		this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 	},
  
-	getURIPartFromStart : function(aString, aIncludeURIHead) 
+	getURIPartFromStart : function(aString, aExcludeURIHead) 
 	{
 		this._updateURIPartRegExp();
 		var match = aString.match(this._URIPartRegExp_start);
 		var part = match ? match[1] : '' ;
-		return (aIncludeURIHead || !this.isHeadOfNewURI(part)) ?
-				part :
-				'' ;
+		return (!aExcludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
 	},
-	getURIPartFromEnd : function(aString, aIncludeURIHead)
+	getURIPartFromEnd : function(aString)
 	{
 		this._updateURIPartRegExp();
 		var match = aString.match(this._URIPartRegExp_end);
-		var part = match ? match[1] : '' ;
-		return (aIncludeURIHead || !this.isHeadOfNewURI(part)) ?
-				part :
-				'' ;
+		return match ? match[1] : '' ;
 	},
 	_URIPartRegExp_start : null,
 	_URIPartRegExp_end : null,
@@ -977,7 +972,7 @@ var TextLinkService = {
 		{
 			let range = this.shrinkURIRange(termRange.cloneRange());
 			let uri = this.fixupURI(range.toString(), aBaseURI);
-			let ranges = this._getFollowingPartRanges(range);
+			let ranges = this.getFollowingURIPartRanges(range);
 			if (ranges.length) {
 				ranges.forEach(function(aRange) {
 					uri += this.convertFullWidthToHalfWidth(aRange.toString());
@@ -1061,14 +1056,6 @@ var TextLinkService = {
 		return (aA.base == aB.base) ? (aA.start - aB.start) :
 				(aA.base.comparePoint(aB.base.startContainer, aB.base.startOffset) < 0) ? 1 : -1 ;
 	},
-	_getFollowingPartRanges : function(aRange)
-	{
-		var ranges = [];
-		if (this.acceptMultilineURI) {
-			this._expandURIRangeToAfter(aRange, ranges);
-		}
-		return ranges;
-	},
 	
 	getFindRange : function(aBaseRange) 
 	{
@@ -1098,17 +1085,17 @@ var TextLinkService = {
 		var expandToAfter  = aBaseRange.collapsed;
 		if (!aBaseRange.collapsed) {
 			var string = aBaseRange.toString();
-			expandToBefore = this.getURIPartFromStart(string, true);
-			expandToAfter  = this.getURIPartFromEnd(string, true);
+			expandToBefore = this.getURIPartFromStart(string);
+			expandToAfter  = this.getURIPartFromEnd(string);
 		}
 		if (expandToBefore)
 			this._expandURIRangeToBefore(findRange);
 		if (expandToAfter)
-			this._expandURIRangeToAfter(findRange, null, this.isHeadOfNewURI(findRange.toString()));
+			this._expandURIRangeToAfter(findRange);
 
 		return findRange;
 	},
-	_expandURIRangeToBefore : function(aRange, aHeadIsFound)
+	_expandURIRangeToBefore : function(aRange)
 	{
 		var expandRange = aRange.cloneRange();
 		expandRange.selectNode(aRange.startContainer);
@@ -1125,47 +1112,23 @@ var TextLinkService = {
 				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 				node
 			);
-		var mayBeURI = aRange.toString();
 		var i = nodes.snapshotLength-1,
-			headPartIsFound = aHeadIsFound || this.isHeadOfNewURI(mayBeURI),
 			lastNode;
-		while (!headPartIsFound)
+		while (true)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
-				if (this.acceptMultilineURI) {
-					let originalString = string;
-					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
-					delta = this.reverseString(originalString).indexOf(this.reverseString(string));
-
-					originalString = string;
-					string = string.replace(this.URIExceptionPattern_end, '');
-					if (this.reverseString(originalString).indexOf(this.reverseString(string)) != 0) {
-						string = '';
-						delta = 0;
-					}
-				}
-				if (!this.acceptMultilineURI || string) {
-					let part = this.getURIPartFromEnd(string, !headPartIsFound);
-					if (!part.length) break;
-					mayBeURI = part + mayBeURI;
-					if (!headPartIsFound && this.isHeadOfNewURI(mayBeURI)) headPartIsFound = true;
-					if (
-						part.length < string.length ||
-						(part.length == string.length && i == -1)
-						) {
-						offset = string.length - part.length + delta;
-						break;
-					}
-					else if (headPartIsFound) {
-						offset = 0;
-						break;
-					}
-				}
-				else {
+				let part = this.getURIPartFromEnd(string);
+				if (!part.length) break;
+				if (
+					part.length < string.length ||
+					(part.length == string.length && i == -1)
+					) {
+					offset = (expandRange.startContainer == aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
+					break;
 				}
 				if (i == -1) break;
 			}
@@ -1185,7 +1148,7 @@ var TextLinkService = {
 
 		expandRange.detach();
 	},
-	_expandURIRangeToAfter : function(aRange, aRanges, aHeadIsFound)
+	_expandURIRangeToAfter : function(aRange, aRanges)
 	{
 		var expandRange = aRange.cloneRange();
 		expandRange.selectNode(aRange.endContainer);
@@ -1202,10 +1165,9 @@ var TextLinkService = {
 				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
 				node
 			);
-		var mayBeURI = aRange.toString();
 		var i = 0,
 			maxi = nodes.snapshotLength,
-			headPartIsFound = aHeadIsFound || this.isHeadOfNewURI(mayBeURI.split('\n')[0]),
+			headPartIsFound = aRanges && this.isHeadOfNewURI(aRange.toString()),
 			lastNode;
 		while (true)
 		{
@@ -1234,12 +1196,11 @@ var TextLinkService = {
 					}
 				}
 				if (!this.acceptMultilineURI || string) {
-					let part = this.getURIPartFromStart(string, !headPartIsFound);
+					let part = this.getURIPartFromStart(string, headPartIsFound);
 					if (!part.length) break;
-					mayBeURI += part;
-					if (!headPartIsFound && this.isHeadOfNewURI(mayBeURI)) headPartIsFound = true;
 					let partRange;
 					if (aRanges) {
+						if (!headPartIsFound && this.isHeadOfNewURI(part)) headPartIsFound = true;
 						partRange = expandRange.cloneRange();
 						aRanges.push(partRange);
 						partRange.setStart(lastNode, partRange.startOffset + delta);
@@ -1250,7 +1211,9 @@ var TextLinkService = {
 						(part.length == string.length && i == maxi)
 						) {
 						offset = expandRange.startOffset + part.length + delta;
-						if (aRanges) partRange.setEnd(lastNode, offset);
+						if (aRanges) {
+							partRange.setEnd(lastNode, offset);
+						}
 						break;
 					}
 				}
@@ -1388,6 +1351,15 @@ var TextLinkService = {
 		}
 
 		return aRange;
+	},
+ 
+	getFollowingURIPartRanges : function(aRange) 
+	{
+		var ranges = [];
+		if (this.acceptMultilineURI) {
+			this._expandURIRangeToAfter(aRange, ranges);
+		}
+		return ranges;
 	},
   
 	handleEvent : function(aEvent) 
@@ -1696,7 +1668,7 @@ var TextLinkService = {
 		var referrer = (aAction & this.ACTION_STEALTH) ?
 					null :
 					this.makeURIFromSpec(frame.location.href) ;
-		this.loadURI(uri, referrer, aAction);
+		this.loadURI(uri, referrer, aEvent, aAction);
 	},
 	loadURI : function(aURI, aReferrer, aEvent, aAction)
 	{

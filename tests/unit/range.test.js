@@ -217,61 +217,6 @@ function test_getFindRange()
 
 	range.detach();
 	findRange.detach();
-
-
-	// 改行を含む場合
-	function assert_getFindRangeMultiline(aExpected, aRange)
-	{
-		var range = sv.getFindRange(aRange);
-		assert.equals(aExpected, range.toString());
-		range.detach();
-	}
-
-	range = content.document.createRange();
-
-	node = $('pre-with-linebreaks');
-	range.selectNode(node.firstChild);
-	assert.equals('http://piro.sakura.ne.jp/latest/', range.toString());
-	sv.acceptMultilineURI = false;
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/\n', range);
-	sv.acceptMultilineURI = true;
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/\n', range);
-
-	range.selectNode(node.childNodes[2]);
-	assert.equals('http://piro.sakura.ne.jp/latest/blosxom/', range.toString());
-	sv.acceptMultilineURI = false;
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\n', range);
-	sv.acceptMultilineURI = true;
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\nmozilla/\n', range);
-
-	range.selectNode(node.childNodes[4]);
-	assert.equals('mozilla/', range.toString());
-	sv.acceptMultilineURI = false;
-	assert_getFindRangeMultiline('mozilla/\n', range);
-	sv.acceptMultilineURI = true;
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/latest/blosxom/\nmozilla/\n', range);
-
-	node = $('wrapped-message');
-	range.selectNode(node.childNodes[2]);
-	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/', range.toString());
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/\nfff/ggg/hhh/iii/jjj/kkkk/hhh/iii\n\n> ', range);
-
-	range.selectNode(node.childNodes[4]);
-	assert.equals('fff/ggg/hhh/iii/jjj/kkkk/hhh/iii', range.toString());
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/\nfff/ggg/hhh/iii/jjj/kkkk/hhh/iii\n\n> ', range);
-
-	node = $('message-quoted-part');
-	range.selectNode(node.childNodes[1]);
-	range.setStart(node.childNodes[1], 7);
-	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/\n> ggg/hhh/iii/jjj/kkkk/hhh/iii', range);
-
-	range.selectNode(node.childNodes[4]);
-	range.setEnd(node.childNodes[4], 28);
-	assert.equals('ggg/hhh/iii/jjj/kkkk/hhh/iii', range.toString());
-	assert_getFindRangeMultiline('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/\n> ggg/hhh/iii/jjj/kkkk/hhh/iii', range);
-
-	range.detach();
 }
 
 test_getFindRange_plainText.setUp = function()
@@ -288,8 +233,6 @@ function test_getFindRange_plainText()
 	assert.equals('(http://www.mozilla.org/)', rangeText);
 
 	var findRange = sv.getFindRange(range);
-	var findRangeText = findRange.toString();
-	assert.compare(findRangeText.length, '>=', rangeText.length);
 	assert.contains(range, findRange);
 
 	range.setStart(node, 15);
@@ -673,11 +616,11 @@ function test_getSelectionURIRanges()
 	);
 }
 
-function test__getFollowingPartRanges()
+function test_getFollowingURIPartRanges()
 {
 	function assertGetFollowingPartRanges(aExpected, aRange)
 	{
-		var ranges = sv._getFollowingPartRanges(aRange);
+		var ranges = sv.getFollowingURIPartRanges(aRange);
 		assert.equals(
 			aExpected,
 			ranges.map(function(aRange) { return aRange.toString(); })
