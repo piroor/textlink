@@ -165,7 +165,7 @@ var TextLinkService = {
 	kURIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
 	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
  
-	kSchemerPattern : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+	kSchemerPattern : '[\\*\\+a-z0-9_]+:',
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
  
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+', 
@@ -203,6 +203,41 @@ var TextLinkService = {
 		'za', 'zm', 'zr', 'zw'
 	],
   
+ 
+	get URIExceptionPattern()
+	{
+		this._updateURIExceptionPattern();
+		return this._URIExceptionPattern;
+	},
+	get URIExceptionPattern_start()
+	{
+		this._updateURIExceptionPattern();
+		return this._URIExceptionPattern_start;
+	},
+	get URIExceptionPattern_end()
+	{
+		this._updateURIExceptionPattern();
+		return this._URIExceptionPattern_end;
+	},
+	_updateURIExceptionPattern : function()
+	{
+		if (this._URIExceptionPattern) return;
+		var regexp = this.getPref('textlink.part.exception');
+		try {
+			this._URIExceptionPattern = new RegExp('^('+regexp+')$', 'i');
+			this._URIExceptionPattern_start = new RegExp('^('+regexp+')', 'i');
+			this._URIExceptionPattern_end = new RegExp('('+regexp+')$', 'i');
+		}
+		catch(e) {
+			this._URIExceptionPattern = /[^\w\W]/;
+			this._URIExceptionPattern_start = /[^\w\W]/;
+			this._URIExceptionPattern_end = /[^\w\W]/;
+		}
+	},
+	_URIExceptionPattern : null,
+	_URIExceptionPattern_start : null,
+	_URIExceptionPattern_end : null,
+ 
 	get browser() 
 	{
 		return 'SplitBrowser' in window ? SplitBrowser.activeBrowser : gBrowser ;
@@ -694,7 +729,7 @@ var TextLinkService = {
 			if (match)
 				aURI = aURI.replace(target, match[1]);
 		}
-		else if (!/^\w+:/.test(aURI)) {
+		else if (!this._firstSchemerRegExp.test(aURI)) {
 			var schemer = this.schemerFixupDefault;
 			if (schemer)
 				aURI = schemer+'://'+aURI;
@@ -845,8 +880,9 @@ var TextLinkService = {
 			aTerm = this.sanitizeURIString(aTerm);
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
+			let hadlWidthTerm = this.convertFullWidthToHalfWidth(aTerm);
 			if (!this.shouldParseRelativePath && this.hasSchemer(aTerm)) {
-				let termForCheck = this.convertFullWidthToHalfWidth(aTerm);
+				let termForCheck = hadlWidthTerm;
 				while (this.hasSchemer(termForCheck))
 				{
 					termForCheck = this.fixupSchemer(termForCheck);
@@ -855,6 +891,9 @@ var TextLinkService = {
 					aTerm = this.removeSchemer(aTerm);
 				}
 				if (!this.hasSchemer(termForCheck)) return;
+			}
+			else if (this.URIExceptionPattern.test(hadlWidthTerm)) {
+				return;
 			}
 
 			if (terms.indexOf(aTerm) < 0) terms.push(aTerm);
@@ -931,46 +970,53 @@ var TextLinkService = {
 		FIND_URI_RANGE:
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
 		{
-			if (this._containsRange(aRangeSet.base, termRange, aStrict)) {
-				let range = this.shrinkURIRange(termRange.cloneRange());
-				let uri = this.fixupURI(range.toString(), aBaseURI);
-				let ranges = this._getFollowingPartRanges(range);
-				if (ranges.length) {
-					ranges.forEach(function(aRange) {
-						uri += this.convertFullWidthToHalfWidth(aRange.toString());
-					}, this);
-				}
-				ranges.unshift(range);
-				if (uri && !(uri in aFoundURIsHash)) {
-					for (let i = 0, maxi = ranges.length; i < maxi; i++)
-					{
-						// 既に見つかったより長いURI文字列の一部である場合は除外する。
-						let range = ranges[i];
-						aRangeSet.position.setEnd(range.startContainer, range.startOffset);
-						let start = aRangeSet.position.toString().length;
-						uriRange = {
-							range  : range,
-							uri    : uri,
-							start  : start,
-							end    : start + aTerm.length,
-							base   : aRangeSet.base
-						};
+			let range = this.shrinkURIRange(termRange.cloneRange());
+			let uri = this.fixupURI(range.toString(), aBaseURI);
+			let ranges = this._getFollowingPartRanges(range);
+			if (ranges.length) {
+				ranges.forEach(function(aRange) {
+					uri += this.convertFullWidthToHalfWidth(aRange.toString());
+				}, this);
+			}
+			ranges.unshift(range);
 
-						if (aRanges.some(this._checkRangeFound, uriRange))
-							continue;
+			if (
+				ranges.some(function(aRange) {
+					return this._containsRange(aRangeSet.base, aRange, aStrict)
+				}, this) &&
+				uri &&
+				!(uri in aFoundURIsHash)
+				) {
+				for (let i = 0, maxi = ranges.length; i < maxi; i++)
+				{
+					// 既に見つかったより長いURI文字列の一部である場合は除外する。
+					let range = ranges[i];
+					aRangeSet.position.setEnd(range.startContainer, range.startOffset);
+					let start = aRangeSet.position.toString().length;
+					uriRange = {
+						range  : range,
+						uri    : uri,
+						start  : start,
+						end    : start + aTerm.length,
+						base   : aRangeSet.base
+					};
 
-						uriRanges.push(uriRange);
-						if (shouldReturnSingleResult) {
-							break FIND_URI_RANGE;
-						}
+					if (aRanges.some(this._checkRangeFound, uriRange))
+						continue;
+
+					uriRanges.push(uriRange);
+					if (shouldReturnSingleResult) {
+						break FIND_URI_RANGE;
 					}
 				}
-				if (shouldReturnSingleResult) {
-					ranges.forEach(function(aRange) {
-						aRange.detach();
-					});
-				}
 			}
+
+			if (shouldReturnSingleResult) {
+				ranges.forEach(function(aRange) {
+					aRange.detach();
+				});
+			}
+
 			if (this.Find.findBackwards) {
 				aRangeSet.startPoint.setEnd(termRange.startContainer, termRange.startOffset);
 			}
@@ -1081,31 +1127,14 @@ var TextLinkService = {
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
-				let delta = 0;
-				if (this.acceptMultilineURI) {
-					let originalString = string;
-					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
-					delta = originalString
-								.split('')
-								.reverse()
-								.join('')
-								.indexOf(
-									string
-										.split('')
-										.reverse()
-										.join('')
-								);
-				}
-				if (!this.acceptMultilineURI || string) {
-					let part = this.getURIPartFromEnd(string);
-					if (!part.length) break;
-					if (
-						part.length < string.length ||
-						(part.length == string.length && i == -1)
-						) {
-						offset = string.length - part.length + delta;
-						break;
-					}
+				let part = this.getURIPartFromEnd(string);
+				if (!part.length) break;
+				if (
+					part.length < string.length ||
+					(part.length == string.length && i == -1)
+					) {
+					offset = string.length - part.length/* + delta*/;
+					break;
 				}
 				if (i == -1) break;
 			}
@@ -1156,9 +1185,17 @@ var TextLinkService = {
 					if (expandRange.startContainer.nodeType == Node.ELEMENT_NODE) {
 						expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
 					}
+
 					let originalString = string;
 					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
 					delta = originalString.indexOf(string);
+
+					originalString = string;
+					string = string.replace(this.URIExceptionPattern_start, '');
+					if (originalString.indexOf(string) != 0) {
+						string = '';
+						delta = 0;
+					}
 				}
 				if (!this.acceptMultilineURI || string) {
 					let part = this.getURIPartFromStart(string, aFirstPartIsAbsolute && i == 0);
@@ -1215,6 +1252,7 @@ var TextLinkService = {
 	},
 	_getParentBlock : function(aNode)
 	{
+		if (!aNode) return null;
 		var win = aNode.ownerDocument.defaultView;
 		if (aNode.nodeType != Node.ELEMENT_NODE) aNode = aNode.parentNode;
 		while (aNode)
@@ -1459,6 +1497,10 @@ var TextLinkService = {
 
 			case 'textlink.contextmenu.openTextLink.copy':
 				this.contextItemCopy = value;
+				return;
+
+			case 'textlink.part.exception':
+				this._URIExceptionPattern = null;
 				return;
 		}
 

@@ -65,13 +65,13 @@ var TextLinkMessengerService = {
 	{
 		var doc = this.browser.contentDocument;
 		var links = this.evaluateXPath(
-				'/descendant::*[not('+(
+				'/descendant::*[local-name()="A" and not('+(
 					'addbook,imap,mailbox,mailto,news,nntp,pop,snews,feed'.split(',')
 					.map(function(aSchemer) {
 						return 'starts-with(@href, "'+aSchemer+':")';
 					})
 					.join(' or ')
-				)+') and @href=text()]',
+				)+') and contains(text(), @href)]',
 				doc
 			);
 		var range = doc.createRange();
@@ -99,8 +99,9 @@ var TextLinkMessengerService = {
 		uriRanges.reverse().forEach(function(aRange) {
 			if (!this._getParentLink(aRange.range.startContainer)) {
 				let link = doc.createElement('a');
+				if (aRange.range.toString().length < aRange.uri.length)
+					link.setAttribute('class', 'moz-txt-link-abbreviated');
 				link.setAttribute('href', aRange.uri);
-				link.setAttribute('title', decodeURIComponent(aRange.uri));
 				link.appendChild(aRange.range.extractContents());
 				aRange.range.insertNode(link);
 				link.textContent = link.textContent;
@@ -112,7 +113,7 @@ var TextLinkMessengerService = {
 	_getParentLink : function(aNode)
 	{
 		return this.evaluateXPath(
-				'ancestor-or-self::*[@href]',
+				'ancestor-or-self::*[local-name()="A" and @href]',
 				aNode,
 				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
