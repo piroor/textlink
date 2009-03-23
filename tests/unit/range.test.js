@@ -617,3 +617,60 @@ function test_getSelectionURIRanges()
 		})
 	);
 }
+
+function test__getFollowingPartRanges()
+{
+	function assertGetFollowingPartRanges(aExpected, aRange)
+	{
+		var ranges = sv._getFollowingPartRanges(aRange);
+		assert.equals(
+			aExpected,
+			ranges.map(function(aRange) { return aRange.toString(); })
+		);
+		ranges.forEach(function(aRange) {
+			aRange.detach();
+		});
+	}
+
+	var node = $('pre-with-linebreaks').firstChild;
+	var range = content.document.createRange();
+	range.setStart(node, 0);
+	range.setEnd(node, 32);
+	assert.equals('http://piro.sakura.ne.jp/latest/', range.toString());
+
+	sv.acceptMultilineURI = false;
+	assertGetFollowingPartRanges([], range);
+
+	sv.acceptMultilineURI = true;
+	assertGetFollowingPartRanges([], range);
+
+	range.setEnd(node, 73);
+	range.setStart(node, 33);
+	assert.equals('http://piro.sakura.ne.jp/latest/blosxom/', range.toString());
+
+	sv.acceptMultilineURI = false;
+	assertGetFollowingPartRanges([], range);
+
+	sv.acceptMultilineURI = true;
+	assertGetFollowingPartRanges(['mozilla/'], range);
+
+	node = $('wrapped-message');
+	range.setStart(node.firstChild, 11);
+	range.setEnd(node.firstChild, 61);
+	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/', range.toString());
+	assertGetFollowingPartRanges(['fff/ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
+
+	node = $('message-quoted-part-1');
+	range.setStart(node.childNodes[1], 7);
+	range.setEnd(node.childNodes[1], 61);
+	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
+	assertGetFollowingPartRanges(['ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
+
+	node = $('message-quoted-part-2');
+	range.setStart(node.childNodes[1], 7);
+	range.setEnd(node.childNodes[1], 61);
+	assert.equals('http://piro.sakura.ne.jp/temp/aaa/bbb/ccc/ddd/eee/fff/', range.toString());
+	assertGetFollowingPartRanges(['ggg/hhh/iii/jjj/kkkk/hhh/iii'], range);
+
+	range.detach();
+}

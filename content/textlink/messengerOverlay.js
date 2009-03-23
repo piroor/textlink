@@ -15,15 +15,10 @@ var TextLinkMessengerService = {
 				).booleanValue;
 	},
  
-	get shouldRecognizeLineBreaksAsBoundaryPoints()
+	get acceptMultilineURI()
 	{
-		return !this.isPlainTextMessage;
-	},
- 
-	_getFollowingPartRanges : function(aRange)
-	{
-		var ranges = [];
-		return ranges;
+		return this.getPref('textlink.multiline.enabled') &&
+			this.isPlainTextMessage;
 	},
  
 	handleEvent : function(aEvent) 
@@ -105,9 +100,10 @@ var TextLinkMessengerService = {
 			if (!this._getParentLink(aRange.range.startContainer)) {
 				let link = doc.createElement('a');
 				link.setAttribute('href', aRange.uri);
+				link.setAttribute('title', decodeURIComponent(aRange.uri));
 				link.appendChild(aRange.range.extractContents());
 				aRange.range.insertNode(link);
-				link.textContent = decodeURIComponent(link.textContent);
+				link.textContent = link.textContent;
 			}
 			aRange.range.detach();
 		}, this);
