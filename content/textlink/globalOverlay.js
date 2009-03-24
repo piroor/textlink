@@ -17,10 +17,25 @@ var TextLinkService = {
 	set schemer(val)
 	{
 		this._schemer = val;
+
+		this._schemers = this.schemer
+			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+			.replace(/\?/g, '.')
+			.replace(/\*/g, '.+')
+			.split(/[,\| \n\r\t]+/);
 		this._schemerRegExp = null;
+
+		this._kURIPattern = null;
+		this._kURIPatternMultibyte = null;
 		return val;
 	},
-	_schemer : '', 
+	_schemer : '',
+	get schemers()
+	{
+		return this._schemers.concat(this._fixupSchemers);
+	},
+	_schemers : [],
+	_fixupSchemers : [],
 
 	get schemerFixupTable()
 	{
@@ -29,7 +44,27 @@ var TextLinkService = {
 	set schemerFixupTable(val)
 	{
 		this._schemerFixupTable = val;
-		this._table = null;
+
+		this._fixupTable = this._schemerFixupTable
+					.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
+		this._fixupTargets = this._fixupTable
+					.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
+					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+					.replace(/\?/g, '.')
+					.replace(/\*/g, '.+')
+					.split(/\s*[,\| \n\r\t]+\s*/);
+		this._fixupSchemers = this._fixupTargets
+					.filter(function(aTarget) {
+						return /:$/.test(aTarget);
+					})
+					.map(function(aTarget) {
+						return aTarget.split(':')[0];
+					});
+		this._fixupTargetsPattern = this._fixupTargets.join('|');
+		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
+
+		this._kURIPattern = null;
+		this._kURIPatternMultibyte = null;
 		return val;
 	},
 	_schemerFixupTable : '',
@@ -79,11 +114,11 @@ var TextLinkService = {
 	
 	get kURIPattern() 
 	{
-		if (!this._kURIPattern)
+		if (!this._kURIPattern) {
 			this._kURIPattern = this.kURIPattern_base
 				.replace(
 					/%SCHEMER_PATTERN%/g,
-					this.kSchemerPattern
+					'('+this.schemers.join('|')+'):'
 				)
 				.replace(
 					/%PART_PATTERN%/g,
@@ -93,6 +128,7 @@ var TextLinkService = {
 					/%DOMAIN_PATTERN%/g,
 					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')\\b'
 				);
+		}
 
 		return this._kURIPattern;
 	},
@@ -100,16 +136,13 @@ var TextLinkService = {
  
 	get kURIPatternRelative() 
 	{
-		if (!this._kURIPatternRelative)
+		if (!this._kURIPatternRelative) {
 			this._kURIPatternRelative = this.kURIPatternRelative_base
-				.replace(
-					/%SCHEMER_PATTERN%/g,
-					this.kSchemerPattern
-				)
 				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPattern_part
 				);
+		}
 
 		return this._kURIPatternRelative;
 	},
@@ -117,11 +150,15 @@ var TextLinkService = {
  
 	get kURIPatternMultibyte() 
 	{
-		if (!this._kURIPatternMultibyte)
+		if (!this._kURIPatternMultibyte) {
 			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base
 				.replace(
 					/%SCHEMER_PATTERN%/g,
-					this.kSchemerPatternMultibyte
+					'('+
+					this.schemers.map(function(aSchemer) {
+						return aSchemer+'|'+this.convertHalfWidthToFullWidth(aSchemer);
+					}, this).join('|')+
+					')[:\uff1a]'
 				)
 				.replace(
 					/%PART_PATTERN%/g,
@@ -138,6 +175,7 @@ var TextLinkService = {
 					')'
 */
 				);
+		}
 
 		return this._kURIPatternMultibyte;
 	},
@@ -145,16 +183,13 @@ var TextLinkService = {
  
 	get kURIPatternMultibyteRelative() 
 	{
-		if (!this._kURIPatternMultibyteRelative)
+		if (!this._kURIPatternMultibyteRelative) {
 			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base
-				.replace(
-					/%SCHEMER_PATTERN%/g,
-					this.kSchemerPatternMultibyte
-				)
 				.replace(
 					/%PART_PATTERN%/g,
 					this.kURIPatternMultibyte_part
 				);
+		}
 
 		return this._kURIPatternMultibyteRelative;
 	},
@@ -701,22 +736,11 @@ var TextLinkService = {
  
 	fixupSchemer : function(aURI) 
 	{
-		if (!this._table) {
-			this._table = this.schemerFixupTable
-						.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
-			this._targets = this._table.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
-						.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-						.replace(/\?/g, '.')
-						.replace(/\*/g, '.+')
-						.replace(/\s*[,\| \n\r\t]+\s*/g, '|');
-			this._targetsRegExp = new RegExp('^('+this._targets+')');
-		}
-
-		var match = aURI.match(this._targetsRegExp);
+		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
 			var target = match[1];
-			var table = this._table;
-			eval((this._targets+'|')
+			var table = this._fixupTable;
+			eval((this._fixupTargetsPattern+'|')
 					.replace(/([^|]+)\|/g,
 						'if (/^$1$/.test("'+target+'")) table = table.replace(/\\b$1\\s*=>/, "'+target+'=>");'
 				));
@@ -738,9 +762,10 @@ var TextLinkService = {
 
 		return aURI;
 	},
-	_table : null,
-	_targets : null,
-	_targetsRegExp : null,
+	_fixupTable : null,
+	_fixupTargets : null,
+	_fixupTargetsPattern : null,
+	_fixupTargetsRegExp : null,
  
 	// ‘Š‘ÎƒpƒX‚Ì‰ðŒˆ 
 	makeURIComplete : function(aURI, aSourceURI)
