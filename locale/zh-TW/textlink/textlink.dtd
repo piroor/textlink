@@ -43,14 +43,14 @@
 <!ENTITY textlink.openTextLink.window.single     "在新視窗開啟: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "全部都在新視窗開啟: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.single     "複製 URI: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "複製全部的 URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "開啟 &lt;選取的 URI 字串&gt;">
 <!ENTITY textlink.context.tab.pref     "在新分頁開啟 &lt;選取的 URI 字串&gt;">
 <!ENTITY textlink.context.window.pref  "在新視窗開啟 &lt;選取的 URI 字串&gt;">
-<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
+<!ENTITY textlink.context.copy.pref    "複製 &lt;選取的 URI 字串&gt;">
 
 
 
@@ -91,7 +91,7 @@
 <!ENTITY textlink.trigger.key_after  "，">
 
 <!ENTITY textlink.action_before "">
-<!ENTITY textlink.action.blank         "什麼都不做">
+<!ENTITY textlink.action.blank         "什麼都不做。">
 <!ENTITY textlink.action.select        "選取它。">
 <!ENTITY textlink.action.current       "便將它載入到目前分頁。">
 <!ENTITY textlink.action.window        "便將它載入到新視窗。">
@@ -101,7 +101,7 @@
 <!ENTITY textlink.action.window.stealth        "便將它載入到新視窗。 (without HTTP_REFERER)">
 <!ENTITY textlink.action.tab.stealth           "便將它載入到新前景分頁。 (without HTTP_REFERER)">
 <!ENTITY textlink.action.tabBackground.stealth "便將它載入到新背景分頁。 (without HTTP_REFERER)">
-<!ENTITY textlink.action.copy          "copy it to the clipboard">
+<!ENTITY textlink.action.copy          "便將它複製到剪貼簿。">
 <!ENTITY textlink.action.openByBrowser "open by browser">
 <!ENTITY textlink.action_after  "">
 
