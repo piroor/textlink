@@ -948,7 +948,6 @@ var TextLinkService = {
 			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
-utils.log(terms.join('\n'));
 		return terms;
 	},
 	_getRangeSetFromRange : function(aBaseRange, aFindRange, aMode)

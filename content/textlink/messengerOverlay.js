@@ -68,12 +68,12 @@ var TextLinkMessengerService = {
 		var doc = this.browser.contentDocument;
 		var links = this.evaluateXPath(
 				'/descendant::*[local-name()="A" and not('+(
-					'addbook,imap,mailbox,mailto,news,nntp,pop,snews,feed'.split(',')
+					'addbook,imap,mailbox,mailto,pop'.split(',')
 					.map(function(aSchemer) {
 						return 'starts-with(@href, "'+aSchemer+':")';
 					})
 					.join(' or ')
-				)+') and contains(text(), @href)]',
+				)+') and (contains(text(), @href) or contains(@href, text()))]',
 				doc
 			);
 		var range = doc.createRange();
@@ -101,8 +101,12 @@ var TextLinkMessengerService = {
 		uriRanges.reverse().forEach(function(aRange) {
 			if (!this._getParentLink(aRange.range.startContainer)) {
 				let link = doc.createElement('a');
-				if (aRange.range.toString().length < aRange.uri.length)
+				if (aRange.range.toString().length < aRange.uri.length) {
 					link.setAttribute('class', 'moz-txt-link-abbreviated');
+				}
+				else {
+					link.setAttribute('class', 'moz-txt-link-freetext');
+				}
 				link.setAttribute('href', aRange.uri);
 				link.appendChild(aRange.range.extractContents());
 				aRange.range.insertNode(link);
