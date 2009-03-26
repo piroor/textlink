@@ -58,10 +58,12 @@ var TextLinkService = {
 						return /:$/.test(aTarget);
 					})
 					.map(function(aTarget) {
-						return aTarget.split(':')[0];
+						return aTarget.replace(/:$/, '');
 					});
 		this._fixupTargetsPattern = this._fixupTargets.join('|');
 		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
+
+		this._schemerRegExp = null;
 
 		this._kURIPattern = null;
 		this._kURIPatternMultibyte = null;
@@ -88,6 +90,7 @@ var TextLinkService = {
 	set shouldParseMultibyteCharacters(val)
 	{
 		this._shouldParseMultibyteCharacters = val;
+		this._schemerRegExp = null;
 		this._URIMatchingRegExp = null;
 		this._URIPartRegExp_start = null;
 		this._URIPartRegExp_end = null;
@@ -568,7 +571,7 @@ var TextLinkService = {
 		this._updateURIRegExp();
 		var match = aString.match(this._URIMatchingRegExp_fromHead);
 		match = match ? match[1] : '' ;
-		return this.hasSchemer(match) ? match == aString : false ;
+		return this.hasLoadableSchemer(match) ? match == aString : false ;
 	},
 	_URIMatchingRegExp : null,
 	_URIMatchingRegExp_fromHead : null,
@@ -616,20 +619,20 @@ var TextLinkService = {
 		this._URIPartRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
  
-	isLoadableSchemer : function(aURI) 
+	hasLoadableSchemer : function(aURI) 
 	{
 		if (!this._schemerRegExp) {
-			this._schemerRegExp = new RegExp(
-				'('+
-				this.schemer
-					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-					.replace(/\?/g, '.')
-					.replace(/\*/g, '.+')
-					.replace(/[,\| \n\r\t]+/g, '|')+
-				')'
-			);
+			var schemers = this.schemers;
+			var colon = ':';
+			if (this.shouldParseMultibyteCharacters) {
+				schemers = schemers.map(function(aSchemer) {
+						return aSchemer+'|'+this.convertHalfWidthToFullWidth(aSchemer);
+					}, this);
+				colon = '[:\uff1a]';
+			}
+			this._schemerRegExp = new RegExp('^('+this.schemers.join('|')+')'+colon, 'i');
 		}
-		return this._schemerRegExp.test(aURI.substr(0, aURI.indexOf(':')).toLowerCase());
+		return this._schemerRegExp.test(aURI);
 	},
 	_schemerRegExp : null,
  
@@ -667,7 +670,7 @@ var TextLinkService = {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
-		return this.isLoadableSchemer(aURIComponent) ? aURIComponent : null ;
+		return this.hasLoadableSchemer(aURIComponent) ? aURIComponent : null ;
 	},
 	
 	sanitizeURIString : function(aURIComponent) 
@@ -714,25 +717,43 @@ var TextLinkService = {
  
 	removeParen : function(aInput) 
 	{
-		while (
-			aInput.match(/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/) ||
-			aInput.match(/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/) ||
-			aInput.match(/^[(\uff08](.+)[)\uff09]$/) ||
-			aInput.match(/^[{\uff5b](.+)[}\uff5d]$/) ||
-			aInput.match(/^[\[\uff3b](.+)[\]\uff3d]$/) ||
-			aInput.match(/^[<\uff1c](.+)[>\uff1e]$/) ||
-			aInput.match(/^[\uff62\u300c](.+)[\uff63\u300d]$/) ||
-			aInput.match(/^\u226a(.+)\u226b$/) ||
-			aInput.match(/^\u3008(.+)\u3009$/) ||
-			aInput.match(/^\u300a(.+)\u300b$/) ||
-			aInput.match(/^\u300e(.+)\u300f$/) ||
-			aInput.match(/^\u3010(.+)\u3011$/) ||
-			aInput.match(/^\u3014(.+)\u3015$/)
-			) {
-			aInput = RegExp.$1;
-		}
+		var doRemoveParen = function(aRegExp) {
+				let match = aInput.match(aRegExp);
+				if (!match) return false;
+				aInput = match[1];
+				return true;
+			};
+		while (this._parenPatterns.some(doRemoveParen)) {}
 		return aInput;
 	},
+	_parenPatterns : [
+		/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/,
+		/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/,
+		/^[(\uff08](.+)[)\uff09]$/,
+		/^[{\uff5b](.+)[}\uff5d]$/,
+		/^[\[\uff3b](.+)[\]\uff3d]$/,
+		/^[<\uff1c](.+)[>\uff1e]$/,
+		/^[\uff62\u300c](.+)[\uff63\u300d]$/,
+		/^\u226a(.+)\u226b$/,
+		/^\u3008(.+)\u3009$/,
+		/^\u300a(.+)\u300b$/,
+		/^\u300e(.+)\u300f$/,
+		/^\u3010(.+)\u3011$/,
+		/^\u3014(.+)\u3015$/,
+		/^(.+)["\u201d\u201c\u301d\u301f][^"\u201d\u201c\u301d\u301f]*$/,
+		/^(.+)[`'\u2019\u2018][^`'\u2019\u2018]*$/,
+		/^(.+)[(\uff08][^)\uff09]*$/,
+		/^(.+)[{\uff5b][^}\uff5d]*$/,
+		/^(.+)[\[\uff3b][^\]\uff3d]*$/,
+		/^(.+)[<\uff1c][^>\uff1e]*$/,
+		/^(.+)[\uff62\u300c][^\uff63\u300d]*$/,
+		/^(.+)\u226a[^\u226b$]*/,
+		/^(.+)\u3008[^\u3009$]*/,
+		/^(.+)\u300a[^\u300b$]*/,
+		/^(.+)\u300e[^\u300f$]*/,
+		/^(.+)\u3010[^\u3011$]*/,
+		/^(.+)\u3014[^\u3015$]*/
+	],
  
 	fixupSchemer : function(aURI) 
 	{
@@ -911,12 +932,11 @@ var TextLinkService = {
 				let termForCheck = hadlWidthTerm;
 				while (this.hasSchemer(termForCheck))
 				{
-					termForCheck = this.fixupSchemer(termForCheck);
-					if (this.isLoadableSchemer(termForCheck)) break;
+					if (this.hasLoadableSchemer(termForCheck)) break;
 					termForCheck = this.removeSchemer(termForCheck);
 					aTerm = this.removeSchemer(aTerm);
 				}
-				if (!this.hasSchemer(termForCheck)) return;
+				if (!this.hasLoadableSchemer(termForCheck)) return;
 			}
 			else if (this.URIExceptionPattern.test(hadlWidthTerm)) {
 				return;
@@ -928,6 +948,7 @@ var TextLinkService = {
 			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
+utils.log(terms.join('\n'));
 		return terms;
 	},
 	_getRangeSetFromRange : function(aBaseRange, aFindRange, aMode)
