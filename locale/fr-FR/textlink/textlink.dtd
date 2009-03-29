@@ -103,7 +103,7 @@
 <!ENTITY textlink.action.tab.stealth           "l'ouvrir dans un nouvel onglet actif (sans HTTP_REFERER).">
 <!ENTITY textlink.action.tabBackground.stealth "l'ouvrir dans un nouvel onglet en arrière-plan (sans HTTP_REFERER).">
 <!ENTITY textlink.action.copy          "le copier dans le presse-papiers">
-<!ENTITY textlink.action.openByBrowser "open by browser">
+<!ENTITY textlink.action.openByBrowser "l'ouvrir par le navigateur">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Défaut">
@@ -113,7 +113,7 @@
 <!ENTITY textlink.group.contextmenu    "Éléments Supplémentaires du menu contextuel lorsqu'une URL est sélectionnée">
 
 
-<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+<!ENTITY textlink.messenger.linkify    "Relier les chaînes URL dans les messages en texte simple">
 
 
 
@@ -126,9 +126,9 @@
 <!ENTITY textlink.schemer.fixup.table         "Corriger les URLs coupées, en utilisant les règles suivantes : (ex. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Défaut">
 
-<!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs (unrecommended)">
+<!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs (non recommandé)">
 <!ENTITY textlink.multibyte.enabled   "Analyser les caractères multi-octet">
-<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
+<!ENTITY textlink.multiline.enabled   "Analyser les URLs fractionnées sur plusieurs lignes (non recommandé)">
 
 <!ENTITY textlink.find_click_point.strict        "Règle pour la détection des clics">
 <!ENTITY textlink.find_click_point.strict.strict "Stricte (quelquefois les URLs ne sont pas chargées)">
