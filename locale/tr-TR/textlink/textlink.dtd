@@ -102,17 +102,17 @@
 <!ENTITY textlink.action.tab.stealth           "yeni ön plan sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.tabBackground.stealth "yeni arka plan sekmede aç (HTTP_REFERER olmadan).">
 <!ENTITY textlink.action.copy          "onu panoya kopyala.">
-<!ENTITY textlink.action.openByBrowser "open by browser">
+<!ENTITY textlink.action.openByBrowser "onu tarayıcıyla aç.">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Sıfırla">
 
 
 
-<!ENTITY textlink.group.contextmenu    "Seçili URL Metinleri İçin Ekstra Sağ Tık Menüsü Öğeleri">
+<!ENTITY textlink.group.contextmenu    "Seçili URL metinleri için ekstra sağ tık menüsü öğeleri">
 
 
-<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+<!ENTITY textlink.messenger.linkify    "Düz metin mesajlarındaki URL'leri linke çevir">
 
 
 
@@ -125,10 +125,10 @@
 <!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (örn. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Sıfırla">
 
-<!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır (unrecommended)">
+<!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır (Önerilmez)">
 <!ENTITY textlink.multibyte.enabled   "Çoklu-bayt karakterleri ayrıştır">
-<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
+<!ENTITY textlink.multiline.enabled   "Birden çok satıra bölünmüş URL'leri işle (Önerilmez)">
 
-<!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
-<!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">
-<!ENTITY textlink.find_click_point.strict.loose  "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)">
+<!ENTITY textlink.find_click_point.strict        "Tıklanan bölgelerin algılanma ilkesi">
+<!ENTITY textlink.find_click_point.strict.strict "Sıkı (Bazen URL'leri açmakta başarısız olur)">
+<!ENTITY textlink.find_click_point.strict.loose  "Serbest (Bazen yanlışlıkla tıklanmamış URL'leri açar)">
