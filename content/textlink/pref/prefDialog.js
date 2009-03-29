@@ -65,19 +65,19 @@ function evaluateXPath(aExpression, aContext, aType)
 
 function initMacLabel()
 {
-	if (navigator.platform.match(/Mac/)) {
-		var macLabels = document.getElementsByAttribute('label-mac', '*');
-		var node;
-		var label;
+	if (navigator.platform.toLowerCase().indexOf('mac') < 0) return;
 
-		for (var i = macLabels.length-1; i < -1; i--)
-		{
-			node = macLabels[i];
-			label = node.getAttribute('label-mac');
-			node.setAttribute('label', label);
-			if (node.localName != 'caption')
-				node.setAttribute('flex', 1);
-		}
+	var macLabels = document.getElementsByAttribute('label-mac', '*');
+	var node;
+	var label;
+
+	for (var i = macLabels.length-1; i < -1; i--)
+	{
+		node = macLabels[i];
+		label = node.getAttribute('label-mac');
+		node.setAttribute('label', label);
+		if (node.localName != 'caption')
+			node.setAttribute('flex', 1);
 	}
 }
 
