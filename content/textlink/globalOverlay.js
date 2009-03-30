@@ -1438,34 +1438,59 @@ var TextLinkService = {
 				return;
 		}
 
-		this.handleUserActionEvents(aEvent);
+		this.handleUserActionEvent(aEvent);
 	},
-	handleUserActionEvents : function(aEvent)
+	
+	handleUserActionEvent : function(aEvent)
 	{
-		if (aEvent.originalTarget.ownerDocument == document ||
-			aEvent.originalTarget.ownerDocument.designMode == 'on') {
-			return;
-		}
-		for (var i in this.actions)
-		{
+		this.getActionsForEvent(aEvent).some(function(aAction) {
 			try {
-				if (this.handleEventFor(aEvent, i)) return;
+				this.openClickedURI(aEvent, aAction.action);
+				return true;
 			}
 			catch(e) {
 			}
-		}
+			return false;
+		}, this);
 	},
-	
-	handleEventFor : function(aEvent, aKey) 
+ 
+	getActionsForEvent : function(aEvent)
+	{
+		var actions = [];
+		if (
+			aEvent.originalTarget.ownerDocument == document ||
+			aEvent.originalTarget.ownerDocument.designMode == 'on' ||
+			(
+				this.evaluateXPath(
+					'ancestor-or-self::*[1]',
+					aEvent.originalTarget,
+					XPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue
+					.localName
+					.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
+			)
+			) {
+			return actions;
+		}
+
+		for (let i in this.actions)
+		{
+			let action = this.actions[i];
+			if (this.actionShouldHandleEvent(action, aEvent)) {
+				actions.push(this.actions[i]);
+			}
+		}
+		return actions;
+	},
+ 
+	actionShouldHandleEvent : function(aAction, aEvent) 
 	{
 		var trigger;
-		var node = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
-
-		if (
+		return (
 			(
 				(
 					aEvent.type == 'keypress' &&
-					(trigger = this.actions[aKey].triggerKey.toLowerCase()) &&
+					(trigger = aAction.triggerKey.toLowerCase()) &&
 					/(VK_[^-,|\s]+)/i.test(trigger) &&
 					aEvent['DOM_'+RegExp.$1.toUpperCase()] &&
 					(
@@ -1475,17 +1500,16 @@ var TextLinkService = {
 								aEvent.keyCode == aEvent.DOM_VK_RETURN
 							) :
 							aEvent.keyCode == aEvent['DOM_'+RegExp.$1.toUpperCase()]
-					) &&
-					node.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) < 0
+					)
 				) ||
 				(
-					(trigger = this.actions[aKey].triggerMouse.toLowerCase()) &&
+					(trigger = aAction.triggerMouse.toLowerCase()) &&
 					(
 						aEvent.type == 'dblclick' ?
 							(aEvent.button == 0 && trigger.indexOf('dblclick') > -1) :
-						trigger.indexOf('middleclick') > -1 ?
-							aEvent.button == 1 :
-							aEvent.button == 0
+						aEvent.type == 'click' ?
+							(aEvent.button == (trigger.indexOf('middleclick') > -1 ? 1 : 0 )) :
+							false
 					)
 				)
 			) &&
@@ -1501,12 +1525,7 @@ var TextLinkService = {
 				(trigger.indexOf('shift') > -1 == aEvent.shiftKey) &&
 				(trigger.indexOf('alt') > -1 == aEvent.altKey)
 			)
-			) {
-			this.openClickedURI(aEvent, this.actions[aKey].action);
-			return true;
-		}
-
-		return false;
+		);
 	},
  
 	observe : function(aSubject, aTopic, aData) 
@@ -1839,6 +1858,9 @@ var TextLinkService = {
 		}
 
 		this.initBrowser(gBrowser);
+
+		// hacks.js
+		this.overrideExtensions();
 	},
 	
 	initPrefs : function() 
