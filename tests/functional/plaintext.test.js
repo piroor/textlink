@@ -30,7 +30,7 @@ function setUp()
 		range.insertNode(span);
 		container.normalize();
 		assert.equals(3, container.childNodes.length, aURI);
-		var box = content.document.getBoxObjectFor(span);
+		var box = utils.getBoxObjectFor(span);
 		positions.push({ x : box.screenX, y : box.screenY });
 
 		range.selectNodeContents(span);
