@@ -1687,13 +1687,15 @@ var TextLinkService = {
 			case 'SubBrowserRemoveRequest':
 				this.destroyBrowser(aEvent.originalTarget.browser);
 				return;
+
+			case 'keypress':
+				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
+					aEvent.keyCode != aEvent.DOM_VK_RETURN)
+					return;
+				break;
 		}
 
-		if (
-			aEvent.type != 'keypress' ||
-			(aEvent.keyCode == aEvent.DOM_VK_ENTER || aEvent.keyCode == aEvent.DOM_VK_RETURN)
-			)
-			this.handleUserActionEvent(aEvent);
+		this.handleUserActionEvent(aEvent);
 	},
 	
 	handleUserActionEvent : function(aEvent)
