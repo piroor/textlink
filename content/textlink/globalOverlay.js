@@ -1689,7 +1689,11 @@ var TextLinkService = {
 				return;
 		}
 
-		this.handleUserActionEvent(aEvent);
+		if (
+			aEvent.type != 'keypress' ||
+			(aEvent.keyCode == aEvent.DOM_VK_ENTER || aEvent.keyCode == aEvent.DOM_VK_RETURN)
+			)
+			this.handleUserActionEvent(aEvent);
 	},
 	
 	handleUserActionEvent : function(aEvent)
