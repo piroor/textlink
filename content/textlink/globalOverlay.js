@@ -746,6 +746,17 @@ var TextLinkService = {
 		return xpathResult;
 	},
  
+	evalInSandbox : function(aCode, aOwner) 
+	{
+		try {
+			var sandbox = new Components.utils.Sandbox(aOwner || 'about:blank');
+			return Components.utils.evalInSandbox(aCode, sandbox);
+		}
+		catch(e) {
+		}
+		return void(0);
+	},
+ 
 	setClipBoard : function(aString) 
 	{
 		Components
@@ -1011,11 +1022,19 @@ var TextLinkService = {
 		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
 			var target = match[1];
-			var table = this._fixupTable;
-			eval((this._fixupTargetsPattern+'|')
-					.replace(/([^|]+)\|/g,
-						'if (/^$1$/.test("'+target+'")) table = table.replace(/\\b$1\\s*=>/, "'+target+'=>");'
-				));
+			var table = this.evalInSandbox('(function() {'+
+					'var table = '+this._fixupTable.quote()+';'+
+					'var target = '+target.quote()+';'+
+					((this.fixupSchemer_targets+'|')
+						.replace(
+							/([^|]+)\|/g,
+							<![CDATA[
+								if (/^$1$/.test(target))
+									table = table.replace(/\\b$1\\s*=>/, target+"=>");
+							]]>
+						))+
+					'return table;'+
+				'})()');
 			match = table.match(new RegExp(
 					'(?:[,\\| \\n\\r\\t]|^)'+
 					target.replace(/([\(\)\+\?\.\{\}])/g, '\\$1')
