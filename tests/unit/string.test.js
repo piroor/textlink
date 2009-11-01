@@ -9,32 +9,34 @@ function tearDown()
 {
 }
 
-function test_convertFullWidthToHalfWidth()
+test_convertFullWidthToHalfWidth.parameters = [
+	{ input    : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'http：／／www．example．com／',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\u301cｄａｓｈ／',
+	  expected : 'http://www.example.com/~dash/' },
+	{ input    : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／',
+	  expected : 'http://www.example.com/~dash/' }
+];
+function test_convertFullWidthToHalfWidth(aParameter)
 {
-	var original = 'http://www.example.com/';
-	function assertConvert(aInput)
-	{
-		assert.equals(original, sv.convertFullWidthToHalfWidth(aInput));
-	}
-
-	assertConvert('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
-	assertConvert('http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
-	assertConvert('http：／／www．example．com／');
-
-	assert.equals('http://www.example.com/~dash/', sv.convertFullWidthToHalfWidth('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\u301cｄａｓｈ／'));
-	assert.equals('http://www.example.com/~dash/', sv.convertFullWidthToHalfWidth('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／'));
+	assert.equals(aParameter.expected, sv.convertFullWidthToHalfWidth(aParameter.input));
 }
 
-function test_convertHalfWidthToFullWidthh()
+test_convertHalfWidthToFullWidth.parameters = [
+	{ input    : 'http://www.example.com/',
+	  expected : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／' },
+	{ input    : 'http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
+	  expected : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／' },
+	{ input    : 'http：／／www．example．com／',
+	  expected : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／' },
+	{ input    : 'http://www.example.com/~dash/',
+	  expected : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／' },
+];
+function test_convertHalfWidthToFullWidth(aParameter)
 {
-	var original = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／';
-	function assertConvert(aInput)
-	{
-		assert.equals(original, sv.convertHalfWidthToFullWidth(aInput));
-	}
-
-	assertConvert('http://www.example.com/');
-	assertConvert('http:／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／');
-	assertConvert('http：／／www．example．com／');
-	assert.equals('ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／\uff5eｄａｓｈ／', sv.convertHalfWidthToFullWidth('http://www.example.com/~dash/'));
+	assert.equals(aParameter.expected, sv.convertHalfWidthToFullWidth(aParameter.input));
 }

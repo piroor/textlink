@@ -106,206 +106,184 @@ function test_matchURIRegExp()
 	assert_matchURIRegExp(true, true);
 }
 
-function test_makeURIComplete()
+test_makeURIComplete.parameters = [
+	{ path     : 'page2',
+	  base     : 'http://www.example.com/page',
+	  resolved : 'http://www.example.com/page2' },
+	{ path     : 'directory/page2',
+	  base     : 'http://www.example.com/page/',
+	  resolved : 'http://www.example.com/page/directory/page2' },
+	{ path     : '../directory/page2',
+	  base     : 'http://www.example.com/page/',
+	  resolved : 'http://www.example.com/directory/page2' },
+	{ path     : './directory/page2',
+	  base     : 'http://www.example.com/page/',
+	  resolved : 'http://www.example.com/page/directory/page2' },
+	{ path     : 'page2?query',
+	  base     : 'http://www.example.com/page',
+	  resolved : 'http://www.example.com/page2?query' }
+];
+function test_makeURIComplete(aParameter)
 {
-	function assert_makeURIComplete(aString, aBase, aExpected)
-	{
-		assert.equals(aExpected, sv.makeURIComplete(aString, aBase));
-	}
-
-	assert_makeURIComplete(
-		'page2',
-		'http://www.example.com/page',
-		'http://www.example.com/page2'
-	);
-	assert_makeURIComplete(
-		'directory/page2',
-		'http://www.example.com/page/',
-		'http://www.example.com/page/directory/page2'
-	);
-	assert_makeURIComplete(
-		'../directory/page2',
-		'http://www.example.com/page/',
-		'http://www.example.com/directory/page2'
-	);
-	assert_makeURIComplete(
-		'./directory/page2',
-		'http://www.example.com/page/',
-		'http://www.example.com/page/directory/page2'
-	);
-	assert_makeURIComplete(
-		'page2?query',
-		'http://www.example.com/page',
-		'http://www.example.com/page2?query'
-	);
+	assert.equals(aParameter.resolved, sv.makeURIComplete(aParameter.path, aParameter.base));
 }
 
-function test_fixupSchemer()
+test_fixupSchemer.parameters = [
+	{ input    : 'http://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'ftp://www.example.com/',
+	  expected : 'ftp://www.example.com/' },
+	{ input    : 'svn://www.example.com/',
+	  expected : 'svn://www.example.com/' },
+	{ input    : 'ttp://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'tp://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'p://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'h++p://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'h**p://www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'www.example.com/',
+	  expected : 'http://www.example.com/' },
+	{ input    : 'www2.example.com/',
+	  expected : 'http://www2.example.com/' },
+	{ input    : 'ftp.example.com/',
+	  expected : 'ftp://ftp.example.com/' },
+	{ input    : 'sub.example.com/',
+	  expected : 'http://sub.example.com/' },
+	{ input    : 'domain',
+	  expected : 'http://domain' },
+];
+function test_fixupSchemer(aParameter)
 {
-	function assert_fixupSchemer(aExpected, aInput)
-	{
-		assert.equals(aExpected, sv.fixupSchemer(aInput));
-	}
-
-	assert_fixupSchemer('http://www.example.com/', 'http://www.example.com/');
-	assert_fixupSchemer('ftp://www.example.com/', 'ftp://www.example.com/');
-	assert_fixupSchemer('svn://www.example.com/', 'svn://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'ttp://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'tp://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'p://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'h++p://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'h**p://www.example.com/');
-	assert_fixupSchemer('http://www.example.com/', 'www.example.com/');
-	assert_fixupSchemer('http://www2.example.com/', 'www2.example.com/');
-	assert_fixupSchemer('ftp://ftp.example.com/', 'ftp.example.com/');
-	assert_fixupSchemer('http://sub.example.com/', 'sub.example.com/');
-	assert_fixupSchemer('http://domain', 'domain');
+	assert.equals(aParameter.expected, sv.fixupSchemer(aParameter.input));
 }
 
-function test_sanitizeURIString()
+test_sanitizeURIString.parameters = utils.readParametersFromTSV('uri.sanitizeURIString.patterns.tsv');
+function test_sanitizeURIString(aParameter)
 {
-	function assert_sanitizeURIString(aExpected, aInput)
-	{
-		assert.equals(aExpected, sv.sanitizeURIString(aInput));
-	}
-
-	function assert_sanitizeURIString_paren(aBase, aOpen, aClose)
-	{
-		assert_sanitizeURIString(aBase, aOpen+aBase+aClose);
-		assert_sanitizeURIString('http://'+aBase+'/', aOpen+'http://'+aBase+'/'+aClose);
-		assert_sanitizeURIString('http://'+aBase+'/index.html', aOpen+'http://'+aBase+'/index.html'+aClose);
-	}
-
-	function assert_sanitizeURIString_parens(aBase)
-	{
-		assert_sanitizeURIString_paren(aBase, '(', ')');
-		assert_sanitizeURIString_paren(aBase, '(', '）');
-		assert_sanitizeURIString_paren(aBase, '（', ')');
-		assert_sanitizeURIString_paren(aBase, '（', '）');
-
-		assert_sanitizeURIString_paren(aBase, '｢', '｣');
-		assert_sanitizeURIString_paren(aBase, '｢', '」');
-		assert_sanitizeURIString_paren(aBase, '「', '｣');
-		assert_sanitizeURIString_paren(aBase, '「', '」');
-		assert_sanitizeURIString_paren(aBase, '[', ']');
-		assert_sanitizeURIString_paren(aBase, '[', '］');
-		assert_sanitizeURIString_paren(aBase, '［', ']');
-		assert_sanitizeURIString_paren(aBase, '［', '］');
-		assert_sanitizeURIString_paren(aBase, '『', '』');
-		assert_sanitizeURIString_paren(aBase, '《', '》');
-		assert_sanitizeURIString_paren(aBase, '〔', '〕');
-		assert_sanitizeURIString_paren(aBase, '【', '】');
-		assert_sanitizeURIString_paren(aBase, '〈', '〉');
-
-		assert_sanitizeURIString_paren(aBase, '<', '>');
-		assert_sanitizeURIString_paren(aBase, '<', '＞');
-		assert_sanitizeURIString_paren(aBase, '＜', '>');
-		assert_sanitizeURIString_paren(aBase, '＜', '＞');
-
-		assert_sanitizeURIString_paren(aBase, '"', '"');
-		assert_sanitizeURIString_paren(aBase, '〝', '〟');
-		assert_sanitizeURIString_paren(aBase, '“', '”');
-		assert_sanitizeURIString_paren(aBase, '”', '”');
-		assert_sanitizeURIString_paren(aBase, '“', '“');
-
-		assert_sanitizeURIString_paren(aBase, "'", "'");
-		assert_sanitizeURIString_paren(aBase, "'", "’");
-		assert_sanitizeURIString_paren(aBase, "’", "'");
-		assert_sanitizeURIString_paren(aBase, "‘", "'");
-		assert_sanitizeURIString_paren(aBase, "’", "’");
-		assert_sanitizeURIString_paren(aBase, "‘", "’");
-	}
-
-	sv.shouldParseRelativePath = false;
-
-	assert_sanitizeURIString('http://www.example.com/', 'http://www.example.com/');
-	assert_sanitizeURIString('http://www.example.com/index', 'http://www.example.com/index');
-	assert_sanitizeURIString(
-		'http://www.example.com/index?query1=value1&query2=value2',
-		'http://www.example.com/index?query1=value1&query2=value2'
-	);
-	assert_sanitizeURIString(
-		'http://www.example.com/index#hash',
-		'http://www.example.com/index#hash'
-	);
-	assert_sanitizeURIString('www.example.com', 'www.example.com');
-	assert_sanitizeURIString('www.example.jp', 'www.example.jp');
-	assert_sanitizeURIString('www.example.jp', '...www.example.jp');
-	assert_sanitizeURIString('www.example.jp', ':www.example.jp');
-	assert_sanitizeURIString('www.example.jp', '/www.example.jp');
-	assert_sanitizeURIString_parens('www.example.com');
-	assert_sanitizeURIString_parens('www.example.com/directory');
-	assert_sanitizeURIString('MyClass.property.value', 'MyClass.property.value');
-
-
-	sv.shouldParseRelativePath = true;
-
-	assert_sanitizeURIString('http://www.example.com/', 'http://www.example.com/');
-	assert_sanitizeURIString('http://www.example.com/index', 'http://www.example.com/index');
-	assert_sanitizeURIString(
-		'http://www.example.com/index?query1=value1&query2=value2',
-		'http://www.example.com/index?query1=value1&query2=value2'
-	);
-	assert_sanitizeURIString(
-		'http://www.example.com/index#hash',
-		'http://www.example.com/index#hash'
-	);
-	assert_sanitizeURIString('www.example.com', 'www.example.com');
-	assert_sanitizeURIString('www.example.jp', 'www.example.jp');
-	assert_sanitizeURIString_parens('www.example.com/directory');
-	assert_sanitizeURIString('', 'MyClass.property.value');
-
-	assert_sanitizeURIString('', 'function MyFunc()');
-	assert_sanitizeURIString('', 'function MyFunc(aArg1, aArg2)');
+	sv.shouldParseRelativePath = aParameter.relative;
+	assert.equals(aParameter.sanitized, sv.sanitizeURIString(aParameter.input));
 }
 
-function test_fixupURI()
+var parens = <![CDATA[
+(	)
+(	）
+（	)
+（	）
+｢	｣
+｢	」
+「	｣
+「	」
+[	]
+[	］
+［	]
+［	］
+『	』
+《	》
+〔	〕
+【	】
+〈	〉
+<	>
+<	＞
+＜	>
+＜	＞
+"	"
+〝	〟
+“	”
+”	”
+“	“
+'	'
+'	’
+’	'
+‘	'
+’	’
+‘	’
+]]>.toString()
+	.replace(/^\s+|\s+$/g, '')
+	.split('\n')
+	.map(function(aLine) {
+		return aLine.split('\t');
+	});
+var parenPatterns = [];
+[
+	{ relative : false, base : 'www.example.com' },
+	{ relative : false, base : 'www.example.com/directory' },
+	{ relative : true,  base : 'www.example.com/directory' }
+].forEach(function(aPattern) {
+	parens.forEach(function(aParen) {
+		parenPatterns.push({ relative  : aPattern.relative,
+		                     input     : aParen[0] + aPattern.base + aParen[1],
+		                     sanitized : aPattern.base });
+		parenPatterns.push({ relative  : aPattern.relative,
+		                     input     : aParen[0] + 'http://' + aPattern.base + '/' + aParen[1],
+		                     sanitized : 'http://' + aPattern.base + '/' });
+		parenPatterns.push({ relative  : aPattern.relative,
+		                     input     : aParen[0] + 'http://' + aPattern.base + '/index.html' + aParen[1],
+		                     sanitized : 'http://' + aPattern.base + '/index.html' });
+	});
+});
+test_sanitizeURIString_paren.parameters = parenPatterns;
+function test_sanitizeURIString_paren(aParameter)
 {
-	function assertFixupInput(aExpected, aInput)
-	{
-		assert.equals(aExpected, sv.fixupURI(aInput));
-	}
-
-	function assertInvalidInput(aInput)
-	{
-		assert.isNull(sv.fixupURI(aInput));
-	}
-
-	assertFixupInput('http://www.example.com/', 'http://www.example.com/');
-	assertFixupInput('http://www.example.com/index', 'http://www.example.com/index');
-	assertFixupInput(
-		'http://www.example.com/index?query1=value1&query2=value2',
-		'http://www.example.com/index?query1=value1&query2=value2'
-	);
-	assertFixupInput(
-		'http://www.example.com/index#hash',
-		'http://www.example.com/index#hash'
-	);
-	assertFixupInput('http://www.example.com', 'www.example.com');
-	assertFixupInput('http://www.example.com', '(www.example.com)');
-
-	assertInvalidInput('svn://www.example.com/');
+	sv.shouldParseRelativePath = aParameter.relative;
+	assert.equals(aParameter.sanitized, sv.sanitizeURIString(aParameter.input));
 }
 
-function test_hasSchemer()
+test_fixupURI.parameters = [
+	{ input : 'http://www.example.com/',
+	  fixed : 'http://www.example.com/' },
+	{ input : 'http://www.example.com/index',
+	  fixed : 'http://www.example.com/index' },
+	{ input : 'http://www.example.com/index?query1=value1&query2=value2',
+	  fixed : 'http://www.example.com/index?query1=value1&query2=value2' },
+	{ input : 'http://www.example.com/index#hash',
+	  fixed : 'http://www.example.com/index#hash' },
+	{ input : 'www.example.com',
+	  fixed : 'http://www.example.com' },
+	{ input : '(www.example.com)',
+	  fixed : 'http://www.example.com' },
+	{ input : 'svn://www.example.com/' }
+];
+function test_fixupURI(aParameter)
 {
-	assert.isTrue(sv.hasSchemer('http://www.example.com/'));
-	assert.isTrue(sv.hasSchemer('ttp://www.example.com/'));
-	assert.isTrue(sv.hasSchemer('URL:http://www.example.com/'));
-	assert.isFalse(sv.hasSchemer('www.example.com/'));
-	assert.isFalse(sv.hasSchemer('www.example.com?URL=http://www.example.com/'));
+	if (aParameter.fixed)
+		assert.equals(aParameter.fixed, sv.fixupURI(aParameter.input));
+	else
+		assert.isNull(sv.fixupURI(aParameter.input));
 }
 
-function test_removeSchemer()
-{
-	function assertRemvoeSchemer(aExpected, aInput)
-	{
-		assert.equals(aExpected, sv.removeSchemer(aInput));
-	}
+var schemerParameters = [
+	{ input   : 'http://www.example.com/',
+	  has     : true,
+	  removed : '//www.example.com/' },
+	{ input   : 'ttp://www.example.com/',
+	  has     : true,
+	  removed : '//www.example.com/' },
+	{ input   : 'URL:http://www.example.com/',
+	  has     : true,
+	  removed : 'http://www.example.com/' },
+	{ input   : 'www.example.com/',
+	  has     : false,
+	  removed : 'www.example.com/' },
+	{ input   : 'www.example.com?URL=http://www.example.com/',
+	  has     : false,
+	  removed : 'www.example.com?URL=http://www.example.com/' },
+];
 
-	assertRemvoeSchemer('//www.example.com/', 'http://www.example.com/');
-	assertRemvoeSchemer('//www.example.com/', 'ttp://www.example.com/');
-	assertRemvoeSchemer('http://www.example.com/', 'URL:http://www.example.com/');
-	assertRemvoeSchemer('www.example.com/', 'www.example.com/');
-	assertRemvoeSchemer('www.example.com?URL=http://www.example.com/', 'www.example.com?URL=http://www.example.com/');
+test_hasSchemer.parameters = schemerParameters;
+function test_hasSchemer(aParameter)
+{
+	if (aParameter.has)
+		assert.isTrue(sv.hasSchemer(aParameter.input));
+	else
+		assert.isFalse(sv.hasSchemer(aParameter.input));
+}
+
+test_removeSchemer.parameters = schemerParameters;
+function test_removeSchemer(aParameter)
+{
+	assert.equals(aParameter.removed, sv.removeSchemer(aParameter.input));
 }

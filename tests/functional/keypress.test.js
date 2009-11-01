@@ -40,7 +40,7 @@ function selectNotURI()
 	assert.equals('Moz', selection.toString());
 }
 
-function assertKeyActions(aKeypress, aSelector)
+function assertKeyActions(aSelector, aKeypressOptions)
 {
 	assert.equals(1, tabs.length);
 
@@ -50,7 +50,7 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -61,7 +61,7 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_SELECT;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -72,7 +72,7 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_BACKGROUND_TAB;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
@@ -86,7 +86,7 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_TAB;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(2, tabs.length);
 	assert.equals(tabs[1], gBrowser.selectedTab);
@@ -101,7 +101,7 @@ function assertKeyActions(aKeypress, aSelector)
 
 	aSelector();
 	assert.equals(0, browserWindowCount);
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -116,7 +116,7 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_COPY;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals('http://www.mozilla.org/', selection.toString());
@@ -128,13 +128,13 @@ function assertKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_CURRENT;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.isTrue(isFirstTabUnloaded());
 }
 
-function assertNoKeyActions(aKeypress, aSelector)
+function assertNoKeyActions(aSelector, aKeypressOptions)
 {
 	assert.equals(1, tabs.length);
 
@@ -144,7 +144,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_DISABLED;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -155,7 +155,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_SELECT;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -166,7 +166,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_BACKGROUND_TAB;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -177,7 +177,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_TAB;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -189,7 +189,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 
 	aSelector();
 	assert.equals(0, browserWindowCount);
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -204,7 +204,7 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_COPY;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
@@ -216,104 +216,62 @@ function assertNoKeyActions(aKeypress, aSelector)
 	sv.actions.test.action = sv.ACTION_OPEN_IN_CURRENT;
 
 	aSelector();
-	action.fireKeyEventOnElement(content.document.documentElement, aKeypress);
+	action.keypressOn.apply(action, aKeypressOptions);
 	yield 300;
 	assert.equals(1, tabs.length);
 	assert.notEquals('http://www.mozilla.org/', selection.toString());
 	assert.isFalse(isFirstTabUnloaded());
 }
 
-var baseKeypress = {
-		type    : 'keypress',
-		keyCode : Ci.nsIDOMKeyEvent.DOM_VK_ENTER
-	};
-
 function testKeyActionsNormal()
 {
-	var keypress = {};
-	keypress.__proto__ = baseKeypress
-
-	keypress.ctrlKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertKeyActions(keypress, selectURI));
+	var root = content.document.documentElement;
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter']));
+	yield Do(assertKeyActions(selectURI, [root, 'enter']));
 }
 
 function testKeyActionsAccel()
 {
 	sv.actions.test.triggerKey = 'accel-VK_ENTER';
-
-	var keypress = {};
-	keypress.__proto__ = baseKeypress
-
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.ctrlKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertKeyActions(keypress, selectURI));
+	var root = content.document.documentElement;
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertKeyActions(selectURI, [root, 'enter', { ctrlKey : true }]));
 }
 
 function testKeyActionsCtrl()
 {
-	sv.actions.test.triggerKey = 'accel-VK_ENTER';
-
-	var keypress = {};
-	keypress.__proto__ = baseKeypress
-
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.ctrlKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertKeyActions(keypress, selectURI));
+	sv.actions.test.triggerKey = 'ctrl-VK_ENTER';
+	var root = content.document.documentElement;
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertKeyActions(selectURI, [root, 'enter', { ctrlKey : true }]));
 }
 
 function testKeyActionsShift()
 {
 	sv.actions.test.triggerKey = 'shift-VK_ENTER';
-
-	var keypress = {};
-	keypress.__proto__ = baseKeypress
-
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.shiftKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertKeyActions(keypress, selectURI));
+	var root = content.document.documentElement;
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { shiftKey : true }]));
+	yield Do(assertKeyActions(selectURI, [root, 'enter', { shiftKey : true }]));
 }
 
 function testKeyActionsShiftCtrl()
 {
 	sv.actions.test.triggerKey = 'shift-ctrl-VK_ENTER';
-	var keypress = {};
-	keypress.__proto__ = baseKeypress
-
-	keypress.shiftKey = false;
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.shiftKey = true;
-	keypress.ctrlKey = false;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.shiftKey = false;
-	keypress.ctrlKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertNoKeyActions(keypress, selectURI));
-
-	keypress.shiftKey = true;
-	keypress.ctrlKey = true;
-	yield Do(assertNoKeyActions(keypress, selectNotURI));
-	yield Do(assertKeyActions(keypress, selectURI));
+	var root = content.document.documentElement;
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter']));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter', { ctrlKey : true }]));
+	yield Do(assertNoKeyActions(selectNotURI, [root, 'enter', { shiftKey : true }]));
+	yield Do(assertNoKeyActions(selectURI, [root, 'enter', { shiftKey : true }]));
+	yield Do(assertKeyActions(selectURI, [root, 'enter', { ctrlKey : true, shiftKey : true }]));
 }
 

@@ -67,29 +67,8 @@ function test_getTextContentFromRange()
 	range.setStartBefore($('hidden1'));
 	range.setEndAfter($('hidden2'));
 
-	var text = <![CDATA[非表示のテキスト。
-http://piro.sakura.ne.jp/
-http://www.mozilla.org/
-www.mozilla.org/products/firefox/
-http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8
-Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。
-詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。
-Mozillaは Netscape Communicator 5.0になる予定でしたが、NGLayoutという全く新しいレイアウトエンジンttp://jt.mozilla.gr.jp/newlayout/gecko.htmlを採用するという方針転換を行ったために開発が遅れてしまい、 Netscape 6 ttp://ftp.netscape.com/pub/netscape6/がリリースされたのは計画スタートから2年も経ってからのことでした。
-そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。
-非表示のテキスト。
-http://piro.sakura.ne.jp/latest/
-http://piro.sakura.ne.jp/latest/blosxom/mozilla/
-http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/
-ttp://piro.sakura.ne.jp/latest/blosxom/webtech/
-ttp://piro.sakura.ne.jp/xul/
-ttp://piro.sakura.ne.jp/xul/tips/
-]]>.toString();
-
-	var formattedText = <![CDATA[非表示のテキスト。 http://piro.sakura.ne.jp/ http://www.mozilla.org/ www.mozilla.org/products/firefox/ http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8
-
-Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。 詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。 Mozillaは Netscape Communicator 5.0になる予定でしたが、NGLayoutという全く新しいレイアウトエンジンttp://jt.mozilla.gr.jp/newlayout/gecko.htmlを採用するという方針転換を行ったために開発が遅れてしまい、 Netscape 6 ttp://ftp.netscape.com/pub/netscape6/がリリースされたのは計画スタートから2年も経ってからのことでした。 そして今ではMozilla Corporation(h++p://www.mozilla.com/)の名の下でFirefox(h**p://www.mozilla.com/firefox/)がリリースされています。
-
-非表示のテキスト。 http://piro.sakura.ne.jp/latest/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/ http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/ ttp://piro.sakura.ne.jp/latest/blosxom/webtech/ ttp://piro.sakura.ne.jp/xul/ ttp://piro.sakura.ne.jp/xul/tips/ ]]>.toString();
+	var text = utils.readFrom('range.getTextContentFromRange.raw.txt', 'UTF-8');
+	var formattedText = utils.readFrom('range.getTextContentFromRange.formatted.txt', 'UTF-8');
 
 	if (textEncoderEnabled) {
 		assert.equals(formattedText, sv.getTextContentFromRange(range));
@@ -99,14 +78,8 @@ Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次�
 	}
 
 
-	text = <![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。
-...
-mozilla.jp/
-Mozilla Japanのサイト。]]>.toString();
-
-	formattedText = <![CDATA[URIの後に改行と半角英数字が連続する場合のテスト。 ...
-mozilla.jp/
-Mozilla Japanのサイト。]]>.toString();
+	text = utils.readFrom('range.getTextContentFromRange.URIraw.txt', 'UTF-8');
+	formattedText = utils.readFrom('range.getTextContentFromRange.URIformatted.txt', 'UTF-8');
 
 	range.selectNodeContents($('br'));
 	if (textEncoderEnabled) {
