@@ -1025,12 +1025,12 @@ var TextLinkService = {
 			var table = this.evalInSandbox('(function() {'+
 					'var table = '+this._fixupTable.quote()+';'+
 					'var target = '+target.quote()+';'+
-					((this.fixupSchemer_targets+'|')
+					((this._fixupTargetsPattern+'|')
 						.replace(
 							/([^|]+)\|/g,
 							<![CDATA[
 								if (/^$1$/.test(target))
-									table = table.replace(/\\b$1\\s*=>/, target+"=>");
+									table = table.replace(/\b$1\s*=>/, target+"=>");
 							]]>
 						))+
 					'return table;'+
