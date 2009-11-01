@@ -54,13 +54,7 @@ function testPlainText()
 	for (var i = 0, maxi = uris.length; i < maxi; i++)
 	{
 		gBrowser.removeAllTabsBut(tabs[0]);
-		action.fireMouseEvent(
-			content,
-			{ type : 'dblclick',
-			  button : 0,
-			  screenX : positions[i].x,
-			  screenY : positions[i].y }
-		);
+		action.dblclickAt(positions[i].x, positions[i].y);
 		yield 100;
 		assert.equals(2, tabs.length, uris[i]);
 		assert.equals(tabs[1], gBrowser.selectedTab, uris[i]);
