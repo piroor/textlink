@@ -1,6 +1,6 @@
 var TextLinkService = { 
 	
-	schemerFixupDefault : 'http',
+	schemerFixupDefault : 'http', 
 	strict              : true,
 	contextItemCurrent  : true,
 	contextItemWindow   : true,
@@ -204,7 +204,7 @@ var TextLinkService = {
 	kURIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
 	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
  
-	kSchemerPattern : '[\\*\\+a-z0-9_]+:',
+	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
  
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+', 
@@ -494,7 +494,7 @@ var TextLinkService = {
 	],
   
  
-	get URIExceptionPattern()
+	get URIExceptionPattern() 
 	{
 		this._updateURIExceptionPattern();
 		return this._URIExceptionPattern;
@@ -708,7 +708,7 @@ var TextLinkService = {
 		}
 		return aRange.toString();
 	},
-	get _textEncoder() 
+	get _textEncoder()
 	{
 		if (this.__textEncoder === void(0)) {
 			try {
@@ -794,11 +794,6 @@ var TextLinkService = {
 		code -= 0x0020;
 		return String.fromCharCode(code);
 	},
- 
-	reverseString : function(aString)
-	{
-		return aString.split('').reverse().join('');
-	},
   
 // uri operations 
 	
@@ -828,7 +823,7 @@ var TextLinkService = {
 		this._updateURIRegExp();
 		return aString.match(this._URIMatchingRegExp);
 	},
-	isHeadOfNewURI : function(aString) 
+	isHeadOfNewURI : function(aString)
 	{
 		this._updateURIRegExp();
 		var match = aString.match(this._URIMatchingRegExp_fromHead);
@@ -898,7 +893,7 @@ var TextLinkService = {
 	},
 	_schemerRegExp : null,
  
-	hasSchemer : function(aInput)
+	hasSchemer : function(aInput) 
 	{
 		return this._firstSchemerRegExp.test(aInput);
 	},
@@ -1717,7 +1712,7 @@ var TextLinkService = {
 		this.handleUserActionEvent(aEvent);
 	},
 	
-	handleUserActionEvent : function(aEvent)
+	handleUserActionEvent : function(aEvent) 
 	{
 		this.getActionsForEvent(aEvent).some(function(aAction) {
 			try {
@@ -1730,7 +1725,7 @@ var TextLinkService = {
 		}, this);
 	},
  
-	getActionsForEvent : function(aEvent)
+	getActionsForEvent : function(aEvent) 
 	{
 		var actions = [];
 		if (
