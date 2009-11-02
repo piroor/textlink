@@ -1,5 +1,5 @@
 TextLinkService.overrideExtensions = function() {
-
+/*
 	// popIn
 	if ('PopIn' in window &&
 		'jQuery' in window && 'event' in jQuery &&
@@ -29,5 +29,5 @@ TextLinkService.overrideExtensions = function() {
 			}, 0, this);
 		};
 	}
-
+*/
 };
