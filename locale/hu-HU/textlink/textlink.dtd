@@ -39,18 +39,18 @@
 <!ENTITY textlink.openTextLink.current.accesskey "g">
 <!ENTITY textlink.openTextLink.tab.single        "Megnyitás új lapon: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.tab.multiple      "Mindegyik megnyitása külön lapon: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.accesskey     "j">
+<!ENTITY textlink.openTextLink.tab.accesskey     "d">
 <!ENTITY textlink.openTextLink.window.single     "Megnyitás új ablakban: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Mindegyik megnyitása külön ablakban: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.window.accesskey  "y">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
+<!ENTITY textlink.openTextLink.copy.single     "Webcím másolása: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "Mindegyik webcím másolása: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.accesskey  "w">
 
 <!ENTITY textlink.context.current.pref "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.tab.pref     "Megnyitás új lapon &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.window.pref  "Megnyitás új ablakban &lt;webcímet tartalmazó szövegrész&gt;">
-<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
+<!ENTITY textlink.context.copy.pref    "Másolás &lt;webcímet tartalmazó szövegrész&gt;">
 
 
 
@@ -101,8 +101,8 @@
 <!ENTITY textlink.action.window.stealth        "beolvasás új ablakban (HTTP_REFERER nálkül)">
 <!ENTITY textlink.action.tab.stealth           "beolvasás új lapon, előtérben (HTTP_REFERER nélkül)">
 <!ENTITY textlink.action.tabBackground.stealth "beolvasás új lapon, háttérben (HTTP_REFERER nélkül)">
-<!ENTITY textlink.action.copy          "copy it to the clipboard">
-<!ENTITY textlink.action.openByBrowser "open by browser">
+<!ENTITY textlink.action.copy          "másolás a vágólapra">
+<!ENTITY textlink.action.openByBrowser "megnyitás böngészővel">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Törlés">
@@ -112,7 +112,7 @@
 <!ENTITY textlink.group.contextmenu    "A helyi menü kibővítése webcímet tartalmazó szöveg kezelésére">
 
 
-<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+<!ENTITY textlink.messenger.linkify    "Webcímet tartalmazó nem formázott szöveges üzenet átalakítása linkre">
 
 
 
@@ -125,9 +125,9 @@
 <!ENTITY textlink.schemer.fixup.table "Hiányos webcímek javítása a következő szabályok segítségével: (pl. &quot;ttp=>http,ttps=>https&quot;)">
 <!ENTITY textlink.schemer.fixup.table.default "Törlés">
 
-<!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása (unrecommended)">
+<!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása (nem ajánlott)">
 <!ENTITY textlink.multibyte.enabled   "Összetett karakterek szétválasztása">
-<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
+<!ENTITY textlink.multiline.enabled   "Webcím szétválasztása több sorba (nem ajánlott)">
 
 <!ENTITY textlink.find_click_point.strict        "A felismerés módja">
 <!ENTITY textlink.find_click_point.strict.strict "Szigorú (néha nem sikerül beolvasni a weboldalt)">
