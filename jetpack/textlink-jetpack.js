@@ -1,11 +1,6 @@
 var TextLinkService = { 
 	
 	schemerFixupDefault : 'http', 
-	strict              : true,
-	contextItemCurrent  : true,
-	contextItemWindow   : true,
-	contextItemTab      : true,
-	contextItemCopy     : true,
 
 	get schemer()
 	{
@@ -82,20 +77,7 @@ var TextLinkService = {
 		return val;
 	},
 	_shouldParseMultibyteCharacters : true,
- 
-	ACTION_DISABLED               : 0, 
-	ACTION_STEALTH                : 1,
-	ACTION_SELECT                 : 2,
-	ACTION_OPEN_IN_CURRENT        : 4,
-	ACTION_OPEN_IN_WINDOW         : 8,
-	ACTION_OPEN_IN_TAB            : 16,
-	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
-	ACTION_COPY                   : 1024,
 
-	actions : {},
-
-	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))',
-	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"',
 	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]',
  
 // regexp 
@@ -491,7 +473,7 @@ var TextLinkService = {
 			var xpathResult = (aContext.ownerDocument || aContext || document).evaluate(
 					aExpression,
 					(aContext || document),
-					this.NSResolver,
+					null,
 					aType,
 					null
 				);
@@ -720,7 +702,7 @@ var TextLinkService = {
 		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
 			var target = match[1];
-			var table = this.evalInSandbox('(function() {'+
+			var table = eval('(function() {'+
 					'var table = '+this._fixupTable.quote()+';'+
 					'var target = '+target.quote()+';'+
 					((this._fixupTargetsPattern+'|')
@@ -759,22 +741,23 @@ var TextLinkService = {
 
 // range operations 
 
-	getURIRange : function(aFrame)
+	getClickedURIRange : function(aFrame)
 	{
 		var selection = aFrame.getSelection();
 		if (!selection.rangeCount) return null;
-		var range = selection.getRangeAt(0);
+		var range = selection.getRangeAt(0).cloneRange();
 
-		this._expandURIRangeToBefore(range);
+		this._expandURIRangeToBefore(range, aFrame);
 		this._expandURIRangeToAfter(range);
 		var string = range.toString();
 
-		jetpack.notifications.show('maybe URI? : '+string);
-
-		return this.matchURIRegExp(string) ? range : null ;
+		string = this.sanitizeURIString(string);
+		return this.matchURIRegExp(string) ?
+				this.shrinkRange(range, string) :
+				null ;
 	},
   
-	_expandURIRangeToBefore : function(aRange)
+	_expandURIRangeToBefore : function(aRange, aFrame)
 	{
 		var expandRange = aRange.cloneRange();
 		expandRange.selectNode(aRange.startContainer);
@@ -796,7 +779,7 @@ var TextLinkService = {
 		while (true)
 		{
 			lastNode = node;
-			if (this._getParentBlock(lastNode) != baseBlock) break;
+			if (this._getParentBlock(lastNode) !== baseBlock) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
@@ -806,7 +789,7 @@ var TextLinkService = {
 					part.length < string.length ||
 					(part.length == string.length && i == -1)
 					) {
-					offset = (expandRange.startContainer == aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
+					offset = (expandRange.startContainer === aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
 					break;
 				}
 				if (i == -1) break;
@@ -820,7 +803,7 @@ var TextLinkService = {
 		}
 		if (
 			lastNode &&
-			(lastNode != aRange.startContainer || offset != aRange.startOffset)
+			(lastNode !== aRange.startContainer || offset != aRange.startOffset)
 			) {
 			aRange.setStart(lastNode, offset);
 		}
@@ -851,30 +834,12 @@ var TextLinkService = {
 		while (true)
 		{
 			lastNode = node;
-			if (this._getParentBlock(lastNode) != baseBlock) break;
+			if (this._getParentBlock(lastNode) !== baseBlock) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setEnd(lastNode, lastNode.textContent.length);
 				let string = expandRange.toString();
 				let delta = 0;
-				if (this.acceptMultilineURI) {
-					// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
-					// 強制的にRangeの開始位置を元に戻す
-					if (expandRange.startContainer.nodeType == Components.interfaces.nsIDOMNode.ELEMENT_NODE) {
-						expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
-					}
-
-					let originalString = string;
-					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
-					delta = originalString.indexOf(string);
-
-					originalString = string;
-					string = string.replace(this.URIExceptionPattern_start, '');
-					if (originalString.indexOf(string) != 0) {
-						string = '';
-						delta = 0;
-					}
-				}
-				if (!this.acceptMultilineURI || string) {
+				if (string) {
 					let part = this.getURIPartFromStart(string, headPartIsFound);
 					if (!part.length) break;
 					let partRange;
@@ -908,7 +873,7 @@ var TextLinkService = {
 		if (
 			!aRanges &&
 			lastNode &&
-			(lastNode != aRange.endContainer || offset != aRange.endOffset)
+			(lastNode !== aRange.endContainer || offset != aRange.endOffset)
 			) {
 			aRange.setEnd(lastNode, offset);
 		}
@@ -945,6 +910,53 @@ var TextLinkService = {
 		return aNode;
 	},
 
+	shrinkRange : function(aRange, aString) 
+	{
+		var startOffset = aRange.toString().indexOf(aString);
+		var existingOffset = aRange.startOffset;
+		var node = aRange.startContainer;
+		if (node.nodeType == Components.interfaces.nsIDOMNode.ELEMENT_NODE)
+			node = this._getFirstTextNodeFromRange(aRange);
+		var rest = node.nodeValue.length - existingOffset;
+		while (true)
+		{
+			if (rest >= startOffset) {
+				aRange.setStart(node, existingOffset + startOffset);
+				break;
+			}
+			node = this.evaluateXPath(
+				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				node,
+				Components.interfaces.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+			).singleNodeValue;
+			startOffset -= rest;
+			existingOffset = 0;
+			rest = node.nodeValue.length;
+		}
+
+		var endOffset = aRange.toString().length - aString.length;
+		node = aRange.endContainer;
+		if (node.nodeType == Components.interfaces.nsIDOMNode.ELEMENT_NODE)
+			node = this._getLastTextNodeFromRange(aRange);
+		rest = aRange.endOffset;
+		while (true)
+		{
+			if (rest >= endOffset) {
+				aRange.setEnd(node, rest - endOffset);
+				break;
+			}
+			node = this.evaluateXPath(
+				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				node,
+				Components.interfaces.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+			).singleNodeValue;
+			endOffset -= rest;
+			rest = node.nodeValue.length;
+		}
+
+		return aRange;
+	},
+ 
 
 /* event handling */
 
@@ -953,7 +965,7 @@ var TextLinkService = {
 		switch (aEvent.type)
 		{
 			case 'unload':
-				if (aEvent.target == aEvent.currentTarget)
+				if (aEvent.target === aEvent.currentTarget)
 					this.destroyDocument(aEvent.target);
 				return;
 
@@ -975,16 +987,14 @@ var TextLinkService = {
 
 		var frame = aEvent.view;
 
-		var range = this.getURIRange(frame);
-//		jetpack.notifications.show('found range: '+String(range));
+		var range = this.getClickedURIRange(frame);
 		if (!range) return;
 
 		var selection = frame.getSelection();
 		selection.removeAllRanges();
 		selection.addRange(range);
 
-		var uri = this.fixupURI(range.toString());
-		frame.open(uri);
+		frame.open(this.fixupURI(range.toString()));
 	},
 
 	initDocument : function(aDocument) 
@@ -1003,8 +1013,11 @@ var TextLinkService = {
    
 }; 
 
+TextLinkService.schemer = 'http https ftp news nntp telnet irc mms ed2k about file urn chrome resource';
+TextLinkService.schemerFixupTable = 'www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https';
+TextLinkService.shouldParseMultibyteCharacters = true;
+
 jetpack.tabs.onReady(function(aDocument) {
-	jetpack.notifications.show('INIT '+aDocument.URL);
 	TextLinkService.initDocument(aDocument);
 });
 
