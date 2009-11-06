@@ -994,7 +994,7 @@ var TextLinkService = {
 		selection.removeAllRanges();
 		selection.addRange(range);
 
-		frame.open(this.fixupURI(range.toString()));
+		jetpack.tabs.open(this.fixupURI(range.toString()));
 	},
 
 	initDocument : function(aDocument) 
