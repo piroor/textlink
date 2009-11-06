@@ -1037,7 +1037,9 @@ var TextLinkService = {
 		selection.removeAllRanges();
 		selection.addRange(range);
 
-		jetpack.tabs.open(this.fixupURI(range.toString()));
+		var uri = this.fixupURI(range.toString());
+		frame.open(uri);
+		// jetpack.tabs.open(uri);
 	},
 
 	initDocument : function(aDocument) 
