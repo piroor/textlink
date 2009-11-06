@@ -2,7 +2,7 @@
 	@author: SHIMODA Hiroshi aka Piro
 	@url: http://piro.sakura.ne.jp/xul/textlink/
 	@title: Text Link Jetpack
-	@version: 0.1.3.1.2009110201
+	@version: 0.1.0.3.1.2009110201
 */
 
 /* ***** BEGIN LICENSE BLOCK ***** 
