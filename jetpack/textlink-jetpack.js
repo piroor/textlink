@@ -822,7 +822,7 @@ var TextLinkService = {
 		while (true)
 		{
 			lastNode = node;
-			if (this._getParentBlock(lastNode) !== baseBlock) break;
+			if (!this._getParentBlock(lastNode).isSameNode(baseBlock)) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
@@ -832,7 +832,7 @@ var TextLinkService = {
 					part.length < string.length ||
 					(part.length == string.length && i == -1)
 					) {
-					offset = (expandRange.startContainer === aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
+					offset = (expandRange.startContainer.isSameNode(aRange.startContainer) ? string : expandRange.startContainer.textContent ).length - part.length;
 					break;
 				}
 				if (i == -1) break;
@@ -846,7 +846,7 @@ var TextLinkService = {
 		}
 		if (
 			lastNode &&
-			(lastNode !== aRange.startContainer || offset != aRange.startOffset)
+			(!lastNode.isSameNode(aRange.startContainer) || offset != aRange.startOffset)
 			) {
 			aRange.setStart(lastNode, offset);
 		}
@@ -877,7 +877,7 @@ var TextLinkService = {
 		while (true)
 		{
 			lastNode = node;
-			if (this._getParentBlock(lastNode) !== baseBlock) break;
+			if (!this._getParentBlock(lastNode).isSameNode(baseBlock)) break;
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setEnd(lastNode, lastNode.textContent.length);
 				let string = expandRange.toString();
@@ -916,7 +916,7 @@ var TextLinkService = {
 		if (
 			!aRanges &&
 			lastNode &&
-			(lastNode !== aRange.endContainer || offset != aRange.endOffset)
+			(!lastNode.isSameNode(aRange.endContainer) || offset != aRange.endOffset)
 			) {
 			aRange.setEnd(lastNode, offset);
 		}
@@ -1008,7 +1008,7 @@ var TextLinkService = {
 		switch (aEvent.type)
 		{
 			case 'unload':
-				if (aEvent.target === aEvent.currentTarget)
+				if (aEvent.target.isSameNode(aEvent.currentTarget))
 					this.destroyDocument(aEvent.target);
 				return;
 
