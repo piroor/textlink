@@ -20,6 +20,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -41,6 +42,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -58,6 +60,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -75,6 +78,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -92,6 +96,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -109,6 +114,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -126,6 +132,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -143,6 +150,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -160,6 +168,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -177,6 +186,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -194,6 +204,24 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
+      </RDF:Description>
+    </em:localized>
+      <RDF:Description em:locale="de-DE"
+                       em:name="Text Link"
+                       em:description="Erlaubt es, URIs in Texten per Doppelklick zu öffnen."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="SHIMODA Hiroshi">
+		<em:translator>menet (fr-FR)</em:translator>
+		<em:translator>BlackJack (fr-FR)</em:translator>
+		<em:translator>Gianny111 (sk-SK)</em:translator>
+		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
+		<em:translator>Alan CHENG (zh-TW)</em:translator>
+		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
+		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
+		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
+		<em:translator>Michael Baer (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
 
