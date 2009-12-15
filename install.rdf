@@ -20,7 +20,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -42,7 +42,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -60,7 +60,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -78,7 +78,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -96,7 +96,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -114,7 +114,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -132,7 +132,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -150,7 +150,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -168,7 +168,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -186,7 +186,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -204,7 +204,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
       <RDF:Description em:locale="de-DE"
@@ -221,7 +221,7 @@
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer (de-DE)</em:translator>
+		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
 
