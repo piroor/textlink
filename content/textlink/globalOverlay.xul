@@ -4,10 +4,10 @@
 <overlay
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-<script type="application/x-javascript" src="chrome://textlink/content/prefs.js"/>
-<script type="application/x-javascript; version=1.7" src="chrome://textlink/content/globalOverlay.js"/>
-<script type="application/x-javascript; version=1.7" src="chrome://textlink/content/hacks.js"/>
-<script type="application/x-javascript; version=1.7"><![CDATA[
+<script type="application/javascript" src="chrome://textlink/content/prefs.js"/>
+<script type="application/javascript" src="chrome://textlink/content/globalOverlay.js"/>
+<script type="application/javascript" src="chrome://textlink/content/hacks.js"/>
+<script type="application/javascript"><![CDATA[
 window.addEventListener('load', TextLinkService, false);
 ]]></script>
 
