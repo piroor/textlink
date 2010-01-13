@@ -562,6 +562,14 @@ var TextLinkService = {
 		return document.getElementById('textLinkTooltip-selectedURI-box');
 	},
  
+	get bundle() { 
+		if (!this._bundle) {
+			this._bundle = document.getElementById('textlink-bundle');
+		}
+		return this._bundle;
+	},
+	_bundle : null,
+ 
 	// XPConnect 
 	
 	get IOService() 
@@ -1706,6 +1714,31 @@ var TextLinkService = {
 				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
 					aEvent.keyCode != aEvent.DOM_VK_RETURN)
 					return;
+
+			case 'UIOperationHistoryUndo:TabbarOperations':
+				switch (aEvent.entry.name)
+				{
+					case 'textlink-openTabs':
+						this.onUndoOpenTextLinkInTabs(aEvent);
+						return;
+				}
+				break;
+
+			case 'UIOperationHistoryRedo:TabbarOperations':
+				switch (aEvent.entry.name)
+				{
+					case 'textlink-openTabs':
+						this.onRedoOpenTextLinkInTabs(aEvent);
+						return;
+				}
+
+			case 'UIOperationHistoryRedo:TabbarOperations':
+				switch (aEvent.entry.name)
+				{
+					case 'textlink-openTabs':
+						this.onPostRedoOpenTextLinkInTabs(aEvent);
+						return;
+				}
 				break;
 		}
 
@@ -2046,13 +2079,8 @@ var TextLinkService = {
 			return;
 		}
 
-		var selectTab;
-		var tab;
-		var b = this.browser;
-
-		var current = b.selectedTab;
-
-		if (aAction === void(0)) aAction = this.ACTION_OPEN_IN_CURRENT;
+		if (aAction === void(0))
+			aAction = this.ACTION_OPEN_IN_CURRENT;
 
 		if (
 			uris.length > 1 &&
@@ -2069,32 +2097,76 @@ var TextLinkService = {
 			return;
 		}
 
-		for (var i in uris)
+		if (aAction == this.ACTION_OPEN_IN_WINDOW) {
+			for (let i in aURIs)
+			{
+				window.open(aURIs[i]);
+			}
+			return;
+		}
+
+		if (aAction == this.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
+			this.browser.loadURI(uris[i]);
+			return;
+		}
+
+		if ('UndoTabService' in window && UndoTabService.isUndoable()) {
+			let self = this;
+			let data = UndoTabService.getTabOpetarionTargetsData({
+				browser : this.browser
+				}, {
+				oldSelected : UndoTabService.getId(self.browser.selectedTab),
+				replace     : false,
+				state       : null,
+				uri         : uris[0]
+			});
+			UndoTabService.doOperation(
+				function(aInfo) {
+					var tabs = self.openTextLinkInTabs(uris, aAction);
+					data.newSelected = UndoTabService.getId(self.browser.selectedTab);
+					if (tabs.length < uris.length) {
+						data.tab = UndoTabService.getId(tabs[0]);
+						data.state = UndoTabService.getTabState(self.browser.selectedTab);
+						data.replace = true;
+					}
+				},
+				{
+					name  : 'textlink-openTabs',
+					label : this.bundle.getString('undo_openTextLinkInTabs_label'),
+					data  : data
+				}
+			);
+		}
+		else {
+			this.openTextLinkInTabs(uris, aAction);
+		}
+	},
+	openTextLinkInTabs : function(aURIs, aAction)
+	{
+		var selectTab;
+		var tabs = [];
+		var b = this.browser;
+		for (let i in aURIs)
 		{
-			if (b.currentURI && b.currentURI.spec == 'about:blank') {
+			if (
+				i == 0 &&
+				(
+					(aAction == this.ACTION_OPEN_IN_CURRENT) ||
+					(b.currentURI && b.currentURI.spec == 'about:blank')
+				)
+				) {
 				if ('TreeStyleTabService' in window) // Tree Style Tab
 					TreeStyleTabService.readyToOpenChildTab(b, true);
-				b.loadURI(uris[i]);
+				b.loadURI(aURIs[i]);
 				if (!selectTab) selectTab = b.selectedTab;
+				tabs.push(b.selectedTabs);
 			}
 			else {
-				if (aAction == this.ACTION_OPEN_IN_WINDOW) {
-					window.open(uris[i]);
-				}
-				else if (aAction == this.ACTION_OPEN_IN_TAB ||
-					aAction == this.ACTION_OPEN_IN_BACKGROUND_TAB ||
-					(aAction == this.ACTION_OPEN_IN_CURRENT && i > 0)) {
-					if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
-						TreeStyleTabService.readyToOpenChildTab(b, true);
-
-					tab = b.addTab(uris[i]);
-
-					if (!selectTab) selectTab = tab;
-				}
-				else if (aAction == this.ACTION_OPEN_IN_CURRENT) {
-					b.loadURI(uris[i]);
-					selectTab = b.selectedTab;
-				}
+				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
+					TreeStyleTabService.readyToOpenChildTab(b, true);
+				let tab = b.addTab(aURIs[i]);
+				if (!selectTab) selectTab = tab;
+				tabs.push(tab);
 			}
 		}
 
@@ -2107,12 +2179,65 @@ var TextLinkService = {
 			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
 			if ('setFocusInternal' in b) b.setFocusInternal();
 		}
+
+		return tabs;
+	},
+	onUndoOpenTextLinkInTabs : function(aEvent)
+	{
+		var entry  = aEvent.entry;
+		var data   = entry.data;
+		var target = UndoTabService.getTabOpetarionTargetsBy(data);
+		if (!target.browser)
+			return aEvent.preventDefault();
+
+		data.newSelected = UndoTabService.getId(target.browser.selectedTab);
+
+		var selected = UndoTabService.getTargetById(data.oldSelected, target.browser.mTabContainer);
+		if (selected)
+			target.browser.selectedTab = selected;
+
+		if (data.replace) {
+			UndoTabService.setTabState(target.tab, target.state);
+		}
+	},
+	onRedoOpenTextLinkInTabs : function(aEvent)
+	{
+		var entry  = aEvent.entry;
+		var data   = entry.data;
+		var target = UndoTabService.getTabOpetarionTargetsBy(data);
+
+		data.oldSelected = UndoTabService.getId(target.browser.selectedTab);
+
+		if (data.replace) {
+			if (!target.tab)
+				return aEvent.preventDefault();
+
+			data.state = UndoTabService.getTabState(target.tab);
+			target.tab.linkedBrowser.loadURI(data.uri);
+		}
+	},
+	onPostRedoOpenTextLinkInTabs : function(aEvent)
+	{
+		var entry  = aEvent.entry;
+		var data   = entry.data;
+		var target = UndoTabService.getTabOpetarionTargetsBy(data);
+		if (!target.browser)
+			return;
+
+		var selected = UndoTabService.getTargetById(data.newSelected, target.browser.mTabContainer);
+		if (selected)
+			target.browser.selectedTab = selected;
 	},
  
 	init : function() 
 	{
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
+
+		window.addEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
+		window.addEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
+		window.addEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
+		window.addEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
 
 		this.addPrefListener(this);
 		this.initPrefs();
@@ -2255,6 +2380,11 @@ var TextLinkService = {
 			appcontent.removeEventListener('SubBrowserAdded', this, false);
 			appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
 		}
+
+		window.removeEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
+		window.removeEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
+		window.removeEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
+		window.removeEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
 
 		this.destroyBrowser(gBrowser);
 	},

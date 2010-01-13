@@ -17,6 +17,7 @@ window.addEventListener('load', TextLinkService, false);
 		onpopuphiding="TextLinkService.handleEvent(event);">
 		<vbox id="textLinkTooltip-selectedURI-box"/>
 	</tooltip>
+	<stringbundle id="textlink-bundle" src="chrome://textlink/locale/textlink.properties"/>
 </popupset>
 
 <popup id="contentAreaContextMenu">
