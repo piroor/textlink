@@ -1715,6 +1715,15 @@ var TextLinkService = {
 					aEvent.keyCode != aEvent.DOM_VK_RETURN)
 					return;
 
+			case 'UIOperationHistoryPreUndo:TabbarOperations':
+				switch (aEvent.entry.name)
+				{
+					case 'textlink-openTabs':
+						this.onPreUndoOpenTextLinkInTabs(aEvent);
+						return;
+				}
+				break;
+
 			case 'UIOperationHistoryUndo:TabbarOperations':
 				switch (aEvent.entry.name)
 				{
@@ -2112,29 +2121,30 @@ var TextLinkService = {
 
 		if ('UndoTabService' in window && UndoTabService.isUndoable()) {
 			let self = this;
-			let data = UndoTabService.getTabOpetarionTargetsData({
-				browser : this.browser
-				}, {
-				oldSelected : UndoTabService.getId(self.browser.selectedTab),
-				replace     : false,
-				state       : null,
-				uri         : uris[0]
-			});
+			let state = UndoTabService.getTabState(this.browser.selectedTab);
+			let oldSelected = this.browser.selectedTab;
+			let entry;
 			UndoTabService.doOperation(
 				function(aInfo) {
-					var tabs = self.openTextLinkInTabs(uris, aAction);
-					data.newSelected = UndoTabService.getId(self.browser.selectedTab);
-					if (tabs.length < uris.length) {
-						data.tab = UndoTabService.getId(tabs[0]);
-						data.state = UndoTabService.getTabState(self.browser.selectedTab);
-						data.replace = true;
-					}
+					let tabs = self.openTextLinkInTabs(uris, aAction);
+					let replace = tabs.length < uris.length;
+					entry.data = UndoTabService.getTabOpetarionTargetsData({
+						browser : self.browser,
+						tabs : {
+							oldSelected : oldSelected,
+							newSelected : self.browser.selectedTab,
+							first       : tabs[0]
+						}
+						}, {
+						replace : replace,
+						state   : replace ? state : null ,
+						uris    : uris
+					});
 				},
-				{
+				(entry = {
 					name  : 'textlink-openTabs',
-					label : this.bundle.getString('undo_openTextLinkInTabs_label'),
-					data  : data
-				}
+					label : this.bundle.getString('undo_openTextLinkInTabs_label')
+				})
 			);
 		}
 		else {
@@ -2182,6 +2192,13 @@ var TextLinkService = {
 
 		return tabs;
 	},
+	onPreUndoOpenTextLinkInTabs : function(aEvent)
+	{
+		var data   = aEvent.entry.data;
+		var target = UndoTabService.getTabOpetarionTargetsBy(data);
+		if (target.browser)
+			data.tabs.newSelected = UndoTabService.getId(target.browser.selectedTab);
+	},
 	onUndoOpenTextLinkInTabs : function(aEvent)
 	{
 		var entry  = aEvent.entry;
@@ -2190,43 +2207,31 @@ var TextLinkService = {
 		if (!target.browser)
 			return aEvent.preventDefault();
 
-		data.newSelected = UndoTabService.getId(target.browser.selectedTab);
-
-		var selected = UndoTabService.getTargetById(data.oldSelected, target.browser.mTabContainer);
-		if (selected)
-			target.browser.selectedTab = selected;
-
-		if (data.replace) {
+		if (target.tabs.oldSelected)
+			target.browser.selectedTab = target.tabs.oldSelected;
+		if (data.replace)
 			UndoTabService.setTabState(target.tab, target.state);
-		}
 	},
 	onRedoOpenTextLinkInTabs : function(aEvent)
 	{
 		var entry  = aEvent.entry;
 		var data   = entry.data;
 		var target = UndoTabService.getTabOpetarionTargetsBy(data);
+		data.tabs.oldSelected = UndoTabService.getId(target.browser.selectedTab);
+		if (!data.replace)
+			return;
 
-		data.oldSelected = UndoTabService.getId(target.browser.selectedTab);
-
-		if (data.replace) {
-			if (!target.tab)
-				return aEvent.preventDefault();
-
-			data.state = UndoTabService.getTabState(target.tab);
-			target.tab.linkedBrowser.loadURI(data.uri);
-		}
+		if (!target.tabs.first)
+			return aEvent.preventDefault();
+		data.state = UndoTabService.getTabState(target.tabs.first);
+		target.tabs.first.linkedBrowser.loadURI(data.uri);
 	},
 	onPostRedoOpenTextLinkInTabs : function(aEvent)
 	{
-		var entry  = aEvent.entry;
-		var data   = entry.data;
+		var data   = aEvent.entry.data;
 		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (!target.browser)
-			return;
-
-		var selected = UndoTabService.getTargetById(data.newSelected, target.browser.mTabContainer);
-		if (selected)
-			target.browser.selectedTab = selected;
+		if (target.tabs.newSelected)
+			target.browser.selectedTab = target.tabs.newSelected;
 	},
  
 	init : function() 
