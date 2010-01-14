@@ -1714,6 +1714,7 @@ var TextLinkService = {
 				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
 					aEvent.keyCode != aEvent.DOM_VK_RETURN)
 					return;
+				break;
 
 			case 'UIOperationHistoryPreUndo:TabbarOperations':
 				switch (aEvent.entry.name)
@@ -2107,10 +2108,9 @@ var TextLinkService = {
 		}
 
 		if (aAction == this.ACTION_OPEN_IN_WINDOW) {
-			for (let i in aURIs)
-			{
-				window.open(aURIs[i]);
-			}
+			uris.forEach(function(aURI) {
+				window.open(aURI);
+			});
 			return;
 		}
 
@@ -2156,10 +2156,9 @@ var TextLinkService = {
 		var selectTab;
 		var tabs = [];
 		var b = this.browser;
-		for (let i in aURIs)
-		{
+		aURIs.forEach(function(aURI, aIndex) {
 			if (
-				i == 0 &&
+				aIndex == 0 &&
 				(
 					(aAction == this.ACTION_OPEN_IN_CURRENT) ||
 					(b.currentURI && b.currentURI.spec == 'about:blank')
@@ -2167,18 +2166,18 @@ var TextLinkService = {
 				) {
 				if ('TreeStyleTabService' in window) // Tree Style Tab
 					TreeStyleTabService.readyToOpenChildTab(b, true);
-				b.loadURI(aURIs[i]);
+				b.loadURI(aURI);
 				if (!selectTab) selectTab = b.selectedTab;
 				tabs.push(b.selectedTabs);
 			}
 			else {
 				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
 					TreeStyleTabService.readyToOpenChildTab(b, true);
-				let tab = b.addTab(aURIs[i]);
+				let tab = b.addTab(aURI);
 				if (!selectTab) selectTab = tab;
 				tabs.push(tab);
 			}
-		}
+		}, this);
 
 		if ('TreeStyleTabService' in window) // Tree Style Tab
 			TreeStyleTabService.stopToOpenChildTab(b);
@@ -2224,7 +2223,7 @@ var TextLinkService = {
 		if (!target.tabs.first)
 			return aEvent.preventDefault();
 		data.state = UndoTabService.getTabState(target.tabs.first);
-		target.tabs.first.linkedBrowser.loadURI(data.uri);
+		target.tabs.first.linkedBrowser.loadURI(data.uris[0]);
 	},
 	onPostRedoOpenTextLinkInTabs : function(aEvent)
 	{
