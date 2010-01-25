@@ -1,11 +1,32 @@
 /*
- lisence: The MIT License, Copyright (c) 2009 SHIMODA "Piro" Hiroshi
+ Preferences Library
+
+ Usage:
+   var value = window['piro.sakura.ne.jp'].prefs.getPref('my.extension.pref');
+   window['piro.sakura.ne.jp'].prefs.setPref('my.extension.pref', true);
+   window['piro.sakura.ne.jp'].prefs.clearPref('my.extension.pref');
+   var listener = {
+         domains : [
+           'browser.tabs',
+           'extensions.someextension'
+         ],
+         observe : function(aSubject, aTopic, aData)
+         {
+           if (aTopic != 'nsPref:changed') return;
+           var value = window['piro.sakura.ne.jp'].prefs.getPref(aData);
+         }
+       };
+   window['piro.sakura.ne.jp'].prefs.addPrefListener(listener);
+   window['piro.sakura.ne.jp'].prefs.removePrefListener(listener);
+
+ lisence: The MIT License, Copyright (c) 2009-2010 SHIMODA "Piro" Hiroshi
    http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/license.txt
  original:
-   https://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/prefs.js
+   http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/prefs.js
+   http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/prefs.test.js
 */
 (function() {
-	const currentRevision = 1;
+	const currentRevision = 4;
 
 	if (!('piro.sakura.ne.jp' in window)) window['piro.sakura.ne.jp'] = {};
 
@@ -16,84 +37,78 @@
 		return;
 	}
 
+	const Cc = Components.classes;
+	const Ci = Components.interfaces;
+
 	window['piro.sakura.ne.jp'].prefs = {
 		revision : currentRevision,
 
-		get Prefs() 
-		{
-			if (!this._Prefs) {
-				this._Prefs = Components.classes['@mozilla.org/preferences;1'].getService(Components.interfaces.nsIPrefBranch);
-			}
-			return this._Prefs;
-		},
-		_Prefs : null,
-	 
-		getPref : function(aPrefstring) 
-		{
-			try {
-				switch (this.Prefs.getPrefType(aPrefstring))
-				{
-					case this.Prefs.PREF_STRING:
-						return decodeURIComponent(escape(this.Prefs.getCharPref(aPrefstring)));
-						break;
-					case this.Prefs.PREF_INT:
-						return this.Prefs.getIntPref(aPrefstring);
-						break;
-					default:
-						return this.Prefs.getBoolPref(aPrefstring);
-						break;
-				}
-			}
-			catch(e) {
-			}
+		Prefs : Cc['@mozilla.org/preferences;1']
+					.getService(Ci.nsIPrefBranch)
+					.QueryInterface(Ci.nsIPrefBranch2),
 
-			return null;
+		DefaultPrefs : Cc['@mozilla.org/preferences-service;1']
+					.getService(Ci.nsIPrefService)
+					.getDefaultBranch(null),
+	 
+		getPref : function(aPrefstring, aBranch) 
+		{
+			if (!aBranch) aBranch = this.Prefs;
+			switch (aBranch.getPrefType(aPrefstring))
+			{
+				case aBranch.PREF_STRING:
+					return decodeURIComponent(escape(aBranch.getCharPref(aPrefstring)));
+
+				case aBranch.PREF_INT:
+					return aBranch.getIntPref(aPrefstring);
+
+				case aBranch.PREF_BOOL:
+					return aBranch.getBoolPref(aPrefstring);
+
+				case aBranch.PREF_INVALID:
+				default:
+					return null;
+			}
+		},
+
+		getDefaultPref : function(aPrefstring)
+		{
+			return this.getPref(aPrefstring, this.DefaultPrefs);
 		},
 	 
-		setPref : function(aPrefstring, aNewValue) 
+		setPref : function(aPrefstring, aNewValue, aBranch) 
 		{
-			var pref = this.Prefs ;
-			var type;
-			try {
-				type = typeof aNewValue;
-			}
-			catch(e) {
-				type = null;
-			}
-
-			switch (type)
+			if (!aBranch) aBranch = this.Prefs;
+			switch (typeof aNewValue)
 			{
 				case 'string':
-					pref.setCharPref(aPrefstring, unescape(encodeURIComponent(aNewValue)));
-					break;
+					return aBranch.setCharPref(aPrefstring, unescape(encodeURIComponent(aNewValue)));
+
 				case 'number':
-					pref.setIntPref(aPrefstring, parseInt(aNewValue));
-					break;
+					return aBranch.setIntPref(aPrefstring, parseInt(aNewValue));
+
 				default:
-					pref.setBoolPref(aPrefstring, aNewValue);
-					break;
+					return aBranch.setBoolPref(aPrefstring, aNewValue);
 			}
-			return true;
+		},
+
+		setDefaultPref : function(aPrefstring, aNewValue)
+		{
+			return this.setPref(aPrefstring, aNewValue, this.DefaultPrefs);
 		},
 	 
 		clearPref : function(aPrefstring) 
 		{
-			try {
+			if (this.Prefs.prefHasUserValue(aPrefstring))
 				this.Prefs.clearUserPref(aPrefstring);
-			}
-			catch(e) {
-			}
-
-			return;
 		},
 	 
 		addPrefListener : function(aObserver) 
 		{
 			var domains = ('domains' in aObserver) ? aObserver.domains : [aObserver.domain] ;
 			try {
-				var pbi = this.Prefs.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
-				for (var i = 0; i < domains.length; i++)
-					pbi.addObserver(domains[i], aObserver, false);
+				for each (var domain in domains)
+					this.Prefs.addObserver(domain, aObserver, false);
 			}
 			catch(e) {
 			}
@@ -103,9 +118,8 @@
 		{
 			var domains = ('domains' in aObserver) ? aObserver.domains : [aObserver.domain] ;
 			try {
-				var pbi = this.Prefs.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
-				for (var i = 0; i < domains.length; i++)
-					pbi.removeObserver(domains[i], aObserver, false);
+				for each (var domain in domains)
+					this.Prefs.removeObserver(domain, aObserver, false);
 			}
 			catch(e) {
 			}
