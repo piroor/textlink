@@ -207,6 +207,7 @@
 		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
+    <em:localized>
       <RDF:Description em:locale="de-DE"
                        em:name="Text Link"
                        em:description="Erlaubt es, URIs in Texten per Doppelklick zu öffnen."
