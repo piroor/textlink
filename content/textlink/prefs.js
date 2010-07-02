@@ -26,18 +26,24 @@
    http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/prefs.test.js
 */
 
-/* To work as a JS Code Module (*require namespace.jsm)
-   http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/namespace.jsm */
+/* To work as a JS Code Module  */
 if (typeof window == 'undefined') {
 	this.EXPORTED_SYMBOLS = ['prefs'];
 
-	let ns = {};
-	Components.utils.import('resource://my-modules/namespace.jsm', ns);
-	/* var */ window = ns.getNamespaceFor('piro.sakura.ne.jp');
+	// If namespace.jsm is available, export symbols to the shared namespace.
+	// See: http://www.cozmixng.org/repos/piro/fx3-compatibility-lib/trunk/namespace.jsm
+	try {
+		let ns = {};
+		Components.utils.import('resource://my-modules/namespace.jsm', ns);
+		/* var */ window = ns.getNamespaceFor('piro.sakura.ne.jp');
+	}
+	catch(e) {
+		window = {};
+	}
 }
 
 (function() {
-	const currentRevision = 6;
+	const currentRevision = 7;
 
 	if (!('piro.sakura.ne.jp' in window)) window['piro.sakura.ne.jp'] = {};
 
@@ -108,7 +114,7 @@ if (typeof window == 'undefined') {
 					return aBranch.setIntPref(aPrefstring, parseInt(aNewValue));
 
 				default:
-					return aBranch.setBoolPref(aPrefstring, aNewValue);
+					return aBranch.setBoolPref(aPrefstring, !!aNewValue);
 			}
 		},
 
