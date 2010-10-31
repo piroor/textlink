@@ -2307,8 +2307,16 @@ var TextLinkService = {
 
 		var uris = [];
 		var target;
-		if (TLS.contextItemCurrent || TLS.contextItemWindow ||
-			TLS.contextItemTab || TLS.contextItemCopy) {
+		if (
+			(
+				TLS.contextItemCurrent ||
+				TLS.contextItemWindow ||
+				TLS.contextItemTab ||
+				TLS.contextItemCopy
+			) &&
+			this.isTextSelected &&
+			this.isContentSelected
+			) {
 			try {
 				target = TLS.getEditableFromChild(document.popupNode);
 				var first = TLS.getFirstSelectionURIRange(target);
