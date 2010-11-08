@@ -562,6 +562,13 @@ var TextLinkService = {
 		return document.getElementById('textLinkTooltip-selectedURI-box');
 	},
  
+	get popupNode() 
+	{
+		var popup = document.getElementById('contentAreaContextMenu') || // Firefox
+					document.getElementById('messagePaneContext'); // Thunderbird
+		return popup && popup.triggerNode || document.popupNode ;
+	},
+ 
 	get bundle() { 
 		if (!this._bundle) {
 			this._bundle = document.getElementById('textlink-bundle');
@@ -1922,11 +1929,11 @@ var TextLinkService = {
 	{
 		this.stopProgressiveBuildTooltip();
 
-		var target = this.getEditableFromChild(document.popupNode);
+		var target = this.getEditableFromChild(this.popupNode);
 		var selection = this.getSelection(target);
 		selection = selection ?
 			[
-				document.popupNode.ownerDocument.defaultView.location.href,
+				this.popupNode.ownerDocument.defaultView.location.href,
 				(function() {
 					var positions = [];
 					for (let i = 0, maxi = selection.rangeCount; i < maxi; i++)
@@ -2318,7 +2325,7 @@ var TextLinkService = {
 			this.isContentSelected
 			) {
 			try {
-				target = TLS.getEditableFromChild(document.popupNode);
+				target = TLS.getEditableFromChild(TLS.popupNode);
 				var first = TLS.getFirstSelectionURIRange(target);
 				var found = {};
 				if (first) {
