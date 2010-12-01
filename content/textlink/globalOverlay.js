@@ -212,6 +212,7 @@ var TextLinkService = {
  
 	// http://www4.plala.or.jp/nomrax/TLD/ 
 	// http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
+	// http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
 	kTopLevelDomains : [
 		// gTLD
 		'aero',
@@ -492,6 +493,28 @@ var TextLinkService = {
 		'zr',
 		'zw'
 	],
+	kIDNTopLevelDomains : [
+		'\u4e2d\u56fd',
+		'\u4e2d\u570b',
+		'\u0645\u0635\u0631',
+		'\u9999\u6e2f',
+		'\u0627\u06cc\u0631\u0627\u0646',
+		'\u0627\u0644\u0627\u0631\u062f\u0646',
+		'\u0641\u0644\u0633\u0637\u064a\u0646',
+		'\u0440\u0444',
+		'\u0627\u0644\u0633\u0639\u0648\u062f\u064a\u0629',
+		'\u0dbd\u0d82\u0d9a\u0dcf',
+		'\u0b87\u0bb2\u0b99\u0bcd\u0b95\u0bc8',
+		'\u53f0\u6e7e',
+		'\u53f0\u7063',
+		'\u0e44\u0e17\u0e22',
+		'\u062a\u0648\u0646\u0633',
+		'\u0627\u0645\u0627\u0631\u0627\u062a'
+	],
+	get topLevelDomains()
+	{
+		return this.kTopLevelDomains.concat(this.kIDNTopLevelDomains);
+	},
   
  
 	get URIExceptionPattern() 
@@ -949,7 +972,7 @@ var TextLinkService = {
 	{
 		// escape patterns like program codes like JavaScript etc.
 		if (!this._topLevelDomainsRegExp) {
-			this._topLevelDomainsRegExp = new RegExp('^(' + this.kTopLevelDomains.join('|') + ')$');
+			this._topLevelDomainsRegExp = new RegExp('^(' + this.topLevelDomains.join('|') + ')$');
 		}
 		if (this.shouldParseRelativePath) {
 			if (
@@ -1074,7 +1097,7 @@ var TextLinkService = {
 		if (aURI.match(/^(urn|mailto):/i)) return aURI;
 
 		if (aURI.match(/^([^\/\.]+\.)+([^\/\.]+)/) &&
-			RegExp.$2.match(new RegExp(['^(', this.kTopLevelDomains.join('|'), ')$'].join('')))) {
+			RegExp.$2.match(new RegExp(['^(', this.topLevelDomains.join('|'), ')$'].join('')))) {
 			var fixedURI = this.URIFixup.createFixupURI(aURI || 'about:blank', this.URIFixup.FIXUP_FLAG_ALLOW_KEYWORD_LOOKUP);
 			return fixedURI.spec;
 		}
