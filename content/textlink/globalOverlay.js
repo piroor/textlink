@@ -169,7 +169,7 @@ var TextLinkService = {
 				)
 				.replace(
 					/%DOMAIN_PATTERN%/g,
-					'[0-9a-z\\.-]+[\\.]('+this.topLevelDomains.join('|')+')\\b'
+					this.kDomainPattern
 /*
 					'[0-9a-z\\.-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0e\uff0d]+[\\.\uff0e]('+
 					this.topLevelDomains.join('|')+
@@ -216,7 +216,7 @@ var TextLinkService = {
 	// and
 	//   http://www.ietf.org/rfc/rfc3454.txt
 	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
-	kStringprepAllowedCharacterPattern : '[^\u0080-\u00A0\u0340\u0341\u06DD\u070F\u1680\u180E\u2000-\u200F\u2028-\u202F\u205F-\u2063\u206A-\u206F\u2FF0-\u2FFB\u3000\uD800-\uF8FF\uFDD0-\uFDEF\uFEFF\uFFF9-\uFFFF]',
+	kStringprepAllowedCharacterPattern : '[^\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF]',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
 	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
@@ -228,8 +228,18 @@ var TextLinkService = {
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
  
-	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+', 
-	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
+	get kURIPattern_part()
+	{
+		return this.getPref('textlink.idn.enabled') ?
+				this.kStringprepAllowedCharacterPattern+'+' :
+				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
+	}, 
+	get kURIPatternMultibyte_part()
+	{
+		return this.getPref('textlink.idn.enabled') ?
+				this.kStringprepAllowedCharacterPattern+'+' :
+				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
+	},
  
 	// http://www4.plala.or.jp/nomrax/TLD/ 
 	// http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
@@ -1927,6 +1937,8 @@ var TextLinkService = {
 				return;
 
 			case 'textlink.idn.enabled':
+				this._kURIPattern = null;
+				this._kURIPatternMultibyte = null;
 				this._kDomainPattern = null;
 				this._topLevelDomainsRegExp = null;
 				return;
