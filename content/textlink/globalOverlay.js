@@ -129,7 +129,7 @@ var TextLinkService = {
 				)
 				.replace(
 					/%DOMAIN_PATTERN%/g,
-					'[0-9a-z\\.-]+\\.('+this.kTopLevelDomains.join('|')+')\\b'
+					this.kDomainPattern
 				);
 		}
 
@@ -169,12 +169,12 @@ var TextLinkService = {
 				)
 				.replace(
 					/%DOMAIN_PATTERN%/g,
-					'[0-9a-z\\.-]+[\\.]('+this.kTopLevelDomains.join('|')+')\\b'
+					'[0-9a-z\\.-]+[\\.]('+this.topLevelDomains.join('|')+')\\b'
 /*
 					'[0-9a-z\\.-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0e\uff0d]+[\\.\uff0e]('+
-					this.kTopLevelDomains.join('|')+
+					this.topLevelDomains.join('|')+
 					'|'+
-					this.convertHalfWidthToFullWidth(this.kTopLevelDomains.join('|')).replace(/\uff5c/g, '|')+
+					this.convertHalfWidthToFullWidth(this.topLevelDomains.join('|')).replace(/\uff5c/g, '|')+
 					')'
 */
 				);
@@ -197,6 +197,27 @@ var TextLinkService = {
 		return this._kURIPatternMultibyteRelative;
 	},
 	_kURIPatternMultibyteRelative : null,
+ 
+	get kDomainPattern()
+	{
+		if (!this._kDomainPattern) {
+			this._kDomainPattern = this.getPref('textlink.idn.enabled') ?
+					this.kStringprepAllowedCharacterPattern+'+' :
+					'[0-9a-z\\.-]+' ;
+			this._kDomainPattern += '\\.('+this.topLevelDomains.join('|')+')\\b'
+		}
+		return this._kDomainPattern;
+	},
+	_kDomainPattern : null,
+
+	// Forbidden characters in IDN are defined by RFC 3491.
+	//   http://www.ietf.org/rfc/rfc3491.txt
+	//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
+	// and
+	//   http://www.ietf.org/rfc/rfc3454.txt
+	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
+	kStringprepAllowedCharacterPattern : '[^\u0080-\u00A0\u0340\u0341\u06DD\u070F\u1680\u180E\u2000-\u200F\u2028-\u202F\u205F-\u2063\u206A-\u206F\u2FF0-\u2FFB\u3000\uD800-\uF8FF\uFDD0-\uFDEF\uFEFF\uFFF9-\uFFFF]',
+	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
 	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
 	kURIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
@@ -513,7 +534,9 @@ var TextLinkService = {
 	],
 	get topLevelDomains()
 	{
-		return this.kTopLevelDomains.concat(this.kIDNTopLevelDomains);
+		return this.getPref('textlink.idn.enabled') ?
+				this.kTopLevelDomains.concat(this.kIDNTopLevelDomains) :
+				this.kTopLevelDomains ;
 	},
   
  
@@ -1005,6 +1028,9 @@ var TextLinkService = {
 		}
 
 		aURIComponent = this.removeParen(aURIComponent);
+
+		if (this.getPref('textlink.idn.enabled'))
+			aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
 	},
@@ -1567,6 +1593,7 @@ var TextLinkService = {
 					}
 				}
 				if (i == maxi) break;
+
 			}
 			catch(e) {
 			}
@@ -1897,6 +1924,11 @@ var TextLinkService = {
 
 			case 'textlink.relative.enabled':
 				this.shouldParseRelativePath = value;
+				return;
+
+			case 'textlink.idn.enabled':
+				this._kDomainPattern = null;
+				this._topLevelDomainsRegExp = null;
 				return;
 
 			case 'textlink.multibyte.enabled':
