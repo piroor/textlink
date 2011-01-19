@@ -23,10 +23,8 @@ var TextLinkService = {
 			.replace(/\?/g, '.')
 			.replace(/\*/g, '.+')
 			.split(/[,\| \n\r\t]+/);
-		this._schemerRegExp = null;
 
-		this._kURIPattern = null;
-		this._kURIPatternMultibyte = null;
+		this.invalidatePatterns();
 		return val;
 	},
 	_schemer : '',
@@ -63,10 +61,7 @@ var TextLinkService = {
 		this._fixupTargetsPattern = this._fixupTargets.join('|');
 		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
 
-		this._schemerRegExp = null;
-
-		this._kURIPattern = null;
-		this._kURIPatternMultibyte = null;
+		this.invalidatePatterns();
 		return val;
 	},
 	_schemerFixupTable : '',
@@ -78,7 +73,7 @@ var TextLinkService = {
 	set shouldParseRelativePath(val)
 	{
 		this._shouldParseRelativePath = val;
-		this._URIMatchingRegExp = null;
+		this.invalidatePatterns();
 		return val;
 	},
 	_shouldParseRelativePath : false,
@@ -90,10 +85,7 @@ var TextLinkService = {
 	set shouldParseMultibyteCharacters(val)
 	{
 		this._shouldParseMultibyteCharacters = val;
-		this._schemerRegExp = null;
-		this._URIMatchingRegExp = null;
-		this._URIPartRegExp_start = null;
-		this._URIPartRegExp_end = null;
+		this.invalidatePatterns();
 		return val;
 	},
 	_shouldParseMultibyteCharacters : true,
@@ -557,6 +549,21 @@ var TextLinkService = {
 				this.kTopLevelDomains ;
 	},
   
+	invalidatePatterns : function()
+	{
+		this._schemerRegExp = null;
+
+		this._kDomainPattern = null;
+		this._topLevelDomainsRegExp = null;
+
+		this._kURIPattern = null;
+		this._kURIPatternMultibyte = null;
+
+		this._URIMatchingRegExp = null;
+		this._URIMatchingRegExp_fromHead = null;
+		this._URIPartRegExp_start = null;
+		this._URIPartRegExp_end = null;
+	},
  
 	get URIExceptionPattern() 
 	{
@@ -1945,10 +1952,7 @@ var TextLinkService = {
 				return;
 
 			case 'textlink.idn.enabled':
-				this._kURIPattern = null;
-				this._kURIPatternMultibyte = null;
-				this._kDomainPattern = null;
-				this._topLevelDomainsRegExp = null;
+				this.invalidatePatterns();
 				return;
 
 			case 'textlink.multibyte.enabled':
