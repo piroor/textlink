@@ -194,25 +194,24 @@ var TextLinkService = {
 	{
 		if (!this._kDomainPattern) {
 			this._kDomainPattern = this.getPref('textlink.idn.enabled') ?
-					this.kStringprepAllowedCharacterPattern+'+[\\.\\u3002]' :
+					'[^'
+						+this.kStringprepForbiddenCharactersRange
+						+this.getPref('network.IDN.blacklist_chars')
+						+'][\\.\\u3002]' :
 					'[0-9a-z\\.-]+\\,' ;
 			this._kDomainPattern += '('+this.topLevelDomains.join('|')+')\\b'
 		}
 		return this._kDomainPattern;
 	},
 	_kDomainPattern : null,
-
-	kStringprepAllowedCharacterPattern : [
-		'[^',
-		// Forbidden characters in IDN are defined by RFC 3491.
-		//   http://www.ietf.org/rfc/rfc3491.txt
-		//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
-		// and
-		//   http://www.ietf.org/rfc/rfc3454.txt
-		//   http://www.jdna.jp/survey/rfc/rfc3454j.html
-		'\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
-		']'
-	].join(''),
+ 
+	// Forbidden characters in IDN are defined by RFC 3491.
+	//   http://www.ietf.org/rfc/rfc3491.txt
+	//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
+	// and
+	//   http://www.ietf.org/rfc/rfc3454.txt
+	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
+	kStringprepForbiddenCharactersRange : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
 	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
@@ -227,13 +226,13 @@ var TextLinkService = {
 	get kURIPattern_part()
 	{
 		return this.getPref('textlink.idn.enabled') ?
-				this.kStringprepAllowedCharacterPattern+'+' :
+				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215]+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
 	}, 
 	get kURIPatternMultibyte_part()
 	{
 		return this.getPref('textlink.idn.enabled') ?
-				this.kStringprepAllowedCharacterPattern+'+' :
+				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215\\uff0f]+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
 	},
  
