@@ -46,6 +46,7 @@ pref("textlink.relative.enabled",    false);
 pref("textlink.multibyte.enabled",   true);
 pref("textlink.multiline.enabled",   false);
 pref("textlink.idn.enabled",         true);
+pref("textlink.anyTLD.enabled",      false);
 pref("textlink.part.exception",      "-+|=+|(-=)+-?|(=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(:\\d+)?");
 
 pref("textlink.find_click_point.strict", true);

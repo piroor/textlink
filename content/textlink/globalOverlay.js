@@ -201,11 +201,9 @@ var TextLinkService = {
 	get domainPattern()
 	{
 		if (!this._domainPattern) {
-			this._domainPattern = [
-				this.possibleDomainPattern,
-				(this.getPref('textlink.idn.enabled') ? '[\\.\\u3002]' : '\\.' ),
-				'('+this.topLevelDomains.join('|')+')\\b'
-			].join('');
+			this._domainPattern = this.possibleDomainPattern;
+			if (this.getPref('textlink.anyTLD.enabled'))
+				this._domainPattern += this.TLDPattern;
 		}
 		return this._domainPattern;
 	},
@@ -214,16 +212,37 @@ var TextLinkService = {
 	get possibleDomainPattern()
 	{
 		if (!this._possibleDomainPattern) {
-			this._possibleDomainPattern = this.getPref('textlink.idn.enabled') ?
-					'[^'
-						+this.kStringprepForbiddenCharactersRange
-						+this.getPref('network.IDN.blacklist_chars')
-						+']+' :
-					'[0-9a-z\\.-]+' ;
+			if (this.getPref('textlink.idn.enabled')) {
+				let part = '[^'+
+							this.kStringprepForbiddenCharactersRange+
+							this.kIDNSeparatorRange+
+							'/'+
+							(this.getPref('network.IDN.blacklist_chars') || '')
+								.replace(/(.)\1*/g, '$1')
+								.replace(/./g, function(aChar) {
+									return '\\u'+(('00'+aChar.charCodeAt(0).toString(16)).substr(-4, 4));
+								})+
+							']+';
+				this._possibleDomainPattern = part + '([' + this.kIDNSeparatorRange + ']' + part + ')*';
+			}
+			else {
+				this._possibleDomainPattern = '[0-9a-z\\.-]+';
+			}
+			if (!this.getPref('textlink.anyTLD.enabled'))
+				this._possibleDomainPattern += this.TLDPattern;
+			this._possibleDomainPattern = '\\b'+this._possibleDomainPattern+'\\b';
 		}
 		return this._possibleDomainPattern;
 	},
 	_possibleDomainPattern : null,
+ 
+	kIDNSeparatorRange : '\\.\\u3002\\uff0e',
+ 
+	get TLDPattern()
+	{
+		return (this.getPref('textlink.idn.enabled') ? '['+this.kIDNSeparatorRange+']' : '\\.' )+
+				'('+this.topLevelDomains.join('|')+')';
+	},
  
 	// Forbidden characters in IDN are defined by RFC 3491.
 	//   http://www.ietf.org/rfc/rfc3491.txt
@@ -247,7 +266,7 @@ var TextLinkService = {
 	{
 		if (!this._URIPattern_part) {
 			this._URIPattern_part = this.getPref('textlink.idn.enabled') ?
-				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215]+' :
+				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
 		}
 		return this._URIPattern_part;
@@ -257,7 +276,7 @@ var TextLinkService = {
 	{
 		if (!this._URIPatternMultibyte_part) {
 			this._URIPatternMultibyte_part = this.getPref('textlink.idn.enabled') ?
-				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215\\uff0f]+' :
+				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
 		}
 		return this._URIPatternMultibyte_part;
