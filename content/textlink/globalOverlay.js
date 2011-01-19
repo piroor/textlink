@@ -107,46 +107,50 @@ var TextLinkService = {
  
 // regexp 
 	
-	get kURIPattern() 
+	get URIPattern() 
 	{
-		if (!this._kURIPattern) {
-			this._kURIPattern = this.kURIPattern_base
+		if (!this._URIPattern) {
+			this._URIPattern = this.URIPattern_base
 				.replace(
 					/%SCHEMER_PATTERN%/g,
 					'('+this.schemers.join('|')+'):'
 				)
 				.replace(
 					/%PART_PATTERN%/g,
-					this.kURIPattern_part
+					this.URIPattern_part
+				)
+				.replace(
+					/%POSSIBLE_DOMAIN_PATTERN%/g,
+					this.possibleDomainPattern
 				)
 				.replace(
 					/%DOMAIN_PATTERN%/g,
-					this.kDomainPattern
+					this.domainPattern
 				);
 		}
 
-		return this._kURIPattern;
+		return this._URIPattern;
 	},
-	_kURIPattern : null,
+	_URIPattern : null,
  
-	get kURIPatternRelative() 
+	get URIPatternRelative() 
 	{
-		if (!this._kURIPatternRelative) {
-			this._kURIPatternRelative = this.kURIPatternRelative_base
+		if (!this._URIPatternRelative) {
+			this._URIPatternRelative = this.URIPatternRelative_base
 				.replace(
 					/%PART_PATTERN%/g,
-					this.kURIPattern_part
+					this.URIPattern_part
 				);
 		}
 
-		return this._kURIPatternRelative;
+		return this._URIPatternRelative;
 	},
-	_kURIPatternRelative : null,
+	_URIPatternRelative : null,
  
-	get kURIPatternMultibyte() 
+	get URIPatternMultibyte() 
 	{
-		if (!this._kURIPatternMultibyte) {
-			this._kURIPatternMultibyte = this.kURIPatternMultibyte_base
+		if (!this._URIPatternMultibyte) {
+			this._URIPatternMultibyte = this.URIPatternMultibyte_base
 				.replace(
 					/%SCHEMER_PATTERN%/g,
 					'('+
@@ -157,11 +161,15 @@ var TextLinkService = {
 				)
 				.replace(
 					/%PART_PATTERN%/g,
-					this.kURIPatternMultibyte_part
+					this.URIPatternMultibyte_part
+				)
+				.replace(
+					/%POSSIBLE_DOMAIN_PATTERN%/g,
+					this.possibleDomainPattern
 				)
 				.replace(
 					/%DOMAIN_PATTERN%/g,
-					this.kDomainPattern
+					this.domainPattern
 /*
 					'[0-9a-z\\.-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0e\uff0d]+[\\.\uff0e]('+
 					this.topLevelDomains.join('|')+
@@ -172,38 +180,50 @@ var TextLinkService = {
 				);
 		}
 
-		return this._kURIPatternMultibyte;
+		return this._URIPatternMultibyte;
 	},
-	_kURIPatternMultibyte : null,
+	_URIPatternMultibyte : null,
  
-	get kURIPatternMultibyteRelative() 
+	get URIPatternMultibyteRelative() 
 	{
-		if (!this._kURIPatternMultibyteRelative) {
-			this._kURIPatternMultibyteRelative = this.kURIPatternMultibyteRelative_base
+		if (!this._URIPatternMultibyteRelative) {
+			this._URIPatternMultibyteRelative = this.URIPatternMultibyteRelative_base
 				.replace(
 					/%PART_PATTERN%/g,
-					this.kURIPatternMultibyte_part
+					this.URIPatternMultibyte_part
 				);
 		}
 
-		return this._kURIPatternMultibyteRelative;
+		return this._URIPatternMultibyteRelative;
 	},
-	_kURIPatternMultibyteRelative : null,
+	_URIPatternMultibyteRelative : null,
  
-	get kDomainPattern()
+	get domainPattern()
 	{
-		if (!this._kDomainPattern) {
-			this._kDomainPattern = this.getPref('textlink.idn.enabled') ?
+		if (!this._domainPattern) {
+			this._domainPattern = [
+				this.possibleDomainPattern,
+				(this.getPref('textlink.idn.enabled') ? '[\\.\\u3002]' : '\\.' ),
+				'('+this.topLevelDomains.join('|')+')\\b'
+			].join('');
+		}
+		return this._domainPattern;
+	},
+	_domainPattern : null,
+ 
+	get possibleDomainPattern()
+	{
+		if (!this._possibleDomainPattern) {
+			this._possibleDomainPattern = this.getPref('textlink.idn.enabled') ?
 					'[^'
 						+this.kStringprepForbiddenCharactersRange
 						+this.getPref('network.IDN.blacklist_chars')
-						+'][\\.\\u3002]' :
-					'[0-9a-z\\.-]+\\,' ;
-			this._kDomainPattern += '('+this.topLevelDomains.join('|')+')\\b'
+						+']+' :
+					'[0-9a-z\\.-]+' ;
 		}
-		return this._kDomainPattern;
+		return this._possibleDomainPattern;
 	},
-	_kDomainPattern : null,
+	_possibleDomainPattern : null,
  
 	// Forbidden characters in IDN are defined by RFC 3491.
 	//   http://www.ietf.org/rfc/rfc3491.txt
@@ -214,27 +234,35 @@ var TextLinkService = {
 	kStringprepForbiddenCharactersRange : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
-	kURIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
+	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%POSSIBLE_DOMAIN_PATTERN%(/%PART_PATTERN%)?|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
+	URIPatternRelative_base : '%PART_PATTERN%(\\.|/)%PART_PATTERN%',
  
-	kURIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(//|\uff0f\uff0f)?%PART_PATTERN%|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
-	kURIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
+	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(//|\uff0f\uff0f)?%POSSIBLE_DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?|%DOMAIN_PATTERN%([/\uff0f]%PART_PATTERN%)?)', 
+	URIPatternMultibyteRelative_base : '%PART_PATTERN%(\\.|\uff0e|/|\uff0f)%PART_PATTERN%',
  
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
  
-	get kURIPattern_part()
+	get URIPattern_part()
 	{
-		return this.getPref('textlink.idn.enabled') ?
+		if (!this._URIPattern_part) {
+			this._URIPattern_part = this.getPref('textlink.idn.enabled') ?
 				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215]+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
-	}, 
-	get kURIPatternMultibyte_part()
+		}
+		return this._URIPattern_part;
+	},
+	_URIPattern_part : null,
+	get URIPatternMultibyte_part()
 	{
-		return this.getPref('textlink.idn.enabled') ?
+		if (!this._URIPatternMultibyte_part) {
+			this._URIPatternMultibyte_part = this.getPref('textlink.idn.enabled') ?
 				'[^'+this.kStringprepForbiddenCharactersRange+'\\u2044\\u2215\\uff0f]+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
+		}
+		return this._URIPatternMultibyte_part;
 	},
+	_URIPatternMultibyte_part : null,
  
 	// http://www4.plala.or.jp/nomrax/TLD/ 
 	// http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
@@ -548,11 +576,14 @@ var TextLinkService = {
 	{
 		this._schemerRegExp = null;
 
-		this._kDomainPattern = null;
+		this._domainPattern = null;
+		this._possibleDomainPattern = null;
 		this._topLevelDomainsRegExp = null;
 
-		this._kURIPattern = null;
-		this._kURIPatternMultibyte = null;
+		this._URIPattern_part = null;
+		this._URIPattern = null;
+		this._URIPatternMultibyte_part = null;
+		this._URIPatternMultibyte = null;
 
 		this._URIMatchingRegExp = null;
 		this._URIMatchingRegExp_fromHead = null;
@@ -918,14 +949,14 @@ var TextLinkService = {
 		if (this._URIMatchingRegExp) return;
 		var regexp = [];
 		if (this.shouldParseMultibyteCharacters) {
-			this._URIMatchingRegExp_fromHead = new RegExp(this.kURIPatternMultibyte, 'i');
-			regexp.push(this.kURIPatternMultibyte);
-			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternMultibyteRelative);
+			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPatternMultibyte, 'i');
+			regexp.push(this.URIPatternMultibyte);
+			if (this.shouldParseRelativePath) regexp.push(this.URIPatternMultibyteRelative);
 		}
 		else {
-			this._URIMatchingRegExp_fromHead = new RegExp(this.kURIPattern, 'i');
-			regexp.push(this.kURIPattern);
-			if (this.shouldParseRelativePath) regexp.push(this.kURIPatternRelative);
+			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPattern, 'i');
+			regexp.push(this.URIPattern);
+			if (this.shouldParseRelativePath) regexp.push(this.URIPatternRelative);
 		}
 		this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 	},
@@ -951,8 +982,8 @@ var TextLinkService = {
 			return;
 
 		var base = this.shouldParseMultibyteCharacters ?
-				this.kURIPatternMultibyte_part :
-				this.kURIPattern_part ;
+				this.URIPatternMultibyte_part :
+				this.URIPattern_part ;
 		this._URIPartRegExp_start = new RegExp('^('+base+')', 'i');
 		this._URIPartRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
