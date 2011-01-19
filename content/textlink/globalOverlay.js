@@ -212,7 +212,7 @@ var TextLinkService = {
 	get possibleDomainPattern()
 	{
 		if (!this._possibleDomainPattern) {
-			if (this.getPref('textlink.idn.enabled')) {
+			if (this.isIDNAvailable) {
 				let part = '[^'+
 							this.kStringprepForbiddenCharactersRange+
 							this.kIDNSeparatorRange+
@@ -230,7 +230,7 @@ var TextLinkService = {
 			}
 			if (!this.getPref('textlink.anyTLD.enabled'))
 				this._possibleDomainPattern += this.TLDPattern;
-			this._possibleDomainPattern = '\\b'+this._possibleDomainPattern+'\\b';
+//			this._possibleDomainPattern = '\\b'+this._possibleDomainPattern+'\\b';
 		}
 		return this._possibleDomainPattern;
 	},
@@ -240,7 +240,7 @@ var TextLinkService = {
  
 	get TLDPattern()
 	{
-		return (this.getPref('textlink.idn.enabled') ? '['+this.kIDNSeparatorRange+']' : '\\.' )+
+		return (this.isIDNAvailable ? '['+this.kIDNSeparatorRange+']' : '\\.' )+
 				'('+this.topLevelDomains.join('|')+')';
 	},
  
@@ -265,7 +265,7 @@ var TextLinkService = {
 	get URIPattern_part()
 	{
 		if (!this._URIPattern_part) {
-			this._URIPattern_part = this.getPref('textlink.idn.enabled') ?
+			this._URIPattern_part = this.isI18nPathAvailable ?
 				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
 		}
@@ -275,7 +275,7 @@ var TextLinkService = {
 	get URIPatternMultibyte_part()
 	{
 		if (!this._URIPatternMultibyte_part) {
-			this._URIPatternMultibyte_part = this.getPref('textlink.idn.enabled') ?
+			this._URIPatternMultibyte_part = this.isI18nPathAvailable ?
 				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
 				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
 		}
@@ -586,11 +586,21 @@ var TextLinkService = {
 	],
 	get topLevelDomains()
 	{
-		return this.getPref('textlink.idn.enabled') ?
+		return this.isIDNAvailable ?
 				this.kTopLevelDomains.concat(this.kIDNTopLevelDomains) :
 				this.kTopLevelDomains ;
 	},
   
+	get isIDNAvailable()
+	{
+		return this.getPref('network.enableIDN') && this.getPref('textlink.idn.enabled');
+	},
+ 
+	get isI18nPathAvailable()
+	{
+		return this.getPref('textlink.i18nPath.enabled');
+	},
+ 
 	invalidatePatterns : function()
 	{
 		this._schemerRegExp = null;
@@ -1099,7 +1109,7 @@ var TextLinkService = {
 
 		aURIComponent = this.removeParen(aURIComponent);
 
-		if (this.getPref('textlink.idn.enabled'))
+		if (this.isIDNAvailable || this.isI18nPathAvailable)
 			aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
@@ -2050,6 +2060,7 @@ var TextLinkService = {
 	},
 	domains : [
 		'textlink.',
+		'network.enableIDN',
 		'network.IDN.blacklist_chars'
 	],
  
