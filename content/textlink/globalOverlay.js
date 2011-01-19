@@ -213,17 +213,19 @@ var TextLinkService = {
 	{
 		if (!this._possibleDomainPattern) {
 			if (this.isIDNAvailable) {
+				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
+											this.kIDNSeparators+
+											':/\uff1a\uff0f';
 				let part = '[^'+
-							this.kStringprepForbiddenCharactersRange+
-							this.kIDNSeparatorRange+
-							'/'+
+							forbiddenCharacters+
 							(this.getPref('network.IDN.blacklist_chars') || '')
+								.replace(new RegExp('['+forbiddenCharacters+']', 'g'), '')
 								.replace(/(.)\1*/g, '$1')
 								.replace(/./g, function(aChar) {
 									return '\\u'+(('00'+aChar.charCodeAt(0).toString(16)).substr(-4, 4));
 								})+
 							']+';
-				this._possibleDomainPattern = part + '([' + this.kIDNSeparatorRange + ']' + part + ')*';
+				this._possibleDomainPattern = part + '([' + this.kIDNSeparators + ']' + part + ')*';
 			}
 			else {
 				this._possibleDomainPattern = '[0-9a-z\\.-]+';
@@ -236,11 +238,11 @@ var TextLinkService = {
 	},
 	_possibleDomainPattern : null,
  
-	kIDNSeparatorRange : '\\.\\u3002\\uff0e',
+	kIDNSeparators : '\\.\\u3002\\uff0e',
  
 	get TLDPattern()
 	{
-		return (this.isIDNAvailable ? '['+this.kIDNSeparatorRange+']' : '\\.' )+
+		return (this.isIDNAvailable ? '['+this.kIDNSeparators+']' : '\\.' )+
 				'('+this.topLevelDomains.join('|')+')';
 	},
  
@@ -250,7 +252,7 @@ var TextLinkService = {
 	// and
 	//   http://www.ietf.org/rfc/rfc3454.txt
 	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
-	kStringprepForbiddenCharactersRange : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
+	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
 	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%POSSIBLE_DOMAIN_PATTERN%(/%PART_PATTERN%)?|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
@@ -261,13 +263,16 @@ var TextLinkService = {
  
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+
+	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
+	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
  
 	get URIPattern_part()
 	{
 		if (!this._URIPattern_part) {
 			this._URIPattern_part = this.isI18nPathAvailable ?
-				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
-				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+' ;
+				'[^'+this.kStringprepForbiddenCharacters+']+' :
+				this.kURIPattern_part ;
 		}
 		return this._URIPattern_part;
 	},
@@ -276,12 +281,33 @@ var TextLinkService = {
 	{
 		if (!this._URIPatternMultibyte_part) {
 			this._URIPatternMultibyte_part = this.isI18nPathAvailable ?
-				'[^'+this.kStringprepForbiddenCharactersRange+']+' :
-				'[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+' ;
+				'[^'+this.kStringprepForbiddenCharacters+']+' :
+				this.kURIPatternMultibyte_part ;
 		}
 		return this._URIPatternMultibyte_part;
 	},
 	_URIPatternMultibyte_part : null,
+ 
+	get findURIPatternPart()
+	{
+		if (!this._findURIPatternPart) {
+			this._findURIPatternPart = this.isI18nPathAvailable || this.isIDNAvailable ?
+				'[^'+this.kStringprepForbiddenCharacters+']+' :
+				this.kURIPattern_part ;
+		}
+		return this._findURIPatternPart;
+	},
+	_findURIPatternPart : null,
+	get findURIPatternMultibytePart()
+	{
+		if (!this._findURIPatternMultibytePart) {
+			this._findURIPatternMultibytePart = this.isI18nPathAvailable || this.isIDNAvailable ?
+				'[^'+this.kStringprepForbiddenCharacters+']+' :
+				this.kURIPatternMultibyte_part ;
+		}
+		return this._findURIPatternMultibytePart;
+	},
+	_findURIPatternMultibytePart : null,
  
 	// http://www4.plala.or.jp/nomrax/TLD/ 
 	// http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
@@ -609,6 +635,9 @@ var TextLinkService = {
 		this._possibleDomainPattern = null;
 		this._topLevelDomainsRegExp = null;
 
+		this._findURIPatternPart = null;
+		this._findURIPatternMultibytePart = null;
+
 		this._URIPattern_part = null;
 		this._URIPattern = null;
 		this._URIPatternMultibyte_part = null;
@@ -616,8 +645,8 @@ var TextLinkService = {
 
 		this._URIMatchingRegExp = null;
 		this._URIMatchingRegExp_fromHead = null;
-		this._URIPartRegExp_start = null;
-		this._URIPartRegExp_end = null;
+		this._URIPartFinderRegExp_start = null;
+		this._URIPartFinderRegExp_end = null;
 	},
  
 	get URIExceptionPattern() 
@@ -992,29 +1021,29 @@ var TextLinkService = {
  
 	getURIPartFromStart : function(aString, aExcludeURIHead) 
 	{
-		this._updateURIPartRegExp();
-		var match = aString.match(this._URIPartRegExp_start);
+		this._updateURIPartFinderRegExp();
+		var match = aString.match(this._URIPartFinderRegExp_start);
 		var part = match ? match[1] : '' ;
 		return (!aExcludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
 	},
 	getURIPartFromEnd : function(aString)
 	{
-		this._updateURIPartRegExp();
-		var match = aString.match(this._URIPartRegExp_end);
+		this._updateURIPartFinderRegExp();
+		var match = aString.match(this._URIPartFinderRegExp_end);
 		return match ? match[1] : '' ;
 	},
-	_URIPartRegExp_start : null,
-	_URIPartRegExp_end : null,
-	_updateURIPartRegExp : function()
+	_URIPartFinderRegExp_start : null,
+	_URIPartFinderRegExp_end : null,
+	_updateURIPartFinderRegExp : function()
 	{
-		if (this._URIPartRegExp_start && this._URIPartRegExp_end)
+		if (this._URIPartFinderRegExp_start && this._URIPartFinderRegExp_end)
 			return;
 
 		var base = this.shouldParseMultibyteCharacters ?
-				this.URIPatternMultibyte_part :
-				this.URIPattern_part ;
-		this._URIPartRegExp_start = new RegExp('^('+base+')', 'i');
-		this._URIPartRegExp_end   = new RegExp('('+base+')$', 'i');
+				this.findURIPatternMultibytePart :
+				this.findURIPatternPart ;
+		this._URIPartFinderRegExp_start = new RegExp('^('+base+')', 'i');
+		this._URIPartFinderRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
  
 	hasLoadableSchemer : function(aURI) 
