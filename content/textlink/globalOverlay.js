@@ -1947,6 +1947,7 @@ var TextLinkService = {
 				return;
 
 			case 'textlink.idn.enabled':
+			case 'network.IDN.blacklist_chars':
 				this.invalidatePatterns();
 				return;
 
@@ -1997,7 +1998,10 @@ var TextLinkService = {
 			delete this.actions[key];
 		}
 	},
-	domain : 'textlink.',
+	domains : [
+		'textlink.',
+		'network.IDN.blacklist_chars'
+	],
  
 	buildTooltip : function(aEvent) 
 	{
