@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2009
+   - Portions created by the Initial Developer are Copyright (C) 2004-2011
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -130,6 +130,8 @@
 <!ENTITY textlink.relative.enabled    "相対パスも認識する（非推奨）">
 <!ENTITY textlink.multibyte.enabled   "全角英数文字も認識する">
 <!ENTITY textlink.multiline.enabled   "改行されたURIも認識する（非推奨）">
+<!ENTITY textlink.idn.enabled         "国際化ドメイン（IDN）も認識する">
+<!ENTITY textlink.i18nPath.enabled    "非ASCII文字のパスも認識する">
 
 <!ENTITY textlink.find_click_point.strict        "クリック位置の認識方法">
 <!ENTITY textlink.find_click_point.strict.strict "厳密に認識する（URIを開けない場合があります）">

@@ -128,6 +128,8 @@
 <!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Çoklu-bayt karakterleri ayrıştır">
 <!ENTITY textlink.multiline.enabled   "Birden çok satıra bölünmüş URL'leri ayrıştır (Önerilmez)">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">
 <!ENTITY textlink.find_click_point.strict.strict "Sıkı (bazen URL'leri açmakta başarısız olur)">

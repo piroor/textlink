@@ -387,6 +387,7 @@
 			<tabpanel orient="vertical">
 				<hbox align="center">
 					<label value="&textlink.trigger.mouse_before;"
+
 						control="textlink.actions.3.trigger.mouse-menulist"/>
 					<menulist id="textlink.actions.3.trigger.mouse-menulist"
 						preference="textlink.actions.3.trigger.mouse">
@@ -638,6 +639,12 @@
 		<preference id="textlink.multibyte.enabled"
 			name="textlink.multibyte.enabled"
 			type="bool"/>
+		<preference id="textlink.idn.enabled"
+			name="textlink.idn.enabled"
+			type="bool"/>
+		<preference id="textlink.i18nPath.enabled"
+			name="textlink.i18nPath.enabled"
+			type="bool"/>
 		<preference id="textlink.find_click_point.strict"
 			name="textlink.find_click_point.strict"
 			type="bool"/>
@@ -684,6 +691,12 @@
 		<checkbox id="textlink.multibyte.enabled-check"
 			label="&textlink.multibyte.enabled;"
 			preference="textlink.multibyte.enabled"/>
+		<checkbox id="textlink.idn.enabled-check"
+			label="&textlink.idn.enabled;"
+			preference="textlink.idn.enabled"/>
+		<checkbox id="textlink.idn.enabled-check"
+			label="&textlink.i18nPath.enabled;"
+			preference="textlink.i18nPath.enabled"/>
 
 	</groupbox>
 

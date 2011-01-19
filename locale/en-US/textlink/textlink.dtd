@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is SHIMODA Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2009
+   - Portions created by the Initial Developer are Copyright (C) 2004-2011
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
@@ -128,6 +128,8 @@
 <!ENTITY textlink.relative.enabled    "Parse relative paths (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Parse multi-byte characters">
 <!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Policy of detecting clicked points">
 <!ENTITY textlink.find_click_point.strict.strict "Strict (sometimes fails to load URIs)">

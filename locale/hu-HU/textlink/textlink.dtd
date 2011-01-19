@@ -128,6 +128,8 @@
 <!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása (nem ajánlott)">
 <!ENTITY textlink.multibyte.enabled   "Összetett karakterek szétválasztása">
 <!ENTITY textlink.multiline.enabled   "Webcím szétválasztása több sorba (nem ajánlott)">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "A felismerés módja">
 <!ENTITY textlink.find_click_point.strict.strict "Szigorú (néha nem sikerül beolvasni a weboldalt)">
