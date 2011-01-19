@@ -229,11 +229,8 @@ var TextLinkService = {
 	{
 		var TLD = this.topLevelDomains;
 		if (aMultibyte) {
-			TLD = TLD.concat(TLD.map(this.convertHalfWidthToFullWidth, this))
-					.sort()
-					.join('\n')
-					.replace(/^(.+)$\n(\1\n)+/gm, '$1\n')
-					.split('\n');
+			TLD = this.cleanUpArray(TLD.concat(TLD.map(this.convertHalfWidthToFullWidth, this)))
+					.reverse(); // this is required to match "com" instead of "co".
 		}
 		return (this.isIDNAvailable ?
 					'['+this.kIDNDomainSeparators+']' :
@@ -317,7 +314,8 @@ var TextLinkService = {
 				];
 			if (this.isIDNAvailable)
 				TLD .push(this.getPref('textlink.IDN_TLD'));
-			this._topLevelDomains = TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/);
+			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
+										.reverse(); // this is required to match "com" instead of "co".
 		}
 		return this._topLevelDomains;
 	},
@@ -580,6 +578,15 @@ var TextLinkService = {
 			.classes['@mozilla.org/widget/clipboardhelper;1']
 			.getService(Components.interfaces.nsIClipboardHelper)
 			.copyString(aString);
+	},
+ 
+	cleanUpArray : function(aArray) 
+	{
+		return aArray.slice(0)
+					.sort()
+					.join('\n')
+					.replace(/^(.+)$\n(\1\n)+/gm, '$1\n')
+					.split('\n');
 	},
   
 // string operations 
