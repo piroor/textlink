@@ -8,7 +8,6 @@ var TextLinkService = {
 	contextItemCopy     : true,
 
 	acceptMultilineURI : false,
-	canUseDocumentEncoder : true,
 
 	get schemer()
 	{
@@ -506,59 +505,6 @@ var TextLinkService = {
 	getTextContentFromRange : function(aRange) 
 	{
 		var encoder = this._textEncoder;
-		if (encoder && this.canUseDocumentEncoder) { // Firefox 3 or later
-			var result = this._getTextContentFromRange(aRange, true);
-			if (result) {
-				return result;
-			}
-		}
-		try {
-			var range = aRange.cloneRange();
-			range.collapse(true);
-			var nodes = this.evaluateXPath(
-					'following::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
-					'following::*[local-name()="br" or local-name()="BR"] | ' +
-					'descendant-or-self::*['+this.kIGNORE_NODE_CONDITION+'] | ' +
-					'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
-					aRange.startContainer
-				);
-			var node;
-			var value;
-			var result = [];
-			for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
-			{
-				node = nodes.snapshotItem(i);
-
-				if (aRange.comparePoint(node, node.textContent.length) < 0) {
-					continue;
-				}
-				else if (aRange.comparePoint(node, 0) > 0) {
-					break;
-				}
-
-				range.setEndBefore(node);
-				result.push(this._getTextContentFromRange(range));
-
-				if (node.localName.toLowerCase() == 'br') {
-					result.push('\n');
-				}
-
-				range.selectNode(node);
-				range.collapse(false);
-			}
-			range.setEnd(aRange.endContainer, aRange.endOffset);
-			result.push(this._getTextContentFromRange(range, true));
-			range.detach();
-			return result.join('');
-		}
-		catch(e) {
-		}
-		// fallback
-		return aRange.toString();
-	},
-	_getTextContentFromRange : function(aRange, aFinal)
-	{
-		var encoder = this._textEncoder;
 		if (encoder) {
 			try {
 				encoder.init(
@@ -567,15 +513,13 @@ var TextLinkService = {
 					encoder.OutputBodyOnly | encoder.OutputLFLineBreak
 				);
 				encoder.setRange(aRange);
-				var result = encoder.encodeToString();
-				if (aFinal) {
-					encoder.init(
-						document,
-						'text/plain',
-						encoder.OutputBodyOnly
-					);
-					encoder.setRange(null);
-				}
+				let result = encoder.encodeToString();
+				encoder.init(
+					document,
+					'text/plain',
+					encoder.OutputBodyOnly
+				);
+				encoder.setRange(null);
 				return result;
 			}
 			catch(e) {
@@ -585,14 +529,9 @@ var TextLinkService = {
 	},
 	get _textEncoder()
 	{
-		if (this.__textEncoder === void(0)) {
-			try {
-				this.__textEncoder = Components.classes['@mozilla.org/layout/documentEncoder;1?type=text/plain']
-										.createInstance(Components.interfaces.nsIDocumentEncoder);
-			}
-			catch(e) {
-				this.__textEncoder = null;
-			}
+		if (!this.__textEncoder) {
+			this.__textEncoder = Components.classes['@mozilla.org/layout/documentEncoder;1?type=text/plain']
+									.createInstance(Components.interfaces.nsIDocumentEncoder);
 		}
 		return this.__textEncoder;
 	},
@@ -1980,13 +1919,7 @@ var TextLinkService = {
 			uris.length > 1 &&
 			(aAction == this.ACTION_OPEN_IN_TAB ||
 			aAction == this.ACTION_OPEN_IN_BACKGROUND_TAB) &&
-			(
-				('BookmarksCommand' in window && '_confirmOpenTabs' in BookmarksCommand) ? // Firefox 2.0
-					!BookmarksCommand._confirmOpenTabs(uris.length) :
-				('PlacesController' in window) ? // Firefox 3
-					!PlacesController.prototype._confirmOpenTabs(uris.length) :
-					false
-			)
+			!PlacesController.prototype._confirmOpenTabs(uris.length)
 			) {
 			return;
 		}
