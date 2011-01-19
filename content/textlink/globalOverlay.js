@@ -210,13 +210,21 @@ var TextLinkService = {
 	},
 	_kDomainPattern : null,
 
-	// Forbidden characters in IDN are defined by RFC 3491.
-	//   http://www.ietf.org/rfc/rfc3491.txt
-	//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
-	// and
-	//   http://www.ietf.org/rfc/rfc3454.txt
-	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
-	kStringprepAllowedCharacterPattern : '[^\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF]',
+	kStringprepAllowedCharacterPattern : [
+		'[^',
+		// Forbidden characters in IDN are defined by RFC 3491.
+		//   http://www.ietf.org/rfc/rfc3491.txt
+		//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
+		// and
+		//   http://www.ietf.org/rfc/rfc3454.txt
+		//   http://www.jdna.jp/survey/rfc/rfc3454j.html
+		'\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
+		// half-width space and full-width space
+		// (they are allowed by the RFC but I ignore them,
+		// because I cannot detect the range of the IRI if it includes spaces.)
+		' \u3000\r\n\t',
+		']'
+	].join(''),
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
 	kURIPattern_base : '\\(?(%SCHEMER_PATTERN%(//)?%PART_PATTERN%|%DOMAIN_PATTERN%(/%PART_PATTERN%)?)', 
