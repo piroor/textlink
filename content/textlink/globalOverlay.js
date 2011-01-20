@@ -715,18 +715,9 @@ var TextLinkService = {
  
 	hasLoadableSchemer : function(aURI) 
 	{
-		if (!this._schemerRegExp) {
-			var schemers = this.schemers;
-			var colon = ':';
-			if (this.shouldParseMultibyteCharacters) {
-				schemers = schemers.map(function(aSchemer) {
-						return aSchemer+'|'+this.convertHalfWidthToFullWidth(aSchemer);
-					}, this);
-				colon = '[:\uff1a]';
-			}
-			this._schemerRegExp = new RegExp('^('+this.schemers.join('|')+')'+colon, 'i');
-		}
-		return this._schemerRegExp.test(aURI);
+		if (!this._schemerRegExp)
+			this._schemerRegExp = new RegExp('^('+this.schemers.join('|')+'):', 'i');
+		return this._schemerRegExp.test(this.convertFullWidthToHalfWidth(aURI));
 	},
 	_schemerRegExp : null,
  

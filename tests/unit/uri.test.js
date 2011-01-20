@@ -287,3 +287,48 @@ function test_removeSchemer(aParameter)
 {
 	assert.equals(aParameter.removed, sv.removeSchemer(aParameter.input));
 }
+
+test_isHeadOfNewURI.parameters = {
+	URI                 : { expected : true, string : 'http://www.example.com' },
+	URIRoot             : { expected : true, string : 'http://www.example.com/' },
+	URIPath             : { expected : true, string : 'http://www.example.com/path/to/file' },
+	URIFullWidth        : { expected : true, string : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ' },
+	URIRootFullWidth    : { expected : true, string : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／' },
+	URIPathFullWidth    : { expected : true, string : 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／ｐａｔｈ／ｔｏ／ｆｉｌｅ' },
+	domain              : { expected : false, string : 'www.example.com' },
+	domainRoot          : { expected : false, string : 'www.example.com/' },
+	domainPath          : { expected : false, string : 'www.example.com/path/to/file' },
+	domainFullWidth     : { expected : false, string : 'ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ' },
+	domainRootFullWidth : { expected : false, string : 'ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／' },
+	domainPathFullWidth : { expected : false, string : 'ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／ｐａｔｈ／ｔｏ／ｆｉｌｅ' },
+	IRI                 : { expected : true, string : 'http://荒川智則.jp' },
+	IRIRoot             : { expected : true, string : 'http://荒川智則.jp/' },
+	IRIPath             : { expected : true, string : 'http://荒川智則.jp/path/to/file' },
+	IRIFullWidth        : { expected : true, string : 'ｈｔｔｐ：／／荒川智則。jp' },
+	IRIRootFullWidth    : { expected : true, string : 'ｈｔｔｐ：／／荒川智則。jp／' },
+	IRIPathFullWidth    : { expected : true, string : 'ｈｔｔｐ：／／荒川智則。jp／ｐａｔｈ／ｔｏ／ｆｉｌｅ' },
+	IDN                 : { expected : false, string : '荒川智則.jp' },
+	IDNRoot             : { expected : false, string : '荒川智則.jp/' },
+	IDNPath             : { expected : false, string : '荒川智則.jp/path/to/file' },
+	IDNFullWidth        : { expected : false, string : '荒川智則。jp' },
+	IDNRootFullWidth    : { expected : false, string : '荒川智則。jp／' },
+	IDNPathFullWidth    : { expected : false, string : '荒川智則。jp／ｐａｔｈ／ｔｏ／ｆｉｌｅ' },
+	invalidDomain       : { expected : false, string : 'www.example.c/' },
+	path                : { expected : false, string : '/path/to/file/' }
+};
+function test_isHeadOfNewURI(aParameter)
+{
+	if (aParameter.expected)
+		assert.isTrue(sv.isHeadOfNewURI(aParameter.string), aParameter.string);
+	else
+		assert.isFalse(sv.isHeadOfNewURI(aParameter.string), aParameter.string);
+}
+
+test_hasLoadableSchemer.parameters = test_isHeadOfNewURI.parameters;
+function test_hasLoadableSchemer(aParameter)
+{
+	if (aParameter.expected)
+		assert.isTrue(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+	else
+		assert.isFalse(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+}
