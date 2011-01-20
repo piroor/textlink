@@ -16,15 +16,17 @@ var namespace = {
 			return utils.gBrowser;
 		}
 	};
-Components.utils.import(baseURL+'../../modules/prefs.js', namespace);
-Components.utils.import(baseURL+'../../modules/utils.js', namespace);
+utils.import(baseURL+'../../modules/prefs.js', namespace);
+var moduleNS = utils.import(baseURL+'../../modules/utils.js', namespace);
 
 var sv;
 
 function getNewService()
 {
-	var obj = {};
-	obj.__proto__ = namespace.TextLinkUtils;
+	var obj = moduleNS.TextLinkUtils;
+	obj.__defineGetter__('browserWindow', function() {
+		return utils.gBrowser.ownerDocument.defaultView;
+	});
 
 	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');
 	for (var i in prefs)
