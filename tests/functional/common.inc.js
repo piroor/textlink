@@ -9,6 +9,7 @@ function commonSetUp(aPath)
 {
 	utils.loadPrefs('../../defaults/preferences/textlink.js');
 	utils.setPref('browser.tabs.warnOnClose', false);
+	utils.setPref('browser.tabs.warnOnOpen', false);
 	utils.setPref('intl.accept_languages', 'ja,en-us,en');
 	utils.setPref('intl.charset.detector', 'ja_parallel_state_machine');
 

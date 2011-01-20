@@ -9,14 +9,20 @@ Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次�
 この段落の内容は、全角英数文字の解釈を有効にしていないと辿れません。このサイトのURIは「ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／」ですが、「ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／～ｐｉｒｏ／」でもアクセスすることができます。
 「ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／〜ｐｉｒｏ／ｅｎｔｒａｎｃｅ／」別の字形の例。
 
-スキーマ部分を省略した場合の読み込みテスト。 www.google.com、www.google.ca、addons.mozilla.org、などなど。
-スキーマ部分を省略しない場合のテスト。 http://www.google.com、www.google.ca、addons.mozilla.org、などなど。
+スキーム部分を省略した場合の読み込みテスト。 www.google.com、www.google.ca、addons.mozilla.org、などなど。
+スキーム部分を省略しない場合のテスト。 http://www.google.com、www.google.ca、addons.mozilla.org、などなど。
 
 クエリ文字列を含むURIの読み込みテスト。 GoogleでFirefoxを検索した結果のページはhttp://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8でアクセスできます。
 
 URIの後に改行と半角英数字が連続する場合のテスト。 ...
 mozilla.jp/
 Mozilla Japanのサイト。
+
+国際化ドメインのテスト。
+荒川智則.jp というドメインがあります。スキームを付けるとhttp://荒川智則.jp/#foobar となります。
+サブドメインに何を付けてもWikiLeaksに飛びます。
+例：http://雪、無音、段ボール。荒川智則.jp/
+この例では「。」は正規化されて半角ピリオド（.）と同じと見なされます。
 
 http://piro.sakura.ne.jp/latest/
 http://piro.sakura.ne.jp/latest/blosxom/mozilla/

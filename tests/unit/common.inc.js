@@ -25,6 +25,13 @@ function getNewService()
 		obj.observe(null, 'nsPref:changed', i);
 	}
 
+	obj.relativePathEnabled = false;
+	obj.multibyteEnabled = true;
+	obj.IDNEnabled = true;
+	obj.i18nPathEnabled = false;
+	obj.multilineURIEnabled = false;
+	obj.strict = true;
+
 	return obj;
 }
 

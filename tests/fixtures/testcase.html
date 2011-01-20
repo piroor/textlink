@@ -37,6 +37,10 @@ http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/
 ttp://piro.sakura.ne.jp/latest/blosxom/webtech/
 ttp://piro.sakura.ne.jp/xul/
 ttp://piro.sakura.ne.jp/xul/tips/
+http://荒川智則.jp/
+http://雪、無音、段ボール。荒川智則.jp/
+ttp://荒川智則.jp/
+ttp://雪、無音、段ボール。荒川智則.jp/
 </p>
 <p id="paren">括弧と組み合わせた場合、色々問題が起こることもあります。http://piro.sakura.ne.jp/(Piroのサイト)という形式の場合……</p>
 <p id="split">部分的な強調などでテキストノードが分割されている場合でも、正しく処理できるようになりました。
@@ -52,14 +56,21 @@ update.mozilla.orgから多数の拡張（プラグインのようなもの）�
 <p id="fullwidth">この段落の内容は、全角英数文字の解釈を有効にしていないと辿れません。
 このサイトのURIは「ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／&#xff5e;ｐｉｒｏ／」ですが、「ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／&#xff5e;ｐｉｒｏ／」でもアクセスすることができます。
 <br />「ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／&#x301c;ｐｉｒｏ／ｅｎｔｒａｎｃｅ／」別の字形の例。</p>
-<p id="prefix">プレフィクスが付いたURI:http://www.example.com/（「URI:http:」というスキーマとして誤認する可能性）
+<p id="prefix">プレフィクスが付いたURI:http://www.example.com/（「URI:http:」というスキームとして誤認する可能性）
 （あと、「http://www.example.com/（」というURIとして認識されてしまう可能性も……）</p>
-<p id="domain">スキーマ部分を省略した場合の読み込みテスト。
+<p id="domain">スキーム部分を省略した場合の読み込みテスト。
 www.google.com、www.google.ca、addons.mozilla.org、などなど。</p>
+<p id="domainWithScheme">スキーム部分を省略しない場合のテスト。
+http://www.google.com、www.google.ca、addons.mozilla.org、などなど。</p>
 <p id="query">クエリ文字列を含むURIの読み込みテスト。
 GoogleでFirefoxを検索した結果のページはhttp://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8でアクセスできます。</p>
 <p id="br">URIの後に改行と半角英数字が連続する場合のテスト。
 ...<br id="br1" />mozilla.jp/<br id="br2" />Mozilla Japanのサイト。</p>
+<p id="idn">国際化ドメインのテスト。
+荒川智則.jp というドメインがあります。スキームを付けるとhttp://荒川智則.jp/#foobar となります。
+サブドメインに何を付けてもWikiLeaksに飛びます。
+例：http://雪、無音、段ボール。荒川智則.jp/
+この例では「。」は正規化されて半角ピリオド（.）と同じと見なされます。</p>
 
 <pre id="pre">
 
@@ -70,6 +81,12 @@ http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/
 ttp://piro.sakura.ne.jp/latest/blosxom/webtech/
 ttp://piro.sakura.ne.jp/xul/
 ttp://piro.sakura.ne.jp/xul/tips/
+
+http://荒川智則.jp/
+http://雪、無音、段ボール。荒川智則.jp/
+
+ttp://荒川智則.jp/
+ttp://雪、無音、段ボール。荒川智則.jp/
 
 </pre>
 
@@ -95,6 +112,7 @@ ttp://piro.sakura.ne.jp/xul/tips/
 英語：http://getfirefox.com/
 日本語：http://mozilla.jp/product/firefox/
 next line
+国際化ドメイン：http://荒川智則.jp/#textarea
 </textarea>
 
 <table id="table" border="1" summary="表">
@@ -107,6 +125,10 @@ next line
 	id="table-cell4">ttp://piro.sakura.ne.jp/latest/blosxom/webtech/</td><td
 	id="table-cell5">ttp://piro.sakura.ne.jp/xul/</td><td
 	id="table-cell6">ttp://piro.sakura.ne.jp/xul/tips/</td></tr>
+<tr><td
+	id="table-cell7">http://荒川智則.jp/</td><td
+	id="table-cell8">http://雪、無音、段ボール。荒川智則.jp/</td><td
+	id="table-cell9">ttp://荒川智則.jp/</td></tr>
 </tbody>
 </table>
 <p><span

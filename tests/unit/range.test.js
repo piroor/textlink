@@ -370,19 +370,27 @@ function test_getURIRangesFromRange()
 	range = sv.getFindRange(selection.getRangeAt(0));
 	ranges = sv.getURIRangesFromRange(range);
 	assert.equals(
-		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		[
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/',
+			'http://荒川智則.jp/#textarea'
+		],
 		ranges.map(rangesToString)
 	);
 	assert.equals(
-		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		[
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/',
+			'http://荒川智則.jp/#textarea'
+		],
 		ranges.map(rangesToURI)
 	);
 	ranges = sv.getURIRangesFromRange(range, sv.FIND_FIRST);
 	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToString));
 	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToURI));
 	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
-	assert.equals(['http://mozilla.jp/product/firefox/'], ranges.map(rangesToString));
-	assert.equals(['http://mozilla.jp/product/firefox/'], ranges.map(rangesToURI));
+	assert.equals(['http://荒川智則.jp/#textarea'], ranges.map(rangesToString));
+	assert.equals(['http://荒川智則.jp/#textarea'], ranges.map(rangesToURI));
 
 	range.detach();
 }
@@ -426,6 +434,9 @@ function test_getURIRangesFromRange_plainText()
 			'http://www.google.com、www.google.ca、addons.mozilla.org',
 			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
 			'mozilla.jp/',
+			'荒川智則.jp',
+			'http://荒川智則.jp/#foobar',
+			'http://雪、無音、段ボール。荒川智則.jp/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
@@ -458,6 +469,9 @@ function test_getURIRangesFromRange_plainText()
 			'http://www.google.com、www.google.ca、addons.mozilla.org',
 			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
 			'http://mozilla.jp/',
+			'http://荒川智則.jp',
+			'http://荒川智則.jp/#foobar',
+			'http://雪、無音、段ボール。荒川智則.jp/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
@@ -517,7 +531,9 @@ function test_getSelectionURIRanges()
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
 			'ttp://piro.sakura.ne.jp/latest/blosxom/webtech/',
 			'ttp://piro.sakura.ne.jp/xul/',
-			'ttp://piro.sakura.ne.jp/xul/tips/'
+			'ttp://piro.sakura.ne.jp/xul/tips/',
+			'http://荒川智則.jp/',
+			'http://雪、無音、段ボール。荒川智則.jp/'
 		],
 		ranges.map(function(aRange) {
 			return aRange.range.toString();
@@ -538,7 +554,9 @@ function test_getSelectionURIRanges()
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
 			'http://piro.sakura.ne.jp/latest/blosxom/webtech/',
 			'http://piro.sakura.ne.jp/xul/',
-			'http://piro.sakura.ne.jp/xul/tips/'
+			'http://piro.sakura.ne.jp/xul/tips/',
+			'http://荒川智則.jp/',
+			'http://雪、無音、段ボール。荒川智則.jp/'
 		],
 		ranges.map(function(aRange) {
 			return aRange.uri;
@@ -574,13 +592,21 @@ function test_getSelectionURIRanges()
 	assert.equals($('textarea').value.replace(/\n/g, ''), range.toString());
 	ranges = sv.getSelectionURIRanges($('textarea'));
 	assert.equals(
-		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		[
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/',
+			'http://荒川智則.jp/#textarea'
+		],
 		ranges.map(function(aRange) {
 			return aRange.range.toString();
 		})
 	);
 	assert.equals(
-		['http://getfirefox.com/', 'http://mozilla.jp/product/firefox/'],
+		[
+			'http://getfirefox.com/',
+			'http://mozilla.jp/product/firefox/',
+			'http://荒川智則.jp/#textarea'
+		],
 		ranges.map(function(aRange) {
 			return aRange.uri;
 		})
