@@ -242,7 +242,7 @@ var TextLinkService = {
 		var TLDPattern = aMultibyte ?
 						'(?:' +
 						[halfWidthTLDPattern]
-							.concat(TLD.map(this.convertHalfWidthToFullWidth, this).reverse())
+							.concat(TLD.map(this.convertHalfWidthToFullWidth, this))
 							.join('|') +
 						')' :
 						halfWidthTLDPattern ;
