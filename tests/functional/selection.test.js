@@ -52,7 +52,9 @@ var urisInRange3 = [
 		'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
 		'http://piro.sakura.ne.jp/latest/blosxom/webtech/',
 		'http://piro.sakura.ne.jp/xul/',
-		'http://piro.sakura.ne.jp/xul/tips/'
+		'http://piro.sakura.ne.jp/xul/tips/',
+		'http://荒川智則.jp/',
+		'http://雪、無音、段ボール。荒川智則.jp/'
 	];
 var rangesInRange3 = [
 		'http://piro.sakura.ne.jp/latest/',
@@ -60,7 +62,9 @@ var rangesInRange3 = [
 		'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
 		'ttp://piro.sakura.ne.jp/latest/blosxom/webtech/',
 		'ttp://piro.sakura.ne.jp/xul/',
-		'ttp://piro.sakura.ne.jp/xul/tips/'
+		'ttp://piro.sakura.ne.jp/xul/tips/',
+		'http://荒川智則.jp/',
+		'http://雪、無音、段ボール。荒川智則.jp/'
 	];
 
 var uris = urisInRange1.concat(urisInRange2, urisInRange3);
