@@ -15,7 +15,7 @@ var TextLinkMessengerService = {
 				).booleanValue;
 	},
  
-	get acceptMultilineURI()
+	get multilineURIEnabled()
 	{
 		return this.getPref('textlink.multiline.enabled') &&
 			this.isPlainTextMessage;

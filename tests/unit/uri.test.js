@@ -33,7 +33,7 @@ function test_matchURIRegExp()
 	function assert_matchURIRegExp(aFullWidth, aRelative)
 	{
 		sv.shouldParseMultibyteCharacters = aFullWidth;
-		sv.shouldParseRelativePath = aRelative;
+		sv.relativePathEnabled = aRelative;
 
 		assertURIMatch(noURI, null, false);
 		assertURIMatch(halfWidth_absolute_URI, halfWidth_absolute_URI, true);
@@ -164,7 +164,7 @@ function test_fixupSchemer(aParameter)
 test_sanitizeURIString.parameters = utils.readParametersFromTSV('uri.sanitizeURIString.patterns.tsv');
 function test_sanitizeURIString(aParameter)
 {
-	sv.shouldParseRelativePath = aParameter.relative;
+	sv.relativePathEnabled = aParameter.relative;
 	assert.equals(aParameter.sanitized, sv.sanitizeURIString(aParameter.input));
 }
 
@@ -228,7 +228,7 @@ var parenPatterns = [];
 test_sanitizeURIString_paren.parameters = parenPatterns;
 function test_sanitizeURIString_paren(aParameter)
 {
-	sv.shouldParseRelativePath = aParameter.relative;
+	sv.relativePathEnabled = aParameter.relative;
 	assert.equals(aParameter.sanitized, sv.sanitizeURIString(aParameter.input));
 }
 

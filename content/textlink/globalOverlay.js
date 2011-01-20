@@ -7,7 +7,7 @@ var TextLinkService = {
 	contextItemTab      : true,
 	contextItemCopy     : true,
 
-	acceptMultilineURI : false,
+	multilineURIEnabled : false,
 
 	get schemer()
 	{
@@ -65,29 +65,53 @@ var TextLinkService = {
 	},
 	_schemerFixupTable : '',
 
-	get shouldParseRelativePath()
+	get relativePathEnabled()
 	{
-		return this._shouldParseRelativePath;
+		return this._relativePathEnabled;
 	},
-	set shouldParseRelativePath(val)
+	set relativePathEnabled(val)
 	{
-		this._shouldParseRelativePath = val;
+		this._relativePathEnabled = val;
 		this.invalidatePatterns();
 		return val;
 	},
-	_shouldParseRelativePath : false,
+	_relativePathEnabled : false,
 
-	get shouldParseMultibyteCharacters()
+	get multibyteEnabled()
 	{
-		return this._shouldParseMultibyteCharacters;
+		return this._multibyteEnabled;
 	},
-	set shouldParseMultibyteCharacters(val)
+	set multibyteEnabled(val)
 	{
-		this._shouldParseMultibyteCharacters = val;
+		this._multibyteEnabled = val;
 		this.invalidatePatterns();
 		return val;
 	},
-	_shouldParseMultibyteCharacters : true,
+	_multibyteEnabled : true,
+
+	get IDNEnabled()
+	{
+		return this._IDNEnabled;
+	},
+	set IDNEnabled(val)
+	{
+		this._IDNEnabled = val;
+		this.invalidatePatterns();
+		return val;
+	},
+	_IDNEnabled : true,
+
+	get i18nPathEnabled()
+	{
+		return this._i18nPathEnabled;
+	},
+	set i18nPathEnabled(val)
+	{
+		this._i18nPathEnabled = val;
+		this.invalidatePatterns();
+		return val;
+	},
+	_i18nPathEnabled : true,
  
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
@@ -196,7 +220,7 @@ var TextLinkService = {
 		var multibyte = aOptionsFlag & this.kDOMAIN_MULTIBYTE;
 		var pattern = this._domainPatterns[aOptionsFlag];
 		if (!pattern) {
-			if (this.isIDNAvailable) {
+			if (this.IDNEnabled) {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
 											':/\uff1a\uff0f';
@@ -246,7 +270,7 @@ var TextLinkService = {
 							.join('|') +
 						')' :
 						halfWidthTLDPattern ;
-		return (this.isIDNAvailable ?
+		return (this.IDNEnabled ?
 					'['+this.kIDNDomainSeparators+']' :
 				aMultibyte ?
 					'['+this.kMultibyteDomainSeparators+']' :
@@ -279,7 +303,7 @@ var TextLinkService = {
 	get URIPattern_part()
 	{
 		if (!this._URIPattern_part) {
-			this._URIPattern_part = this.isI18nPathAvailable ?
+			this._URIPattern_part = this.i18nPathEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPattern_part ;
 		}
@@ -289,7 +313,7 @@ var TextLinkService = {
 	get URIPatternMultibyte_part()
 	{
 		if (!this._URIPatternMultibyte_part) {
-			this._URIPatternMultibyte_part = this.isI18nPathAvailable ?
+			this._URIPatternMultibyte_part = this.i18nPathEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPatternMultibyte_part ;
 		}
@@ -300,7 +324,7 @@ var TextLinkService = {
 	get findURIPatternPart()
 	{
 		if (!this._findURIPatternPart) {
-			this._findURIPatternPart = this.isI18nPathAvailable || this.isIDNAvailable ?
+			this._findURIPatternPart = this.i18nPathEnabled || this.IDNEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPattern_part ;
 		}
@@ -310,7 +334,7 @@ var TextLinkService = {
 	get findURIPatternMultibytePart()
 	{
 		if (!this._findURIPatternMultibytePart) {
-			this._findURIPatternMultibytePart = this.isI18nPathAvailable || this.isIDNAvailable ?
+			this._findURIPatternMultibytePart = this.i18nPathEnabled || this.IDNEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPatternMultibyte_part ;
 		}
@@ -326,7 +350,7 @@ var TextLinkService = {
 					this.getPref('textlink.ccTLD'),
 					this.getPref('textlink.extraTLD')
 				];
-			if (this.isIDNAvailable)
+			if (this.IDNEnabled)
 				TLD .push(this.getPref('textlink.IDN_TLD'));
 			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
 										.reverse(); // this is required to match "com" instead of "co".
@@ -335,16 +359,6 @@ var TextLinkService = {
 	},
 	_topLevelDomains : null,
   
-	get isIDNAvailable()
-	{
-		return this.getPref('network.enableIDN') && this.getPref('textlink.idn.enabled');
-	},
- 
-	get isI18nPathAvailable()
-	{
-		return this.getPref('textlink.i18nPath.enabled');
-	},
- 
 	invalidatePatterns : function()
 	{
 		this._schemerRegExp = null;
@@ -673,15 +687,15 @@ var TextLinkService = {
 	{
 		if (this._URIMatchingRegExp) return;
 		var regexp = [];
-		if (this.shouldParseMultibyteCharacters) {
+		if (this.multibyteEnabled) {
 			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPatternMultibyte, 'i');
 			regexp.push(this.URIPatternMultibyte);
-			if (this.shouldParseRelativePath) regexp.push(this.URIPatternMultibyteRelative);
+			if (this.relativePathEnabled) regexp.push(this.URIPatternMultibyteRelative);
 		}
 		else {
 			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPattern, 'i');
 			regexp.push(this.URIPattern);
-			if (this.shouldParseRelativePath) regexp.push(this.URIPatternRelative);
+			if (this.relativePathEnabled) regexp.push(this.URIPatternRelative);
 		}
 		this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 	},
@@ -706,7 +720,7 @@ var TextLinkService = {
 		if (this._URIPartFinderRegExp_start && this._URIPartFinderRegExp_end)
 			return;
 
-		var base = this.shouldParseMultibyteCharacters ?
+		var base = this.multibyteEnabled ?
 				this.findURIPatternMultibytePart :
 				this.findURIPatternPart ;
 		this._URIPartFinderRegExp_start = new RegExp('^('+base+')', 'i');
@@ -740,7 +754,7 @@ var TextLinkService = {
  
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
-		if (this.shouldParseMultibyteCharacters) {
+		if (this.multibyteEnabled) {
 			aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 		}
 
@@ -751,7 +765,7 @@ var TextLinkService = {
 
 		aURIComponent = this.fixupSchemer(aURIComponent);
 
-		if (this.shouldParseRelativePath) {
+		if (this.relativePathEnabled) {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
@@ -764,7 +778,7 @@ var TextLinkService = {
 		if (!this._topLevelDomainsRegExp) {
 			this._topLevelDomainsRegExp = new RegExp('^(' + this.topLevelDomains.join('|') + ')$');
 		}
-		if (this.shouldParseRelativePath) {
+		if (this.relativePathEnabled) {
 			if (
 				(
 					aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
@@ -787,7 +801,7 @@ var TextLinkService = {
 			aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
 			aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
 			(
-				!this.shouldParseRelativePath &&
+				!this.relativePathEnabled &&
 				aURIComponent.match(/^[\.\/:](.+)$/)
 			)
 			) {
@@ -796,7 +810,7 @@ var TextLinkService = {
 
 		aURIComponent = this.removeParen(aURIComponent);
 
-		if (this.isIDNAvailable || this.isI18nPathAvailable)
+		if (this.IDNEnabled || this.i18nPathEnabled)
 			aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
@@ -1024,7 +1038,7 @@ var TextLinkService = {
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
 			let hadlWidthTerm = this.convertFullWidthToHalfWidth(aTerm);
-			if (!this.shouldParseRelativePath && this.hasSchemer(aTerm)) {
+			if (!this.relativePathEnabled && this.hasSchemer(aTerm)) {
 				let termForCheck = hadlWidthTerm;
 				while (this.hasSchemer(termForCheck))
 				{
@@ -1204,7 +1218,7 @@ var TextLinkService = {
 		var findRange = aBaseRange.cloneRange();
 
 		if (this.getEditableFromChild(findRange.startContainer)) {
-			var root = this.evaluateXPath(
+			let root = this.evaluateXPath(
 					'ancestor-or-self::node()[parent::*['+this.kINPUT_FIELD_CONDITITON+']]',
 					findRange.startContainer,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
@@ -1226,7 +1240,7 @@ var TextLinkService = {
 		var expandToBefore = aBaseRange.collapsed;
 		var expandToAfter  = aBaseRange.collapsed;
 		if (!aBaseRange.collapsed) {
-			var string = aBaseRange.toString();
+			let string = aBaseRange.toString();
 			expandToBefore = this.getURIPartFromStart(string);
 			expandToAfter  = this.getURIPartFromEnd(string);
 		}
@@ -1319,7 +1333,7 @@ var TextLinkService = {
 				expandRange.setEnd(lastNode, lastNode.textContent.length);
 				let string = expandRange.toString();
 				let delta = 0;
-				if (this.acceptMultilineURI) {
+				if (this.multilineURIEnabled) {
 					// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
 					// 強制的にRangeの開始位置を元に戻す
 					if (expandRange.startContainer.nodeType == Node.ELEMENT_NODE) {
@@ -1337,7 +1351,7 @@ var TextLinkService = {
 						delta = 0;
 					}
 				}
-				if (!this.acceptMultilineURI || string) {
+				if (!this.multilineURIEnabled || string) {
 					let part = this.getURIPartFromStart(string, headPartIsFound);
 					if (!part.length) break;
 					let partRange;
@@ -1499,7 +1513,7 @@ var TextLinkService = {
 	getFollowingURIPartRanges : function(aRange) 
 	{
 		var ranges = [];
-		if (this.acceptMultilineURI) {
+		if (this.multilineURIEnabled) {
 			this._expandURIRangeToAfter(aRange, ranges);
 		}
 		return ranges;
@@ -1690,10 +1704,18 @@ var TextLinkService = {
 				return;
 
 			case 'textlink.relative.enabled':
-				this.shouldParseRelativePath = value;
+				this.relativePathEnabled = value;
 				return;
 
 			case 'textlink.idn.enabled':
+			case 'network.enableIDN':
+				this.IDNEnabled = this.getPref('network.enableIDN') && this.getPref('textlink.idn.enabled');
+				return;
+
+			case 'textlink.i18nPath.enabled':
+				this.i18nPathEnabled = this.getPref('textlink.i18nPath.enabled');
+				return;
+
 			case 'textlink.gTLD':
 			case 'textlink.ccTLD':
 			case 'textlink.IDN_TLD':
@@ -1703,7 +1725,7 @@ var TextLinkService = {
 				return;
 
 			case 'textlink.multibyte.enabled':
-				this.shouldParseMultibyteCharacters = value;
+				this.multibyteEnabled = value;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.current':
