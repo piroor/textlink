@@ -41,19 +41,26 @@ function test_getEditableFromChild()
 function test_getSelection()
 {
 	var windowSelection = content.getSelection();
-	assert.equals(windowSelection, sv.getSelection(content));
-	assert.equals(windowSelection, sv.getSelection());
+	var rangeCollapsed = content.document.createRange();
+	rangeCollapsed.setStart($('split').firstChild, 60);
+	windowSelection.addRange(rangeCollapsed);
 
+	assert.isNotNull(windowSelection);
+	assert.equals(windowSelection.toString(), sv.getSelection(content).toString());
+	assert.equals(windowSelection.toString(), sv.getSelection().toString());
+
+	$('input').select();
 	var selection = sv.getSelection($('input'));
 	assert.isNotNull(selection);
-	assert.notEquals(windowSelection, selection);
+	assert.notEquals(windowSelection.toString(), selection.toString());
 	assert.equals(
-		selection,
+		selection.toString(),
 		$('input')
 			.QueryInterface(Ci.nsIDOMNSEditableElement)
 			.editor
 			.selectionController
 			.getSelection(Ci.nsISelectionController.SELECTION_NORMAL)
+			.toString()
 	);
 }
 
