@@ -32,7 +32,7 @@ function test_matchURIRegExp()
 
 	function assert_matchURIRegExp(aFullWidth, aRelative)
 	{
-		sv.shouldParseMultibyteCharacters = aFullWidth;
+		sv.multibyteEnabled = aFullWidth;
 		sv.relativePathEnabled = aRelative;
 
 		assertURIMatch(noURI, null, false);
