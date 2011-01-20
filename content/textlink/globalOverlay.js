@@ -111,7 +111,7 @@ var TextLinkService = {
 		this.invalidatePatterns();
 		return val;
 	},
-	_i18nPathEnabled : true,
+	_i18nPathEnabled : false,
  
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : 1,
@@ -2125,6 +2125,9 @@ var TextLinkService = {
 			textlink.find_click_point.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
+			textlink.multiline.enabled
+			textlink.idn.enabled
+			textlink.i18nPath.enabled
 			textlink.contextmenu.openTextLink.current
 			textlink.contextmenu.openTextLink.window
 			textlink.contextmenu.openTextLink.tab
