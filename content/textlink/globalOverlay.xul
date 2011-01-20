@@ -4,7 +4,6 @@
 <overlay
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-<script type="application/javascript" src="chrome://textlink/content/prefs.js"/>
 <script type="application/javascript" src="chrome://textlink/content/globalOverlay.js"/>
 <script type="application/javascript" src="chrome://textlink/content/hacks.js"/>
 <script type="application/javascript"><![CDATA[
