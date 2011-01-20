@@ -128,8 +128,7 @@ var TextLinkMessengerService = {
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
 
-		this.addPrefListener(this);
-		this.initPrefs();
+		this.contextMenu.addEventListener('popupshowing', this, false);
 
 		this.browser.addEventListener('dblclick', this, true);
 		this.browser.addEventListener('keypress', this, true);
@@ -140,7 +139,7 @@ var TextLinkMessengerService = {
 	{
 		window.removeEventListener('unload', this, false);
 
-		this.removePrefListener(this);
+		this.contextMenu.removeEventListener('popupshowing', this, false);
 
 		this.browser.removeEventListener('dblclick', this, true);
 		this.browser.removeEventListener('keypress', this, true);
