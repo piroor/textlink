@@ -49,6 +49,8 @@ pref("textlink.idn.enabled",         true);
 pref("textlink.i18nPath.enabled",    false);
 pref("textlink.part.exception",      "-+|=+|(-=)+-?|(=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(:\\d+)?");
 
+pref("textlink.idn.lazyDetection.separators", "\u3001\u3002");
+
 pref("textlink.find_click_point.strict", true);
 
 

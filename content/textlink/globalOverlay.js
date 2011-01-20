@@ -119,8 +119,12 @@ var TextLinkService = {
 					this.URIPattern_part
 				)
 				.replace(
+					/%LAZY_DOMAIN_PATTERN%/g,
+					this.getDomainPattern(this.kDOMAIN_LAZY)
+				)
+				.replace(
 					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern(false)
+					this.getDomainPattern()
 				);
 		}
 
@@ -159,8 +163,12 @@ var TextLinkService = {
 					this.URIPatternMultibyte_part
 				)
 				.replace(
+					/%LAZY_DOMAIN_PATTERN%/g,
+					this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
+				)
+				.replace(
 					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern(true)
+					this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
 				);
 		}
 
@@ -182,14 +190,18 @@ var TextLinkService = {
 	},
 	_URIPatternMultibyteRelative : null,
  
-	getDomainPattern : function(aMultibyte)
+	getDomainPattern : function(aOptionsFlag)
 	{
-		var pattern = aMultibyte ? this._domainPatternMultibyte : this._domainPattern ;
+		aOptionsFlag = aOptionsFlag || 0;
+		var multibyte = aOptionsFlag & this.kDOMAIN_MULTIBYTE;
+		var pattern = this._domainPatterns[aOptionsFlag];
 		if (!pattern) {
 			if (this.isIDNAvailable) {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
 											':/\uff1a\uff0f';
+				if (aOptionsFlag & this.kDOMAIN_LAZY)
+					forbiddenCharacters += this.getPref('textlink.idn.lazyDetection.separators');
 				let part = '[^'+
 							forbiddenCharacters+
 							(this.getPref('network.IDN.blacklist_chars') || '')
@@ -201,7 +213,7 @@ var TextLinkService = {
 							']+';
 				pattern = part + '(?:[' + this.kIDNDomainSeparators + ']' + part + ')*';
 			}
-			else if (aMultibyte) {
+			else if (multibyte) {
 				let part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
 				pattern = part + '(?:[' + this.kMultibyteDomainSeparators + ']' + part + ')*';
 			}
@@ -209,17 +221,15 @@ var TextLinkService = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			pattern += this.getTLDPattern(aMultibyte);
+			pattern += this.getTLDPattern(multibyte);
 
-			if (aMultibyte)
-				this._domainPatternMultibyte = pattern;
-			else
-				this._domainPattern = pattern;
+			this._domainPatterns[aOptionsFlag] = pattern;
 		}
 		return pattern;
 	},
-	_domainPattern : null,
-	_domainPatternMultibyte : null,
+	_domainPatterns : {},
+	kDOMAIN_MULTIBYTE : (1 << 0),
+	kDOMAIN_LAZY      : (1 << 1),
  
 	kDomainSeparators          : '\\.',
 	kMultibyteDomainSeparators : '\\.\uff0e',
@@ -228,17 +238,21 @@ var TextLinkService = {
 	getTLDPattern : function(aMultibyte)
 	{
 		var TLD = this.topLevelDomains;
-		if (aMultibyte) {
-			TLD = this.cleanUpArray(TLD.concat(TLD.map(this.convertHalfWidthToFullWidth, this)))
-					.reverse(); // this is required to match "com" instead of "co".
-		}
+		var halfWidthTLDPattern = '(?:'+TLD.join('|')+')\\b';
+		var TLDPattern = aMultibyte ?
+						'(?:' +
+						[halfWidthTLDPattern]
+							.concat(TLD.map(this.convertHalfWidthToFullWidth, this).reverse())
+							.join('|') +
+						')' :
+						halfWidthTLDPattern ;
 		return (this.isIDNAvailable ?
 					'['+this.kIDNDomainSeparators+']' :
 				aMultibyte ?
 					'['+this.kMultibyteDomainSeparators+']' :
 					this.kDomainSeparators
 				)+
-				'(?:'+TLD.join('|')+')';
+				TLDPattern;
 	},
  
 	// Forbidden characters in IDN are defined by RFC 3491.
@@ -250,10 +264,10 @@ var TextLinkService = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(?:%SCHEMER_PATTERN%(?://)?%DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPattern_base : '\\(?(?:%SCHEMER_PATTERN%(?://)?%DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LAZY_DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(?:%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '[\\(\uff08]?(?:%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LAZY_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
@@ -335,8 +349,7 @@ var TextLinkService = {
 	{
 		this._schemerRegExp = null;
 
-		this._domainPattern = null;
-		this._domainPatternMultibyte = null;
+		this._domainPatterns = {};
 		this._topLevelDomains = null;
 		this._topLevelDomainsRegExp = null;
 

@@ -10,6 +10,7 @@ Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次�
 「ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／〜ｐｉｒｏ／ｅｎｔｒａｎｃｅ／」別の字形の例。
 
 スキーマ部分を省略した場合の読み込みテスト。 www.google.com、www.google.ca、addons.mozilla.org、などなど。
+スキーマ部分を省略しない場合のテスト。 http://www.google.com、www.google.ca、addons.mozilla.org、などなど。
 
 クエリ文字列を含むURIの読み込みテスト。 GoogleでFirefoxを検索した結果のページはhttp://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8でアクセスできます。
 
