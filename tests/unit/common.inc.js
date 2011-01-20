@@ -1,9 +1,16 @@
 var namespace = {
 		window : {
 			addEventListener : function() {},
+			removeEventListener : function() {},
+			get document() {
+				return gBrowser.ownerDocument;
+			},
 			get gBrowser() {
 				return utils.gBrowser;
 			}
+		},
+		get document() {
+			return gBrowser.ownerDocument;
 		},
 		get gBrowser() {
 			return utils.gBrowser;
