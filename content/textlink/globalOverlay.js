@@ -34,10 +34,15 @@ var TextLinkService = {
 		return document.getElementById('textLinkTooltip-selectedURI-box');
 	},
  
+	get contextMenu() 
+	{
+		return document.getElementById('contentAreaContextMenu') || // Firefox
+					document.getElementById('messagePaneContext'); // Thunderbird
+	},
+ 
 	get popupNode() 
 	{
-		var popup = document.getElementById('contentAreaContextMenu') || // Firefox
-					document.getElementById('messagePaneContext'); // Thunderbird
+		var popup = this.contextMenu;
 		return popup && popup.triggerNode || document.popupNode ;
 	},
  
@@ -62,7 +67,12 @@ var TextLinkService = {
 				return;
 
 			case 'popupshowing':
-				this.buildTooltip(aEvent);
+				if (aEvent.currentTarget == this.tooltip) {
+					this.buildTooltip(aEvent);
+				}
+				else {
+					this.initContextMenu();
+				}
 				return;
 
 			case 'popuphiding':
@@ -524,15 +534,12 @@ var TextLinkService = {
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
 
+		this.contextMenu.addEventListener('popupshowing', this, false);
+
 		window.addEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
 		window.addEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
 		window.addEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
 		window.addEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
-
-		if ('nsContextMenu' in window) {
-			nsContextMenu.prototype.__textlink__initItems = nsContextMenu.prototype.initItems;
-			nsContextMenu.prototype.initItems = this.initItems;
-		}
 
 		var appcontent = document.getElementById('appcontent');
 		if (appcontent) {
@@ -552,35 +559,30 @@ var TextLinkService = {
 		aBrowser.addEventListener('keypress', this, true);
 	},
  
-	// gContextMenu.initItems 
-	initItems : function()
+	initContextMenu : function() 
 	{
-		this.__textlink__initItems();
-
-		var TLS = TextLinkService;
-
 		var uris = [];
 		var target;
 		if (
 			(
-				TLS.contextItemCurrent ||
-				TLS.contextItemWindow ||
-				TLS.contextItemTab ||
-				TLS.contextItemCopy
+				this.contextItemCurrent ||
+				this.contextItemWindow ||
+				this.contextItemTab ||
+				this.contextItemCopy
 			) &&
-			this.isTextSelected &&
-			this.isContentSelected
+			gContextMenu.isTextSelected &&
+			gContextMenu.isContentSelected
 			) {
 			try {
-				target = TLS.getEditableFromChild(TLS.popupNode);
-				var first = TLS.getFirstSelectionURIRange(target);
+				target = this.getEditableFromChild(this.popupNode);
+				var first = this.getFirstSelectionURIRange(target);
 				var found = {};
 				if (first) {
 					uris.push(first.uri);
 					first.range.detach();
 					found[first.uri] = true;
 				}
-				var last = TLS.getLastSelectionURIRange(target, false, found);
+				var last = this.getLastSelectionURIRange(target, false, found);
 				if (last) {
 					uris.push(last.uri);
 					last.range.detach();
@@ -590,14 +592,14 @@ var TextLinkService = {
 			}
 		}
 
-		this.showItem('context-openTextLink-current',
-			uris.length && TLS.contextItemCurrent);
-		this.showItem('context-openTextLink-window',
-			uris.length && TLS.contextItemWindow);
-		this.showItem('context-openTextLink-tab',
-			uris.length && TLS.contextItemTab);
-		this.showItem('context-openTextLink-copy',
-			uris.length && TLS.contextItemCopy);
+		gContextMenu.showItem('context-openTextLink-current',
+			uris.length && this.contextItemCurrent);
+		gContextMenu.showItem('context-openTextLink-window',
+			uris.length && this.contextItemWindow);
+		gContextMenu.showItem('context-openTextLink-tab',
+			uris.length && this.contextItemTab);
+		gContextMenu.showItem('context-openTextLink-copy',
+			uris.length && this.contextItemCopy);
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -619,7 +621,7 @@ var TextLinkService = {
 				'context-openTextLink-copy'
 			].forEach(function(aID) {
 				var item = this.setLabel(aID, attr, targets);
-			}, TLS);
+			}, this);
 		}
 	},
 	setLabel : function(aID, aAttr, aTargets)
@@ -638,6 +640,8 @@ var TextLinkService = {
 	destroy : function() 
 	{
 		window.removeEventListener('unload', this, false);
+
+		this.contextMenu.removeEventListener('popupshowing', this, false);
 
 		var appcontent = document.getElementById('appcontent');
 		if (appcontent) {
