@@ -1,8 +1,5 @@
 utils.include('common.inc.js');
 
-var textEncoderEnabled = '@mozilla.org/layout/documentEncoder;1?type=text/plain' in Cc &&
-						'nsIDocumentEncoder' in Ci;
-
 function setUp()
 {
 	utils.setPref('intl.accept_languages', 'ja,en-us,en');
@@ -67,27 +64,13 @@ function test_getTextContentFromRange()
 	range.setStartBefore($('hidden1'));
 	range.setEndAfter($('hidden2'));
 
-	var text = utils.readFrom('range.getTextContentFromRange.raw.txt', 'UTF-8');
-	var formattedText = utils.readFrom('range.getTextContentFromRange.formatted.txt', 'UTF-8');
-
-	if (textEncoderEnabled) {
-		assert.equals(formattedText, sv.getTextContentFromRange(range));
-	}
-	else {
-		assert.equals(text, sv.getTextContentFromRange(range));
-	}
+	var formattedText = utils.readFrom('range.getTextContentFromRange.formatted.txt', 'UTF-8').replace(/\r\n/g, '\n');
+	assert.equals(formattedText, sv.getTextContentFromRange(range).replace(/\r\n/g, '\n'));
 
 
-	text = utils.readFrom('range.getTextContentFromRange.URIraw.txt', 'UTF-8');
-	formattedText = utils.readFrom('range.getTextContentFromRange.URIformatted.txt', 'UTF-8');
-
+	formattedText = utils.readFrom('range.getTextContentFromRange.URIformatted.txt', 'UTF-8').replace(/\r\n/g, '\n');
 	range.selectNodeContents($('br'));
-	if (textEncoderEnabled) {
-		assert.equals(formattedText, sv.getTextContentFromRange(range));
-	}
-	else {
-		assert.equals(text, sv.getTextContentFromRange(range));
-	}
+	assert.equals(formattedText, sv.getTextContentFromRange(range));
 
 	range.detach();
 }
@@ -327,33 +310,31 @@ function test_getURIRangesFromRange()
 	assert.equals(['http://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToURI));
 
 
-	if (textEncoderEnabled) {
-		range.setStart($('table-cell1').firstChild, 3);
-		range.setEnd($('table-cell6').firstChild, 8);
-		ranges = sv.getURIRangesFromRange(range);
-		assert.equals(
-			[
-				'http://piro.sakura.ne.jp/latest/',
-				'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
-				'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
-				'ttp://piro.sakura.ne.jp/latest/blosxom/webtech/',
-				'ttp://piro.sakura.ne.jp/xul/',
-				'ttp://piro.sakura.ne.jp/xul/tips/'
-			],
-			ranges.map(rangesToString)
-		);
-		assert.equals(
-			[
-				'http://piro.sakura.ne.jp/latest/',
-				'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
-				'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
-				'http://piro.sakura.ne.jp/latest/blosxom/webtech/',
-				'http://piro.sakura.ne.jp/xul/',
-				'http://piro.sakura.ne.jp/xul/tips/'
-			],
-			ranges.map(rangesToURI)
-		);
-	}
+	range.setStart($('table-cell1').firstChild, 3);
+	range.setEnd($('table-cell6').firstChild, 8);
+	ranges = sv.getURIRangesFromRange(range);
+	assert.equals(
+		[
+			'http://piro.sakura.ne.jp/latest/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
+			'ttp://piro.sakura.ne.jp/latest/blosxom/webtech/',
+			'ttp://piro.sakura.ne.jp/xul/',
+			'ttp://piro.sakura.ne.jp/xul/tips/'
+		],
+		ranges.map(rangesToString)
+	);
+	assert.equals(
+		[
+			'http://piro.sakura.ne.jp/latest/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
+			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
+			'http://piro.sakura.ne.jp/latest/blosxom/webtech/',
+			'http://piro.sakura.ne.jp/xul/',
+			'http://piro.sakura.ne.jp/xul/tips/'
+		],
+		ranges.map(rangesToURI)
+	);
 
 
 	var selection;
