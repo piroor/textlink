@@ -16,15 +16,15 @@ var namespace = {
 			return utils.gBrowser;
 		}
 	};
-utils.include('../../content/textlink/prefs.js', namespace, 'Shift_JIS');
-utils.include('../../content/textlink/globalOverlay.js', namespace, 'Shift_JIS');
+Components.utils.import(baseURL+'../../modules/prefs.js', namespace);
+Components.utils.import(baseURL+'../../modules/utils.js', namespace);
 
 var sv;
 
 function getNewService()
 {
 	var obj = {};
-	obj.__proto__ = namespace.TextLinkService;
+	obj.__proto__ = namespace.TextLinkUtils;
 
 	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');
 	for (var i in prefs)
