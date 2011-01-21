@@ -1,8 +1,14 @@
 var TextLinkService = { 
 	
-	get browserWindow() 
+	get window() 
 	{
 		return window;
+	},
+
+	get browser()
+	{
+		var w = this.window;
+		return 'SplitBrowser' in w ? w.SplitBrowser.activeBrowser : w.gBrowser ;
 	},
  
 	get browserURI() 

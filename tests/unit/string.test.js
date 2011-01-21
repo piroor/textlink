@@ -7,6 +7,7 @@ function setUp()
 
 function tearDown()
 {
+	sv.destroy();
 }
 
 test_convertFullWidthToHalfWidth.parameters = [

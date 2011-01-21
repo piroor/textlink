@@ -1,21 +1,4 @@
-var namespace = {
-		window : {
-			addEventListener : function() {},
-			removeEventListener : function() {},
-			get document() {
-				return gBrowser.ownerDocument;
-			},
-			get gBrowser() {
-				return utils.gBrowser;
-			}
-		},
-		get document() {
-			return gBrowser.ownerDocument;
-		},
-		get gBrowser() {
-			return utils.gBrowser;
-		}
-	};
+var namespace = {};
 utils.import(baseURL+'../../modules/prefs.js', namespace);
 var moduleNS = utils.import(baseURL+'../../modules/utils.js', namespace);
 
@@ -24,8 +7,11 @@ var sv;
 function getNewService()
 {
 	var obj = moduleNS.TextLinkUtils;
-	obj.__defineGetter__('browserWindow', function() {
+	obj.__defineGetter__('window', function() {
 		return utils.gBrowser.ownerDocument.defaultView;
+	});
+	obj.__defineGetter__('browser', function() {
+		return utils.gBrowser;
 	});
 
 	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');

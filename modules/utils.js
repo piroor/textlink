@@ -458,20 +458,29 @@ var TextLinkUtils = {
 		this._URIPartFinderRegExp_end = null;
 	},
   
-	get browserWindow() 
+	get window() // this must be overridden by implementations 
 	{
-		return this.WindowMediator.getMostRecentWindow('navigator:browser');
+		throw new Error('Fatal Error: TextLinkUtils has no window!');
+	},
+	set window(aValue)
+	{
+		delete this.window;
+		return this.window = aValue;
 	},
  
 	get document() 
 	{
-		return this.browserWindow.document;
+		return this.window.document;
 	},
  
-	get browser() 
+	get browser() // this must be overridden by implementations 
 	{
-		var w = this.browserWindow;
-		return 'SplitBrowser' in w ? w.SplitBrowser.activeBrowser : w.gBrowser ;
+		throw new Error('Fatal Error: TextLinkUtils has no browser!');
+	},
+	set browser(aValue) 
+	{
+		delete this.browser;
+		return this.browser = aValue;
 	},
  
 	// XPConnect 
@@ -502,15 +511,6 @@ var TextLinkUtils = {
 		return this._Find;
 	},
 	_Find : null,
- 
-	get WindowMediator() 
-	{
-		if (!this._WindowMediator) {
-			this._WindowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(Ci.nsIWindowMediator);
-		}
-		return this._WindowMediator;
-	},
-	_WindowMediator : null,
   
 // utilities 
 	

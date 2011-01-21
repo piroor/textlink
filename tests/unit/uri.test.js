@@ -7,6 +7,7 @@ function setUp()
 
 function tearDown()
 {
+	sv.destroy();
 }
 
 function test_matchURIRegExp()
