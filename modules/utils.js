@@ -400,37 +400,50 @@ var TextLinkUtils = {
  
 	get URIExceptionPattern() 
 	{
-		this._updateURIExceptionPattern();
+		if (!this._URIExceptionPattern)
+			this._updateURIExceptionPattern();
 		return this._URIExceptionPattern;
 	},
 	get URIExceptionPattern_start()
 	{
-		this._updateURIExceptionPattern();
+		if (!this._URIExceptionPattern_start)
+			this._updateURIExceptionPattern();
 		return this._URIExceptionPattern_start;
 	},
 	get URIExceptionPattern_end()
 	{
-		this._updateURIExceptionPattern();
+		if (!this._URIExceptionPattern_end)
+			this._updateURIExceptionPattern();
 		return this._URIExceptionPattern_end;
+	},
+	get URIExceptionPattern_all()
+	{
+		if (!this._URIExceptionPattern_all)
+			this._updateURIExceptionPattern();
+		return this._URIExceptionPattern_all;
 	},
 	_updateURIExceptionPattern : function()
 	{
-		if (this._URIExceptionPattern) return;
-		var regexp = this.prefs.getPref('textlink.part.exception');
 		try {
-			this._URIExceptionPattern = new RegExp('^('+regexp+')$', 'i');
-			this._URIExceptionPattern_start = new RegExp('^('+regexp+')', 'i');
-			this._URIExceptionPattern_end = new RegExp('('+regexp+')$', 'i');
+			var whole = '^(?:'+this.prefs.getPref('textlink.part.exception.whole')+')$';
+			var start = '^(?:'+this.prefs.getPref('textlink.part.exception.start')+')';
+			var end = '(?:'+this.prefs.getPref('textlink.part.exception.end')+')$';
+			this._URIExceptionPattern = new RegExp(whole, 'i');
+			this._URIExceptionPattern_start = new RegExp(start, 'i');
+			this._URIExceptionPattern_end = new RegExp(end, 'i');
+			this._URIExceptionPattern_all = new RegExp(whole+'|'+start+'|'+end, 'i');
 		}
 		catch(e) {
 			this._URIExceptionPattern = /[^\w\W]/;
 			this._URIExceptionPattern_start = /[^\w\W]/;
 			this._URIExceptionPattern_end = /[^\w\W]/;
+			this._URIExceptionPattern_all = /[^\w\W]/;
 		}
 	},
 	_URIExceptionPattern : null,
 	_URIExceptionPattern_start : null,
 	_URIExceptionPattern_end : null,
+	_URIExceptionPattern_all : null,
  
 	invalidatePatterns : function() 
 	{
@@ -452,6 +465,14 @@ var TextLinkUtils = {
 		this._URIMatchingRegExp_fromHead = null;
 		this._URIPartFinderRegExp_start = null;
 		this._URIPartFinderRegExp_end = null;
+	},
+ 
+	invalidateExceptionPatterns : function()
+	{
+		this._URIExceptionPattern = null;
+		this._URIExceptionPattern_start = null;
+		this._URIExceptionPattern_end = null;
+		this._URIExceptionPattern_all = null;
 	},
   
 	// XPConnect 
@@ -583,7 +604,20 @@ var TextLinkUtils = {
 	matchURIRegExp : function(aString) 
 	{
 		this._updateURIRegExp();
-		return aString.match(this._URIMatchingRegExp);
+		var match = aString.match(this._URIMatchingRegExp);
+		if (!match)
+			return null;
+		match = Array.slice(match)
+					.filter(function(aMaybeURI) {
+						return (
+							(
+								!this.hasLoadableSchemer(aMaybeURI) &&
+								!this.URIExceptionPattern_all.test(aMaybeURI)
+							) ||
+							this.isHeadOfNewURI(aMaybeURI)
+						);
+					}, this);
+		return match.length ? match : null ;
 	},
 	isHeadOfNewURI : function(aString)
 	{
@@ -888,8 +922,10 @@ var TextLinkUtils = {
 				this.contextItemCopy = value;
 				return;
 
-			case 'textlink.part.exception':
-				this._URIExceptionPattern = null;
+			case 'textlink.part.exception.whole':
+			case 'textlink.part.exception.start':
+			case 'textlink.part.exception.end':
+				this.invalidateExceptionPatterns();
 				return;
 		}
 
