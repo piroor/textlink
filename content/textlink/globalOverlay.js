@@ -7,14 +7,13 @@ var TextLinkService = {
 
 	get browser()
 	{
-		var w = this.window;
-		return 'SplitBrowser' in w ? w.SplitBrowser.activeBrowser : w.gBrowser ;
+		return this.rangeUtils.browser;
 	},
  
 	get browserURI() 
 	{
 		if (!this._browserURI) {
-			var uri = this.prefs.getPref('browser.chromeURL');
+			var uri = this.utils.prefs.getPref('browser.chromeURL');
 			if (!uri) {
 				try {
 					var handler = Components.classes['@mozilla.org/commandlinehandler/general-startup;1?type=browser'].getService(Components.interfaces.nsICmdLineHandler);
@@ -159,7 +158,7 @@ var TextLinkService = {
 			aEvent.originalTarget.ownerDocument == document ||
 			aEvent.originalTarget.ownerDocument.designMode == 'on' ||
 			(
-				this.evaluateXPath(
+				this.utils.evaluateXPath(
 					'ancestor-or-self::*[1]',
 					aEvent.originalTarget,
 					XPathResult.FIRST_ORDERED_NODE_TYPE
@@ -171,11 +170,11 @@ var TextLinkService = {
 			return actions;
 		}
 
-		for (let i in this.actions)
+		for (let i in this.utils.actions)
 		{
-			let action = this.actions[i];
+			let action = this.utils.actions[i];
 			if (this.actionShouldHandleEvent(action, aEvent)) {
-				actions.push(this.actions[i]);
+				actions.push(action);
 			}
 		}
 		return actions;
@@ -230,8 +229,8 @@ var TextLinkService = {
 	{
 		this.stopProgressiveBuildTooltip();
 
-		var target = this.getEditableFromChild(this.popupNode);
-		var selection = this.getSelection(target);
+		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var selection = this.rangeUtils.getSelection(target);
 		selection = selection ?
 			[
 				this.popupNode.ownerDocument.defaultView.location.href,
@@ -256,7 +255,7 @@ var TextLinkService = {
 			null ;
 
 		if (this.tooltip.lastSelection != selection) {
-			this.tooltip.findURIsIterator = this.getURIRangesIterator(target);
+			this.tooltip.findURIsIterator = this.rangeUtils.getURIRangesIterator(target);
 			this.tooltip.foundURIRanges   = [];
 			this.tooltip.lastSelection    = selection;
 		}
@@ -294,7 +293,7 @@ var TextLinkService = {
 			catch(e) {
 				return false;
 			}
-			ranges.sort(this._compareRangePosition);
+			ranges.sort(this.rangeUtils._compareRangePosition);
 
 			this.tooltip.foundURIs = ranges.map(function(aRange) {
 				return aRange.uri;
@@ -321,10 +320,10 @@ var TextLinkService = {
   
 	openClickedURI : function(aEvent, aAction) 
 	{
-		var target = this.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+		var target = this.utils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
 		if (
-			aAction == this.ACTION_DISABLED ||
+			aAction == this.utils.ACTION_DISABLED ||
 			aEvent.button > 0 ||
 			target.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
 			)
@@ -335,7 +334,7 @@ var TextLinkService = {
 
 		var frame = target.ownerDocument.defaultView;
 
-		var ranges = this.getSelectionURIRanges(frame, this.FIND_FIRST, this.strict);
+		var ranges = this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict);
 		if (!ranges.length) return;
 
 		var range = ranges[0];
@@ -344,17 +343,17 @@ var TextLinkService = {
 		selection.removeAllRanges();
 		selection.addRange(range.range);
 
-		if (aAction & this.ACTION_SELECT) return;
+		if (aAction & this.utils.ACTION_SELECT) return;
 
-		if (aAction & this.ACTION_COPY) {
-			this.setClipBoard(range.uri);
+		if (aAction & this.utils.ACTION_COPY) {
+			this.utils.setClipBoard(range.uri);
 			return;
 		}
 
 		var uri = range.uri;
-		var referrer = (aAction & this.ACTION_STEALTH) ?
+		var referrer = (aAction & this.utils.ACTION_STEALTH) ?
 					null :
-					this.makeURIFromSpec(frame.location.href) ;
+					this.utils.makeURIFromSpec(frame.location.href) ;
 		this.loadURI(uri, referrer, aEvent, aAction);
 	},
 	loadURI : function(aURI, aReferrer, aEvent, aAction)
@@ -362,26 +361,26 @@ var TextLinkService = {
 		var b = aEvent.currentTarget;
 		var frame = aEvent.originalTarget.ownerDocument.defaultView;
 
-		if (aAction & this.ACTION_OPEN_IN_CURRENT ||
+		if (aAction & this.utils.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			b.localName != 'tabbrowser') {
 			b.loadURI(aURI, aReferrer);
 		}
-		else if (aAction & this.ACTION_OPEN_IN_WINDOW) {
+		else if (aAction & this.utils.ACTION_OPEN_IN_WINDOW) {
 			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', aURI, null, aReferrer);
 		}
 		else {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(frame);
 			}
-			b.loadOneTab(aURI, aReferrer, null, null, (aAction & this.ACTION_OPEN_IN_BACKGROUND_TAB));
+			b.loadOneTab(aURI, aReferrer, null, null, (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
  
 	openTextLinkIn : function(aAction, aTarget) 
 	{
-		var frame = this.getCurrentFrame();
-		var uris = this.getSelectionURIRanges(this.getEditableFromChild(aTarget) || frame	);
+		var frame = this.rangeUtils.getCurrentFrame();
+		var uris = this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame	);
 		if (!uris.length) return;
 
 		var selection = frame.getSelection();
@@ -391,32 +390,32 @@ var TextLinkService = {
 				return aRange.uri;
 			});
 
-		if (aAction == this.ACTION_COPY) {
+		if (aAction == this.utils.ACTION_COPY) {
 			if (uris.length > 1) uris.push('');
-			this.setClipBoard(uris.join('\r\n'));
+			this.utils.setClipBoard(uris.join('\r\n'));
 			return;
 		}
 
 		if (aAction === void(0))
-			aAction = this.ACTION_OPEN_IN_CURRENT;
+			aAction = this.utils.ACTION_OPEN_IN_CURRENT;
 
 		if (
 			uris.length > 1 &&
-			(aAction == this.ACTION_OPEN_IN_TAB ||
-			aAction == this.ACTION_OPEN_IN_BACKGROUND_TAB) &&
+			(aAction == this.utils.ACTION_OPEN_IN_TAB ||
+			aAction == this.utils.ACTION_OPEN_IN_BACKGROUND_TAB) &&
 			!PlacesController.prototype._confirmOpenTabs(uris.length)
 			) {
 			return;
 		}
 
-		if (aAction == this.ACTION_OPEN_IN_WINDOW) {
+		if (aAction == this.utils.ACTION_OPEN_IN_WINDOW) {
 			uris.forEach(function(aURI) {
 				window.open(aURI);
 			});
 			return;
 		}
 
-		if (aAction == this.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
+		if (aAction == this.utils.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
 			this.browser.loadURI(uris[i]);
 			return;
 		}
@@ -462,7 +461,7 @@ var TextLinkService = {
 			if (
 				aIndex == 0 &&
 				(
-					(aAction == this.ACTION_OPEN_IN_CURRENT) ||
+					(aAction == this.utils.ACTION_OPEN_IN_CURRENT) ||
 					(b.currentURI && b.currentURI.spec == 'about:blank')
 				)
 				) {
@@ -485,7 +484,7 @@ var TextLinkService = {
 			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
-			aAction != this.ACTION_OPEN_IN_BACKGROUND_TAB) {
+			aAction != this.utils.ACTION_OPEN_IN_BACKGROUND_TAB) {
 			b.selectedTab = selectTab;
 			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
 			if ('setFocusInternal' in b) b.setFocusInternal();
@@ -571,24 +570,24 @@ var TextLinkService = {
 		var target;
 		if (
 			(
-				this.contextItemCurrent ||
-				this.contextItemWindow ||
-				this.contextItemTab ||
-				this.contextItemCopy
+				this.utils.contextItemCurrent ||
+				this.utils.contextItemWindow ||
+				this.utils.contextItemTab ||
+				this.utils.contextItemCopy
 			) &&
 			gContextMenu.isTextSelected &&
 			gContextMenu.isContentSelected
 			) {
 			try {
-				target = this.getEditableFromChild(this.popupNode);
-				var first = this.getFirstSelectionURIRange(target);
+				target = this.rangeUtils.getEditableFromChild(this.popupNode);
+				var first = this.rangeUtils.getFirstSelectionURIRange(target);
 				var found = {};
 				if (first) {
 					uris.push(first.uri);
 					first.range.detach();
 					found[first.uri] = true;
 				}
-				var last = this.getLastSelectionURIRange(target, false, found);
+				var last = this.rangeUtils.getLastSelectionURIRange(target, false, found);
 				if (last) {
 					uris.push(last.uri);
 					last.range.detach();
@@ -599,13 +598,13 @@ var TextLinkService = {
 		}
 
 		gContextMenu.showItem('context-openTextLink-current',
-			uris.length && this.contextItemCurrent);
+			uris.length && this.utils.contextItemCurrent);
 		gContextMenu.showItem('context-openTextLink-window',
-			uris.length && this.contextItemWindow);
+			uris.length && this.utils.contextItemWindow);
 		gContextMenu.showItem('context-openTextLink-tab',
-			uris.length && this.contextItemTab);
+			uris.length && this.utils.contextItemTab);
 		gContextMenu.showItem('context-openTextLink-copy',
-			uris.length && this.contextItemCopy);
+			uris.length && this.utils.contextItemCopy);
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -674,7 +673,8 @@ var TextLinkService = {
 (function() { 
 	var namespace = {};
 	Components.utils.import('resource://textlink-modules/utils.js', namespace);
-	TextLinkService.__proto__ = TextLinkService.utils = namespace.TextLinkUtils;
-	TextLinkService.utils.init();
+	Components.utils.import('resource://textlink-modules/range.js', namespace);
+	TextLinkService.utils = namespace.TextLinkUtils;
+	TextLinkService.rangeUtils = new namespace.TextLinkRangeUtils(window);
 })();
  

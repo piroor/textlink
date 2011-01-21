@@ -4,13 +4,13 @@ function setUp()
 {
 	utils.setPref('intl.accept_languages', 'ja,en-us,en');
 	utils.setPref('intl.charset.detector', 'ja_parallel_state_machine');
-	sv = getNewService();
+	sv = getNewRangeUtils();
 	yield Do(utils.loadURI('../fixtures/testcase.html'));
 }
 
 function tearDown()
 {
-	sv.destroy();
+	sv.utils.destroy();
 }
 
 function test_getCurrentFrame()
@@ -125,10 +125,10 @@ function test_getFindRange()
 
 	range.setStart(node, 15);
 	range.collapse(true);
-	sv.IDNEnabled = true;
+	sv.utils.IDNEnabled = true;
 	findRange = sv.getFindRange(range);
 	assert.equals('Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。', findRange.toString());
-	sv.IDNEnabled = false;
+	sv.utils.IDNEnabled = false;
 	findRange = sv.getFindRange(range);
 	assert.equals('Mozilla(http://www.mozilla.org/)', findRange.toString());
 
@@ -205,10 +205,10 @@ function test_getFindRange_plainText()
 
 	range.setStart(node, 15);
 	range.collapse(true);
-	sv.IDNEnabled = true;
+	sv.utils.IDNEnabled = true;
 	findRange = sv.getFindRange(range);
 	assert.equals('Mozilla(http://www.mozilla.org/)はNetscape（http://www.netscape.com/）の次世代ブラウザ開発計画としてスタートしました。詳しくはhttp://jt.mozilla.gr.jp/src-faq.html#1をご覧下さい。', findRange.toString());
-	sv.IDNEnabled = false;
+	sv.utils.IDNEnabled = false;
 	findRange = sv.getFindRange(range);
 	assert.equals('Mozilla(http://www.mozilla.org/)', findRange.toString());
 
@@ -632,16 +632,16 @@ function test_getFollowingURIPartRanges()
 	var range = content.document.createRange();
 	range.selectNode(node.firstChild);
 	assert.equals('http://piro.sakura.ne.jp/latest/', range.toString());
-	sv.multilineURIEnabled = false;
+	sv.utils.multilineURIEnabled = false;
 	assertGetFollowingPartRanges([], range);
-	sv.multilineURIEnabled = true;
+	sv.utils.multilineURIEnabled = true;
 	assertGetFollowingPartRanges([], range);
 
 	range.selectNode(node.childNodes[2]);
 	assert.equals('http://piro.sakura.ne.jp/latest/blosxom/', range.toString());
-	sv.multilineURIEnabled = false;
+	sv.utils.multilineURIEnabled = false;
 	assertGetFollowingPartRanges([], range);
-	sv.multilineURIEnabled = true;
+	sv.utils.multilineURIEnabled = true;
 	assertGetFollowingPartRanges(['mozilla/'], range);
 
 	node = $('wrapped-message');

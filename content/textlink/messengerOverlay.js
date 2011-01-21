@@ -1,14 +1,9 @@
 var TextLinkMessengerService = { 
 	
-	get browser() 
-	{
-		return document.getElementById('messagepane');
-	},
- 
 	get isPlainTextMessage()
 	{
-		return this.getPref('mailnews.display.html_as') == 1 ||
-				this.evaluateXPath(
+		return this.utils.prefs.getPref('mailnews.display.html_as') == 1 ||
+				this.utils.evaluateXPath(
 					'/descendant::*[local-name()="BODY"]/child::*[@class="moz-text-plain"]',
 					this.browser.contentDocument,
 					XPathResult.BOOLEAN_TYPE
@@ -17,7 +12,7 @@ var TextLinkMessengerService = {
  
 	get multilineURIEnabled()
 	{
-		return this.getPref('textlink.multiline.enabled') &&
+		return this.utils.prefs.getPref('textlink.multiline.enabled') &&
 			this.isPlainTextMessage;
 	},
  
@@ -46,14 +41,14 @@ var TextLinkMessengerService = {
 	{
 		Components.classes['@mozilla.org/uriloader/external-protocol-service;1']
 			.getService(Components.interfaces.nsIExternalProtocolService)
-			.loadUrl(this.makeURIFromSpec(aURI));
+			.loadUrl(this.utils.makeURIFromSpec(aURI));
 	},
  
 	onContentLoad : function() 
 	{
 		if (
 			!this.isPlainTextMessage ||
-			!this.getPref('textlink.messenger.linkify')
+			!this.utils.prefs.getPref('textlink.messenger.linkify')
 			)
 			return;
 
@@ -64,7 +59,7 @@ var TextLinkMessengerService = {
 	unlinkifyAutoLinks : function() 
 	{
 		var doc = this.browser.contentDocument;
-		var links = this.evaluateXPath(
+		var links = this.utils.evaluateXPath(
 				'/descendant::*[local-name()="A" and not('+(
 					'addbook,imap,mailbox,mailto,pop'.split(',')
 					.map(function(aSchemer) {
@@ -92,9 +87,9 @@ var TextLinkMessengerService = {
 		var doc = this.browser.contentDocument;
 		var range = doc.createRange();
 		range.selectNodeContents(doc.body);
-		var uriRanges = this.getURIRangesFromRange(
+		var uriRanges = this.rangeUtils.getURIRangesFromRange(
 				range,
-				this.FIND_ALL | this.ALLOW_SAME_URIS
+				this.rangeUtils.FIND_ALL | this.rangeUtils.ALLOW_SAME_URIS
 			);
 		uriRanges.reverse().forEach(function(aRange) {
 			if (!this._getParentLink(aRange.range.startContainer)) {
@@ -116,7 +111,7 @@ var TextLinkMessengerService = {
 	},
 	_getParentLink : function(aNode)
 	{
-		return this.evaluateXPath(
+		return this.utils.evaluateXPath(
 				'ancestor-or-self::*[local-name()="A" and @href]',
 				aNode,
 				XPathResult.FIRST_ORDERED_NODE_TYPE

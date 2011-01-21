@@ -2,7 +2,7 @@ utils.include('common.inc.js');
 
 function setUp()
 {
-	sv = getNewService();
+	sv = getNewUtils();
 }
 
 function tearDown()
@@ -26,14 +26,15 @@ function test_matchURIRegExp()
 
 	function assertURIMatch(aString, aURIString, aShouldMatch)
 	{
+		var message = aString +'\n => '+aURIString;
 		var match = sv.matchURIRegExp(aString);
 		if (!aShouldMatch) {
-			assert.isNull(match);
+			assert.isNull(match, message);
 		}
 		else {
-			assert.isNotNull(match);
-			assert.equals(1, match.length);
-			assert.equals(aURIString, match[0]);
+			assert.isNotNull(match, message);
+			assert.equals(1, match.length, message);
+			assert.equals(aURIString, match[0], message);
 		}
 	}
 

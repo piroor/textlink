@@ -1,18 +1,11 @@
 var namespace = {};
-utils.import(baseURL+'../../modules/prefs.js', namespace);
-var moduleNS = utils.import(baseURL+'../../modules/utils.js', namespace);
 
 var sv;
 
-function getNewService()
+function getNewUtils()
 {
-	var obj = moduleNS.TextLinkUtils;
-	obj.__defineGetter__('window', function() {
-		return utils.gBrowser.ownerDocument.defaultView;
-	});
-	obj.__defineGetter__('browser', function() {
-		return utils.gBrowser;
-	});
+	var obj = utils.import(baseURL+'../../modules/utils.js', namespace)
+					.TextLinkUtils;
 
 	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');
 	for (var i in prefs)
@@ -27,6 +20,14 @@ function getNewService()
 	obj.multilineURIEnabled = false;
 	obj.strict = true;
 
+	return obj;
+}
+
+function getNewRangeUtils()
+{
+	var ns = utils.import(baseURL+'../../modules/range.js', namespace);
+	var obj = new ns.TextLinkRangeUtils(window);
+	obj.utils = getNewUtils();
 	return obj;
 }
 

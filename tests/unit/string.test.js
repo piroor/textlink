@@ -2,7 +2,7 @@ utils.include('common.inc.js');
 
 function setUp()
 {
-	sv = getNewService();
+	sv = getNewUtils();
 }
 
 function tearDown()
