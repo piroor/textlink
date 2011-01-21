@@ -1,20 +1,31 @@
-relative	input	sanitized
-false	http://www.example.com/	http://www.example.com/
-false	http://www.example.com/index	http://www.example.com/index
-false	http://www.example.com/index?query1=value1&query2=value2	http://www.example.com/index?query1=value1&query2=value2
-false	http://www.example.com/index#hash	http://www.example.com/index#hash
-false	www.example.com	www.example.com
-false	www.example.jp	www.example.jp
-false	...www.example.jp	www.example.jp
-false	:www.example.jp	www.example.jp
-false	/www.example.jp	www.example.jp
-false	MyClass.property.value	MyClass.property.value
-true	http://www.example.com/	http://www.example.com/
-true	http://www.example.com/index	http://www.example.com/index
-true	http://www.example.com/index?query1=value1&query2=value2	http://www.example.com/index?query1=value1&query2=value2
-true	http://www.example.com/index#hash	http://www.example.com/index#hash
-true	www.example.com	www.example.com
-true	www.example.jp	www.example.jp
-true	MyClass.property.value	
-true	function MyFunc()	
-true	function MyFunc(aArg1, aArg2)	
+"relative"	"input"	"sanitized"
+"false"	"http://www.example.com/"	"http://www.example.com/"
+"false"	"http://www.example.com/index"	"http://www.example.com/index"
+"false"	"http://www.example.com/index?query1=value1&query2=value2"	"http://www.example.com/index?query1=value1&query2=value2"
+"false"	"http://www.example.com/index#hash"	"http://www.example.com/index#hash"
+"false"	"www.example.com"	"www.example.com"
+"false"	"www.example.jp"	"www.example.jp"
+"false"	"...www.example.jp"	"www.example.jp"
+"false"	":www.example.jp"	"www.example.jp"
+"false"	"/www.example.jp"	"www.example.jp"
+"false"	"MyClass.property.value"	"MyClass.property.value"
+"true"	"http://www.example.com/"	"http://www.example.com/"
+"true"	"http://www.example.com/index"	"http://www.example.com/index"
+"true"	"http://www.example.com/index?query1=value1&query2=value2"	"http://www.example.com/index?query1=value1&query2=value2"
+"true"	"http://www.example.com/index#hash"	"http://www.example.com/index#hash"
+"true"	"www.example.com"	"www.example.com"
+"true"	"www.example.jp"	"www.example.jp"
+"true"	"MyClass.property.value"	
+"true"	"function MyFunc()"	
+"true"	"function MyFunc(aArg1, aArg2)"	
+"false"	"http://日本語.jp/"	"http://日本語.jp/"
+"false"	"http://日本語.jp/path/to/file"	"http://日本語.jp/path/to/file"
+"false"	"http://日本語.jp/path/to/file?query=value"	"http://日本語.jp/path/to/file?query=value"
+"false"	"http://日本語.jp/path/to/file#hash"	"http://日本語.jp/path/to/file#hash"
+"false"	"日本語.jp/"	"日本語.jp/"
+"false"	"日本語.jp/path/to/file"	"日本語.jp/path/to/file"
+"false"	"日本語.jp/path/to/file?query=value"	"日本語.jp/path/to/file?query=value"
+"false"	"日本語.jp/path/to/file#hash"	"日本語.jp/path/to/file#hash"
+"false"	"...日本語.jp"	"日本語.jp"
+"false"	":日本語.jp"	"日本語.jp"
+"false"	"/日本語.jp"	"日本語.jp"
