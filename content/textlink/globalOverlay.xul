@@ -26,30 +26,30 @@ window.addEventListener('load', TextLinkService, false);
 		label-base-multiple="&textlink.openTextLink.current.multiple;"
 		accesskey="&textlink.openTextLink.current.accesskey;"
 		tooltip="textLinkTooltip-selectedURI"
-		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_CURRENT, TextLinkService.popupNode);"
-		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_TAB); this.parentNode.hidePopup(); }"/>
+		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT, TextLinkService.popupNode);"
+		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-tab"
 		insertbefore="context-searchselect context-sep-selectall context-sep-open"
 		label-base-single="&textlink.openTextLink.tab.single;"
 		label-base-multiple="&textlink.openTextLink.tab.multiple;"
 		accesskey="&textlink.openTextLink.tab.accesskey;"
 		tooltip="textLinkTooltip-selectedURI"
-		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_TAB, TextLinkService.popupNode);"
-		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_CURRENT); this.parentNode.hidePopup(); }"/>
+		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB, TextLinkService.popupNode);"
+		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-window"
 		insertbefore="context-searchselect context-sep-selectall context-sep-open"
 		label-base-single="&textlink.openTextLink.window.single;"
 		label-base-multiple="&textlink.openTextLink.window.multiple;"
 		accesskey="&textlink.openTextLink.window.accesskey;"
 		tooltip="textLinkTooltip-selectedURI"
-		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_OPEN_IN_WINDOW, TextLinkService.popupNode);"/>
+		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_WINDOW, TextLinkService.popupNode);"/>
 	<menuitem id="context-openTextLink-copy"
 		insertafter="context-copy"
 		label-base-single="&textlink.openTextLink.copy.single;"
 		label-base-multiple="&textlink.openTextLink.copy.multiple;"
 		accesskey="&textlink.openTextLink.copy.accesskey;"
 		tooltip="textLinkTooltip-selectedURI"
-		oncommand="TextLinkService.openTextLinkIn(TextLinkService.ACTION_COPY, TextLinkService.popupNode);"/>
+		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_COPY, TextLinkService.popupNode);"/>
 </popup>
 
 </overlay>

@@ -108,7 +108,7 @@ function testCopy()
 	utils.setClipBoard('test');
 	assert.equals('test', utils.getClipBoard());
 
-	sv.openTextLinkIn(sv.ACTION_COPY);
+	sv.openTextLinkIn(sv.utils.ACTION_COPY);
 
 	assert.equals(1, tabs.length);
 	assert.equals(expectedValue, utils.getClipBoard());
@@ -118,7 +118,7 @@ function testCopy()
 
 function testOpenInCurrent()
 {
-	sv.openTextLinkIn(sv.ACTION_OPEN_IN_CURRENT);
+	sv.openTextLinkIn(sv.utils.ACTION_OPEN_IN_CURRENT);
 	yield 300;
 	assert.equals(uris.length, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
@@ -127,7 +127,7 @@ function testOpenInCurrent()
 
 function testOpenInTabs()
 {
-	sv.openTextLinkIn(sv.ACTION_OPEN_IN_TAB);
+	sv.openTextLinkIn(sv.utils.ACTION_OPEN_IN_TAB);
 	assert.equals(uris.length+1, tabs.length);
 	assert.equals(tabs[1], gBrowser.selectedTab);
 
@@ -136,7 +136,7 @@ function testOpenInTabs()
 
 function testOpenInBackgroundTabs()
 {
-	sv.openTextLinkIn(sv.ACTION_OPEN_IN_BACKGROUND_TAB);
+	sv.openTextLinkIn(sv.utils.ACTION_OPEN_IN_BACKGROUND_TAB);
 	assert.equals(uris.length+1, tabs.length);
 	assert.equals(tabs[0], gBrowser.selectedTab);
 
@@ -146,7 +146,7 @@ function testOpenInBackgroundTabs()
 function testOpenInWindows()
 {
 	assert.equals(0, browserWindowCount);
-	sv.openTextLinkIn(sv.ACTION_OPEN_IN_WINDOW);
+	sv.openTextLinkIn(sv.utils.ACTION_OPEN_IN_WINDOW);
 	yield 100;
 	assert.equals(1, tabs.length);
 	assert.equals(uris.length, browserWindowCount);
