@@ -1671,5 +1671,7 @@ var TextLinkUtils = {
 		this.prefs.removePrefListener(this);
 	}
   
-}; 
+};
+
+TextLinkUtils.init(); 
  
