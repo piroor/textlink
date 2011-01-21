@@ -1,10 +1,15 @@
 var TextLinkMessengerService = { 
+ 
+	get contextMenu() 
+	{
+		return document.getElementById('messagePaneContext') || document.getElementById('mailContext');
+	},
 	
 	get isPlainTextMessage()
 	{
 		return this.utils.prefs.getPref('mailnews.display.html_as') == 1 ||
 				this.utils.evaluateXPath(
-					'/descendant::*[local-name()="BODY"]/child::*[@class="moz-text-plain"]',
+					'/descendant::*[local-name()="BODY" or local-name()="body"]/child::*[@class="moz-text-plain"]',
 					this.browser.contentDocument,
 					XPathResult.BOOLEAN_TYPE
 				).booleanValue;
@@ -34,7 +39,7 @@ var TextLinkMessengerService = {
 				return;
 		}
 
-		this.handleUserActionEvents(aEvent);
+		this.handleUserActionEvent(aEvent);
 	},
  
 	loadURI : function(aURI)
@@ -60,7 +65,7 @@ var TextLinkMessengerService = {
 	{
 		var doc = this.browser.contentDocument;
 		var links = this.utils.evaluateXPath(
-				'/descendant::*[local-name()="A" and not('+(
+				'/descendant::*[local-name()="A" or local-name()="a"][not('+(
 					'addbook,imap,mailbox,mailto,pop'.split(',')
 					.map(function(aSchemer) {
 						return 'starts-with(@href, "'+aSchemer+':")';
@@ -87,11 +92,12 @@ var TextLinkMessengerService = {
 		var doc = this.browser.contentDocument;
 		var range = doc.createRange();
 		range.selectNodeContents(doc.body);
-		var uriRanges = this.rangeUtils.getURIRangesFromRange(
-				range,
-				this.rangeUtils.FIND_ALL | this.rangeUtils.ALLOW_SAME_URIS
-			);
-		uriRanges.reverse().forEach(function(aRange) {
+		this.rangeUtils.getURIRangesFromRange(
+			range,
+			this.rangeUtils.FIND_ALL | this.rangeUtils.ALLOW_SAME_URIS
+		)
+		.reverse()
+		.forEach(function(aRange) {
 			if (!this._getParentLink(aRange.range.startContainer)) {
 				let link = doc.createElement('a');
 				if (aRange.range.toString().length < aRange.uri.length) {
@@ -112,7 +118,7 @@ var TextLinkMessengerService = {
 	_getParentLink : function(aNode)
 	{
 		return this.utils.evaluateXPath(
-				'ancestor-or-self::*[local-name()="A" and @href]',
+				'ancestor-or-self::*[local-name()="A" or local-name()="a"][@href]',
 				aNode,
 				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;

@@ -41,8 +41,7 @@ var TextLinkService = {
  
 	get contextMenu() 
 	{
-		return document.getElementById('contentAreaContextMenu') || // Firefox
-					document.getElementById('messagePaneContext'); // Thunderbird
+		return document.getElementById('contentAreaContextMenu');
 	},
  
 	get popupNode() 
