@@ -11,16 +11,6 @@
                    em:iconURL="chrome://textlink/content/icon.png"
                    em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                    em:optionsURL="chrome://textlink/content/pref/prefDialog.xul">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
 
 
     <em:updateURL>http://piro.sakura.ne.jp/xul/update.rdf</em:updateURL>
@@ -33,16 +23,6 @@
                        em:description="Allows URI texts written in webpages to be loaded by double clicks."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -51,16 +31,6 @@
                        em:description="ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。"
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -71,14 +41,6 @@
                        em:creator="SHIMODA Hiroshi">
 		<em:translator>menet (fr-FR)</em:translator>
 		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -87,16 +49,7 @@
                        em:description="Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
 		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -105,16 +58,7 @@
                        em:description="允许通过双击载入网页中的 URI 文本。"
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
 		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -123,16 +67,7 @@
                        em:description="讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。"
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
 		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -141,16 +76,7 @@
                        em:description="Carica gli URI testuali con un doppio clic."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
 		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -159,16 +85,7 @@
                        em:description="Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
 		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -177,16 +94,7 @@
                        em:description="Pozwala na otwieranie nieklikalnych (tekstowych) linków przy pomocy podwójnego kliknięcia"
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -195,16 +103,7 @@
                        em:description="Web sayfalarındaki link özelliği olmayan URL metinlerinin çift tıklanarak açılmasını sağlar."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
 		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
-		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
@@ -213,15 +112,6 @@
                        em:description="Erlaubt es, URIs in Texten per Doppelklick zu öffnen."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="SHIMODA Hiroshi">
-		<em:translator>menet (fr-FR)</em:translator>
-		<em:translator>BlackJack (fr-FR)</em:translator>
-		<em:translator>Gianny111 (sk-SK)</em:translator>
-		<em:translator>Carlos Oliveira (zh-CN)</em:translator>
-		<em:translator>Alan CHENG (zh-TW)</em:translator>
-		<em:contributor>Marco C. (it-IT locale, original designer of icon)</em:contributor>
-		<em:translator>Mikes Kaszmán István (hu-HU)</em:translator>
-		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
-		<em:translator>Anıl Yıldız (tr-TR)</em:translator>
 		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
@@ -231,7 +121,7 @@
       <!-- Firefox -->
       <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                        em:minVersion="3.5"
-                       em:maxVersion="4.0b10pre" />
+                       em:maxVersion="4.0b11pre" />
       <!-- Thunderbird -->
       <RDF:Description em:id="{3550f703-e582-4d05-9a08-453d09bdfdc6}"
                        em:minVersion="3.0"
