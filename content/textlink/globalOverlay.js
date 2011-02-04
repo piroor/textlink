@@ -402,7 +402,7 @@ var TextLinkService = {
 			uris.length > 1 &&
 			(aAction == this.utils.ACTION_OPEN_IN_TAB ||
 			aAction == this.utils.ACTION_OPEN_IN_BACKGROUND_TAB) &&
-			!PlacesController.prototype._confirmOpenTabs(uris.length)
+			!PlacesUIUtils._confirmOpenInTabs(uris.length)
 			) {
 			return;
 		}
