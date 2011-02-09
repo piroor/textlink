@@ -38,7 +38,7 @@ pref("textlink.contextmenu.openTextLink.copy",    true);
 
 pref("textlink.messenger.linkify", true);
 
-pref("textlink.schemer",                     "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource");
+pref("textlink.schemer",                     "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data");
 pref("textlink.schemer.fixup.table",         "www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
 pref("textlink.schemer.fixup.default", "http");
 
