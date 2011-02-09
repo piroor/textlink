@@ -284,7 +284,8 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			pattern += this.getTLDPattern(multibyte);
+			if (this.prefs.getPref('textlink.strictDomainNames.enabled'))
+				pattern += this.getTLDPattern(multibyte);
 
 			this._domainPatterns[aOptionsFlag] = pattern;
 		}
@@ -898,6 +899,7 @@ var TextLinkUtils = {
 			case 'textlink.ccTLD':
 			case 'textlink.IDN_TLD':
 			case 'textlink.extraTLD':
+			case 'textlink.strictDomainNames.enabled':
 			case 'network.IDN.blacklist_chars':
 				this.invalidatePatterns();
 				return;
