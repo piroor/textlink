@@ -284,7 +284,8 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			if (this.prefs.getPref('textlink.strictDomainNames.enabled'))
+			if ((aOptionsFlag & this.kDOMAIN_LAZY) ||
+				this.prefs.getPref('textlink.strictDomainNames.enabled'))
 				pattern += this.getTLDPattern(multibyte);
 
 			this._domainPatterns[aOptionsFlag] = pattern;
