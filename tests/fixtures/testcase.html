@@ -71,6 +71,10 @@ GoogleでFirefoxを検索した結果のページはhttp://www.google.co.jp/sear
 サブドメインに何を付けてもWikiLeaksに飛びます。
 例：http://雪、無音、段ボール。荒川智則.jp/
 この例では「。」は正規化されて半角ピリオド（.）と同じと見なされます。</p>
+<p id="not-http">http以外のスキームのテスト。
+about:blank、about:config、about:plugins、about:supportなどのabout: URIや、
+data:text/plain,foobar のようなdata: URI、
+chrome://browser/content/browser.xul、resource://gre/のようなFirefox内部で使われるURLがあります。</p>
 
 <pre id="pre">
 
