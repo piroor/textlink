@@ -182,7 +182,7 @@ var TextLinkUtils = {
 					this.URIPattern_part
 				)
 				.replace(
-					/%LAZY_DOMAIN_PATTERN%/g,
+					/%POSSIBLE_DOMAIN_PATTERN%/g,
 					this.getDomainPattern(this.kDOMAIN_LAZY)
 				)
 				.replace(
@@ -226,7 +226,7 @@ var TextLinkUtils = {
 					this.URIPatternMultibyte_part
 				)
 				.replace(
-					/%LAZY_DOMAIN_PATTERN%/g,
+					/%POSSIBLE_DOMAIN_PATTERN%/g,
 					this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
 				)
 				.replace(
@@ -263,7 +263,7 @@ var TextLinkUtils = {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
 											':/\uff1a\uff0f';
-				if (aOptionsFlag & this.kDOMAIN_LAZY)
+				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
 					forbiddenCharacters += this.prefs.getPref('textlink.idn.lazyDetection.separators');
 				let part = '[^'+
 							forbiddenCharacters+
@@ -284,8 +284,7 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			if ((aOptionsFlag & this.kDOMAIN_LAZY) ||
-				this.prefs.getPref('textlink.strictDomainNames.enabled'))
+			if (!(aOptionsFlag & this.kDOMAIN_LAZY))
 				pattern += this.getTLDPattern(multibyte);
 
 			this._domainPatterns[aOptionsFlag] = pattern;
@@ -329,10 +328,10 @@ var TextLinkUtils = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LAZY_DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LAZY_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
@@ -810,6 +809,7 @@ var TextLinkUtils = {
 		if (match) {
 			var target = match[1];
 			var table = this.evalInSandbox('(function() {'+
+
 					'var table = '+this._fixupTable.quote()+';'+
 					'var target = '+target.quote()+';'+
 					((this._fixupTargetsPattern+'|')
@@ -900,7 +900,6 @@ var TextLinkUtils = {
 			case 'textlink.ccTLD':
 			case 'textlink.IDN_TLD':
 			case 'textlink.extraTLD':
-			case 'textlink.strictDomainNames.enabled':
 			case 'network.IDN.blacklist_chars':
 				this.invalidatePatterns();
 				return;

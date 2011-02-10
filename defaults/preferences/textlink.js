@@ -47,7 +47,6 @@ pref("textlink.multibyte.enabled",   true);
 pref("textlink.multiline.enabled",   false);
 pref("textlink.idn.enabled",         true);
 pref("textlink.i18nPath.enabled",    false);
-pref("textlink.strictDomainNames.enabled", true);
 pref("textlink.part.exception.whole", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
 pref("textlink.part.exception.start", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?|[\\.\u3002\uff0e]+[^\\.\u3002\uff0e\/\uff0f]");
 pref("textlink.part.exception.end",   "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
