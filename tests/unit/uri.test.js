@@ -35,7 +35,10 @@ var halfWidthAbsoluteURIs = [
 		halfWidthAbsoluteURISources
 			.map(function(aURI) { return aURI+'?query1=value1&query2=value2'; }).join('\n'),
 		halfWidthAbsoluteURISources
-			.map(function(aURI) { return aURI+'#hash'; }).join('\n')
+			.map(function(aURI) { return aURI+'#hash'; }).join('\n'),
+		'about:config',
+		'chrome://browser/content/browser.xul',
+		'data:text/plain,foobar'
 	].join('\n').split('\n');
 var fullWidthAbsoluteURIs = [
 		fullWidthAbsoluteURISources.join('\n'),
@@ -46,7 +49,10 @@ var fullWidthAbsoluteURIs = [
 		fullWidthAbsoluteURISources
 			.map(function(aURI) { return aURI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２'; }).join('\n'),
 		fullWidthAbsoluteURISources
-			.map(function(aURI) { return aURI+'＃ｈａｓｈ'; }).join('\n')
+			.map(function(aURI) { return aURI+'＃ｈａｓｈ'; }).join('\n'),
+		'ａｂｏｕｔ：ｃｏｎｆｉｇ',
+		'ｃｈｒｏｍｅ：／／ｂｒｏｗｓｅｒ／ｃｏｎｔｅｎｔ／ｂｒｏｗｓｅｒ．ｘｕｌ',
+		'ｄａｔａ：ｔｅｘｔ／ｐｌａｉｎ，ｆｏｏｂａｒ'
 	].join('\n').split('\n');
 var IDNAbsoluteURIs = [
 		IDNAbsoluteURISources.join('\n'),
