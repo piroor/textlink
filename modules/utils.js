@@ -182,6 +182,10 @@ var TextLinkUtils = {
 					this.URIPattern_part
 				)
 				.replace(
+					/%LOGIN_PATTERN%/g,
+					this.kLoginPattern
+				)
+				.replace(
 					/%POSSIBLE_DOMAIN_PATTERN%/g,
 					this.getDomainPattern(this.kDOMAIN_LAZY)
 				)
@@ -224,6 +228,10 @@ var TextLinkUtils = {
 				.replace(
 					/%PART_PATTERN%/g,
 					this.URIPatternMultibyte_part
+				)
+				.replace(
+					/%LOGIN_PATTERN%/g,
+					this.kLoginPatternMultibyte
 				)
 				.replace(
 					/%POSSIBLE_DOMAIN_PATTERN%/g,
@@ -329,14 +337,17 @@ var TextLinkUtils = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
 	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+
+	kLoginPattern : '(?:[^/:]+(?::[^/@]+)?@)?',
+	kLoginPatternMultibyte : '(?:[^/:\uff0f\uff1a]+(?:[:\uff1a][^@/\uff0f\uff20]+)?[@\uff0f])?',
 
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
 	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
