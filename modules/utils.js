@@ -347,7 +347,7 @@ var TextLinkUtils = {
 	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
 
 	kLoginPattern : '(?:[^/:]+(?::[^/@]+)?@)?',
-	kLoginPatternMultibyte : '(?:[^/:\uff0f\uff1a]+(?:[:\uff1a][^@/\uff0f\uff20]+)?[@\uff0f])?',
+	kLoginPatternMultibyte : '(?:[^/:\uff0f\uff1a]+(?:[:\uff1a][^@/\uff0f\uff20]+)?[@\uff20])?',
 
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
 	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
