@@ -574,8 +574,16 @@ var TextLinkService = {
 				this.utils.contextItemTab ||
 				this.utils.contextItemCopy
 			) &&
-			gContextMenu.isTextSelected &&
-			gContextMenu.isContentSelected
+			(
+				(
+					gContextMenu.isTextSelected &&
+					gContextMenu.isContentSelected
+				) ||
+				(
+					gContextMenu.onTextInput &&
+					this.rangeUtils.getSelection(gContextMenu.target)
+				)
+			)
 			) {
 			try {
 				target = this.rangeUtils.getEditableFromChild(this.popupNode);
