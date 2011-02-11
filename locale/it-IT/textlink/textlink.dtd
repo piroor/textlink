@@ -121,10 +121,10 @@
 
 <!ENTITY textlink.group.find        "Rilevamento degli URI">
 
-<!ENTITY textlink.schemer             "Rileva come URI un testo che incomincia con una di queste parti: (es. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Resetta">
-<!ENTITY textlink.schemer.fixup.table "Correggi gli URI errati secondo le seguenti regole: (es. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Resetta">
+<!ENTITY textlink.scheme             "Rileva come URI un testo che incomincia con una di queste parti: (es. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Resetta">
+<!ENTITY textlink.scheme.fixup.table "Correggi gli URI errati secondo le seguenti regole: (es. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Resetta">
 
 <!ENTITY textlink.relative.enabled    "Analizza percorsi relativi (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Analizza caratteri multi-byte">

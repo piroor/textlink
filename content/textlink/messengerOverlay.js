@@ -67,8 +67,8 @@ var TextLinkMessengerService = {
 		var links = this.utils.evaluateXPath(
 				'/descendant::*[local-name()="A" or local-name()="a"][not('+(
 					'addbook,imap,mailbox,mailto,pop'.split(',')
-					.map(function(aSchemer) {
-						return 'starts-with(@href, "'+aSchemer+':")';
+					.map(function(aScheme) {
+						return 'starts-with(@href, "'+aScheme+':")';
 					})
 					.join(' or ')
 				)+') and (contains(text(), @href) or contains(@href, text()))]',

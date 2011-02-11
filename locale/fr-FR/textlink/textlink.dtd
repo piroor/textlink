@@ -121,10 +121,10 @@
 
 <!ENTITY textlink.group.find        "Détection d'URL">
 
-<!ENTITY textlink.schemer                     "Traiter le texte qui commence avec ce qui suit, comme une URL : (ex. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default             "Défaut">
-<!ENTITY textlink.schemer.fixup.table         "Corriger les URLs coupées, en utilisant les règles suivantes : (ex. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Défaut">
+<!ENTITY textlink.scheme                     "Traiter le texte qui commence avec ce qui suit, comme une URL : (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default             "Défaut">
+<!ENTITY textlink.scheme.fixup.table         "Corriger les URLs coupées, en utilisant les règles suivantes : (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Défaut">
 
 <!ENTITY textlink.relative.enabled    "Analyser les chemins relatifs (non recommandé)">
 <!ENTITY textlink.multibyte.enabled   "Analyser les caractères multi-octet">

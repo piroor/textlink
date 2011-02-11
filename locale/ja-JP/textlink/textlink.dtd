@@ -122,10 +122,10 @@
 
 <!ENTITY textlink.group.find        "URIの検出方法">
 
-<!ENTITY textlink.schemer             "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: ">
-<!ENTITY textlink.schemer.default     "初期値に戻す">
-<!ENTITY textlink.schemer.fixup.table "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）">
-<!ENTITY textlink.schemer.fixup.table.default "初期値に戻す">
+<!ENTITY textlink.scheme             "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: ">
+<!ENTITY textlink.scheme.default     "初期値に戻す">
+<!ENTITY textlink.scheme.fixup.table "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）">
+<!ENTITY textlink.scheme.fixup.table.default "初期値に戻す">
 
 <!ENTITY textlink.relative.enabled    "相対パスも認識する（非推奨）">
 <!ENTITY textlink.multibyte.enabled   "全角英数文字も認識する">

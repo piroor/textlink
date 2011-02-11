@@ -274,15 +274,15 @@ TextLinkRangeUtils.prototype = {
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
 			let hadlWidthTerm = this.utils.convertFullWidthToHalfWidth(aTerm);
-			if (!this.utils.relativePathEnabled && this.utils.hasSchemer(aTerm)) {
+			if (!this.utils.relativePathEnabled && this.utils.hasScheme(aTerm)) {
 				let termForCheck = hadlWidthTerm;
-				while (this.utils.hasSchemer(termForCheck))
+				while (this.utils.hasScheme(termForCheck))
 				{
-					if (this.utils.hasLoadableSchemer(termForCheck)) break;
-					termForCheck = this.utils.removeSchemer(termForCheck);
-					aTerm = this.utils.removeSchemer(aTerm);
+					if (this.utils.hasLoadableScheme(termForCheck)) break;
+					termForCheck = this.utils.removeScheme(termForCheck);
+					aTerm = this.utils.removeScheme(aTerm);
 				}
-				if (!this.utils.hasLoadableSchemer(termForCheck)) return;
+				if (!this.utils.hasLoadableScheme(termForCheck)) return;
 			}
 			else if (this.utils.URIExceptionPattern.test(hadlWidthTerm)) {
 				return;

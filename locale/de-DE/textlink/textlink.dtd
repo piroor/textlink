@@ -121,10 +121,10 @@
 
 <!ENTITY textlink.group.find        "URI-Erkennung">
 
-<!ENTITY textlink.schemer             "Text, der mit folgenden Teilen beginnt, als URI erkennen: (ex. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Zurücksetzen">
-<!ENTITY textlink.schemer.fixup.table "Repariere defekte URIs mit folgenden Regeln: (ex. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Zurücksetzen">
+<!ENTITY textlink.scheme             "Text, der mit folgenden Teilen beginnt, als URI erkennen: (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Zurücksetzen">
+<!ENTITY textlink.scheme.fixup.table "Repariere defekte URIs mit folgenden Regeln: (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Zurücksetzen">
 
 <!ENTITY textlink.relative.enabled    "Parse relative Pfadangaben (nicht empfohlen)">
 <!ENTITY textlink.multibyte.enabled   "Parse Multi-Byte-Zeichen">

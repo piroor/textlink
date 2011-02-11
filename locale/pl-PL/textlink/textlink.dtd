@@ -120,10 +120,10 @@
 
 <!ENTITY textlink.group.find        "Wykrywanie adresów URI">
 
-<!ENTITY textlink.schemer             "Rozpoznaj tekst jako adres URI, jeśli zaczyna się od słów: (np. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Przywróć domyślne">
-<!ENTITY textlink.schemer.fixup.table "Popraw błędne adresy przy pomocy następujących reguł: (np. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Przywróć domyślne">
+<!ENTITY textlink.scheme             "Rozpoznaj tekst jako adres URI, jeśli zaczyna się od słów: (np. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Przywróć domyślne">
+<!ENTITY textlink.scheme.fixup.table "Popraw błędne adresy przy pomocy następujących reguł: (np. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Przywróć domyślne">
 
 <!ENTITY textlink.relative.enabled    "Odczytuj adresy względne (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Odczytuj znaki kilkubajtowe">

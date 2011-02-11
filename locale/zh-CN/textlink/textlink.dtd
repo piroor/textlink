@@ -119,10 +119,10 @@
 
 <!ENTITY textlink.group.find        "URI 检测">
 
-<!ENTITY textlink.schemer             "将以下部分开头的文本视作 URI：（例如 &quot;http、ftp、mailto&quot;）">
-<!ENTITY textlink.schemer.default     "重置">
-<!ENTITY textlink.schemer.fixup.table "使用以下规则修复拼写错误的 URI：（例如 &quot;ttp=>http、ttps=>https&quot;）">
-<!ENTITY textlink.schemer.fixup.table.default "重置">
+<!ENTITY textlink.scheme             "将以下部分开头的文本视作 URI：（例如 &quot;http、ftp、mailto&quot;）">
+<!ENTITY textlink.scheme.default     "重置">
+<!ENTITY textlink.scheme.fixup.table "使用以下规则修复拼写错误的 URI：（例如 &quot;ttp=>http、ttps=>https&quot;）">
+<!ENTITY textlink.scheme.fixup.table.default "重置">
 
 <!ENTITY textlink.relative.enabled    "解析相关的路径 (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "解析多字节的字符">

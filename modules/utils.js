@@ -43,7 +43,7 @@ Components.utils.import('resource://textlink-modules/prefs.js');
 var TextLinkUtils = { 
 	prefs : prefs,
 	
-	schemerFixupDefault : 'http', 
+	schemeFixupDefault : 'http', 
 	strict              : true,
 	contextItemCurrent  : true,
 	contextItemWindow   : true,
@@ -52,15 +52,15 @@ var TextLinkUtils = {
 
 	multilineURIEnabled : false,
 
-	get schemer()
+	get scheme()
 	{
-		return this._schemer;
+		return this._scheme;
 	},
-	set schemer(val)
+	set scheme(val)
 	{
-		this._schemer = val;
+		this._scheme = val;
 
-		this._schemers = this.schemer
+		this._schemes = this.scheme
 			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
 			.replace(/\?/g, '.')
 			.replace(/\*/g, '.+')
@@ -69,23 +69,23 @@ var TextLinkUtils = {
 		this.invalidatePatterns();
 		return val;
 	},
-	_schemer : '',
-	get schemers()
+	_scheme : '',
+	get schemes()
 	{
-		return this._schemers.concat(this._fixupSchemers);
+		return this._schemes.concat(this._fixupSchemes);
 	},
-	_schemers : [],
-	_fixupSchemers : [],
+	_schemes : [],
+	_fixupSchemes : [],
 
-	get schemerFixupTable()
+	get schemeFixupTable()
 	{
-		return this._schemerFixupTable;
+		return this._schemeFixupTable;
 	},
-	set schemerFixupTable(val)
+	set schemeFixupTable(val)
 	{
-		this._schemerFixupTable = val;
+		this._schemeFixupTable = val;
 
-		this._fixupTable = this._schemerFixupTable
+		this._fixupTable = this._schemeFixupTable
 					.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
 		this._fixupTargets = this._fixupTable
 					.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
@@ -93,7 +93,7 @@ var TextLinkUtils = {
 					.replace(/\?/g, '.')
 					.replace(/\*/g, '.+')
 					.split(/\s*[,\| \n\r\t]+\s*/);
-		this._fixupSchemers = this._fixupTargets
+		this._fixupSchemes = this._fixupTargets
 					.filter(function(aTarget) {
 						return /:$/.test(aTarget);
 					})
@@ -106,7 +106,7 @@ var TextLinkUtils = {
 		this.invalidatePatterns();
 		return val;
 	},
-	_schemerFixupTable : '',
+	_schemeFixupTable : '',
 
 	get relativePathEnabled()
 	{
@@ -174,8 +174,8 @@ var TextLinkUtils = {
 		if (!this._URIPattern) {
 			this._URIPattern = this.URIPattern_base
 				.replace(
-					/%SCHEMER_PATTERN%/g,
-					'(?:'+this.schemers.join('|')+'):'
+					/%SCHEME_PATTERN%/g,
+					'(?:'+this.schemes.join('|')+'):'
 				)
 				.replace(
 					/%PART_PATTERN%/g,
@@ -218,10 +218,10 @@ var TextLinkUtils = {
 		if (!this._URIPatternMultibyte) {
 			this._URIPatternMultibyte = this.URIPatternMultibyte_base
 				.replace(
-					/%SCHEMER_PATTERN%/g,
+					/%SCHEME_PATTERN%/g,
 					'(?:'+
-					this.schemers.map(function(aSchemer) {
-						return aSchemer+'|'+this.convertHalfWidthToFullWidth(aSchemer);
+					this.schemes.map(function(aScheme) {
+						return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
 					}, this).join('|')+
 					')[:\uff1a]'
 				)
@@ -337,14 +337,14 @@ var TextLinkUtils = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPattern_base : '\\(?(%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
-	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
-	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+	kSchemePattern : '[\\*\\+a-z0-9_]+:', 
+	kSchemePatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
 
 	kLoginPattern : '(?:[^/:]+(?::[^/@]+)?@)?',
 	kLoginPatternMultibyte : '(?:[^/:\uff0f\uff1a]+(?:[:\uff1a][^@/\uff0f\uff20]+)?[@\uff20])?',
@@ -460,7 +460,7 @@ var TextLinkUtils = {
  
 	invalidatePatterns : function() 
 	{
-		this._schemerRegExp = null;
+		this._schemeRegExp = null;
 
 		this._domainPatterns = {};
 		this._topLevelDomains = null;
@@ -480,7 +480,7 @@ var TextLinkUtils = {
 		this._URIPartFinderRegExp_end = null;
 	},
  
-	invalidateExceptionPatterns : function()
+	invalidateExceptionPatterns : function() 
 	{
 		this._URIExceptionPattern = null;
 		this._URIExceptionPattern_start = null;
@@ -624,7 +624,7 @@ var TextLinkUtils = {
 					.filter(function(aMaybeURI) {
 						return (
 							(
-								!this.hasLoadableSchemer(aMaybeURI) &&
+								!this.hasLoadableScheme(aMaybeURI) &&
 								!this.URIExceptionPattern_all.test(aMaybeURI)
 							) ||
 							this.isHeadOfNewURI(aMaybeURI)
@@ -637,7 +637,7 @@ var TextLinkUtils = {
 		this._updateURIRegExp();
 		var match = aString.match(this._URIMatchingRegExp_fromHead);
 		match = match ? match[1] : '' ;
-		return this.hasLoadableSchemer(match) ? match == aString : false ;
+		return this.hasLoadableScheme(match) ? match == aString : false ;
 	},
 	_URIMatchingRegExp : null,
 	_URIMatchingRegExp_fromHead : null,
@@ -685,30 +685,30 @@ var TextLinkUtils = {
 		this._URIPartFinderRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
  
-	hasLoadableSchemer : function(aURI) 
+	hasLoadableScheme : function(aURI) 
 	{
-		if (!this._schemerRegExp)
-			this._schemerRegExp = new RegExp('^('+this.schemers.join('|')+'):', 'i');
-		return this._schemerRegExp.test(this.convertFullWidthToHalfWidth(aURI));
+		if (!this._schemeRegExp)
+			this._schemeRegExp = new RegExp('^('+this.schemes.join('|')+'):', 'i');
+		return this._schemeRegExp.test(this.convertFullWidthToHalfWidth(aURI));
 	},
-	_schemerRegExp : null,
+	_schemeRegExp : null,
  
-	hasSchemer : function(aInput) 
+	hasScheme : function(aInput) 
 	{
-		return this._firstSchemerRegExp.test(aInput);
+		return this._firstSchemeRegExp.test(aInput);
 	},
-	removeSchemer : function(aInput)
+	removeScheme : function(aInput)
 	{
-		return aInput.replace(this._firstSchemerRegExp, '');
+		return aInput.replace(this._firstSchemeRegExp, '');
 	},
-	get _firstSchemerRegExp()
+	get _firstSchemeRegExp()
 	{
-		if (!this.__firstSchemerRegExp) {
-			this.__firstSchemerRegExp = new RegExp('^'+this.kSchemerPatternMultibyte, 'i');
+		if (!this.__firstSchemeRegExp) {
+			this.__firstSchemeRegExp = new RegExp('^'+this.kSchemePatternMultibyte, 'i');
 		}
-		return this.__firstSchemerRegExp;
+		return this.__firstSchemeRegExp;
 	},
-	__firstSchemerRegExp : null,
+	__firstSchemeRegExp : null,
  
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
@@ -721,13 +721,13 @@ var TextLinkUtils = {
 			return null;
 		}
 
-		aURIComponent = this.fixupSchemer(aURIComponent);
+		aURIComponent = this.fixupScheme(aURIComponent);
 
 		if (this.relativePathEnabled) {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
-		return this.hasLoadableSchemer(aURIComponent) ? aURIComponent : null ;
+		return this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
 	},
 	
 	sanitizeURIString : function(aURIComponent) 
@@ -815,7 +815,7 @@ var TextLinkUtils = {
 		/^(.+)\u3014[^\u3015$]*/
 	],
  
-	fixupSchemer : function(aURI) 
+	fixupScheme : function(aURI) 
 	{
 		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
@@ -844,10 +844,10 @@ var TextLinkUtils = {
 			if (match)
 				aURI = aURI.replace(target, match[1]);
 		}
-		else if (!this._firstSchemerRegExp.test(aURI)) {
-			var schemer = this.schemerFixupDefault;
-			if (schemer)
-				aURI = schemer+'://'+aURI;
+		else if (!this._firstSchemeRegExp.test(aURI)) {
+			var scheme = this.schemeFixupDefault;
+			if (scheme)
+				aURI = scheme+'://'+aURI;
 		}
 
 		return aURI;
@@ -879,16 +879,16 @@ var TextLinkUtils = {
 		var value = this.prefs.getPref(aData);
 		switch (aData)
 		{
-			case 'textlink.schemer':
-				this.schemer = value;
+			case 'textlink.scheme':
+				this.scheme = value;
 				return;
 
-			case 'textlink.schemer.fixup.table':
-				this.schemerFixupTable = value;
+			case 'textlink.scheme.fixup.table':
+				this.schemeFixupTable = value;
 				return;
 
-			case 'textlink.schemer.fixup.default':
-				this.schemerFixupDefault = value;
+			case 'textlink.scheme.fixup.default':
+				this.schemeFixupDefault = value;
 				return;
 
 			case 'textlink.find_click_point.strict':
@@ -975,15 +975,16 @@ var TextLinkUtils = {
 	init : function() 
 	{
 		this.prefs.addPrefListener(this);
+		this.migratePrefs();
 		this.initPrefs();
 	},
 	
 	initPrefs : function() 
 	{
 		var items = <![CDATA[
-			textlink.schemer
-			textlink.schemer.fixup.table
-			textlink.schemer.fixup.default
+			textlink.scheme
+			textlink.scheme.fixup.table
+			textlink.scheme.fixup.default
 			textlink.find_click_point.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
@@ -1003,6 +1004,32 @@ var TextLinkUtils = {
 		items.sort().forEach(function(aPref) {
 			this.observe(null, 'nsPref:changed', aPref);
 		}, this);
+	},
+ 
+	kPREF_VERSION : 1, 
+	migratePrefs : function()
+	{
+		// migrate old prefs
+		var orientalPrefs = [];
+		switch (this.prefs.getPref('textlink.prefsVersion'))
+		{
+			case 0:
+				[
+					'textlink.schemer:textlink.scheme',
+					'textlink.schemer.fixup.table:textlink.scheme.fixup.table',
+					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
+				].forEach(function(aPref) {
+					var keys = aPref.split(':');
+					var value = this.prefs.getPref(keys[0]);
+					if (value != this.prefs.getDefaultPref(keys[0])) {
+						this.prefs.setPref(keys[1], value);
+						this.prefs.clearPref(keys[0]);
+					}
+				}, this);
+			default:
+				break;
+		}
+		this.prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
 	},
   
 	destroy : function() 

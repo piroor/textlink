@@ -242,7 +242,7 @@ function test_makeURIComplete(aParameter)
 	assert.equals(aParameter.resolved, sv.makeURIComplete(aParameter.path, aParameter.base));
 }
 
-test_fixupSchemer.parameters = [
+test_fixupScheme.parameters = [
 	{ input    : 'http://www.example.com/',
 	  expected : 'http://www.example.com/' },
 	{ input    : 'ftp://www.example.com/',
@@ -294,9 +294,9 @@ test_fixupSchemer.parameters = [
 	{ input    : 'sub.日本語.jp/',
 	  expected : 'http://sub.日本語.jp/' },
 ];
-function test_fixupSchemer(aParameter)
+function test_fixupScheme(aParameter)
 {
-	assert.equals(aParameter.expected, sv.fixupSchemer(aParameter.input));
+	assert.equals(aParameter.expected, sv.fixupScheme(aParameter.input));
 }
 
 test_sanitizeURIString.parameters = utils.readParametersFromTSV('uri.sanitizeURIString.patterns.tsv');
@@ -408,7 +408,7 @@ function test_fixupURI(aParameter)
 		assert.isNull(sv.fixupURI(aParameter.input));
 }
 
-var schemerParameters = [
+var schemeParameters = [
 	{ input   : 'http://www.example.com/',
 	  has     : true,
 	  removed : '//www.example.com/' },
@@ -441,19 +441,19 @@ var schemerParameters = [
 	  removed : '日本語.jp?URL=http://日本語.jp/' },
 ];
 
-test_hasSchemer.parameters = schemerParameters;
-function test_hasSchemer(aParameter)
+test_hasScheme.parameters = schemeParameters;
+function test_hasScheme(aParameter)
 {
 	if (aParameter.has)
-		assert.isTrue(sv.hasSchemer(aParameter.input));
+		assert.isTrue(sv.hasScheme(aParameter.input));
 	else
-		assert.isFalse(sv.hasSchemer(aParameter.input));
+		assert.isFalse(sv.hasScheme(aParameter.input));
 }
 
-test_removeSchemer.parameters = schemerParameters;
-function test_removeSchemer(aParameter)
+test_removeScheme.parameters = schemeParameters;
+function test_removeScheme(aParameter)
 {
-	assert.equals(aParameter.removed, sv.removeSchemer(aParameter.input));
+	assert.equals(aParameter.removed, sv.removeScheme(aParameter.input));
 }
 
 test_isHeadOfNewURI.parameters = {
@@ -492,11 +492,11 @@ function test_isHeadOfNewURI(aParameter)
 		assert.isFalse(sv.isHeadOfNewURI(aParameter.string), aParameter.string);
 }
 
-test_hasLoadableSchemer.parameters = test_isHeadOfNewURI.parameters;
-function test_hasLoadableSchemer(aParameter)
+test_hasLoadableScheme.parameters = test_isHeadOfNewURI.parameters;
+function test_hasLoadableScheme(aParameter)
 {
 	if (aParameter.expected)
-		assert.isTrue(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+		assert.isTrue(sv.hasLoadableScheme(aParameter.string), aParameter.string);
 	else
-		assert.isFalse(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+		assert.isFalse(sv.hasLoadableScheme(aParameter.string), aParameter.string);
 }
