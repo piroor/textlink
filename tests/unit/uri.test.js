@@ -22,8 +22,8 @@ var fullWidthAbsoluteURISources = ['ｈｔｔｐ：／／ｗｗｗ．ｅｘａ�
                                    'ｈｔｔｐ：／／ｕｓｅｒ＠ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
                                    'ｈｔｔｐ：／／ｕｓｅｒ：ｐａｓｓ＠ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／'];
 var IDNAbsoluteURISources       = ['http://日本語.jp/',
-                                   'http://user@日本語.jp/',
-                                   'http://user:pass@日本語.jp/'];
+                                   'http://ユーザ@日本語.jp/',
+                                   'http://ユーザ:パスワード@日本語.jp/'];
 var halfWidthRelativeURISource  = '../directory/file';
 var fullWidthRelativeURISource  = '．．／ｄｉｒｅｃｔｏｒｙ／ｆｉｌｅ';
 var noURI                       = 'テキスト';
