@@ -74,7 +74,10 @@ var TextLinkUtils = {
 	set IDNScheme(aValue)
 	{
 		this._IDNScheme = aValue;
-		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme));
+		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme))
+							.filter(function(aScheme) {
+								return this.schemes.indexOf(aScheme) > -1;
+							}, this);
 		this.invalidatePatterns();
 		return aValue;
 	},

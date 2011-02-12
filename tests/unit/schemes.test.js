@@ -38,7 +38,7 @@ function test_schemes()
 function test_IDNSchemes()
 {
 	sv.scheme = 'http, https, about, chrome';
-	sv.IDNScheme = 'http, https';
+	sv.IDNScheme = 'http, https, unknown';
 
 	assert.equals('http, https', sv.IDNScheme);
 	assert.equals([], sv.IDNSchemes);
