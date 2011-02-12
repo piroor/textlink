@@ -130,7 +130,8 @@
 <!ENTITY textlink.relative.enabled    "相対パスも認識する（非推奨）">
 <!ENTITY textlink.multibyte.enabled   "全角英数文字も認識する">
 <!ENTITY textlink.multiline.enabled   "改行されたURIも認識する（非推奨）">
-<!ENTITY textlink.idn.enabled         "国際化ドメイン（IDN）も認識する">
+<!ENTITY textlink.idn.enabled         "以下で始まるURIでは国際化ドメイン（IDN）も認識する">
+<!ENTITY textlink.idn.scheme.default  "初期値に戻す">
 <!ENTITY textlink.i18nPath.enabled    "非ASCII文字のパスも認識する">
 
 <!ENTITY textlink.find_click_point.strict        "クリック位置の認識方法">

@@ -642,6 +642,9 @@
 		<preference id="textlink.idn.enabled"
 			name="textlink.idn.enabled"
 			type="bool"/>
+		<preference id="textlink.idn.scheme"
+			name="textlink.idn.scheme"
+			type="string"/>
 		<preference id="textlink.i18nPath.enabled"
 			name="textlink.i18nPath.enabled"
 			type="bool"/>
@@ -669,6 +672,21 @@
 								getDefaultPref('textlink.scheme');"/>
 		</hbox>
 
+		<checkbox id="textlink.idn.enabled-check"
+			label="&textlink.idn.enabled;"
+			preference="textlink.idn.enabled"/>
+		<hbox align="center">
+			<spacer style="width:1em;"/>
+			<textbox id="textlink.idn.scheme-textbox"
+				flex="1"
+				preference="textlink.idn.scheme"/>
+			<button label="&textlink.idn.scheme.default;"
+				class="reset-button"
+				oncommand="document.getElementById('textlink.idn.scheme').value =
+							this.previousSibling.value =
+								getDefaultPref('textlink.idn.scheme');"/>
+		</hbox>
+
 		<label id="textlink.scheme.fixup.table.label"
 			value="&textlink.scheme.fixup.table;"
 			control="textlink.scheme.fixup.table-textbox"/>
@@ -691,10 +709,7 @@
 		<checkbox id="textlink.multibyte.enabled-check"
 			label="&textlink.multibyte.enabled;"
 			preference="textlink.multibyte.enabled"/>
-		<checkbox id="textlink.idn.enabled-check"
-			label="&textlink.idn.enabled;"
-			preference="textlink.idn.enabled"/>
-		<checkbox id="textlink.idn.enabled-check"
+		<checkbox id="textlink.i18nPath.enabled-check"
 			label="&textlink.i18nPath.enabled;"
 			preference="textlink.i18nPath.enabled"/>
 

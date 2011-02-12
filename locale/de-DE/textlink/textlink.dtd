@@ -129,7 +129,8 @@
 <!ENTITY textlink.relative.enabled    "Parse relative Pfadangaben (nicht empfohlen)">
 <!ENTITY textlink.multibyte.enabled   "Parse Multi-Byte-Zeichen">
 <!ENTITY textlink.multiline.enabled   "Parse durch Zeilenumbrüche getrennte URIs (nicht empfohlen)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Erkennungverfahren für Klickpunkte">

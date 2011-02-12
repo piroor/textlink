@@ -127,7 +127,8 @@
 <!ENTITY textlink.relative.enabled    "剖析相對路徑 (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "剖析多位元組字元 (multi-byte characters)">
 <!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "滑鼠點擊偵測方式">
