@@ -30,32 +30,32 @@ function test_schemes()
 	assert.equals('a, b, c, d', sv.scheme);
 	assert.equals(['a', 'b', 'c', 'd'], sv.schemes);
 
-	sv.schemeFixupTable = 'e=>a, f=>a, g=>a';
+	sv.schemeFixupTable = 'e:=>a:, f:=>a:, g:=>a:';
 	assert.equals('a, b, c, d', sv.scheme);
 	assert.equals(['a', 'b', 'c', 'd', 'e', 'f', 'g'], sv.schemes);
 }
 
 function test_IDNSchemes()
 {
-	sv.scheme = 'a, b, c, d';
-	sv.IDNScheme = 'c, d';
+	sv.scheme = 'http, https, about, chrome';
+	sv.IDNScheme = 'http, https';
 
-	assert.equals('c, d', sv.IDNScheme);
+	assert.equals('http, https', sv.IDNScheme);
 	assert.equals([], sv.IDNSchemes);
-	assert.equals(['a', 'b', 'c', 'd'], sv.nonIDNSchemes);
+	assert.equals(['about', 'chrome', 'http', 'https'], sv.nonIDNSchemes);
 
-	sv.schemeFixupTable = 'e:=>a:, f:=>c:, g:=>d:';
+	sv.schemeFixupTable = 'ttp:=>http:, tp:=>http:, p:=>http:, bout:=>about:';
 	assert.equals([], sv.IDNSchemes);
-	assert.equals(['a', 'b', 'c', 'd', 'e', 'f', 'g'], sv.nonIDNSchemes);
+	assert.equals(['about', 'bout', 'chrome', 'http', 'https', 'p', 'tp', 'ttp'], sv.nonIDNSchemes);
 
 	sv.IDNEnabled = true;
 	sv.schemeFixupTable = '';
 
-	assert.equals(['c', 'd'], sv.IDNSchemes);
-	assert.equals(['a', 'b'], sv.nonIDNSchemes);
+	assert.equals(['http', 'https'], sv.IDNSchemes);
+	assert.equals(['about', 'chrome'], sv.nonIDNSchemes);
 
-	sv.schemeFixupTable = 'e:=>a:, f:=>c:, g:=>d:';
-	assert.equals(['c', 'd', 'f', 'g'], sv.IDNSchemes);
-	assert.equals(['a', 'b', 'e'], sv.nonIDNSchemes);
+	sv.schemeFixupTable = 'ttp:=>http:, tp:=>http:, p:=>http:, bout:=>about:';
+	assert.equals(['http', 'https', 'p', 'tp', 'ttp'], sv.IDNSchemes);
+	assert.equals(['about', 'bout', 'chrome'], sv.nonIDNSchemes);
 }
 

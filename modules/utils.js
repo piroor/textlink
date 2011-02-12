@@ -227,27 +227,44 @@ var TextLinkUtils = {
 	get URIPattern() 
 	{
 		if (!this._URIPattern) {
-			this._URIPattern = this.URIPattern_base
-				.replace(
-					/%SCHEME_PATTERN%/g,
-					'(?:'+this.schemes.join('|')+'):'
-				)
-				.replace(
-					/%PART_PATTERN%/g,
-					this.URIPattern_part
-				)
-				.replace(
-					/%LOGIN_PATTERN%/g,
-					this.kLoginPattern
-				)
-				.replace(
-					/%POSSIBLE_DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_LAZY)
-				)
-				.replace(
-					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern()
-				);
+			var patterns = [];
+			var base = this.URIPattern_base
+						.replace(
+							/%PART_PATTERN%/g,
+							this.URIPattern_part
+						)
+						.replace(
+							/%LOGIN_PATTERN%/g,
+							this.kLoginPattern
+						);
+			patterns.push(base
+							.replace(
+								/%SCHEME_PATTERN%/g,
+								'(?:'+this.nonIDNSchemes.join('|')+'):'
+							)
+							.replace(
+								/%POSSIBLE_DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_LAZY)
+							)
+							.replace(
+								/%DOMAIN_PATTERN%/g,
+								this.getDomainPattern()
+							));
+			if (this.IDNEnabled)
+				patterns.push(base
+								.replace(
+									/%SCHEME_PATTERN%/g,
+									'(?:'+this.IDNSchemes.join('|')+'):'
+								)
+								.replace(
+									/%POSSIBLE_DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_LAZY | this.kDOMAIN_IDN)
+								)
+								.replace(
+									/%DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_IDN)
+								));
+			this._URIPattern = this.URIPatterns_base.replace(/%URI_PATTERN%/g, patterns.join('|'));
 		}
 
 		return this._URIPattern;
@@ -271,31 +288,52 @@ var TextLinkUtils = {
 	get URIPatternMultibyte() 
 	{
 		if (!this._URIPatternMultibyte) {
-			this._URIPatternMultibyte = this.URIPatternMultibyte_base
-				.replace(
-					/%SCHEME_PATTERN%/g,
-					'(?:'+
-					this.schemes.map(function(aScheme) {
-						return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
-					}, this).join('|')+
-					')[:\uff1a]'
-				)
-				.replace(
-					/%PART_PATTERN%/g,
-					this.URIPatternMultibyte_part
-				)
-				.replace(
-					/%LOGIN_PATTERN%/g,
-					this.kLoginPatternMultibyte
-				)
-				.replace(
-					/%POSSIBLE_DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
-				)
-				.replace(
-					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
-				);
+			var patterns = [];
+			var base = this.URIPatternMultibyte_base
+						.replace(
+							/%PART_PATTERN%/g,
+							this.URIPatternMultibyte_part
+						)
+						.replace(
+							/%LOGIN_PATTERN%/g,
+							this.kLoginPatternMultibyte
+						);
+			patterns.push(base
+							.replace(
+								/%SCHEME_PATTERN%/g,
+								'(?:'+
+								this.nonIDNSchemes.map(function(aScheme) {
+									return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
+								}, this).join('|')+
+								')[:\uff1a]'
+							)
+							.replace(
+								/%POSSIBLE_DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
+							)
+							.replace(
+								/%DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
+							));
+			if (this.IDNEnabled)
+				patterns.push(base
+								.replace(
+									/%SCHEME_PATTERN%/g,
+									'(?:'+
+									this.IDNSchemes.map(function(aScheme) {
+										return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
+									}, this).join('|')+
+									')[:\uff1a]'
+								)
+								.replace(
+									/%POSSIBLE_DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY | this.kDOMAIN_IDN)
+								)
+								.replace(
+									/%DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_IDN)
+								));
+			this._URIPatternMultibyte = this.URIPatternsMultibyte_base.replace(/%URI_PATTERN%/g, patterns.join('|'));
 		}
 
 		return this._URIPatternMultibyte;
@@ -319,10 +357,9 @@ var TextLinkUtils = {
 	getDomainPattern : function(aOptionsFlag) 
 	{
 		aOptionsFlag = aOptionsFlag || 0;
-		var multibyte = aOptionsFlag & this.kDOMAIN_MULTIBYTE;
 		var pattern = this._domainPatterns[aOptionsFlag];
 		if (!pattern) {
-			if (this.IDNEnabled) {
+			if (aOptionsFlag & this.kDOMAIN_IDN) {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
 											':/\uff1a\uff0f';
@@ -339,7 +376,7 @@ var TextLinkUtils = {
 							']+';
 				pattern = part + '(?:[' + this.kIDNDomainSeparators + ']' + part + ')*';
 			}
-			else if (multibyte) {
+			else if (aOptionsFlag & this.kDOMAIN_MULTIBYTE) {
 				let part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
 				pattern = part + '(?:[' + this.kMultibyteDomainSeparators + ']' + part + ')*';
 			}
@@ -347,9 +384,11 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			if (!(aOptionsFlag & this.kDOMAIN_LAZY) ||
-				this.prefs.getPref('textlink.strictDomainNames.enabled'))
-				pattern += this.getTLDPattern(multibyte);
+			if (
+				!(aOptionsFlag & this.kDOMAIN_LAZY) ||
+				aOptionsFlag & this.kDOMAIN_IDN
+				)
+				pattern += this.getTLDPattern(aOptionsFlag);
 
 			this._domainPatterns[aOptionsFlag] = pattern;
 		}
@@ -358,25 +397,26 @@ var TextLinkUtils = {
 	_domainPatterns : {},
 	kDOMAIN_MULTIBYTE : (1 << 0),
 	kDOMAIN_LAZY      : (1 << 1),
+	kDOMAIN_IDN       : (1 << 2),
  
 	kDomainSeparators          : '\\.', 
 	kMultibyteDomainSeparators : '\\.\uff0e',
 	kIDNDomainSeparators       : '\\.\u3002\uff0e',
  
-	getTLDPattern : function(aMultibyte) 
+	getTLDPattern : function(aOptionsFlag) 
 	{
 		var TLD = this.topLevelDomains;
 		var halfWidthTLDPattern = '(?:'+TLD.join('|')+')\\b';
-		var TLDPattern = aMultibyte ?
+		var TLDPattern = aOptionsFlag & this.kDOMAIN_MULTIBYTE || aOptionsFlag & this.kDOMAIN_IDN ?
 						'(?:' +
 						[halfWidthTLDPattern]
 							.concat(TLD.map(this.convertHalfWidthToFullWidth, this))
 							.join('|') +
 						')' :
 						halfWidthTLDPattern ;
-		return (this.IDNEnabled ?
+		return (aOptionsFlag & this.kDOMAIN_IDN ?
 					'['+this.kIDNDomainSeparators+']' :
-				aMultibyte ?
+				aOptionsFlag & this.kDOMAIN_MULTIBYTE ?
 					'['+this.kMultibyteDomainSeparators+']' :
 					this.kDomainSeparators
 				)+
@@ -392,10 +432,13 @@ var TextLinkUtils = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPatterns_base : '\\(?(%URI_PATTERN%)', 
+	URIPatternsMultibyte_base : '[\\(\uff08]?(%URI_PATTERN%)', 
+ 
+	URIPattern_base : '%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
 	kSchemePattern : '[\\*\\+a-z0-9_]+:', 
@@ -991,7 +1034,6 @@ var TextLinkUtils = {
 			case 'textlink.ccTLD':
 			case 'textlink.IDN_TLD':
 			case 'textlink.extraTLD':
-			case 'textlink.strictDomainNames.enabled':
 			case 'network.IDN.blacklist_chars':
 				this.invalidatePatterns();
 				return;
@@ -1064,6 +1106,7 @@ var TextLinkUtils = {
 			textlink.scheme
 			textlink.scheme.fixup.table
 			textlink.scheme.fixup.default
+			textlink.idn.scheme
 			textlink.find_click_point.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
