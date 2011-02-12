@@ -77,17 +77,24 @@ var fullWidthRelativeURIs = [
 		fullWidthRelativeURISource+'＃ｈａｓｈ'
 	].join('\n').split('\n');
 
-function assertURIMatch(aString, aURIString, aShouldMatch)
+function extractDomainPart(aURI)
+{
+	var domain = aURI
+			.replace(/^[^:：]+[:：](?:[\/／][\/／])?|[\/／].*$/g, '') // remove scheme and path
+			.replace(/^[^@＠]+[@＠]/, ''); // remove inline username and password
+	return /[\.．]/.test(domain) ? domain : '' ; // ignore not-domain strings (like "blank" extracted from "about:blank")
+}
+function assertURIMatch(aString, aURIString, aShouldMatchToURI)
 {
 	var message = aString +'\n => '+aURIString;
 	var match = sv.matchURIRegExp(aString);
-	if (!aShouldMatch) {
-		assert.isNull(match, message);
-	}
-	else {
+	if (aShouldMatchToURI) {
 		assert.isNotNull(match, message);
 		assert.equals(1, match.length, message);
 		assert.equals(aURIString, match[0], message);
+	}
+	else {
+		assert.isNull(match, message);
 	}
 }
 
@@ -127,9 +134,12 @@ test_matchURIRegExp_fullWidthAbsoluteURIs.setUp = matchURIRegExpSetUp;
 function test_matchURIRegExp_fullWidthAbsoluteURIs(aFlags)
 {
 	fullWidthAbsoluteURIs.forEach(function(aURI) {
-		assertURIMatch(aURI, aURI, aFlags & FULL_WIDTH);
-		assertURIMatch('test '+aURI+' text', aURI, aFlags & FULL_WIDTH);
-		assertURIMatch('日本語'+aURI+'日本語', aURI, aFlags & FULL_WIDTH);
+		// fullwidth URIs can be recognized as IDN, so, we accept the domain part extracted from the fullwidth URI.
+		var matched = !(aFlags & FULL_WIDTH) && aFlags & IDN ?
+						extractDomainPart(aURI) : aURI ;
+		assertURIMatch(aURI, matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
+		assertURIMatch('test '+aURI+' text', matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
+		assertURIMatch('日本語'+aURI+'日本語', matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
 	});
 }
 
@@ -173,6 +183,11 @@ function test_matchURIRegExp_multiline(aFlags)
 	var expected = halfWidthAbsoluteURIs;
 	if (aFlags & FULL_WIDTH)
 		expected = expected.concat(fullWidthAbsoluteURIs);
+	// fullwidth URIs can be recognized as IDNs, so, we add array of domain parts extracted from fullwidth URIs.
+	if (aFlags & IDN)
+		expected = expected.concat(fullWidthAbsoluteURIs
+									.map(extractDomainPart)
+									.filter(function(aDomain) { return aDomain; }));
 	if (aFlags & RELATIVE)
 		expected = expected.concat(halfWidthRelativeURIs);
 	if (aFlags & FULL_WIDTH && aFlags & RELATIVE)

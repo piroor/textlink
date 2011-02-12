@@ -365,7 +365,7 @@ var TextLinkUtils = {
 			if (aOptionsFlag & this.kDOMAIN_IDN) {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
-											':/\uff1a\uff0f';
+											':/@\uff1a\uff0f\uff20';
 				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
 					forbiddenCharacters += this.prefs.getPref('textlink.idn.lazyDetection.separators');
 				let part = '[^'+
