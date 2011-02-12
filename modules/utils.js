@@ -56,55 +56,110 @@ var TextLinkUtils = {
 	{
 		return this._scheme;
 	},
-	set scheme(val)
+	set scheme(aValue)
 	{
-		this._scheme = val;
-
-		this._schemes = this.scheme
-			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-			.replace(/\?/g, '.')
-			.replace(/\*/g, '.+')
-			.split(/[,\| \n\r\t]+/);
-
+		this._scheme = aValue;
+		this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
 		this.invalidatePatterns();
-		return val;
+		return aValue;
 	},
 	_scheme : '',
 	get schemes()
 	{
-		return this._schemes.concat(this._fixupSchemes);
+		return this._schemes.concat(this._fixupSchemes).sort();
 	},
 	_schemes : [],
 	_fixupSchemes : [],
+
+	set IDNScheme(aValue)
+	{
+		this._IDNScheme = aValue;
+		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme));
+		this.invalidatePatterns();
+		return aValue;
+	},
+	get IDNScheme()
+	{
+		return this._IDNScheme;
+	},
+	_IDNScheme : '',
+	get IDNSchemes()
+	{
+		if (this.IDNEnabled) {
+			if (this._fixupIDNSchemes === null) {
+				this._fixupIDNSchemes = [];
+				for (let i in this._fixupTargetsHash)
+				{
+					if (!this._fixupTargetsHash.hasOwnProperty(i))
+						continue;
+					let fixUpToMatch = this._fixupTargetsHash[i].match(/^(\w+):/);
+					let fixUpFromMatch = i.match(/^(\w+):/);
+					if (
+						fixUpToMatch &&
+						this._IDNSchemes.indexOf(fixUpToMatch[1]) > -1 &&
+						fixUpFromMatch
+						)
+						this._fixupIDNSchemes.push(fixUpFromMatch[1]);
+				}
+			}
+			return this._IDNSchemes.concat(this._fixupIDNSchemes).sort();
+		}
+		else {
+			return [];
+		}
+	},
+	_IDNSchemes : [],
+	_fixupIDNSchemes : null,
+
+	get nonIDNSchemes()
+	{
+		if (this.IDNEnabled) {
+			if (this._nonIDNSchemes === null) {
+				let IDNSchemes = this.IDNSchemes;
+				this._nonIDNSchemes = this.schemes
+										.filter(function(aScheme) {
+											return IDNSchemes.indexOf(aScheme) < 0;
+										});
+			}
+			return this._nonIDNSchemes;
+		}
+		else {
+			return this.schemes;
+		}
+	},
+	_nonIDNSchemes : null,
 
 	get schemeFixupTable()
 	{
 		return this._schemeFixupTable;
 	},
-	set schemeFixupTable(val)
+	set schemeFixupTable(aValue)
 	{
-		this._schemeFixupTable = val;
+		this._schemeFixupTable = aValue;
 
 		this._fixupTable = this._schemeFixupTable
 					.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
-		this._fixupTargets = this._fixupTable
-					.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
-					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-					.replace(/\?/g, '.')
-					.replace(/\*/g, '.+')
-					.split(/\s*[,\| \n\r\t]+\s*/);
-		this._fixupSchemes = this._fixupTargets
-					.filter(function(aTarget) {
-						return /:$/.test(aTarget);
-					})
-					.map(function(aTarget) {
-						return aTarget.replace(/:$/, '');
-					});
+
+		this._fixupTargets     = [];
+		this._fixupTargetsHash = {};
+		this._fixupSchemes     = [];
+		this.niceSplit(this.expandWildcardsToRegExp(this._fixupTable))
+			.forEach(function(aTarget) {
+				let [fixUpFrom, fixUpTo] = aTarget.split(/\s*=>\s*/);
+				if (!fixUpFrom || !fixUpTo)
+					return;
+				this._fixupTargetsHash[fixUpFrom] = fixUpTo;
+				this._fixupTargets.push(fixUpFrom);
+				let match = fixUpFrom.match(/^(\w+):/);
+				if (match)
+					this._fixupSchemes.push(match[1]);
+			}, this);
+
 		this._fixupTargetsPattern = this._fixupTargets.join('|');
 		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
 
 		this.invalidatePatterns();
-		return val;
+		return aValue;
 	},
 	_schemeFixupTable : '',
 
@@ -461,6 +516,8 @@ var TextLinkUtils = {
 	invalidatePatterns : function() 
 	{
 		this._schemeRegExp = null;
+		this._fixupIDNSchemes = null;
+		this._nonIDNSchemes = null;
 
 		this._domainPatterns = {};
 		this._topLevelDomains = null;
@@ -589,6 +646,23 @@ var TextLinkUtils = {
 		code += 0xFF00;
 		code -= 0x0020;
 		return String.fromCharCode(code);
+	},
+ 
+	expandWildcardsToRegExp : function(aInput) 
+	{
+		return String(aInput)
+			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+			.replace(/\?/g, '.')
+			.replace(/\*/g, '.+');
+	},
+ 
+	niceSplit : function(aInput) 
+	{
+		return String(aInput)
+			.split(/[\s\|,]+/)
+			.filter(function(aItem) {
+				return !!aItem;
+			});
 	},
   
 // uri operations 
@@ -852,10 +926,11 @@ var TextLinkUtils = {
 
 		return aURI;
 	},
-	_fixupTable : null,
-	_fixupTargets : null,
-	_fixupTargetsPattern : null,
-	_fixupTargetsRegExp : null,
+	_fixupTable : '',
+	_fixupTargets : [],
+	_fixupTargetsHash : {},
+	_fixupTargetsPattern : '',
+	_fixupTargetsRegExp : '',
  
 	// ‘Š‘ÎƒpƒX‚Ì‰ðŒˆ 
 	makeURIComplete : function(aURI, aSourceURI)
@@ -902,6 +977,10 @@ var TextLinkUtils = {
 			case 'textlink.idn.enabled':
 			case 'network.enableIDN':
 				this.IDNEnabled = this.prefs.getPref('network.enableIDN') && this.prefs.getPref('textlink.idn.enabled');
+				return;
+
+			case 'textlink.idn.scheme':
+				this.IDNScheme = value;
 				return;
 
 			case 'textlink.i18nPath.enabled':
