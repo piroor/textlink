@@ -220,7 +220,7 @@ function test_getURIRangesFromRange()
 {
 	var range = content.document.createRange();
 	range.selectNodeContents($('first'));
-	range.setEndAfter($('prefix'));
+	range.setEndAfter($('auth-url'));
 
 	var ranges;
 	var rangesToString = function(aRange) {
@@ -246,7 +246,25 @@ function test_getURIRangesFromRange()
 			'ｈｔｔｐ：／／ｗｈｉｔｅ．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'ｔｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\uff5eｐｉｒｏ／',
 			'ｔｐ：／／ｗｗｗ９８．ｓａｋｕｒａ．ｎｅ．ｊｐ／\u301cｐｉｒｏ／ｅｎｔｒａｎｃｅ／',
-			'http://www.example.com/'
+			'http://www.example.com/',
+			'www.google.com',
+			'www.google.ca',
+			'addons.mozilla.org',
+			'http://www.google.com、www.google.ca、addons.mozilla.org',
+			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
+			'mozilla.jp/',
+			'荒川智則.jp',
+			'http://荒川智則.jp/#foobar',
+			'http://雪、無音、段ボール。荒川智則.jp/',
+			'about:blank',
+			'about:config',
+			'about:plugins',
+			'about:support',
+			'data:text/plain,foobar',
+			'chrome://browser/content/browser.xul',
+			'resource://gre/',
+			'ftp://anonymous:anonymous@ftp.mozilla.org/',
+			'http://test@example.com/test/'
 		],
 		ranges.map(rangesToString)
 	);
@@ -265,7 +283,25 @@ function test_getURIRangesFromRange()
 			'http://white.sakura.ne.jp/~piro/',
 			'http://www98.sakura.ne.jp/~piro/',
 			'http://www98.sakura.ne.jp/~piro/entrance/',
-			'http://www.example.com/'
+			'http://www.example.com/',
+			'http://www.google.com',
+			'http://www.google.ca',
+			'http://addons.mozilla.org',
+			'http://www.google.com、www.google.ca、addons.mozilla.org',
+			'http://www.google.co.jp/search?q=Firefox&ie=utf-8&oe=utf-8',
+			'http://mozilla.jp/',
+			'http://荒川智則.jp',
+			'http://荒川智則.jp/#foobar',
+			'http://雪、無音、段ボール。荒川智則.jp/',
+			'about:blank',
+			'about:config',
+			'about:plugins',
+			'about:support',
+			'data:text/plain,foobar',
+			'chrome://browser/content/browser.xul',
+			'resource://gre/',
+			'ftp://anonymous:anonymous@ftp.mozilla.org/',
+			'http://test@example.com/test/'
 		],
 		ranges.map(rangesToURI)
 	);
@@ -275,8 +311,8 @@ function test_getURIRangesFromRange()
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
 	ranges = sv.getURIRangesFromRange(range, sv.FIND_LAST);
-	assert.equals(['http://www.example.com/'], ranges.map(rangesToString));
-	assert.equals(['http://www.example.com/'], ranges.map(rangesToURI));
+	assert.equals(['http://test@example.com/test/'], ranges.map(rangesToString));
+	assert.equals(['http://test@example.com/test/'], ranges.map(rangesToURI));
 
 
 	range.setStart($('first').firstChild, 10);
@@ -438,6 +474,15 @@ function test_getURIRangesFromRange_plainText()
 			'荒川智則.jp',
 			'http://荒川智則.jp/#foobar',
 			'http://雪、無音、段ボール。荒川智則.jp/',
+			'about:blank',
+			'about:config',
+			'about:plugins',
+			'about:support',
+			'data:text/plain,foobar',
+			'chrome://browser/content/browser.xul',
+			'resource://gre/',
+			'ftp://anonymous:anonymous@ftp.mozilla.org/',
+			'http://test@example.com/test/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',
@@ -473,6 +518,15 @@ function test_getURIRangesFromRange_plainText()
 			'http://荒川智則.jp',
 			'http://荒川智則.jp/#foobar',
 			'http://雪、無音、段ボール。荒川智則.jp/',
+			'about:blank',
+			'about:config',
+			'about:plugins',
+			'about:support',
+			'data:text/plain,foobar',
+			'chrome://browser/content/browser.xul',
+			'resource://gre/',
+			'ftp://anonymous:anonymous@ftp.mozilla.org/',
+			'http://test@example.com/test/',
 			'http://piro.sakura.ne.jp/latest/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/',
 			'http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/',

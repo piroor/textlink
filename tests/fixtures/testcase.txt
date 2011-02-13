@@ -24,6 +24,10 @@ Mozilla Japanのサイト。
 例：http://雪、無音、段ボール。荒川智則.jp/
 この例では「。」は正規化されて半角ピリオド（.）と同じと見なされます。
 
+http以外のスキームのテスト。 about:blank、about:config、about:plugins、about:supportなどのabout: URIや、 data:text/plain,foobar のようなdata: URI、 chrome://browser/content/browser.xul、resource://gre/のようなFirefox内部で使われるURLがあります。
+
+ユーザ名とパスワードを含むURLのテスト。 ftp://anonymous:anonymous@ftp.mozilla.org/、http://test@example.com/test/など。
+
 http://piro.sakura.ne.jp/latest/
 http://piro.sakura.ne.jp/latest/blosxom/mozilla/
 http://piro.sakura.ne.jp/latest/blosxom/mozilla/xul/
