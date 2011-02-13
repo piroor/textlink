@@ -141,7 +141,7 @@ var TextLinkUtils = {
 		this._schemeFixupTable = aValue;
 
 		this._fixupTable = this._schemeFixupTable
-					.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
+					.replace(/(\s*[^:,\s]+)\s*=>\s*([^:,\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
 
 		this._fixupTargets     = [];
 		this._fixupTargetsHash = {};
@@ -157,6 +157,11 @@ var TextLinkUtils = {
 				if (match)
 					this._fixupSchemes.push(match[1]);
 			}, this);
+
+		this._fixupTargets.sort().forEach(function(aTarget) {
+			this._fixupTargetsHash[aTarget] = this._fixupTargetsHash[aTarget];
+		}, this);
+		this._fixupSchemes.sort();
 
 		this._fixupTargetsPattern = this._fixupTargets.join('|');
 		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
