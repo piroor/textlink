@@ -60,6 +60,7 @@ var TextLinkUtils = {
 	{
 		this._scheme = aValue;
 		this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
+		this.IDNScheme = this.IDNScheme; // reset IDN-enabled schemes list
 		this.invalidatePatterns();
 		return aValue;
 	},
@@ -1114,12 +1115,12 @@ var TextLinkUtils = {
 			textlink.scheme
 			textlink.scheme.fixup.table
 			textlink.scheme.fixup.default
-			textlink.idn.scheme
 			textlink.find_click_point.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
 			textlink.multiline.enabled
 			textlink.idn.enabled
+			textlink.idn.scheme
 			textlink.i18nPath.enabled
 			textlink.contextmenu.openTextLink.current
 			textlink.contextmenu.openTextLink.window
