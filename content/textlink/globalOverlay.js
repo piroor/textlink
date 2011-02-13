@@ -338,9 +338,8 @@ var TextLinkService = {
 
 		var range = ranges[0];
 
-		var selection = frame.getSelection();
-		selection.removeAllRanges();
-		selection.addRange(range.range);
+		range.selection.removeAllRanges();
+		range.selection.addRange(range.range);
 
 		if (aAction & this.utils.ACTION_SELECT) return;
 
@@ -379,15 +378,19 @@ var TextLinkService = {
 	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.rangeUtils.getCurrentFrame();
-		var uris = this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame	);
+		var uris = this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame);
 		if (!uris.length) return;
 
-		var selection = frame.getSelection();
-		selection.removeAllRanges();
+		var selections = [];
 		uris = uris.map(function(aRange) {
-				selection.addRange(aRange.range);
+				if (selections.indexOf(aRange.selection) < 0) {
+					selections.push(aRange.selection);
+					aRange.selection.removeAllRanges();
+				}
+				aRange.selection.addRange(aRange.range);
 				return aRange.uri;
 			});
+		selections = void(0);
 
 		if (aAction == this.utils.ACTION_COPY) {
 			if (uris.length > 1) uris.push('');
