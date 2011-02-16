@@ -44,7 +44,7 @@ if (typeof window == 'undefined' ||
 }
 
 (function() {
-	const currentRevision = 7;
+	const currentRevision = 8;
 
 	if (!('piro.sakura.ne.jp' in window)) window['piro.sakura.ne.jp'] = {};
 
@@ -76,12 +76,14 @@ if (typeof window == 'undefined' ||
 
 			aBranch = aBranch || this.Prefs;
 
-			if (aInterface)
-				return (aBranch.getPrefType(aPrefstring) == aBranch.PREF_INVALID) ?
-						null :
-						aBranch.getComplexValue(aPrefstring, aInterface);
+			var type = aBranch.getPrefType(aPrefstring);
+			if (type == aBranch.PREF_INVALID)
+				return null;
 
-			switch (aBranch.getPrefType(aPrefstring))
+			if (aInterface)
+				return aBranch.getComplexValue(aPrefstring, aInterface);
+
+			switch (type)
 			{
 				case aBranch.PREF_STRING:
 					return decodeURIComponent(escape(aBranch.getCharPref(aPrefstring)));

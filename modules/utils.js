@@ -1152,7 +1152,7 @@ var TextLinkUtils = {
 				].forEach(function(aPref) {
 					var keys = aPref.split(':');
 					var value = this.prefs.getPref(keys[0]);
-					if (value != this.prefs.getDefaultPref(keys[0])) {
+					if (value !== null) {
 						this.prefs.setPref(keys[1], value);
 						this.prefs.clearPref(keys[0]);
 					}
