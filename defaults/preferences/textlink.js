@@ -46,6 +46,7 @@ pref("textlink.relative.enabled",    false);
 pref("textlink.multibyte.enabled",   true);
 pref("textlink.multiline.enabled",   false);
 pref("textlink.idn.enabled",         true);
+pref("textlink.idn.scheme",          "http https");
 pref("textlink.i18nPath.enabled",    false);
 pref("textlink.strictDomainNames.enabled", true);
 pref("textlink.part.exception.whole", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");

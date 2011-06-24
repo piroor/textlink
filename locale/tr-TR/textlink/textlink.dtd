@@ -70,9 +70,9 @@
 <!ENTITY textlink.trigger.mouse.ignore               "(fare hareketlerini yoksay)">
 <!ENTITY textlink.trigger.mouse.dblclick             "Çift tıklandığında">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + Çift tıklandığında">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "⌘ + Çift tıklandığında">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + Çift tıklandığında">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + Çift tıklandığında">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + Çift tıklandığında">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + Çift tıklandığında">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + Çift tıklandığında">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + Çift tıklandığında">
@@ -82,9 +82,9 @@
 <!ENTITY textlink.trigger.key.ignore            "(tuş hareketlerini yoksay)">
 <!ENTITY textlink.trigger.key.enter             "Metin seçiliyken Enter'a basılırsa">
 <!ENTITY textlink.trigger.key.enter.accel       "Metin seçiliyken Ctrl + Enter'a basılırsa">
-<!ENTITY textlink.trigger.key.enter.accel.mac   "Metin seçiliyken Command + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "Metin seçiliyken ⌘ + Enter'a basılırsa">
 <!ENTITY textlink.trigger.key.enter.accel.shift "Metin seçiliyken Ctrl + Shift + Enter'a basılırsa">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Metin seçiliyken Command + Shift + Enter'a basılırsa">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Metin seçiliyken ⌘ + Shift + Enter'a basılırsa">
 <!ENTITY textlink.trigger.key.enter.alt         "Metin seçiliyken Alt + Enter'a basılırsa">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "Metin seçiliyken Alt + Shift + Enter'a basılırsa">
 <!ENTITY textlink.trigger.key.enter.shift       "Metin seçiliyken Shift + Enter'a basılırsa">

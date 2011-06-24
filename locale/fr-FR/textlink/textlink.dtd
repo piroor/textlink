@@ -72,8 +72,8 @@
 <!ENTITY textlink.trigger.mouse.dblclick                 "Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.accel           "Ctrl + Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift     "Ctrl + Maj + Double-clic">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Commande + Double-clic">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Commande + Maj + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "⌘ + Double-clic">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Maj + Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.alt             "Alt + Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift       "Alt + Maj + Double-clic">
 <!ENTITY textlink.trigger.mouse.dblclick.shift           "Maj + Double-clic">
@@ -84,8 +84,8 @@
 <!ENTITY textlink.trigger.key.enter                 "Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.accel           "Ctrl + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.accel.shift     "Ctrl + Maj + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "Commande + Entrée est tapé avec du texte sélectionné">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Commande + Maj + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "⌘ + Entrée est tapé avec du texte sélectionné">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "⌘ + Maj + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.alt             "Alt + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.alt.shift       "Alt + Maj + Entrée est tapé avec du texte sélectionné">
 <!ENTITY textlink.trigger.key.enter.shift           "Maj + Entrée est tapé avec du texte sélectionné">

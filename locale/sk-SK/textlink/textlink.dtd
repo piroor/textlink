@@ -71,8 +71,8 @@
 <!ENTITY textlink.trigger.mouse.dblclick             "dvakrát kliknete">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "stlačíte Ctrl + dvakrát kliknete">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "stlačíte Ctrl + Shift + dvakrát kliknete">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "stlačíte Command + dvakrát kliknete">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "stlačíte Command + Shift + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "stlačíte ⌘ + dvakrát kliknete">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "stlačíte ⌘ + Shift + dvakrát kliknete">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "stlačíte Alt + dvakrát kliknete">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "stlačíte Alt + Shift + dvakrát kliknete">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "stlačíte Shift + dvakrát kliknete">
@@ -83,8 +83,8 @@
 <!ENTITY textlink.trigger.key.enter             "stlačíte Enter na vybranom texte">
 <!ENTITY textlink.trigger.key.enter.accel       "stlačíte Ctrl + Enter na vybranom texte">
 <!ENTITY textlink.trigger.key.enter.accel.shift "stlačíte Ctrl + Shift + Enter počas označenia textu">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "stlačíte Command + Enter na vybranom texte">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "stlačíte Command + Shift + Enter počas označenie textu">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "stlačíte ⌘ + Enter na vybranom texte">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "stlačíte ⌘ + Shift + Enter počas označenie textu">
 <!ENTITY textlink.trigger.key.enter.alt         "Alt + Enter sú stlačené počas označenia textu">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Enter sú stlačené počas označenia textu">
 <!ENTITY textlink.trigger.key.enter.shift       "Shift + Enter sú stlačené počas označenia textu">

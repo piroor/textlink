@@ -71,8 +71,8 @@
 <!ENTITY textlink.trigger.mouse.dblclick             "双击">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + 双击">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + 双击">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Command + 双击">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + 双击">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "⌘ + 双击">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + 双击">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + 双击">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + 双击">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + 双击">
@@ -83,8 +83,8 @@
 <!ENTITY textlink.trigger.key.enter             "选定文本并按下 Enter 键">
 <!ENTITY textlink.trigger.key.enter.accel       "选定文本并按下 Ctrl + Enter 键">
 <!ENTITY textlink.trigger.key.enter.accel.shift "选定文本并按下 Ctrl + Shift + 键">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "选定文本并按下 Command + Enter 键">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "选定文本并按下 Command + Shift + Enter 键">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "选定文本并按下 ⌘ + Enter 键">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "选定文本并按下 ⌘ + Shift + Enter 键">
 <!ENTITY textlink.trigger.key.enter.alt         "选定文本并按下 Alt + Enter 键">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "选定文本并按下 Alt + Shift + Enter 键">
 <!ENTITY textlink.trigger.key.enter.shift       "选定文本并按下 Shift + Enter 键">

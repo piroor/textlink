@@ -71,8 +71,8 @@
 <!ENTITY textlink.trigger.mouse.dblclick             "cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + cliccato due volte">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "Command + cliccato due volte">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "⌘ + cliccato due volte">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + cliccato due volte">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + cliccato due volte">
@@ -83,8 +83,8 @@
 <!ENTITY textlink.trigger.key.enter             "Invio viene premuto quando si seleziona il testo">
 <!ENTITY textlink.trigger.key.enter.accel       "Ctrl + Invio vengono premuti quando si seleziona il testo">
 <!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + Invio vengono premuti quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "Command + Invio vengono premuti quando si seleziona il testo">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "⌘ + Invio vengono premuti quando si seleziona il testo">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "⌘ + Shift + Invio vengono premuti quando si seleziona il testo">
 <!ENTITY textlink.trigger.key.enter.alt         "Alt + Invio vengono premuti quando si seleziona il testo">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Invio vengono premuti quando si seleziona il testo">
 <!ENTITY textlink.trigger.key.enter.shift       "Shift + Invio vengono premuti quando si seleziona il testo">

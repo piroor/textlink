@@ -71,9 +71,9 @@
 <!ENTITY textlink.trigger.mouse.ignore               "（マウスからの入力を検知しない）">
 <!ENTITY textlink.trigger.mouse.dblclick             "ダブルクリック">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + ダブルクリック">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "⌘ + ダブルクリック">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + ダブルクリック">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + ダブルクリック">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + ダブルクリック">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + ダブルクリック">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + ダブルクリック">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + ダブルクリック">
@@ -83,9 +83,9 @@
 <!ENTITY textlink.trigger.key.ignore            "（キーボードからの入力を検知しない）">
 <!ENTITY textlink.trigger.key.enter             "テキストを選択して Enter キーを押した時">
 <!ENTITY textlink.trigger.key.enter.accel       "テキストを選択して Ctrl + Enter キーを押した時">
-<!ENTITY textlink.trigger.key.enter.accel.mac   "テキストを選択して Command + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "テキストを選択して ⌘ + Enter キーを押した時">
 <!ENTITY textlink.trigger.key.enter.accel.shift "テキストを選択して Ctrl + Shift + Enter キーを押した時">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "テキストを選択して Command + Shift + Enter キーを押した時">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "テキストを選択して ⌘ + Shift + Enter キーを押した時">
 <!ENTITY textlink.trigger.key.enter.alt         "テキストを選択して Alt + Enter キーを押した時">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "テキストを選択して Alt + Shift + Enter キーを押した時">
 <!ENTITY textlink.trigger.key.enter.shift       "テキストを選択して Shift + Enter キーを押した時">

@@ -71,8 +71,8 @@
 <!ENTITY textlink.trigger.mouse.dblclick             "duplán kattint">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "lenyomja a Ctrl billentyűt és duplán kattint">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "lenyomja a Ctrl, Shift billentyűket és duplán kattint">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "lenyomja a Command billentyűt és duplán kattint">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "lenyomja a Command, Shift billentyűket és duplán kattint">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac       "lenyomja a ⌘ billentyűt és duplán kattint">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "lenyomja a ⌘, Shift billentyűket és duplán kattint">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "lenyomja az Alt billentyűt és duplán kattint">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "lenyomja az Alt, Shift billentyűket és duplán kattint">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "lenyomja a Shift billentyűt és duplán kattint">
@@ -83,8 +83,8 @@
 <!ENTITY textlink.trigger.key.enter             "lenyomja az Enter billentyűt a megfelelő szövegrészen">
 <!ENTITY textlink.trigger.key.enter.accel       "lenyomja a Ctrl, Enter billentyűket a megfelelő szövegrészen">
 <!ENTITY textlink.trigger.key.enter.accel.shift "lenyomja a Ctrl, Shift, Enter billentyűket a megfelelő szövegrészen">
-<!ENTITY textlink.trigger.key.enter.accel.mac       "lenyomja a Command, Enter billentyűket a megfelelő szövegrészen">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "lenyomja a Command, Shift, Enter billentyűket a megfelelő szövegrészen">
+<!ENTITY textlink.trigger.key.enter.accel.mac       "lenyomja a ⌘, Enter billentyűket a megfelelő szövegrészen">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "lenyomja a ⌘, Shift, Enter billentyűket a megfelelő szövegrészen">
 <!ENTITY textlink.trigger.key.enter.alt         "lenyomja az Alt, Enter billentyűket a megfelelő szövegrészen">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "lenyomja az Alt, Shift, Enter billentyűket a megfelelő szövegrészen">
 <!ENTITY textlink.trigger.key.enter.shift       "lenyomja a Shift, Enter billentyűket a megfelelő szövegrészen">

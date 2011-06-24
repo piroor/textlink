@@ -70,9 +70,9 @@
 <!ENTITY textlink.trigger.mouse.ignore               "(ignore mouse events)">
 <!ENTITY textlink.trigger.mouse.dblclick             "Double-clicked">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + Double-clicked">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "⌘ + Double-clicked">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + Double-clicked">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + Double-clicked">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + Double-clicked">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + Double-clicked">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + Double-clicked">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + Double-clicked">
@@ -82,9 +82,9 @@
 <!ENTITY textlink.trigger.key.ignore            "(ignore key events)">
 <!ENTITY textlink.trigger.key.enter             "Enter is pressed with text selecting">
 <!ENTITY textlink.trigger.key.enter.accel       "Ctrl + Enter is pressed with text selecting">
-<!ENTITY textlink.trigger.key.enter.accel.mac   "Command + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "⌘ + Enter is pressed with text selecting">
 <!ENTITY textlink.trigger.key.enter.accel.shift "Ctrl + Shift + Enter is pressed with text selecting">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "Command + Shift + Enter is pressed with text selecting">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "⌘ + Shift + Enter is pressed with text selecting">
 <!ENTITY textlink.trigger.key.enter.alt         "Alt + Enter is pressed with text selecting">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "Alt + Shift + Enter is pressed with text selecting">
 <!ENTITY textlink.trigger.key.enter.shift       "Shift + Enter is pressed with text selecting">

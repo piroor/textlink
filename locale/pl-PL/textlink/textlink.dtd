@@ -70,9 +70,9 @@
 <!ENTITY textlink.trigger.mouse.ignore               "(ignoruj zachowanie myszy)">
 <!ENTITY textlink.trigger.mouse.dblclick             "podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + podwójne kliknięcie">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "Command + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "⌘ + podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.shift "Ctrl + Shift + podwójne kliknięcie">
-<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "Command + Shift + podwójne kliknięcie">
+<!ENTITY textlink.trigger.mouse.dblclick.accel.shift.mac "⌘ + Shift + podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.alt         "Alt + podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.alt.shift   "Alt + Shift + podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.shift       "Shift + podwójne kliknięcie">
@@ -82,9 +82,9 @@
 <!ENTITY textlink.trigger.key.ignore            "(ignoruj naciśnięte klawisze)">
 <!ENTITY textlink.trigger.key.enter             "naciśnięto klawisz Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel       "naciśnięto klawisze Ctrl + Enter przy zaznaczonym tekście">
-<!ENTITY textlink.trigger.key.enter.accel.mac   "naciśnięto klawisze Command + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel.mac   "naciśnięto klawisze ⌘ + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel.shift "naciśnięto klawisze Ctrl + Shift + Enter przy zaznaczonym tekście">
-<!ENTITY textlink.trigger.key.enter.accel.shift.mac "naciśnięto klawisze Command + Shift + Enter przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.accel.shift.mac "naciśnięto klawisze ⌘ + Shift + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.alt         "naciśnięto klawisze Alt + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "naciśnięto klawisze Alt + Shift + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.shift       "naciśnięto klawisz Shift przy zaznaczonym tekście">
