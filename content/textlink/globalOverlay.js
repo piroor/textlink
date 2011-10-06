@@ -74,7 +74,7 @@ var TextLinkService = {
 				if (aEvent.currentTarget == this.tooltip) {
 					this.buildTooltip(aEvent);
 				}
-				else {
+				else if (aEvent.target == this.contextMenu) {
 					this.initContextMenu();
 				}
 				return;
