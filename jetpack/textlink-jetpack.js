@@ -24,7 +24,7 @@
  * Portions created by the Initial Developer are Copyright (C) 2002-2009
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+ * Contributor(s): SHIMODA Hiroshi <piro.outsider.reflex@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or

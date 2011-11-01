@@ -27,7 +27,7 @@
               UIはXMLだし。文書インスタンスのマークアップに著作権は発生
               しないというのが公の見解だったような気も……
 
-[連絡先     ] piro@p.club.ne.jp
+[連絡先     ] piro.outsider.reflex@gmail.com
 [配布元     ] http://piro.sakura.ne.jp/
               http://hp.vector.co.jp/authors/VA016061/
 
