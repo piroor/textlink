@@ -33,7 +33,7 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 
-
+<!ENTITY textlink.openTextLink.menu              "Text Link">
 <!ENTITY textlink.openTextLink.current.single    "Open &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Open All: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.current.accesskey "O">
