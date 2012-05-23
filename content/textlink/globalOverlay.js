@@ -44,6 +44,10 @@ var TextLinkService = {
 		return document.getElementById('contentAreaContextMenu');
 	},
  
+ 	get contextMenuPopup () {
+ 		return document.getElementById('context-textlink-menupopup');
+ 	},
+ 
 	get popupNode() 
 	{
 		var popup = this.contextMenu;
@@ -76,6 +80,9 @@ var TextLinkService = {
 				}
 				else if (aEvent.target == this.contextMenu) {
 					this.initContextMenu();
+				}
+				else if (aEvent.target == this.contextMenuPopup) {
+					this.initTextLinkMenu();
 				}
 				return;
 
@@ -568,53 +575,56 @@ var TextLinkService = {
  
 	initContextMenu : function() 
 	{
-		var uris = [];
-		var target;
-		if (
-			(
+		let isShow = (
 				this.utils.contextItemCurrent ||
 				this.utils.contextItemWindow ||
 				this.utils.contextItemTab ||
 				this.utils.contextItemCopy
 			) &&
 			(
-				(
-					gContextMenu.isTextSelected &&
-					gContextMenu.isContentSelected
-				) ||
-				(
-					gContextMenu.onTextInput &&
-					this.rangeUtils.getSelection(gContextMenu.target)
-				)
-			)
-			) {
-			try {
-				target = this.rangeUtils.getEditableFromChild(this.popupNode);
-				var first = this.rangeUtils.getFirstSelectionURIRange(target);
-				var found = {};
-				if (first) {
-					uris.push(first.uri);
-					first.range.detach();
-					found[first.uri] = true;
-				}
-				var last = this.rangeUtils.getLastSelectionURIRange(target, false, found);
-				if (last) {
-					uris.push(last.uri);
-					last.range.detach();
-				}
+				(gContextMenu.isTextSelected && gContextMenu.isContentSelected) ||
+				(gContextMenu.onTextInput && this.rangeUtils.getSelection(gContextMenu.target))
+			) ?
+			true : false;
+		gContextMenu.showItem("context-textlink-menu", isShow);
+	},
+
+	initTextLinkMenu: function () {
+		var uris = [];
+		var target;
+		try {
+			target = this.rangeUtils.getEditableFromChild(this.popupNode);
+			var first = this.rangeUtils.getFirstSelectionURIRange(target);
+			var found = {};
+			if (first) {
+				uris.push(first.uri);
+				first.range.detach();
+				found[first.uri] = true;
 			}
-			catch(e) {
+			var last = this.rangeUtils.getLastSelectionURIRange(target, false, found);
+			if (last) {
+				uris.push(last.uri);
+				last.range.detach();
 			}
 		}
+		catch(e) {
+		}
 
-		gContextMenu.showItem('context-openTextLink-current',
-			uris.length && this.utils.contextItemCurrent);
-		gContextMenu.showItem('context-openTextLink-window',
-			uris.length && this.utils.contextItemWindow);
-		gContextMenu.showItem('context-openTextLink-tab',
-			uris.length && this.utils.contextItemTab);
-		gContextMenu.showItem('context-openTextLink-copy',
-			uris.length && this.utils.contextItemCopy);
+		// show items or not
+		gContextMenu.showItem('context-openTextLink-current', this.utils.contextItemCurrent);
+		gContextMenu.showItem('context-openTextLink-window', this.utils.contextItemWindow);
+		gContextMenu.showItem('context-openTextLink-tab', this.utils.contextItemTab);
+		gContextMenu.showItem('context-openTextLink-copy', this.utils.contextItemCopy);
+
+		// enable items or not
+		let isEnable = (uris.length > 0) ? true : false;
+		this.enableItem('context-openTextLink-current', isEnable);
+		this.enableItem('context-openTextLink-window', isEnable);
+		this.enableItem('context-openTextLink-tab', isEnable);
+		this.enableItem('context-openTextLink-copy', isEnable);
+
+		let attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single';
+		let targets;
 		if (uris.length) {
 			var uri1, uri2;
 
@@ -626,19 +636,31 @@ var TextLinkService = {
 				if (uri2.length > 20) uri2 = uri2.substring(0, 15).replace(/\.+$/, '')+'..';
 			}
 
-			var targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
-			var attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single' ;
+			targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
+		}
+		else {
+			targets = [/\%s1/i, "", /\%s2/i, "", /\%s/i, ""];
+		}
+		[
+			'context-openTextLink-current',
+			'context-openTextLink-window',
+			'context-openTextLink-tab',
+			'context-openTextLink-copy'
+		].forEach(function(aID) {
+			var item = this.setLabel(aID, attr, targets);
+		}, this);
+	},
 
-			[
-				'context-openTextLink-current',
-				'context-openTextLink-window',
-				'context-openTextLink-tab',
-				'context-openTextLink-copy'
-			].forEach(function(aID) {
-				var item = this.setLabel(aID, attr, targets);
-			}, this);
+	enableItem: function (aID, aIsEnable) {
+		let element = document.getElementById(aID);
+		if (aIsEnable) {
+			element.removeAttribute("disabled");
+		}
+		else {
+			element.setAttribute("disabled", "true");
 		}
 	},
+
 	setLabel : function(aID, aAttr, aTargets)
 	{
 		var item = document.getElementById(aID);
