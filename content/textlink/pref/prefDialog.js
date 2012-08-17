@@ -1,3 +1,5 @@
+Components.utils.import('resource://gre/modules/Services.jsm');
+
 function init()
 {
 	initForProduct();
@@ -6,9 +8,7 @@ function init()
 
 function initForProduct()
 {
-	var XULAppInfo = Components
-			.classes['@mozilla.org/xre/app-info;1']
-			.getService(Components.interfaces.nsIXULAppInfo);
+	var XULAppInfo = Services.appinfo;
 	var product;
 	switch (XULAppInfo.ID)
 	{
@@ -110,10 +110,7 @@ function resetActions()
 
 function getDefaultPref(aPrefstring)
 {
-	const DEFPrefs = Components
-			.classes['@mozilla.org/preferences-service;1']
-			.getService(Components.interfaces.nsIPrefService)
-			.getDefaultBranch(null);
+	const DEFPrefs = Services.prefs.getDefaultBranch(null);
 	try {
 		var type = DEFPrefs.getPrefType(aPrefstring);
 		switch (type)
