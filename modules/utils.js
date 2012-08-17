@@ -38,6 +38,7 @@ const EXPORTED_SYMBOLS = ['TextLinkUtils'];
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://textlink-modules/prefs.js');
  
 var TextLinkUtils = { 
@@ -602,7 +603,7 @@ var TextLinkUtils = {
 	get IOService() 
 	{
 		if (!this._IOService) {
-			this._IOService = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+			this._IOService = Services.io;
 		}
 		return this._IOService;
 	},
