@@ -38,6 +38,10 @@ const EXPORTED_SYMBOLS = ['TextLinkRangeUtils'];
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+const INPUT_FIELD_CONDITITON = 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))';
+const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"';
+const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
+
 Components.utils.import('resource://textlink-modules/utils.js');
  
 function TextLinkRangeUtils(aWindow) 
@@ -49,11 +53,7 @@ TextLinkRangeUtils.prototype = {
 	{
 		return TextLinkUtils.prefs;
 	},
-	
-	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))', 
-	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"',
-	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]',
- 
+
 	get document() 
 	{
 		return this.window.document;
@@ -108,7 +108,7 @@ TextLinkRangeUtils.prototype = {
 	{
 		if (!aNode) return null;
 		return TextLinkUtils.evaluateXPath(
-				'ancestor-or-self::*['+this.kINPUT_FIELD_CONDITITON+'][1]',
+				'ancestor-or-self::*['+INPUT_FIELD_CONDITITON+'][1]',
 				aNode,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
@@ -435,7 +435,7 @@ TextLinkRangeUtils.prototype = {
 
 		if (this.getEditableFromChild(findRange.startContainer)) {
 			let root = TextLinkUtils.evaluateXPath(
-					'ancestor-or-self::node()[parent::*['+this.kINPUT_FIELD_CONDITITON+']]',
+					'ancestor-or-self::node()[parent::*['+INPUT_FIELD_CONDITITON+']]',
 					findRange.startContainer,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
@@ -481,7 +481,7 @@ TextLinkRangeUtils.prototype = {
 		}
 		var baseBlock = this._getParentBlock(node);
 		var nodes = TextLinkUtils.evaluateXPath(
-				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				'preceding::text()[not('+IGNORE_TEXT_CONDITION+')]',
 				node
 			);
 		var i = nodes.snapshotLength-1,
@@ -534,7 +534,7 @@ TextLinkRangeUtils.prototype = {
 		}
 		var baseBlock = this._getParentBlock(node);
 		var nodes = TextLinkUtils.evaluateXPath(
-				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+				'following::text()[not('+IGNORE_TEXT_CONDITION+')]',
 				node
 			);
 		var i = 0,
@@ -612,7 +612,7 @@ TextLinkRangeUtils.prototype = {
 	_getFirstTextNodeFromRange : function(aRange)
 	{
 		return TextLinkUtils.evaluateXPath(
-				'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][1]',
 				aRange.startContainer.childNodes.item(aRange.startOffset) || aRange.startContainer.firstChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
@@ -620,7 +620,7 @@ TextLinkRangeUtils.prototype = {
 	_getLastTextNodeFromRange : function(aRange)
 	{
 		return TextLinkUtils.evaluateXPath(
-				'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][last()]',
 				aRange.endContainer.childNodes.item(aRange.endOffset) || aRange.endContainer.lastChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
