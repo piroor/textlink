@@ -600,15 +600,6 @@ var TextLinkUtils = {
   
 	// XPConnect 
 	
-	get IOService() 
-	{
-		if (!this._IOService) {
-			this._IOService = Services.io;
-		}
-		return this._IOService;
-	},
-	_IOService : null,
- 
 	get URIFixup() 
 	{
 		if (!this._URIFixup) {
@@ -726,12 +717,12 @@ var TextLinkUtils = {
 			var newURI;
 			aURI = aURI || '';
 			if (aURI && String(aURI).match(/^file:/)) {
-				var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+				var fileHandler = Services.io.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
-				newURI = this.IOService.newFileURI(tempLocalFile);
+				newURI = Services.io.newFileURI(tempLocalFile);
 			}
 			else {
-				newURI = this.IOService.newURI(aURI, null, null);
+				newURI = Services.io.newURI(aURI, null, null);
 			}
 
 			return newURI;
@@ -996,8 +987,8 @@ var TextLinkUtils = {
 			return fixedURI.spec;
 		}
 
-		var baseURI = this.IOService.newURI(aSourceURI, null, null);
-		return this.IOService.newURI(aURI, null, baseURI).spec;
+		var baseURI = Services.io.newURI(aSourceURI, null, null);
+		return Services.io.newURI(aURI, null, baseURI).spec;
 	},
    
 	observe : function(aSubject, aTopic, aData) 
