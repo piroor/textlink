@@ -38,17 +38,16 @@ pref("textlink.contextmenu.openTextLink.copy",    true);
 
 pref("textlink.messenger.linkify", true);
 
-pref("textlink.schemer",                     "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data");
-pref("textlink.schemer.fixup.table",         "www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
-pref("textlink.schemer.fixup.default", "http");
+pref("textlink.scheme",            "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data");
+pref("textlink.scheme.fixup.table", "www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
+pref("textlink.scheme.fixup.default", "http");
 
 pref("textlink.relative.enabled",    false);
 pref("textlink.multibyte.enabled",   true);
 pref("textlink.multiline.enabled",   false);
 pref("textlink.idn.enabled",         true);
-pref("textlink.idn.scheme",          "http https");
+pref("textlink.idn.scheme",          "http https ftp news nntp telnet irc");
 pref("textlink.i18nPath.enabled",    false);
-pref("textlink.strictDomainNames.enabled", true);
 pref("textlink.part.exception.whole", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
 pref("textlink.part.exception.start", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?|[\\.\u3002\uff0e]+[^\\.\u3002\uff0e\/\uff0f]");
 pref("textlink.part.exception.end",   "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
@@ -360,3 +359,5 @@ pref("textlink.IDN_TLD", "
 	");
 pref("textlink.extraTLD", "");
 
+
+pref("textlink.prefsVersion", 0);

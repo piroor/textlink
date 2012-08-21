@@ -120,15 +120,16 @@
 
 <!ENTITY textlink.group.find        "Detekcia internetových adries">
 
-<!ENTITY textlink.schemer             "Rozpoznať text ako internetovú adresu, ak začína nasledovnými reťazcami: (napr. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Vymazať">
-<!ENTITY textlink.schemer.fixup.table "Opraviť poškodené internetové adresy pomocou nasledovných pravidiel: (napr. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Vymazať">
+<!ENTITY textlink.scheme             "Rozpoznať text ako internetovú adresu, ak začína nasledovnými reťazcami: (napr. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Vymazať">
+<!ENTITY textlink.scheme.fixup.table "Opraviť poškodené internetové adresy pomocou nasledovných pravidiel: (napr. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Vymazať">
 
 <!ENTITY textlink.relative.enabled    "Rozložiť relatívne cesty (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Rozložiť viacnásobné slabiky">
 <!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Politika detekcie">

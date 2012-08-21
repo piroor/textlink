@@ -274,15 +274,15 @@ TextLinkRangeUtils.prototype = {
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
 			let hadlWidthTerm = this.utils.convertFullWidthToHalfWidth(aTerm);
-			if (!this.utils.relativePathEnabled && this.utils.hasSchemer(aTerm)) {
+			if (!this.utils.relativePathEnabled && this.utils.hasScheme(aTerm)) {
 				let termForCheck = hadlWidthTerm;
-				while (this.utils.hasSchemer(termForCheck))
+				while (this.utils.hasScheme(termForCheck))
 				{
-					if (this.utils.hasLoadableSchemer(termForCheck)) break;
-					termForCheck = this.utils.removeSchemer(termForCheck);
-					aTerm = this.utils.removeSchemer(aTerm);
+					if (this.utils.hasLoadableScheme(termForCheck)) break;
+					termForCheck = this.utils.removeScheme(termForCheck);
+					aTerm = this.utils.removeScheme(aTerm);
 				}
-				if (!this.utils.hasLoadableSchemer(termForCheck)) return;
+				if (!this.utils.hasLoadableScheme(termForCheck)) return;
 			}
 			else if (this.utils.URIExceptionPattern.test(hadlWidthTerm)) {
 				return;
@@ -312,24 +312,11 @@ TextLinkRangeUtils.prototype = {
 		var endPoint = findRange.cloneRange();
 		endPoint.collapse(aMode & this.FIND_LAST);
 
-		var posRange;
-		if (editable) {
-			var root = editable.QueryInterface(Ci.nsIDOMNSEditableElement)
-					.editor
-					.rootElement;
-			posRange = root.ownerDocument.createRange();
-			posRange.selectNodeContents(root);
-		}
-		else {
-			posRange = findRange.cloneRange()
-		}
-
 		return {
 				findRange  : findRange,
 				startPoint : startPoint,
 				endPoint   : endPoint,
-				base       : aBaseRange,
-				position   : posRange
+				base       : aBaseRange
 			};
 	},
 	_destroyRangeSet : function(aRangeSet)
@@ -337,11 +324,9 @@ TextLinkRangeUtils.prototype = {
 		aRangeSet.findRange.detach();
 		aRangeSet.startPoint.detach();
 		aRangeSet.endPoint.detach();
-		aRangeSet.position.detach();
 		delete aRangeSet.findRange;
 		delete aRangeSet.startPoint;
 		delete aRangeSet.endPoint;
-		delete aRangeSet.position;
 		delete aRangeSet.base;
 	},
 	_findRangesForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash, aMode)
@@ -383,17 +368,19 @@ TextLinkRangeUtils.prototype = {
 				{
 					// Šù‚ÉŒ©‚Â‚©‚Á‚½‚æ‚è’·‚¢URI•¶š—ñ‚Ìˆê•”‚Å‚ ‚éê‡‚ÍœŠO‚·‚éB
 					let range = ranges[i];
-					aRangeSet.position.setEnd(range.startContainer, range.startOffset);
-					let start = aRangeSet.position.toString().length;
 					uriRange = {
-						range  : range,
-						uri    : uri,
-						start  : start,
-						end    : start + aTerm.length,
-						base   : aRangeSet.base
+						range     : range,
+						uri       : uri,
+						base      : aRangeSet.base,
+						selection : this.getSelection(
+							this.getEditableFromChild(range.startContainer) ||
+							range.startContainer.ownerDocument.defaultView
+						)
 					};
 
-					if (aRanges.some(this._checkRangeFound, uriRange))
+					if (aRanges.some(function(aRange) {
+							return this._containsRange(aRange.range, range, true);
+						}, this))
 						continue;
 
 					uriRanges.push(uriRange);
@@ -438,15 +425,9 @@ TextLinkRangeUtils.prototype = {
 				aTarget.comparePoint(aBase.endContainer, aBase.endOffset) == 0
 			);
 	},
-	_checkRangeFound : function(aRange)
-	{
-		return (aRange.start >= this.start && aRange.end <= this.end) ||
-				(aRange.start <= this.start && aRange.end >= this.end);
-	},
 	_compareRangePosition : function(aA, aB)
 	{
-		return (aA.base == aB.base) ? (aA.start - aB.start) :
-				(aA.base.comparePoint(aB.base.startContainer, aB.base.startOffset) < 0) ? 1 : -1 ;
+		return aB.range.comparePoint(aA.range.startContainer, aA.range.startOffset);
 	},
 	
 	getFindRange : function(aBaseRange) 

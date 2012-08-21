@@ -43,7 +43,7 @@ Components.utils.import('resource://textlink-modules/prefs.js');
 var TextLinkUtils = { 
 	prefs : prefs,
 	
-	schemerFixupDefault : 'http', 
+	schemeFixupDefault : 'http', 
 	strict              : true,
 	contextItemCurrent  : true,
 	contextItemWindow   : true,
@@ -52,61 +52,125 @@ var TextLinkUtils = {
 
 	multilineURIEnabled : false,
 
-	get schemer()
+	get scheme()
 	{
-		return this._schemer;
+		return this._scheme;
 	},
-	set schemer(val)
+	set scheme(aValue)
 	{
-		this._schemer = val;
-
-		this._schemers = this.schemer
-			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-			.replace(/\?/g, '.')
-			.replace(/\*/g, '.+')
-			.split(/[,\| \n\r\t]+/);
-
+		this._scheme = aValue;
+		this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
+		this.IDNScheme = this.IDNScheme; // reset IDN-enabled schemes list
 		this.invalidatePatterns();
-		return val;
+		return aValue;
 	},
-	_schemer : '',
-	get schemers()
+	_scheme : '',
+	get schemes()
 	{
-		return this._schemers.concat(this._fixupSchemers);
+		return this._schemes.concat(this._fixupSchemes).sort();
 	},
-	_schemers : [],
-	_fixupSchemers : [],
+	_schemes : [],
+	_fixupSchemes : [],
 
-	get schemerFixupTable()
+	set IDNScheme(aValue)
 	{
-		return this._schemerFixupTable;
+		this._IDNScheme = aValue;
+		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme))
+							.filter(function(aScheme) {
+								return this.schemes.indexOf(aScheme) > -1;
+							}, this);
+		this.invalidatePatterns();
+		return aValue;
 	},
-	set schemerFixupTable(val)
+	get IDNScheme()
 	{
-		this._schemerFixupTable = val;
+		return this._IDNScheme;
+	},
+	_IDNScheme : '',
+	get IDNSchemes()
+	{
+		if (this.IDNEnabled) {
+			if (this._fixupIDNSchemes === null) {
+				this._fixupIDNSchemes = [];
+				for (let i in this._fixupTargetsHash)
+				{
+					if (!this._fixupTargetsHash.hasOwnProperty(i))
+						continue;
+					let fixUpToMatch = this._fixupTargetsHash[i].match(/^(\w+):/);
+					let fixUpFromMatch = i.match(/^(\w+):/);
+					if (
+						fixUpToMatch &&
+						this._IDNSchemes.indexOf(fixUpToMatch[1]) > -1 &&
+						fixUpFromMatch
+						)
+						this._fixupIDNSchemes.push(fixUpFromMatch[1]);
+				}
+			}
+			return this._IDNSchemes.concat(this._fixupIDNSchemes).sort();
+		}
+		else {
+			return [];
+		}
+	},
+	_IDNSchemes : [],
+	_fixupIDNSchemes : null,
 
-		this._fixupTable = this._schemerFixupTable
-					.replace(/(\s*[^:\s]+)\s*=>\s*([^:\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
-		this._fixupTargets = this._fixupTable
-					.replace(/\s*=>\s*[^,\| \n\r\t]+|\s*=>\s*[^,\| \n\r\t]+$/g, '')
-					.replace(/([\(\)\+\.\{\}])/g, '\\$1')
-					.replace(/\?/g, '.')
-					.replace(/\*/g, '.+')
-					.split(/\s*[,\| \n\r\t]+\s*/);
-		this._fixupSchemers = this._fixupTargets
-					.filter(function(aTarget) {
-						return /:$/.test(aTarget);
-					})
-					.map(function(aTarget) {
-						return aTarget.replace(/:$/, '');
-					});
+	get nonIDNSchemes()
+	{
+		if (this.IDNEnabled) {
+			if (this._nonIDNSchemes === null) {
+				let IDNSchemes = this.IDNSchemes;
+				this._nonIDNSchemes = this.schemes
+										.filter(function(aScheme) {
+											return IDNSchemes.indexOf(aScheme) < 0;
+										});
+			}
+			return this._nonIDNSchemes;
+		}
+		else {
+			return this.schemes;
+		}
+	},
+	_nonIDNSchemes : null,
+
+	get schemeFixupTable()
+	{
+		return this._schemeFixupTable;
+	},
+	set schemeFixupTable(aValue)
+	{
+		this._schemeFixupTable = aValue;
+
+		this._fixupTable = this._schemeFixupTable
+					.replace(/(\s*[^:,\s]+)\s*=>\s*([^:,\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
+
+		this._fixupTargets     = [];
+		this._fixupTargetsHash = {};
+		this._fixupSchemes     = [];
+		this.niceSplit(this.expandWildcardsToRegExp(this._fixupTable))
+			.forEach(function(aTarget) {
+				let [fixUpFrom, fixUpTo] = aTarget.split(/\s*=>\s*/);
+				if (!fixUpFrom || !fixUpTo)
+					return;
+				this._fixupTargetsHash[fixUpFrom] = fixUpTo;
+				this._fixupTargets.push(fixUpFrom);
+				let match = fixUpFrom.match(/^(\w+):/);
+				if (match)
+					this._fixupSchemes.push(match[1]);
+			}, this);
+
+		this._fixupTargets.sort().forEach(function(aTarget) {
+			this._fixupTargetsHash[aTarget] = this._fixupTargetsHash[aTarget];
+		}, this);
+		this._fixupSchemes.sort();
+
 		this._fixupTargetsPattern = this._fixupTargets.join('|');
 		this._fixupTargetsRegExp = new RegExp('^('+this._fixupTargetsPattern+')');
 
 		this.invalidatePatterns();
-		return val;
+		return aValue;
 	},
-	_schemerFixupTable : '',
+	_schemeFixupTable : '',
 
 	get relativePathEnabled()
 	{
@@ -172,23 +236,44 @@ var TextLinkUtils = {
 	get URIPattern() 
 	{
 		if (!this._URIPattern) {
-			this._URIPattern = this.URIPattern_base
-				.replace(
-					/%SCHEMER_PATTERN%/g,
-					'(?:'+this.schemers.join('|')+'):'
-				)
-				.replace(
-					/%PART_PATTERN%/g,
-					this.URIPattern_part
-				)
-				.replace(
-					/%POSSIBLE_DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_LAZY)
-				)
-				.replace(
-					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern()
-				);
+			var patterns = [];
+			var base = this.URIPattern_base
+						.replace(
+							/%PART_PATTERN%/g,
+							this.URIPattern_part
+						)
+						.replace(
+							/%LOGIN_PATTERN%/g,
+							this.kLoginPattern
+						);
+			patterns.push(base
+							.replace(
+								/%SCHEME_PATTERN%/g,
+								'(?:'+this.nonIDNSchemes.join('|')+'):'
+							)
+							.replace(
+								/%POSSIBLE_DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_LAZY)
+							)
+							.replace(
+								/%DOMAIN_PATTERN%/g,
+								this.getDomainPattern()
+							));
+			if (this.IDNEnabled)
+				patterns.push(base
+								.replace(
+									/%SCHEME_PATTERN%/g,
+									'(?:'+this.IDNSchemes.join('|')+'):'
+								)
+								.replace(
+									/%POSSIBLE_DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_LAZY | this.kDOMAIN_IDN)
+								)
+								.replace(
+									/%DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_IDN)
+								));
+			this._URIPattern = this.URIPatterns_base.replace(/%URI_PATTERN%/g, patterns.join('|'));
 		}
 
 		return this._URIPattern;
@@ -212,27 +297,52 @@ var TextLinkUtils = {
 	get URIPatternMultibyte() 
 	{
 		if (!this._URIPatternMultibyte) {
-			this._URIPatternMultibyte = this.URIPatternMultibyte_base
-				.replace(
-					/%SCHEMER_PATTERN%/g,
-					'(?:'+
-					this.schemers.map(function(aSchemer) {
-						return aSchemer+'|'+this.convertHalfWidthToFullWidth(aSchemer);
-					}, this).join('|')+
-					')[:\uff1a]'
-				)
-				.replace(
-					/%PART_PATTERN%/g,
-					this.URIPatternMultibyte_part
-				)
-				.replace(
-					/%POSSIBLE_DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
-				)
-				.replace(
-					/%DOMAIN_PATTERN%/g,
-					this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
-				);
+			var patterns = [];
+			var base = this.URIPatternMultibyte_base
+						.replace(
+							/%PART_PATTERN%/g,
+							this.URIPatternMultibyte_part
+						)
+						.replace(
+							/%LOGIN_PATTERN%/g,
+							this.kLoginPatternMultibyte
+						);
+			patterns.push(base
+							.replace(
+								/%SCHEME_PATTERN%/g,
+								'(?:'+
+								this.nonIDNSchemes.map(function(aScheme) {
+									return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
+								}, this).join('|')+
+								')[:\uff1a]'
+							)
+							.replace(
+								/%POSSIBLE_DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY)
+							)
+							.replace(
+								/%DOMAIN_PATTERN%/g,
+								this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
+							));
+			if (this.IDNEnabled)
+				patterns.push(base
+								.replace(
+									/%SCHEME_PATTERN%/g,
+									'(?:'+
+									this.IDNSchemes.map(function(aScheme) {
+										return aScheme+'|'+this.convertHalfWidthToFullWidth(aScheme);
+									}, this).join('|')+
+									')[:\uff1a]'
+								)
+								.replace(
+									/%POSSIBLE_DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_LAZY | this.kDOMAIN_IDN)
+								)
+								.replace(
+									/%DOMAIN_PATTERN%/g,
+									this.getDomainPattern(this.kDOMAIN_MULTIBYTE | this.kDOMAIN_IDN)
+								));
+			this._URIPatternMultibyte = this.URIPatternsMultibyte_base.replace(/%URI_PATTERN%/g, patterns.join('|'));
 		}
 
 		return this._URIPatternMultibyte;
@@ -256,13 +366,12 @@ var TextLinkUtils = {
 	getDomainPattern : function(aOptionsFlag) 
 	{
 		aOptionsFlag = aOptionsFlag || 0;
-		var multibyte = aOptionsFlag & this.kDOMAIN_MULTIBYTE;
 		var pattern = this._domainPatterns[aOptionsFlag];
 		if (!pattern) {
-			if (this.IDNEnabled) {
+			if (aOptionsFlag & this.kDOMAIN_IDN) {
 				let forbiddenCharacters = this.kStringprepForbiddenCharacters+
 											this.kIDNDomainSeparators+
-											':/\uff1a\uff0f';
+											':/@\uff1a\uff0f\uff20';
 				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
 					forbiddenCharacters += this.prefs.getPref('textlink.idn.lazyDetection.separators');
 				let part = '[^'+
@@ -276,7 +385,7 @@ var TextLinkUtils = {
 							']+';
 				pattern = part + '(?:[' + this.kIDNDomainSeparators + ']' + part + ')*';
 			}
-			else if (multibyte) {
+			else if (aOptionsFlag & this.kDOMAIN_MULTIBYTE) {
 				let part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
 				pattern = part + '(?:[' + this.kMultibyteDomainSeparators + ']' + part + ')*';
 			}
@@ -284,9 +393,11 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
-			if (!(aOptionsFlag & this.kDOMAIN_LAZY) ||
-				this.prefs.getPref('textlink.strictDomainNames.enabled'))
-				pattern += this.getTLDPattern(multibyte);
+			if (
+				!(aOptionsFlag & this.kDOMAIN_LAZY) ||
+				aOptionsFlag & this.kDOMAIN_IDN
+				)
+				pattern += this.getTLDPattern(aOptionsFlag);
 
 			this._domainPatterns[aOptionsFlag] = pattern;
 		}
@@ -295,25 +406,26 @@ var TextLinkUtils = {
 	_domainPatterns : {},
 	kDOMAIN_MULTIBYTE : (1 << 0),
 	kDOMAIN_LAZY      : (1 << 1),
+	kDOMAIN_IDN       : (1 << 2),
  
 	kDomainSeparators          : '\\.', 
 	kMultibyteDomainSeparators : '\\.\uff0e',
 	kIDNDomainSeparators       : '\\.\u3002\uff0e',
  
-	getTLDPattern : function(aMultibyte) 
+	getTLDPattern : function(aOptionsFlag) 
 	{
 		var TLD = this.topLevelDomains;
 		var halfWidthTLDPattern = '(?:'+TLD.join('|')+')\\b';
-		var TLDPattern = aMultibyte ?
+		var TLDPattern = aOptionsFlag & this.kDOMAIN_MULTIBYTE || aOptionsFlag & this.kDOMAIN_IDN ?
 						'(?:' +
 						[halfWidthTLDPattern]
 							.concat(TLD.map(this.convertHalfWidthToFullWidth, this))
 							.join('|') +
 						')' :
 						halfWidthTLDPattern ;
-		return (this.IDNEnabled ?
+		return (aOptionsFlag & this.kDOMAIN_IDN ?
 					'['+this.kIDNDomainSeparators+']' :
-				aMultibyte ?
+				aOptionsFlag & this.kDOMAIN_MULTIBYTE ?
 					'['+this.kMultibyteDomainSeparators+']' :
 					this.kDomainSeparators
 				)+
@@ -329,14 +441,20 @@ var TextLinkUtils = {
 	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
 	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
  
-	URIPattern_base : '\\(?(%SCHEMER_PATTERN%(?://)?%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?)', 
+	URIPatterns_base : '\\(?(%URI_PATTERN%)', 
+	URIPatternsMultibyte_base : '[\\(\uff08]?(%URI_PATTERN%)', 
+ 
+	URIPattern_base : '%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '[\\(\uff08]?(%SCHEMER_PATTERN%(?://|\uff0f\uff0f)?%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?)', 
+	URIPatternMultibyte_base : '%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
-	kSchemerPattern : '[\\*\\+a-z0-9_]+:', 
-	kSchemerPatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+	kSchemePattern : '[\\*\\+a-z0-9_]+:', 
+	kSchemePatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
+
+	kLoginPattern : '(?:[^/:]+(?::[^/@]+)?@)?',
+	kLoginPatternMultibyte : '(?:[^/:\uff0f\uff1a]+(?:[:\uff1a][^@/\uff0f\uff20]+)?[@\uff20])?',
 
 	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
 	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
@@ -449,7 +567,9 @@ var TextLinkUtils = {
  
 	invalidatePatterns : function() 
 	{
-		this._schemerRegExp = null;
+		this._schemeRegExp = null;
+		this._fixupIDNSchemes = null;
+		this._nonIDNSchemes = null;
 
 		this._domainPatterns = {};
 		this._topLevelDomains = null;
@@ -469,7 +589,7 @@ var TextLinkUtils = {
 		this._URIPartFinderRegExp_end = null;
 	},
  
-	invalidateExceptionPatterns : function()
+	invalidateExceptionPatterns : function() 
 	{
 		this._URIExceptionPattern = null;
 		this._URIExceptionPattern_start = null;
@@ -579,6 +699,23 @@ var TextLinkUtils = {
 		code -= 0x0020;
 		return String.fromCharCode(code);
 	},
+ 
+	expandWildcardsToRegExp : function(aInput) 
+	{
+		return String(aInput)
+			.replace(/([\(\)\+\.\{\}])/g, '\\$1')
+			.replace(/\?/g, '.')
+			.replace(/\*/g, '.+');
+	},
+ 
+	niceSplit : function(aInput) 
+	{
+		return String(aInput)
+			.split(/[\s\|,]+/)
+			.filter(function(aItem) {
+				return !!aItem;
+			});
+	},
   
 // uri operations 
 	
@@ -613,7 +750,7 @@ var TextLinkUtils = {
 					.filter(function(aMaybeURI) {
 						return (
 							(
-								!this.hasLoadableSchemer(aMaybeURI) &&
+								!this.hasLoadableScheme(aMaybeURI) &&
 								!this.URIExceptionPattern_all.test(aMaybeURI)
 							) ||
 							this.isHeadOfNewURI(aMaybeURI)
@@ -626,7 +763,7 @@ var TextLinkUtils = {
 		this._updateURIRegExp();
 		var match = aString.match(this._URIMatchingRegExp_fromHead);
 		match = match ? match[1] : '' ;
-		return this.hasLoadableSchemer(match) ? match == aString : false ;
+		return this.hasLoadableScheme(match) ? match == aString : false ;
 	},
 	_URIMatchingRegExp : null,
 	_URIMatchingRegExp_fromHead : null,
@@ -674,30 +811,30 @@ var TextLinkUtils = {
 		this._URIPartFinderRegExp_end   = new RegExp('('+base+')$', 'i');
 	},
  
-	hasLoadableSchemer : function(aURI) 
+	hasLoadableScheme : function(aURI) 
 	{
-		if (!this._schemerRegExp)
-			this._schemerRegExp = new RegExp('^('+this.schemers.join('|')+'):', 'i');
-		return this._schemerRegExp.test(this.convertFullWidthToHalfWidth(aURI));
+		if (!this._schemeRegExp)
+			this._schemeRegExp = new RegExp('^('+this.schemes.join('|')+'):', 'i');
+		return this._schemeRegExp.test(this.convertFullWidthToHalfWidth(aURI));
 	},
-	_schemerRegExp : null,
+	_schemeRegExp : null,
  
-	hasSchemer : function(aInput) 
+	hasScheme : function(aInput) 
 	{
-		return this._firstSchemerRegExp.test(aInput);
+		return this._firstSchemeRegExp.test(aInput);
 	},
-	removeSchemer : function(aInput)
+	removeScheme : function(aInput)
 	{
-		return aInput.replace(this._firstSchemerRegExp, '');
+		return aInput.replace(this._firstSchemeRegExp, '');
 	},
-	get _firstSchemerRegExp()
+	get _firstSchemeRegExp()
 	{
-		if (!this.__firstSchemerRegExp) {
-			this.__firstSchemerRegExp = new RegExp('^'+this.kSchemerPatternMultibyte, 'i');
+		if (!this.__firstSchemeRegExp) {
+			this.__firstSchemeRegExp = new RegExp('^'+this.kSchemePatternMultibyte, 'i');
 		}
-		return this.__firstSchemerRegExp;
+		return this.__firstSchemeRegExp;
 	},
-	__firstSchemerRegExp : null,
+	__firstSchemeRegExp : null,
  
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
@@ -710,13 +847,13 @@ var TextLinkUtils = {
 			return null;
 		}
 
-		aURIComponent = this.fixupSchemer(aURIComponent);
+		aURIComponent = this.fixupScheme(aURIComponent);
 
 		if (this.relativePathEnabled) {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
-		return this.hasLoadableSchemer(aURIComponent) ? aURIComponent : null ;
+		return this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
 	},
 	
 	sanitizeURIString : function(aURIComponent) 
@@ -804,7 +941,7 @@ var TextLinkUtils = {
 		/^(.+)\u3014[^\u3015$]*/
 	],
  
-	fixupSchemer : function(aURI) 
+	fixupScheme : function(aURI) 
 	{
 		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
@@ -833,18 +970,19 @@ var TextLinkUtils = {
 			if (match)
 				aURI = aURI.replace(target, match[1]);
 		}
-		else if (!this._firstSchemerRegExp.test(aURI)) {
-			var schemer = this.schemerFixupDefault;
-			if (schemer)
-				aURI = schemer+'://'+aURI;
+		else if (!this._firstSchemeRegExp.test(aURI)) {
+			var scheme = this.schemeFixupDefault;
+			if (scheme)
+				aURI = scheme+'://'+aURI;
 		}
 
 		return aURI;
 	},
-	_fixupTable : null,
-	_fixupTargets : null,
-	_fixupTargetsPattern : null,
-	_fixupTargetsRegExp : null,
+	_fixupTable : '',
+	_fixupTargets : [],
+	_fixupTargetsHash : {},
+	_fixupTargetsPattern : '',
+	_fixupTargetsRegExp : '',
  
 	// ‘Š‘ÎƒpƒX‚Ì‰ðŒˆ 
 	makeURIComplete : function(aURI, aSourceURI)
@@ -868,16 +1006,16 @@ var TextLinkUtils = {
 		var value = this.prefs.getPref(aData);
 		switch (aData)
 		{
-			case 'textlink.schemer':
-				this.schemer = value;
+			case 'textlink.scheme':
+				this.scheme = value;
 				return;
 
-			case 'textlink.schemer.fixup.table':
-				this.schemerFixupTable = value;
+			case 'textlink.scheme.fixup.table':
+				this.schemeFixupTable = value;
 				return;
 
-			case 'textlink.schemer.fixup.default':
-				this.schemerFixupDefault = value;
+			case 'textlink.scheme.fixup.default':
+				this.schemeFixupDefault = value;
 				return;
 
 			case 'textlink.find_click_point.strict':
@@ -893,6 +1031,10 @@ var TextLinkUtils = {
 				this.IDNEnabled = this.prefs.getPref('network.enableIDN') && this.prefs.getPref('textlink.idn.enabled');
 				return;
 
+			case 'textlink.idn.scheme':
+				this.IDNScheme = value;
+				return;
+
 			case 'textlink.i18nPath.enabled':
 				this.i18nPathEnabled = this.prefs.getPref('textlink.i18nPath.enabled');
 				return;
@@ -901,7 +1043,6 @@ var TextLinkUtils = {
 			case 'textlink.ccTLD':
 			case 'textlink.IDN_TLD':
 			case 'textlink.extraTLD':
-			case 'textlink.strictDomainNames.enabled':
 			case 'network.IDN.blacklist_chars':
 				this.invalidatePatterns();
 				return;
@@ -964,20 +1105,22 @@ var TextLinkUtils = {
 	init : function() 
 	{
 		this.prefs.addPrefListener(this);
+		this.migratePrefs();
 		this.initPrefs();
 	},
 	
 	initPrefs : function() 
 	{
 		var items = <![CDATA[
-			textlink.schemer
-			textlink.schemer.fixup.table
-			textlink.schemer.fixup.default
+			textlink.scheme
+			textlink.scheme.fixup.table
+			textlink.scheme.fixup.default
 			textlink.find_click_point.strict
 			textlink.relative.enabled
 			textlink.multibyte.enabled
 			textlink.multiline.enabled
 			textlink.idn.enabled
+			textlink.idn.scheme
 			textlink.i18nPath.enabled
 			textlink.contextmenu.openTextLink.current
 			textlink.contextmenu.openTextLink.window
@@ -992,6 +1135,32 @@ var TextLinkUtils = {
 		items.sort().forEach(function(aPref) {
 			this.observe(null, 'nsPref:changed', aPref);
 		}, this);
+	},
+ 
+	kPREF_VERSION : 1, 
+	migratePrefs : function()
+	{
+		// migrate old prefs
+		var orientalPrefs = [];
+		switch (this.prefs.getPref('textlink.prefsVersion'))
+		{
+			case 0:
+				[
+					'textlink.schemer:textlink.scheme',
+					'textlink.schemer.fixup.table:textlink.scheme.fixup.table',
+					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
+				].forEach(function(aPref) {
+					var keys = aPref.split(':');
+					var value = this.prefs.getPref(keys[0]);
+					if (value !== null) {
+						this.prefs.setPref(keys[1], value);
+						this.prefs.clearPref(keys[0]);
+					}
+				}, this);
+			default:
+				break;
+		}
+		this.prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
 	},
   
 	destroy : function() 

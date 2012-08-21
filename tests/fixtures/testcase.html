@@ -71,6 +71,12 @@ GoogleでFirefoxを検索した結果のページはhttp://www.google.co.jp/sear
 サブドメインに何を付けてもWikiLeaksに飛びます。
 例：http://雪、無音、段ボール。荒川智則.jp/
 この例では「。」は正規化されて半角ピリオド（.）と同じと見なされます。</p>
+<p id="not-http">http以外のスキームのテスト。
+about:blank、about:config、about:plugins、about:supportなどのabout: URIや、
+data:text/plain,foobar のようなdata: URI、
+chrome://browser/content/browser.xul、resource://gre/のようなFirefox内部で使われるURLがあります。</p>
+<p id="auth-url">ユーザ名とパスワードを含むURLのテスト。
+ftp://anonymous:anonymous@ftp.mozilla.org/、http://test@example.com/test/など。</p>
 
 <pre id="pre">
 
@@ -107,6 +113,7 @@ ttp://雪、無音、段ボール。荒川智則.jp/
 <br class="splitter" /><span class="moz-txt-citetags">&gt; &gt; </span>ggg/hhh/iii/jjj/kkkk/hhh/iii てすとてすとー<br class="splitter" />
 <br class="splitter" /></pre></blockquote></blockquote>
 
+<p id="inputfields-before">http://www.example.com/#before</p>
 <p><input id="input" type="text" size="60" value="URI: http://www.mozilla.com/" /></p>
 <textarea id="textarea" cols="60" rows="5">
 英語：http://getfirefox.com/
@@ -114,6 +121,7 @@ ttp://雪、無音、段ボール。荒川智則.jp/
 next line
 国際化ドメイン：http://荒川智則.jp/#textarea
 </textarea>
+<p id="inputfields-after">http://www.example.com/#after</p>
 
 <table id="table" border="1" summary="表">
 <tbody>

@@ -120,15 +120,16 @@
 
 <!ENTITY textlink.group.find        "Webcímek keresése a szövegben">
 
-<!ENTITY textlink.schemer             "Szöveg felismerése webcímként, ha a következőkkel kezdődik: (pl. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Törlés">
-<!ENTITY textlink.schemer.fixup.table "Hiányos webcímek javítása a következő szabályok segítségével: (pl. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Törlés">
+<!ENTITY textlink.scheme             "Szöveg felismerése webcímként, ha a következőkkel kezdődik: (pl. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Törlés">
+<!ENTITY textlink.scheme.fixup.table "Hiányos webcímek javítása a következő szabályok segítségével: (pl. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Törlés">
 
 <!ENTITY textlink.relative.enabled    "Relatív útvonalak szétválasztása (nem ajánlott)">
 <!ENTITY textlink.multibyte.enabled   "Összetett karakterek szétválasztása">
 <!ENTITY textlink.multiline.enabled   "Webcím szétválasztása több sorba (nem ajánlott)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "A felismerés módja">

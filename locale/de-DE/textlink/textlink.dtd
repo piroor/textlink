@@ -121,15 +121,16 @@
 
 <!ENTITY textlink.group.find        "URI-Erkennung">
 
-<!ENTITY textlink.schemer             "Text, der mit folgenden Teilen beginnt, als URI erkennen: (ex. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Zurücksetzen">
-<!ENTITY textlink.schemer.fixup.table "Repariere defekte URIs mit folgenden Regeln: (ex. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Zurücksetzen">
+<!ENTITY textlink.scheme             "Text, der mit folgenden Teilen beginnt, als URI erkennen: (ex. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Zurücksetzen">
+<!ENTITY textlink.scheme.fixup.table "Repariere defekte URIs mit folgenden Regeln: (ex. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Zurücksetzen">
 
 <!ENTITY textlink.relative.enabled    "Parse relative Pfadangaben (nicht empfohlen)">
 <!ENTITY textlink.multibyte.enabled   "Parse Multi-Byte-Zeichen">
 <!ENTITY textlink.multiline.enabled   "Parse durch Zeilenumbrüche getrennte URIs (nicht empfohlen)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Erkennungverfahren für Klickpunkte">

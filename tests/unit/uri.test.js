@@ -14,93 +14,192 @@ const HALF_WIDTH = (1 << 0);
 const FULL_WIDTH = (1 << 1);
 const IDN        = (1 << 2);
 const RELATIVE   = (1 << 3);
-test_matchURIRegExp.parameters = {
+
+var halfWidthAbsoluteURISources = ['http://www.example.com/',
+                                   'http://user@www.example.com/',
+                                   'http://user:pass@www.example.com/'];
+var fullWidthAbsoluteURISources = ['ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
+                                   'ｈｔｔｐ：／／ｕｓｅｒ＠ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／',
+                                   'ｈｔｔｐ：／／ｕｓｅｒ：ｐａｓｓ＠ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／'];
+var IDNAbsoluteURISources       = ['http://日本語.jp/',
+                                   'http://ユーザ@日本語.jp/',
+                                   'http://ユーザ:パスワード@日本語.jp/'];
+var halfWidthRelativeURISource  = '../directory/file';
+var fullWidthRelativeURISource  = '．．／ｄｉｒｅｃｔｏｒｙ／ｆｉｌｅ';
+var noURI                       = 'テキスト';
+
+var halfWidthAbsoluteURIs = [
+		halfWidthAbsoluteURISources.join('\n'),
+		halfWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'~user/'; }).join('\n'),
+		halfWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'?query1=value1&query2=value2'; }).join('\n'),
+		halfWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'#hash'; }).join('\n'),
+		'about:config',
+		'chrome://browser/content/browser.xul',
+		'data:text/plain,foobar'
+	].join('\n').split('\n');
+var fullWidthAbsoluteURIs = [
+		fullWidthAbsoluteURISources.join('\n'),
+		fullWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'\u301cｕｓｅｒ／'; }).join('\n'),
+		fullWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'\uff5eｕｓｅｒ／'; }).join('\n'),
+		fullWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２'; }).join('\n'),
+		fullWidthAbsoluteURISources
+			.map(function(aURI) { return aURI+'＃ｈａｓｈ'; }).join('\n'),
+		'ａｂｏｕｔ：ｃｏｎｆｉｇ',
+		'ｃｈｒｏｍｅ：／／ｂｒｏｗｓｅｒ／ｃｏｎｔｅｎｔ／ｂｒｏｗｓｅｒ．ｘｕｌ',
+		'ｄａｔａ：ｔｅｘｔ／ｐｌａｉｎ，ｆｏｏｂａｒ'
+	].join('\n').split('\n');
+var IDNAbsoluteURIs = [
+		IDNAbsoluteURISources.join('\n'),
+		IDNAbsoluteURISources
+			.map(function(aURI) { return aURI+'~user/'; }).join('\n'),
+		IDNAbsoluteURISources
+			.map(function(aURI) { return aURI+'?query1=value1&query2=value2'; }).join('\n'),
+		IDNAbsoluteURISources
+			.map(function(aURI) { return aURI+'#hash'; }).join('\n')
+	].join('\n').split('\n');
+var halfWidthRelativeURIs = [
+		halfWidthRelativeURISource,
+		halfWidthRelativeURISource+'~user/',
+		halfWidthRelativeURISource+'?query1=value1&query2=value2',
+		halfWidthRelativeURISource+'#hash'
+	].join('\n').split('\n');
+var fullWidthRelativeURIs = [
+		fullWidthRelativeURISource,
+		fullWidthRelativeURISource+'\u301cｕｓｅｒ／',
+		fullWidthRelativeURISource+'\uff5eｕｓｅｒ／',
+		fullWidthRelativeURISource+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
+		fullWidthRelativeURISource+'＃ｈａｓｈ'
+	].join('\n').split('\n');
+
+function extractDomainPart(aURI)
+{
+	var domain = aURI
+			.replace(/^[^:：]+[:：](?:[\/／][\/／])?|[\/／].*$/g, '') // remove scheme and path
+			.replace(/^[^@＠]+[@＠]/, ''); // remove inline username and password
+	return /[\.．]/.test(domain) ? domain : '' ; // ignore not-domain strings (like "blank" extracted from "about:blank")
+}
+function assertURIMatch(aString, aURIString, aShouldMatchToURI)
+{
+	var message = aString +'\n => '+aURIString;
+	var match = sv.matchURIRegExp(aString);
+	if (aShouldMatchToURI) {
+		assert.isNotNull(match, message);
+		assert.equals(1, match.length, message);
+		assert.equals(aURIString, match[0], message);
+	}
+	else {
+		assert.isNull(match, message);
+	}
+}
+
+var matchURIRegExpParameters = {
 	halfWidth         : HALF_WIDTH,
 	fullWidth         : FULL_WIDTH,
 	IDN               : IDN,
 	halfWidthRelative : HALF_WIDTH | RELATIVE,
 	fullWidthRelative : FULL_WIDTH | RELATIVE
 };
-function test_matchURIRegExp(aFlags)
-{
-
-	var noURI                  = 'テキスト';
-	var halfWidth_absolute_URI = 'http://www.example.com/';
-	var fullWidth_absolute_URI = 'ｈｔｔｐ：／／ｗｗｗ．ｅｘａｍｐｌｅ．ｃｏｍ／';
-	var IDN_absolute_URI       = 'http://日本語.jp/';
-	var halfWidth_relative_URI = '../directory/file';
-	var fullWidth_relative_URI = '．．／ｄｉｒｅｃｔｏｒｙ／ｆｉｌｅ';
-
-	function assertURIMatch(aString, aURIString, aShouldMatch)
-	{
-		var message = aString +'\n => '+aURIString;
-		var match = sv.matchURIRegExp(aString);
-		if (!aShouldMatch) {
-			assert.isNull(match, message);
-		}
-		else {
-			assert.isNotNull(match, message);
-			assert.equals(1, match.length, message);
-			assert.equals(aURIString, match[0], message);
-		}
-	}
-
+var matchURIRegExpSetUp = function(aFlags) {
 	sv.multibyteEnabled = !!(aFlags & FULL_WIDTH);
 	sv.relativePathEnabled = !!(aFlags & RELATIVE);
 	sv.IDNEnabled = !!(aFlags & IDN);
+};
 
+test_matchURIRegExp_noURI.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_noURI.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_noURI(aFlags)
+{
 	assertURIMatch(noURI, null, false);
-	assertURIMatch(halfWidth_absolute_URI, halfWidth_absolute_URI, true);
-	assertURIMatch(fullWidth_absolute_URI, fullWidth_absolute_URI, aFlags & FULL_WIDTH);
-	assertURIMatch(IDN_absolute_URI, IDN_absolute_URI, aFlags & IDN);
-	assertURIMatch('test '+halfWidth_absolute_URI+' text', halfWidth_absolute_URI, true);
-	assertURIMatch('test '+fullWidth_absolute_URI+' text', fullWidth_absolute_URI, aFlags & FULL_WIDTH);
-	assertURIMatch('test '+IDN_absolute_URI+' text', IDN_absolute_URI, aFlags & IDN);
-	assertURIMatch('日本語'+halfWidth_absolute_URI+'日本語', halfWidth_absolute_URI, true);
-	assertURIMatch('日本語'+fullWidth_absolute_URI+'日本語', fullWidth_absolute_URI, aFlags & FULL_WIDTH);
-	assertURIMatch('日本語'+IDN_absolute_URI+'日本語', IDN_absolute_URI, aFlags & IDN);
+}
 
-	assertURIMatch(halfWidth_relative_URI, halfWidth_relative_URI, aFlags & RELATIVE);
-	assertURIMatch(fullWidth_relative_URI, fullWidth_relative_URI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
-	assertURIMatch('test '+halfWidth_relative_URI+' text', halfWidth_relative_URI, aFlags & RELATIVE);
-	assertURIMatch('test '+fullWidth_relative_URI+' text', fullWidth_relative_URI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
-	assertURIMatch('日本語'+halfWidth_relative_URI+'日本語', halfWidth_relative_URI, aFlags & RELATIVE);
-	assertURIMatch('日本語'+fullWidth_relative_URI+'日本語', fullWidth_relative_URI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
+test_matchURIRegExp_halfWidthAbsoluteURIs.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_halfWidthAbsoluteURIs.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_halfWidthAbsoluteURIs(aFlags)
+{
+	halfWidthAbsoluteURIs.forEach(function(aURI) {
+		assertURIMatch(aURI, aURI, true);
+		assertURIMatch('test '+aURI+' text', aURI, true);
+		assertURIMatch('日本語'+aURI+'日本語', aURI, true);
+	});
+}
 
-	var uris = [
-			halfWidth_absolute_URI,
-			halfWidth_absolute_URI+'~user/',
-			halfWidth_absolute_URI+'?query1=value1&query2=value2',
-			halfWidth_absolute_URI+'#hash',
-			fullWidth_absolute_URI,
-			fullWidth_absolute_URI+'\u301cｕｓｅｒ／',
-			fullWidth_absolute_URI+'\uff5eｕｓｅｒ／',
-			fullWidth_absolute_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
-			fullWidth_absolute_URI+'＃ｈａｓｈ',
-			halfWidth_relative_URI,
-			halfWidth_relative_URI+'~user/',
-			halfWidth_relative_URI+'?query1=value1&query2=value2',
-			halfWidth_relative_URI+'#hash',
-			fullWidth_relative_URI,
-			fullWidth_relative_URI+'\u301cｕｓｅｒ／',
-			fullWidth_relative_URI+'\uff5eｕｓｅｒ／',
-			fullWidth_relative_URI+'？ｑｕｅｒｙ１＝ｖａｌｕｅ１＆ｑｕｅｒｙ２＝ｖａｌｕｅ２',
-			fullWidth_relative_URI+'＃ｈａｓｈ',
-			IDN_absolute_URI,
-			IDN_absolute_URI+'~user/',
-			IDN_absolute_URI+'?query1=value1&query2=value2',
-			IDN_absolute_URI+'#hash'
-		];
+test_matchURIRegExp_fullWidthAbsoluteURIs.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_fullWidthAbsoluteURIs.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_fullWidthAbsoluteURIs(aFlags)
+{
+	fullWidthAbsoluteURIs.forEach(function(aURI) {
+		// fullwidth URIs can be recognized as IDN, so, we accept the domain part extracted from the fullwidth URI.
+		var matched = !(aFlags & FULL_WIDTH) && aFlags & IDN ?
+						extractDomainPart(aURI) : aURI ;
+		assertURIMatch(aURI, matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
+		assertURIMatch('test '+aURI+' text', matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
+		assertURIMatch('日本語'+aURI+'日本語', matched || aURI, aFlags & FULL_WIDTH || (aFlags & IDN && matched));
+	});
+}
 
-	var expected = uris.slice(0, 4);
+test_matchURIRegExp_IDNAbsoluteURIs.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_IDNAbsoluteURIs.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_IDNAbsoluteURIs(aFlags)
+{
+	IDNAbsoluteURIs.forEach(function(aURI) {
+		assertURIMatch(aURI, aURI, aFlags & IDN);
+		assertURIMatch('test '+aURI+' text', aURI, aFlags & IDN);
+		assertURIMatch('日本語'+aURI+'日本語', aURI, aFlags & IDN);
+	});
+}
+
+test_matchURIRegExp_halfWidthRelativeURIs.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_halfWidthRelativeURIs.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_halfWidthRelativeURIs(aFlags)
+{
+	halfWidthRelativeURIs.forEach(function(aURI) {
+		assertURIMatch(aURI, aURI, aFlags & RELATIVE);
+		assertURIMatch('test '+aURI+' text', aURI, aFlags & RELATIVE);
+		assertURIMatch('日本語'+aURI+'日本語', aURI, aFlags & RELATIVE);
+	});
+}
+
+test_matchURIRegExp_fullWidthRelativeURIs.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_fullWidthRelativeURIs.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_fullWidthRelativeURIs(aFlags)
+{
+	fullWidthRelativeURIs.forEach(function(aURI) {
+		assertURIMatch(aURI, aURI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
+		assertURIMatch('test '+aURI+' text', aURI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
+		assertURIMatch('日本語'+aURI+'日本語', aURI, aFlags & RELATIVE && aFlags & FULL_WIDTH);
+	});
+}
+
+test_matchURIRegExp_multiline.parameters = matchURIRegExpParameters;
+test_matchURIRegExp_multiline.setUp = matchURIRegExpSetUp;
+function test_matchURIRegExp_multiline(aFlags)
+{
+	var expected = halfWidthAbsoluteURIs;
 	if (aFlags & FULL_WIDTH)
-		expected = expected.concat(uris.slice(4, 9));
-	if (aFlags & RELATIVE)
-		expected = expected.concat(uris.slice(9, 13));
-	if (aFlags & FULL_WIDTH && aFlags & RELATIVE)
-		expected = expected.concat(uris.slice(13, 18));
+		expected = expected.concat(fullWidthAbsoluteURIs);
+	// fullwidth URIs can be recognized as IDNs, so, we add array of domain parts extracted from fullwidth URIs.
 	if (aFlags & IDN)
-		expected = expected.concat(uris.slice(18, 23));
+		expected = expected.concat(fullWidthAbsoluteURIs
+									.map(extractDomainPart)
+									.filter(function(aDomain) { return aDomain; }));
+	if (aFlags & RELATIVE)
+		expected = expected.concat(halfWidthRelativeURIs);
+	if (aFlags & FULL_WIDTH && aFlags & RELATIVE)
+		expected = expected.concat(fullWidthRelativeURIs);
+	if (aFlags & IDN)
+		expected = expected.concat(IDNAbsoluteURIs);
+
+	var uris = halfWidthAbsoluteURIs
+				.concat(fullWidthAbsoluteURIs)
+				.concat(halfWidthRelativeURIs)
+				.concat(fullWidthRelativeURIs)
+				.concat(IDNAbsoluteURIs);
 
 	function assertMatchURIs(aExpected, aInput)
 	{
@@ -158,7 +257,7 @@ function test_makeURIComplete(aParameter)
 	assert.equals(aParameter.resolved, sv.makeURIComplete(aParameter.path, aParameter.base));
 }
 
-test_fixupSchemer.parameters = [
+test_fixupScheme.parameters = [
 	{ input    : 'http://www.example.com/',
 	  expected : 'http://www.example.com/' },
 	{ input    : 'ftp://www.example.com/',
@@ -210,9 +309,9 @@ test_fixupSchemer.parameters = [
 	{ input    : 'sub.日本語.jp/',
 	  expected : 'http://sub.日本語.jp/' },
 ];
-function test_fixupSchemer(aParameter)
+function test_fixupScheme(aParameter)
 {
-	assert.equals(aParameter.expected, sv.fixupSchemer(aParameter.input));
+	assert.equals(aParameter.expected, sv.fixupScheme(aParameter.input));
 }
 
 test_sanitizeURIString.parameters = utils.readParametersFromTSV('uri.sanitizeURIString.patterns.tsv');
@@ -324,7 +423,7 @@ function test_fixupURI(aParameter)
 		assert.isNull(sv.fixupURI(aParameter.input));
 }
 
-var schemerParameters = [
+var schemeParameters = [
 	{ input   : 'http://www.example.com/',
 	  has     : true,
 	  removed : '//www.example.com/' },
@@ -357,19 +456,19 @@ var schemerParameters = [
 	  removed : '日本語.jp?URL=http://日本語.jp/' },
 ];
 
-test_hasSchemer.parameters = schemerParameters;
-function test_hasSchemer(aParameter)
+test_hasScheme.parameters = schemeParameters;
+function test_hasScheme(aParameter)
 {
 	if (aParameter.has)
-		assert.isTrue(sv.hasSchemer(aParameter.input));
+		assert.isTrue(sv.hasScheme(aParameter.input));
 	else
-		assert.isFalse(sv.hasSchemer(aParameter.input));
+		assert.isFalse(sv.hasScheme(aParameter.input));
 }
 
-test_removeSchemer.parameters = schemerParameters;
-function test_removeSchemer(aParameter)
+test_removeScheme.parameters = schemeParameters;
+function test_removeScheme(aParameter)
 {
-	assert.equals(aParameter.removed, sv.removeSchemer(aParameter.input));
+	assert.equals(aParameter.removed, sv.removeScheme(aParameter.input));
 }
 
 test_isHeadOfNewURI.parameters = {
@@ -408,11 +507,11 @@ function test_isHeadOfNewURI(aParameter)
 		assert.isFalse(sv.isHeadOfNewURI(aParameter.string), aParameter.string);
 }
 
-test_hasLoadableSchemer.parameters = test_isHeadOfNewURI.parameters;
-function test_hasLoadableSchemer(aParameter)
+test_hasLoadableScheme.parameters = test_isHeadOfNewURI.parameters;
+function test_hasLoadableScheme(aParameter)
 {
 	if (aParameter.expected)
-		assert.isTrue(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+		assert.isTrue(sv.hasLoadableScheme(aParameter.string), aParameter.string);
 	else
-		assert.isFalse(sv.hasLoadableSchemer(aParameter.string), aParameter.string);
+		assert.isFalse(sv.hasLoadableScheme(aParameter.string), aParameter.string);
 }

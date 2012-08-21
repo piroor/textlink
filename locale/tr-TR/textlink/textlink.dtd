@@ -120,15 +120,16 @@
 
 <!ENTITY textlink.group.find        "URL Algılanması">
 
-<!ENTITY textlink.schemer             "Bunlarla başlayan metinleri URL olarak tanı: (örn. &quot;http,ftp,mailto&quot;)">
-<!ENTITY textlink.schemer.default     "Sıfırla">
-<!ENTITY textlink.schemer.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (örn. &quot;ttp=>http,ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "Sıfırla">
+<!ENTITY textlink.scheme             "Bunlarla başlayan metinleri URL olarak tanı: (örn. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme.default     "Sıfırla">
+<!ENTITY textlink.scheme.fixup.table "Kırık URL'leri bu kurallara göre düzelt: (örn. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "Sıfırla">
 
 <!ENTITY textlink.relative.enabled    "Bağlantılı yolları ayrıştır (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "Çoklu-bayt karakterleri ayrıştır">
 <!ENTITY textlink.multiline.enabled   "Birden çok satıra bölünmüş URL'leri ayrıştır (Önerilmez)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "Tıklanan Noktaların Algılanma İlkesi">

@@ -119,15 +119,16 @@
 
 <!ENTITY textlink.group.find        "URI 偵測">
 
-<!ENTITY textlink.schemer             "將開頭為下列指定字串的文字辨認成 URI: (例如: &quot;http, ftp, mailto&quot;)">
-<!ENTITY textlink.schemer.default     "重設">
-<!ENTITY textlink.schemer.fixup.table "依下列規則修復損毀的 URI: (例如: &quot;ttp=>http, ttps=>https&quot;)">
-<!ENTITY textlink.schemer.fixup.table.default "重設">
+<!ENTITY textlink.scheme             "將開頭為下列指定字串的文字辨認成 URI: (例如: &quot;http, ftp, mailto&quot;)">
+<!ENTITY textlink.scheme.default     "重設">
+<!ENTITY textlink.scheme.fixup.table "依下列規則修復損毀的 URI: (例如: &quot;ttp=>http, ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table.default "重設">
 
 <!ENTITY textlink.relative.enabled    "剖析相對路徑 (unrecommended)">
 <!ENTITY textlink.multibyte.enabled   "剖析多位元組字元 (multi-byte characters)">
 <!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s">
+<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
+<!ENTITY textlink.idn.scheme.default  "Reset">
 <!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
 
 <!ENTITY textlink.find_click_point.strict        "滑鼠點擊偵測方式">

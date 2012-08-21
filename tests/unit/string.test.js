@@ -41,3 +41,41 @@ function test_convertHalfWidthToFullWidth(aParameter)
 {
 	assert.equals(aParameter.expected, sv.convertHalfWidthToFullWidth(aParameter.input));
 }
+
+test_expandWildcardsToRegExp.parameters = [
+	{ input    : 'h??p:',
+	  expected : 'h..p:' },
+	{ input    : 'h*p:',
+	  expected : 'h.+p:' },
+	{ input    : 'h++p:',
+	  expected : 'h\\+\\+p:' },
+	{ input    : 'www.example.com',
+	  expected : 'www\\.example\\.com' },
+	{ input    : 'http:(){}',
+	  expected : 'http:\\(\\)\\{\\}' },
+];
+function test_expandWildcardsToRegExp(aParameter)
+{
+	assert.equals(aParameter.expected, sv.expandWildcardsToRegExp(aParameter.input));
+}
+
+test_niceSplit.parameters = [
+	{ input    : 'a b c d',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : 'a   b   c   d',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : 'a	b	c	d',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : 'a,b,c,d',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : 'a, b, c, d',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : 'a\nb\nc\nd',
+	  expected : 'a,b,c,d'.split(',') },
+	{ input    : '',
+	  expected : [] },
+];
+function test_niceSplit(aParameter)
+{
+	assert.equals(aParameter.expected, sv.niceSplit(aParameter.input));
+}
