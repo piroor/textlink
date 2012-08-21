@@ -74,7 +74,7 @@ var TextLinkService = {
 				if (aEvent.currentTarget == this.tooltip) {
 					this.buildTooltip(aEvent);
 				}
-				else {
+				else if (aEvent.target == this.contextMenu) {
 					this.initContextMenu();
 				}
 				return;
@@ -464,7 +464,7 @@ var TextLinkService = {
 				aIndex == 0 &&
 				(
 					(aAction == this.utils.ACTION_OPEN_IN_CURRENT) ||
-					(b.currentURI && b.currentURI.spec == 'about:blank')
+					(b.currentURI && (window.isBlankPageURL ? window.isBlankPageURL(b.currentURI.spec) : (b.currentURI.spec == 'about:blank')))
 				)
 				) {
 				if ('TreeStyleTabService' in window) // Tree Style Tab

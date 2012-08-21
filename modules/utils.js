@@ -17,7 +17,7 @@
  * Portions created by the Initial Developer are Copyright (C) 2002-2011
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+ * Contributor(s): SHIMODA Hiroshi <piro.outsider.reflex@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,6 +38,7 @@ const EXPORTED_SYMBOLS = ['TextLinkUtils'];
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://textlink-modules/prefs.js');
  
 var TextLinkUtils = { 
@@ -599,15 +600,6 @@ var TextLinkUtils = {
   
 	// XPConnect 
 	
-	get IOService() 
-	{
-		if (!this._IOService) {
-			this._IOService = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-		}
-		return this._IOService;
-	},
-	_IOService : null,
- 
 	get URIFixup() 
 	{
 		if (!this._URIFixup) {
@@ -725,12 +717,12 @@ var TextLinkUtils = {
 			var newURI;
 			aURI = aURI || '';
 			if (aURI && String(aURI).match(/^file:/)) {
-				var fileHandler = this.IOService.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+				var fileHandler = Services.io.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
-				newURI = this.IOService.newFileURI(tempLocalFile);
+				newURI = Services.io.newFileURI(tempLocalFile);
 			}
 			else {
-				newURI = this.IOService.newURI(aURI, null, null);
+				newURI = Services.io.newURI(aURI, null, null);
 			}
 
 			return newURI;
@@ -995,8 +987,8 @@ var TextLinkUtils = {
 			return fixedURI.spec;
 		}
 
-		var baseURI = this.IOService.newURI(aSourceURI, null, null);
-		return this.IOService.newURI(aURI, null, baseURI).spec;
+		var baseURI = Services.io.newURI(aSourceURI, null, null);
+		return Services.io.newURI(aURI, null, baseURI).spec;
 	},
    
 	observe : function(aSubject, aTopic, aData) 

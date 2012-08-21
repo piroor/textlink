@@ -17,7 +17,7 @@
  * Portions created by the Initial Developer are Copyright (C) 2002-2011
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s): SHIMODA Hiroshi <piro@p.club.ne.jp>
+ * Contributor(s): SHIMODA Hiroshi <piro.outsider.reflex@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,6 +38,10 @@ const EXPORTED_SYMBOLS = ['TextLinkRangeUtils'];
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
+const INPUT_FIELD_CONDITITON = 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))';
+const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"';
+const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
+
 Components.utils.import('resource://textlink-modules/utils.js');
  
 function TextLinkRangeUtils(aWindow) 
@@ -45,16 +49,11 @@ function TextLinkRangeUtils(aWindow)
 	this.window = aWindow;
 }
 TextLinkRangeUtils.prototype = {
-	utils : TextLinkUtils,
 	get prefs()
 	{
-		return this.utils.prefs;
+		return TextLinkUtils.prefs;
 	},
-	
-	kINPUT_FIELD_CONDITITON : 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))', 
-	kIGNORE_NODE_CONDITION : 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"',
-	kIGNORE_TEXT_CONDITION : 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]',
- 
+
 	get document() 
 	{
 		return this.window.document;
@@ -108,8 +107,8 @@ TextLinkRangeUtils.prototype = {
 	getEditableFromChild : function(aNode) 
 	{
 		if (!aNode) return null;
-		return this.utils.evaluateXPath(
-				'ancestor-or-self::*['+this.kINPUT_FIELD_CONDITITON+'][1]',
+		return TextLinkUtils.evaluateXPath(
+				'ancestor-or-self::*['+INPUT_FIELD_CONDITITON+'][1]',
 				aNode,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
@@ -260,7 +259,7 @@ TextLinkRangeUtils.prototype = {
 	_getFindTermsFromRange : function(aRange, aMode)
 	{
 		var terms = [];
-		var mayBeURIs = this.utils.matchURIRegExp(this.getTextContentFromRange(aRange));
+		var mayBeURIs = TextLinkUtils.matchURIRegExp(this.getTextContentFromRange(aRange));
 		if (!mayBeURIs) {
 			return terms;
 		}
@@ -270,21 +269,21 @@ TextLinkRangeUtils.prototype = {
 		mayBeURIs.forEach(function(aTerm) {
 			if (typeof aTerm != 'string') aTerm = aTerm[0];
 			aTerm = aTerm.replace(/^\s+|\s+$/g, '');
-			aTerm = this.utils.sanitizeURIString(aTerm);
+			aTerm = TextLinkUtils.sanitizeURIString(aTerm);
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
-			let hadlWidthTerm = this.utils.convertFullWidthToHalfWidth(aTerm);
-			if (!this.utils.relativePathEnabled && this.utils.hasScheme(aTerm)) {
+			let hadlWidthTerm = TextLinkUtils.convertFullWidthToHalfWidth(aTerm);
+			if (!TextLinkUtils.relativePathEnabled && TextLinkUtils.hasScheme(aTerm)) {
 				let termForCheck = hadlWidthTerm;
-				while (this.utils.hasScheme(termForCheck))
+				while (TextLinkUtils.hasScheme(termForCheck))
 				{
-					if (this.utils.hasLoadableScheme(termForCheck)) break;
-					termForCheck = this.utils.removeScheme(termForCheck);
-					aTerm = this.utils.removeScheme(aTerm);
+					if (TextLinkUtils.hasLoadableScheme(termForCheck)) break;
+					termForCheck = TextLinkUtils.removeScheme(termForCheck);
+					aTerm = TextLinkUtils.removeScheme(aTerm);
 				}
-				if (!this.utils.hasLoadableScheme(termForCheck)) return;
+				if (!TextLinkUtils.hasLoadableScheme(termForCheck)) return;
 			}
-			else if (this.utils.URIExceptionPattern.test(hadlWidthTerm)) {
+			else if (TextLinkUtils.URIExceptionPattern.test(hadlWidthTerm)) {
 				return;
 			}
 
@@ -348,11 +347,11 @@ TextLinkRangeUtils.prototype = {
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
 		{
 			let range = this.shrinkURIRange(termRange.cloneRange());
-			let uri = this.utils.fixupURI(range.toString(), aBaseURI);
+			let uri = TextLinkUtils.fixupURI(range.toString(), aBaseURI);
 			let ranges = this.getFollowingURIPartRanges(range);
 			if (ranges.length) {
 				ranges.forEach(function(aRange) {
-					uri += this.utils.convertFullWidthToHalfWidth(aRange.toString());
+					uri += TextLinkUtils.convertFullWidthToHalfWidth(aRange.toString());
 				}, this);
 			}
 			ranges.unshift(range);
@@ -435,18 +434,18 @@ TextLinkRangeUtils.prototype = {
 		var findRange = aBaseRange.cloneRange();
 
 		if (this.getEditableFromChild(findRange.startContainer)) {
-			let root = this.utils.evaluateXPath(
-					'ancestor-or-self::node()[parent::*['+this.kINPUT_FIELD_CONDITITON+']]',
+			let root = TextLinkUtils.evaluateXPath(
+					'ancestor-or-self::node()[parent::*['+INPUT_FIELD_CONDITITON+']]',
 					findRange.startContainer,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 			// setStartBefore causes error...
-			findRange.setStart(this.utils.evaluateXPath(
+			findRange.setStart(TextLinkUtils.evaluateXPath(
 					'preceding-sibling::node()[1]',
 					root,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue || root, 0);
-			findRange.setEndAfter(this.utils.evaluateXPath(
+			findRange.setEndAfter(TextLinkUtils.evaluateXPath(
 					'(child::node()[last()] | following-sibling::node()[last()])[1]',
 					root,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
@@ -458,8 +457,8 @@ TextLinkRangeUtils.prototype = {
 		var expandToAfter  = aBaseRange.collapsed;
 		if (!aBaseRange.collapsed) {
 			let string = aBaseRange.toString();
-			expandToBefore = this.utils.getURIPartFromStart(string);
-			expandToAfter  = this.utils.getURIPartFromEnd(string);
+			expandToBefore = TextLinkUtils.getURIPartFromStart(string);
+			expandToAfter  = TextLinkUtils.getURIPartFromEnd(string);
 		}
 		if (expandToBefore)
 			this._expandURIRangeToBefore(findRange);
@@ -481,8 +480,8 @@ TextLinkRangeUtils.prototype = {
 			offset = 0;
 		}
 		var baseBlock = this._getParentBlock(node);
-		var nodes = this.utils.evaluateXPath(
-				'preceding::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+		var nodes = TextLinkUtils.evaluateXPath(
+				'preceding::text()[not('+IGNORE_TEXT_CONDITION+')]',
 				node
 			);
 		var i = nodes.snapshotLength-1,
@@ -494,7 +493,7 @@ TextLinkRangeUtils.prototype = {
 			try{ // Firefox 2 sometimes fails...
 				expandRange.setStart(lastNode, 0);
 				let string = expandRange.toString();
-				let part = this.utils.getURIPartFromEnd(string);
+				let part = TextLinkUtils.getURIPartFromEnd(string);
 				if (!part.length) break;
 				if (
 					part.length < string.length ||
@@ -534,13 +533,13 @@ TextLinkRangeUtils.prototype = {
 			offset = node ? node.textContent.length : 0 ;
 		}
 		var baseBlock = this._getParentBlock(node);
-		var nodes = this.utils.evaluateXPath(
-				'following::text()[not('+this.kIGNORE_TEXT_CONDITION+')]',
+		var nodes = TextLinkUtils.evaluateXPath(
+				'following::text()[not('+IGNORE_TEXT_CONDITION+')]',
 				node
 			);
 		var i = 0,
 			maxi = nodes.snapshotLength,
-			headPartIsFound = aRanges && this.utils.isHeadOfNewURI(aRange.toString()),
+			headPartIsFound = aRanges && TextLinkUtils.isHeadOfNewURI(aRange.toString()),
 			lastNode;
 		while (true)
 		{
@@ -550,7 +549,7 @@ TextLinkRangeUtils.prototype = {
 				expandRange.setEnd(lastNode, lastNode.textContent.length);
 				let string = expandRange.toString();
 				let delta = 0;
-				if (this.utils.multilineURIEnabled) {
+				if (TextLinkUtils.multilineURIEnabled) {
 					// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
 					// 強制的にRangeの開始位置を元に戻す
 					if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
@@ -562,18 +561,18 @@ TextLinkRangeUtils.prototype = {
 					delta = originalString.indexOf(string);
 
 					originalString = string;
-					string = string.replace(this.utils.URIExceptionPattern_start, '');
+					string = string.replace(TextLinkUtils.URIExceptionPattern_start, '');
 					if (originalString.indexOf(string) != 0) {
 						string = '';
 						delta = 0;
 					}
 				}
-				if (!this.utils.multilineURIEnabled || string) {
-					let part = this.utils.getURIPartFromStart(string, headPartIsFound);
+				if (!TextLinkUtils.multilineURIEnabled || string) {
+					let part = TextLinkUtils.getURIPartFromStart(string, headPartIsFound);
 					if (!part.length) break;
 					let partRange;
 					if (aRanges) {
-						if (!headPartIsFound && this.utils.isHeadOfNewURI(part)) headPartIsFound = true;
+						if (!headPartIsFound && TextLinkUtils.isHeadOfNewURI(part)) headPartIsFound = true;
 						partRange = expandRange.cloneRange();
 						aRanges.push(partRange);
 						partRange.setStart(lastNode, partRange.startOffset + delta);
@@ -612,16 +611,16 @@ TextLinkRangeUtils.prototype = {
 	},
 	_getFirstTextNodeFromRange : function(aRange)
 	{
-		return this.utils.evaluateXPath(
-				'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][1]',
+		return TextLinkUtils.evaluateXPath(
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][1]',
 				aRange.startContainer.childNodes.item(aRange.startOffset) || aRange.startContainer.firstChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
 	},
 	_getLastTextNodeFromRange : function(aRange)
 	{
-		return this.utils.evaluateXPath(
-				'descendant-or-self::text()[not('+this.kIGNORE_TEXT_CONDITION+')][last()]',
+		return TextLinkUtils.evaluateXPath(
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][last()]',
 				aRange.endContainer.childNodes.item(aRange.endOffset) || aRange.endContainer.lastChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
@@ -702,7 +701,7 @@ TextLinkRangeUtils.prototype = {
 	shrinkURIRange : function(aRange) 
 	{
 		// 強制改行以降を切り落とす
-		var nodes = this.utils.evaluateXPath(
+		var nodes = TextLinkUtils.evaluateXPath(
 				'following::*[local-name()="br" or local-name()="BR"] | '+
 				'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
 				aRange.startContainer
@@ -730,7 +729,7 @@ TextLinkRangeUtils.prototype = {
 	getFollowingURIPartRanges : function(aRange) 
 	{
 		var ranges = [];
-		if (this.utils.multilineURIEnabled) {
+		if (TextLinkUtils.multilineURIEnabled) {
 			this._expandURIRangeToAfter(aRange, ranges);
 		}
 		return ranges;
