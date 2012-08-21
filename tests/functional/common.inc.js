@@ -13,7 +13,7 @@ function commonSetUp(aPath)
 	utils.setPref('intl.accept_languages', 'ja,en-us,en');
 	utils.setPref('intl.charset.detector', 'ja_parallel_state_machine');
 
-	yield Do(utils.setUpTestWindow());
+	yield Do(utils.setUpTestWindow({ width: 800, height: 600 }));
 	yield Do(utils.addTab(aPath || '../fixtures/testcase.html', { selected : true }));
 	gBrowser.removeAllTabsBut(gBrowser.selectedTab);
 

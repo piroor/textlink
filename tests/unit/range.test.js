@@ -95,11 +95,18 @@ function test_shrinkURIRange()
 	assert.equals('mozilla.jp/', range.toString());
 
 	range.detach();
+}
 
-
+/**
+ * We never do this test on Firefox 10 and later, because
+ * the editor document is not detected as an HTML document anymore.
+ */
+test_shrinkURIRange_inTextEditor.shouldSkip = true;
+function test_shrinkURIRange_inTextEditor()
+{
 	var selection = getSelectionInEditable($('textarea'));
 	assert.equals(1, selection.rangeCount);
-	range = selection.getRangeAt(0).cloneRange();
+	var range = selection.getRangeAt(0).cloneRange();
 	selection.removeAllRanges();
 	range.selectNode(range.startContainer.childNodes[4]);
 	range.setStart(range.startContainer.childNodes[2], 4);
@@ -107,6 +114,8 @@ function test_shrinkURIRange()
 
 	range = sv.shrinkURIRange(range);
 	assert.equals('http://mozilla.jp/product/firefox/', range.toString());
+
+	range.detach();
 }
 
 function test_getFindRange()
