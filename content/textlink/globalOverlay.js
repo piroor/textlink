@@ -146,6 +146,11 @@ var TextLinkService = {
 			case 'mouseup':
 				if (aEvent.detail != 2)
 					return;
+				if (document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
+					// Fix for https://github.com/piroor/textlink/issues/14
+					this.forbidDblclick = true;
+					return;
+				}
 				let pos = this.mousedownPosition;
 				if (pos) {
 					this.mousedownPosition = null;
