@@ -1,6 +1,6 @@
-var TextLinkService = {
-
-	get window()
+var TextLinkService = { 
+	
+	get window() 
 	{
 		return window;
 	},
@@ -9,8 +9,8 @@ var TextLinkService = {
 	{
 		return this.rangeUtils.browser;
 	},
-
-	get browserURI()
+ 
+	get browserURI() 
 	{
 		if (!this._browserURI) {
 			var uri = this.utils.prefs.getPref('browser.chromeURL');
@@ -29,8 +29,8 @@ var TextLinkService = {
 		return this._browserURI;
 	},
 	_browserURI : null,
-
-	get tooltip()
+ 
+	get tooltip() 
 	{
 		return document.getElementById('textLinkTooltip-selectedURI');
 	},
@@ -38,31 +38,31 @@ var TextLinkService = {
 	{
 		return document.getElementById('textLinkTooltip-selectedURI-box');
 	},
-
-	get contextMenu()
+ 
+	get contextMenu() 
 	{
 		return document.getElementById('contentAreaContextMenu');
 	},
-
-	get popupNode()
+ 
+	get popupNode() 
 	{
 		var popup = this.contextMenu;
 		return popup && popup.triggerNode || document.popupNode ;
 	},
-
-	get bundle() {
+ 
+	get bundle() { 
 		if (!this._bundle) {
 			this._bundle = document.getElementById('textlink-bundle');
 		}
 		return this._bundle;
 	},
 	_bundle : null,
-
- 	forbidDblclick: false,
+ 
+  	forbidDblclick: false,
  	mousedownPosition: null,
  	forbidDblclickTolerance: 24,
-
-	handleEvent : function(aEvent)
+ 
+	handleEvent : function(aEvent) 
 	{
 		switch (aEvent.type)
 		{
@@ -136,7 +136,6 @@ var TextLinkService = {
 						return;
 				}
 				break;
-
 			case 'mousedown':
 				if (aEvent.detail == 2) {
 					this.forbidDblclick = false;
@@ -169,8 +168,8 @@ var TextLinkService = {
 
 		this.handleUserActionEvent(aEvent);
 	},
-
-	handleUserActionEvent : function(aEvent)
+	
+	handleUserActionEvent : function(aEvent) 
 	{
 		this.getActionsForEvent(aEvent).some(function(aAction) {
 			try {
@@ -182,8 +181,8 @@ var TextLinkService = {
 			return false;
 		}, this);
 	},
-
-	getActionsForEvent : function(aEvent)
+ 
+	getActionsForEvent : function(aEvent) 
 	{
 		var actions = [];
 		if (
@@ -211,8 +210,8 @@ var TextLinkService = {
 		}
 		return actions;
 	},
-
-	actionShouldHandleEvent : function(aAction, aEvent)
+ 
+	actionShouldHandleEvent : function(aAction, aEvent) 
 	{
 		var trigger;
 		return (
@@ -256,8 +255,8 @@ var TextLinkService = {
 			)
 		);
 	},
-
-	buildTooltip : function(aEvent)
+ 
+	buildTooltip : function(aEvent) 
 	{
 		this.stopProgressiveBuildTooltip();
 
@@ -349,8 +348,8 @@ var TextLinkService = {
 		range.deleteContents();
 		range.detach();
 	},
-
-	openClickedURI : function(aEvent, aAction)
+  
+	openClickedURI : function(aEvent, aAction) 
 	{
 		var target = this.utils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
@@ -407,8 +406,8 @@ var TextLinkService = {
 			b.loadOneTab(aURI, aReferrer, null, null, (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
-
-	openTextLinkIn : function(aAction, aTarget)
+ 
+	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.rangeUtils.getCurrentFrame();
 		var uris = this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame);
@@ -568,8 +567,8 @@ var TextLinkService = {
 		if (target.tabs.newSelected)
 			target.browser.selectedTab = target.tabs.newSelected;
 	},
-
-	init : function()
+ 
+	init : function() 
 	{
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
@@ -592,16 +591,16 @@ var TextLinkService = {
 		// hacks.js
 		this.overrideExtensions();
 	},
-
-	initBrowser : function(aBrowser)
+	
+	initBrowser : function(aBrowser) 
 	{
 		aBrowser.addEventListener('mousedown', this, true);
 		aBrowser.addEventListener('mouseup', this, true);
 		aBrowser.addEventListener('dblclick', this, true);
 		aBrowser.addEventListener('keypress', this, true);
 	},
-
-	initContextMenu : function()
+ 
+	initContextMenu : function() 
 	{
 		var uris = [];
 		var target;
@@ -686,8 +685,8 @@ var TextLinkService = {
 
 		return item;
 	},
-
-	destroy : function()
+  
+	destroy : function() 
 	{
 		window.removeEventListener('unload', this, false);
 
@@ -706,22 +705,22 @@ var TextLinkService = {
 
 		this.destroyBrowser(gBrowser);
 	},
-
-	destroyBrowser : function(aBrowser)
+	
+	destroyBrowser : function(aBrowser) 
 	{
 		aBrowser.removeEventListener('mousedown', this, true);
 		aBrowser.removeEventListener('mouseup', this, true);
 		aBrowser.removeEventListener('dblclick', this, true);
 		aBrowser.removeEventListener('keypress', this, true);
 	}
+   
+}; 
 
-};
-
-(function() {
+(function() { 
 	var namespace = {};
 	Components.utils.import('resource://textlink-modules/utils.js', namespace);
 	Components.utils.import('resource://textlink-modules/range.js', namespace);
 	TextLinkService.utils = namespace.TextLinkUtils;
 	TextLinkService.rangeUtils = new namespace.TextLinkRangeUtils(window);
 })();
-
+ 
