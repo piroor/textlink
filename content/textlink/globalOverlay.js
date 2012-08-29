@@ -58,9 +58,9 @@ var TextLinkService = {
 	},
 	_bundle : null,
  
-  	forbidDblclick: false,
- 	mousedownPosition: null,
- 	forbidDblclickTolerance: 24,
+	forbidDblclick: false,
+	mousedownPosition: null,
+	forbidDblclickTolerance: 24,
  
 	handleEvent : function(aEvent) 
 	{
