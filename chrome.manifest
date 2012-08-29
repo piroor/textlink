@@ -12,8 +12,10 @@ locale	textlink	sk-SK	jar:chrome/textlink.jar!/locale/sk-SK/textlink/
 locale	textlink	zh-CN	jar:chrome/textlink.jar!/locale/zh-CN/textlink/
 locale	textlink	zh-TW	jar:chrome/textlink.jar!/locale/zh-TW/textlink/
 locale	textlink	it-IT	jar:chrome/textlink.jar!/locale/it-IT/textlink/
+locale	textlink	lt	jar:chrome/textlink.jar!/locale/lt/textlink/
 locale	textlink	hu-HU	jar:chrome/textlink.jar!/locale/hu-HU/textlink/
-locale	textlink	pl-LP	jar:chrome/textlink.jar!/locale/pl-PL/textlink/locale	textlink	tr-TR	jar:chrome/textlink.jar!/locale/tr-TR/textlink/
+locale	textlink	pl-LP	jar:chrome/textlink.jar!/locale/pl-PL/textlink/
+locale	textlink	tr-TR	jar:chrome/textlink.jar!/locale/tr-TR/textlink/
 locale	textlink	de-DE	jar:chrome/textlink.jar!/locale/de-DE/textlink/
 
 resource textlink-modules modules/
