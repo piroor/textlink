@@ -58,6 +58,10 @@ var TextLinkService = {
 	},
 	_bundle : null,
  
+	forbidDblclick: false,
+	mousedownPosition: null,
+	forbidDblclickTolerance: 24,
+ 
 	handleEvent : function(aEvent) 
 	{
 		switch (aEvent.type)
@@ -132,6 +136,34 @@ var TextLinkService = {
 						return;
 				}
 				break;
+			case 'mousedown':
+				if (aEvent.detail == 2) {
+					this.forbidDblclick = false;
+					this.mousedownPosition = { x: aEvent.screenX, y: aEvent.screenY };
+				}
+				return;
+			case 'mouseup':
+				if (aEvent.detail != 2)
+					return;
+				if (document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
+					// Fix for https://github.com/piroor/textlink/issues/14
+					this.forbidDblclick = true;
+					return;
+				}
+				let pos = this.mousedownPosition;
+				if (pos) {
+					this.mousedownPosition = null;
+					let delta = Math.sqrt(
+						Math.pow(aEvent.screenX - pos.x, 2),
+						Math.pow(aEvent.screenY - pos.y, 2)
+					);
+					if (delta > this.forbidDblclickTolerance)
+						this.forbidDblclick = true;
+				}
+				return;
+			case 'dblclick':
+				if (this.forbidDblclick)
+					return;
 		}
 
 		this.handleUserActionEvent(aEvent);
@@ -562,6 +594,8 @@ var TextLinkService = {
 	
 	initBrowser : function(aBrowser) 
 	{
+		aBrowser.addEventListener('mousedown', this, true);
+		aBrowser.addEventListener('mouseup', this, true);
 		aBrowser.addEventListener('dblclick', this, true);
 		aBrowser.addEventListener('keypress', this, true);
 	},
@@ -674,6 +708,8 @@ var TextLinkService = {
 	
 	destroyBrowser : function(aBrowser) 
 	{
+		aBrowser.removeEventListener('mousedown', this, true);
+		aBrowser.removeEventListener('mouseup', this, true);
 		aBrowser.removeEventListener('dblclick', this, true);
 		aBrowser.removeEventListener('keypress', this, true);
 	}
