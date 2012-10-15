@@ -208,4 +208,4 @@ Preferences（設定） > Advanced（詳細） > Text Link（テキストリンク）で
 
 ------------------------------------------------------------------------
 Text Link for NS7 & Moz & Firefox
-Copyright 2004-2006 Piro(SHIMODA Hiroshi)
+Copyright 2004-2006 Piro(YUKI "Piro" Hiroshi)
