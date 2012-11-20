@@ -668,18 +668,24 @@ var TextLinkService = {
 		gContextMenu.showItem('context-openTextLink-copy',
 			this.utils.contextItemCopy);
 
+		var check = function() {
+				if (!gContextMenu) throw new Error('context menu is already closed');
+			};
+
 		var uris = [];
 		var found = {};
-		this.rangeUtils.getFirstSelectionURIRange(target)
+		this.rangeUtils.getFirstSelectionURIRange(target, false, null, check)
 			.next(function(aFirstRange) {
+				check();
 				if (aFirstRange) {
 					uris.push(aFirstRange.uri);
 					aFirstRange.range.detach();
 					found[aFirstRange.uri] = true;
 				}
-				return self.rangeUtils.getLastSelectionURIRange(target, false, found);
+				return self.rangeUtils.getLastSelectionURIRange(target, false, found, check);
 			})
 			.next(function(aLastRange) {
+				check();
 				if (aLastRange) {
 					uris.push(aLastRange.uri);
 					aLastRange.range.detach();

@@ -164,7 +164,7 @@ TextLinkRangeUtils.prototype = {
 	ERRROR_FIND_MODE_NOT_SPECIFIED : new Error('you must specify find mode'),
 	ERRROR_NO_URI_RANGE : new Error('there is no range maybe URI'),
 	
-	getURIRangesIterator : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash) 
+	getURIRangesIterator : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
 		if (!aMode) aMode = this.FIND_ALL;
 
@@ -194,6 +194,8 @@ TextLinkRangeUtils.prototype = {
 					let foundRange = iterator.next();
 					yield foundRange;
 					ranges.push(foundRange);
+					if (aContinuationChecker && typeof aContinuationChecker == 'function')
+						aContinuationChecker();
 				}
 			}
 			catch(e) {
@@ -644,21 +646,23 @@ TextLinkRangeUtils.prototype = {
 		return aNode;
 	},
   
-	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash) 
+	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
 		if (!aMode) aMode = this.FIND_ALL;
 
-		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash);
+		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker);
 		var ranges = [];
 		var self = this;
 		return Deferred
 			.next(function() {
+				if (aContinuationChecker && typeof aContinuationChecker == 'function')
+					aContinuationChecker();
 				var start = Date.now();
 				divide: {
 					do {
 						ranges.push(iterator.next());
 					} while (Date.now() - start < 20);
-					return Deferred.call(arguments.callee);
+					return Deferred.wait(0.2).call(arguments.callee);
 				}
 			})
 			.error(function(e) {
@@ -666,24 +670,25 @@ TextLinkRangeUtils.prototype = {
 					throw e;
 			})
 			.next(function() {
-				if (aMode & self.FIND_ALL) {
+				if (aContinuationChecker && typeof aContinuationChecker == 'function')
+					aContinuationChecker();
+				if (aMode & self.FIND_ALL)
 					ranges.sort(self._compareRangePosition);
-				}
 				return ranges;
 			});
 	},
 	
-	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash) 
+	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
-		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash)
+		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash, aContinuationChecker)
 				.next(function(aRanges) {
 					return aRanges.length ? aRanges[0] : null ;
 				});
 	},
  
-	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash) 
+	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
-		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash)
+		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash, aContinuationChecker)
 				.next(function(aRanges) {
 					return aRanges.length ? aRanges[0] : null ;
 				});
