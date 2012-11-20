@@ -92,28 +92,29 @@ var TextLinkMessengerService = {
 		var doc = this.browser.contentDocument;
 		var range = doc.createRange();
 		range.selectNodeContents(doc.body);
+		var self = this;
 		this.rangeUtils.getURIRangesFromRange(
 			range,
 			this.rangeUtils.FIND_ALL | this.rangeUtils.ALLOW_SAME_URIS
-		)
-		.reverse()
-		.forEach(function(aRange) {
-			if (!this._getParentLink(aRange.range.startContainer)) {
-				let link = doc.createElement('a');
-				if (aRange.range.toString().length < aRange.uri.length) {
-					link.setAttribute('class', 'moz-txt-link-abbreviated');
+		).next(function(aRanges) {
+			aRanges.reverse().forEach(function(aRange) {
+				if (!self._getParentLink(aRange.range.startContainer)) {
+					let link = doc.createElement('a');
+					if (aRange.range.toString().length < aRange.uri.length) {
+						link.setAttribute('class', 'moz-txt-link-abbreviated');
+					}
+					else {
+						link.setAttribute('class', 'moz-txt-link-freetext');
+					}
+					link.setAttribute('href', aRange.uri);
+					link.appendChild(aRange.range.extractContents());
+					aRange.range.insertNode(link);
+					link.textContent = link.textContent;
 				}
-				else {
-					link.setAttribute('class', 'moz-txt-link-freetext');
-				}
-				link.setAttribute('href', aRange.uri);
-				link.appendChild(aRange.range.extractContents());
-				aRange.range.insertNode(link);
-				link.textContent = link.textContent;
-			}
-			aRange.range.detach();
-		}, this);
-		range.detach();
+				aRange.range.detach();
+			});
+			range.detach();
+		});
 	},
 	_getParentLink : function(aNode)
 	{

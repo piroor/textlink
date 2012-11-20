@@ -34,17 +34,25 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.openTextLink.current.single    "Open &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "Open All: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.single     "Open &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple   "Open All: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.processing "Open: finding URIs…">
+<!ENTITY textlink.openTextLink.current.disabled   "Open: no URI found">
 <!ENTITY textlink.openTextLink.current.accesskey "O">
 <!ENTITY textlink.openTextLink.tab.single        "Open in New Tab: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.tab.multiple      "Open All in New Tabs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.processing    "Open in New Tab: finding URIs…">
+<!ENTITY textlink.openTextLink.tab.disabled      "Open in New Tab: no URI found">
 <!ENTITY textlink.openTextLink.tab.accesskey     "T">
 <!ENTITY textlink.openTextLink.window.single     "Open in New Window: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Open All in New Windows: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.processing "Open in New Window: finding URIs…">
+<!ENTITY textlink.openTextLink.window.disabled   "Open in New Window: no URI found">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
 <!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.processing "Copy URI: finding URIs…">
+<!ENTITY textlink.openTextLink.copy.disabled   "Copy URI: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "Open &lt;selected URI string&gt;">

@@ -365,10 +365,16 @@ var TextLinkService = {
 
 		var frame = target.ownerDocument.defaultView;
 
-		var ranges = this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict);
-		if (!ranges.length) return;
-
-		var range = ranges[0];
+		var self = this;
+		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict)
+			.next(function(aRanges) {
+				if (aRanges.length)
+					self.openClickedURIPostProcess(frame, aRanges);
+			});
+	},
+	openClickedURIPostProcess : function(aFrame, aRanges)
+	{
+		var range = aRanges[0];
 
 		range.selection.removeAllRanges();
 		range.selection.addRange(range.range);
@@ -383,7 +389,7 @@ var TextLinkService = {
 		var uri = range.uri;
 		var referrer = (aAction & this.utils.ACTION_STEALTH) ?
 					null :
-					this.utils.makeURIFromSpec(frame.location.href) ;
+					this.utils.makeURIFromSpec(aFrame.location.href) ;
 		this.loadURI(uri, referrer, aEvent, aAction);
 	},
 	loadURI : function(aURI, aReferrer, aEvent, aAction)
@@ -410,11 +416,16 @@ var TextLinkService = {
 	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.rangeUtils.getCurrentFrame();
-		var uris = this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame);
-		if (!uris.length) return;
-
+		this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
+			.next(function(aRanges) {
+				if (aRanges.length)
+					return self.openTextLinkInPostProcess(aAction, aTarget, aRanges);
+			});
+	},
+	openTextLinkInPostProcess : function(aAction, aTarget, aRanges)
+	{
 		var selections = [];
-		uris = uris.map(function(aRange) {
+		var uris = aRanges.map(function(aRange) {
 				if (selections.indexOf(aRange.selection) < 0) {
 					selections.push(aRange.selection);
 					aRange.selection.removeAllRanges();
@@ -602,84 +613,112 @@ var TextLinkService = {
  
 	initContextMenu : function() 
 	{
-		var uris = [];
-		var target;
-		if (
-			(
-				this.utils.contextItemCurrent ||
-				this.utils.contextItemWindow ||
-				this.utils.contextItemTab ||
-				this.utils.contextItemCopy
-			) &&
-			(
-				(
-					gContextMenu.isTextSelected &&
-					gContextMenu.isContentSelected
-				) ||
-				(
-					gContextMenu.onTextInput &&
-					this.rangeUtils.getSelection(gContextMenu.target)
-				)
-			)
-			) {
-			try {
-				target = this.rangeUtils.getEditableFromChild(this.popupNode);
-				var first = this.rangeUtils.getFirstSelectionURIRange(target);
-				var found = {};
-				if (first) {
-					uris.push(first.uri);
-					first.range.detach();
-					found[first.uri] = true;
-				}
-				var last = this.rangeUtils.getLastSelectionURIRange(target, false, found);
-				if (last) {
-					uris.push(last.uri);
-					last.range.detach();
-				}
-			}
-			catch(e) {
-			}
-		}
-
-		gContextMenu.showItem('context-openTextLink-current',
-			uris.length && this.utils.contextItemCurrent);
-		gContextMenu.showItem('context-openTextLink-window',
-			uris.length && this.utils.contextItemWindow);
-		gContextMenu.showItem('context-openTextLink-tab',
-			uris.length && this.utils.contextItemTab);
-		gContextMenu.showItem('context-openTextLink-copy',
-			uris.length && this.utils.contextItemCopy);
-		if (uris.length) {
-			var uri1, uri2;
-
-			uri1 = uris[0];
-			if (uri1.length > 20) uri1 = uri1.substring(0, 15).replace(/\.+$/, '')+'..';
-
-			if (uris.length > 1) {
-				uri2 = uris[uris.length-1];
-				if (uri2.length > 20) uri2 = uri2.substring(0, 15).replace(/\.+$/, '')+'..';
-			}
-
-			var targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
-			var attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single' ;
-
-			[
+		var items = [
 				'context-openTextLink-current',
 				'context-openTextLink-window',
 				'context-openTextLink-tab',
 				'context-openTextLink-copy'
-			].forEach(function(aID) {
-				var item = this.setLabel(aID, attr, targets);
-			}, this);
-		}
+			];
+		var self = this;
+
+		items.forEach(function(aID) {
+			gContextMenu.showItem(aID, false);
+			var item = self.setLabel(aID, 'label-processing');
+			if (item) {
+				item.setAttribute('disabled', true);
+				item.setAttribute('uri-finding', true);
+			}
+		});
+
+		if (
+			(
+				!this.utils.contextItemCurrent &&
+				!this.utils.contextItemWindow &&
+				!this.utils.contextItemTab &&
+				!this.utils.contextItemCopy
+			) ||
+			(
+				(
+					!gContextMenu.isTextSelected ||
+					!gContextMenu.isContentSelected
+				) &&
+				(
+					!gContextMenu.onTextInput ||
+					!this.rangeUtils.getSelection(gContextMenu.target)
+				)
+			)
+			)
+			return;
+
+		gContextMenu.showItem('context-openTextLink-current',
+			this.utils.contextItemCurrent);
+		gContextMenu.showItem('context-openTextLink-window',
+			this.utils.contextItemWindow);
+		gContextMenu.showItem('context-openTextLink-tab',
+			this.utils.contextItemTab);
+		gContextMenu.showItem('context-openTextLink-copy',
+			this.utils.contextItemCopy);
+
+		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var uris = [];
+		var found = {};
+		this.rangeUtils.getFirstSelectionURIRange(target)
+			.next(function(aFirstRange) {
+				if (aFirstRange) {
+					uris.push(aFirstRange.uri);
+					aFirstRange.range.detach();
+					found[aFirstRange.uri] = true;
+				}
+				return self.rangeUtils.getLastSelectionURIRange(target, false, found);
+			})
+			.next(function(aLastRange) {
+				if (aLastRange) {
+					uris.push(aLastRange.uri);
+					aLastRange.range.detach();
+				}
+
+				if (uris.length) {
+					var uri1, uri2;
+
+					uri1 = uris[0];
+					if (uri1.length > 20) uri1 = uri1.substring(0, 15).replace(/\.+$/, '')+'..';
+
+					if (uris.length > 1) {
+						uri2 = uris[uris.length-1];
+						if (uri2.length > 20) uri2 = uri2.substring(0, 15).replace(/\.+$/, '')+'..';
+					}
+
+					var targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
+					var attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single' ;
+
+					items.forEach(function(aID) {
+						var item = self.setLabel(aID, attr, targets);
+						if (item) {
+							item.removeAttribute('disabled');
+							item.removeAttribute('uri-finding');
+						}
+					});
+				}
+				else {
+					items.forEach(function(aID) {
+						var item = self.setLabel(aID, 'label-disabled');
+						if (item)
+							item.removeAttribute('uri-finding');
+					});
+				}
+			})
+			.error(function(e) {
+			});
 	},
 	setLabel : function(aID, aAttr, aTargets)
 	{
 		var item = document.getElementById(aID);
 		if (!item) return;
 		var base = item.getAttribute(aAttr);
-		for (var i = 0; i < aTargets.length; i+=2)
-			base = base.replace(aTargets[i], aTargets[i+1]);
+		if (aTargets) {
+			for (var i = 0; i < aTargets.length; i+=2)
+				base = base.replace(aTargets[i], aTargets[i+1]);
+		}
 
 		item.setAttribute('label', base);
 

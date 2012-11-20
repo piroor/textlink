@@ -43,6 +43,11 @@ const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT if
 const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
 
 Components.utils.import('resource://textlink-modules/utils.js');
+Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
+XPCOMUtils.defineLazyGetter(this, 'Deferred', function() {
+	var { Deferred } = Components.utils.import('resource://textlink-modules/jsdeferred.js', {});
+	return Deferred;
+});
  
 function TextLinkRangeUtils(aWindow) 
 {
@@ -643,59 +648,80 @@ TextLinkRangeUtils.prototype = {
 	{
 		if (!aMode) aMode = this.FIND_ALL;
 
+		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash);
 		var ranges = [];
-		try {
-			var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash);
-			while(true)
-			{
-				ranges.push(iterator.next());
-			}
-		}
-		catch(e) {
-		}
-
-		if (aMode & this.FIND_ALL) {
-			ranges.sort(this._compareRangePosition);
-		}
-
-		return ranges;
+		var self = this;
+		return Deferred
+			.next(function() {
+				var start = Date.now();
+				divide: {
+					do {
+						ranges.push(iterator.next());
+					} while (Date.now() - start < 20);
+					return Deferred.call(arguments.callee);
+				}
+			})
+			.error(function(e) {
+				if (!(e instanceof StopIteration))
+					throw e;
+			})
+			.next(function() {
+				if (aMode & self.FIND_ALL) {
+					ranges.sort(self._compareRangePosition);
+				}
+				return ranges;
+			});
 	},
 	
 	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash) 
 	{
-		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash);
-		return ranges.length ? ranges[0] : null ;
+		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash)
+				.next(function(aRanges) {
+					return aRanges.length ? aRanges[0] : null ;
+				});
 	},
  
 	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash) 
 	{
-		var ranges = this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash);
-		return ranges.length ? ranges[0] : null ;
+		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash)
+				.next(function(aRanges) {
+					return aRanges.length ? aRanges[0] : null ;
+				});
 	},
  
 	getURIRangesFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
 	{
 		if (!aMode) aMode = this.FIND_ALL;
+
+		var iterator = this.getURIRangesIteratorFromRange(aBaseRange, aMode, aStrict, aExceptionsHash);
 		var ranges = [];
+		var self = this;
+		return Deferred
+			.next(function() {
+				var start = Date.now();
+				divide: {
+					do {
+						ranges.push(iterator.next());
+					} while (Date.now() - start < 20);
+					return Deferred.call(arguments.callee);
+				}
+				return true;
+			})
+			.error(function(e) {
+				if (e == self.ERRROR_NO_URI_RANGE)
+					return false;
+				if (!(e instanceof StopIteration))
+					throw e;
+				return true;
+			})
+			.next(function(aCanceled) {
+				if (aCanceled) return [];
 
-		try {
-			var iterator = this.getURIRangesIteratorFromRange(aBaseRange, aMode, aStrict, aExceptionsHash);
-			while(true)
-			{
-				ranges.push(iterator.next());
-			}
-		}
-		catch(e if e instanceof StopIteration) {
-		}
-		catch(e if e == this.ERRROR_NO_URI_RANGE) {
-			return ranges;
-		}
-
-		if (aMode & this.FIND_ALL) {
-			ranges.sort(this._compareRangePosition);
-		}
-
-		return ranges;
+				if (aMode & self.FIND_ALL) {
+					ranges.sort(self._compareRangePosition);
+				}
+				return ranges;
+			});
 	},
   
 	shrinkURIRange : function(aRange) 

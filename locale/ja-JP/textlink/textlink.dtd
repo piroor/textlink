@@ -34,17 +34,25 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.openTextLink.current.single    "開く: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "すべて開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
+<!ENTITY textlink.openTextLink.current.single     "開く: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.current.multiple   "すべて開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.processing "開く: URIを探索中...">
+<!ENTITY textlink.openTextLink.current.disabled   "開く: URIがありません">
+<!ENTITY textlink.openTextLink.current.accesskey  "O">
 <!ENTITY textlink.openTextLink.tab.single        "新しいタブで開く: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.tab.multiple      "すべて新しいタブで開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.processing    "新しいタブで開く: URIを探索中...">
+<!ENTITY textlink.openTextLink.tab.disabled      "新しいタブで開く: URIがありません">
 <!ENTITY textlink.openTextLink.tab.accesskey     "T">
 <!ENTITY textlink.openTextLink.window.single     "新しいウィンドウで開く: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "すべて新しいウィンドウで開く: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.processing "新しいウィンドウで開く: URIを探索中...">
+<!ENTITY textlink.openTextLink.window.disabled   "新しいウィンドウで開く: URIがありません">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
-<!ENTITY textlink.openTextLink.copy.single     "URIをコピー：&quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "すべてのURIをコピー：&quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.single     "URIをコピー: &quot;&#37;s&quot;">
+<!ENTITY textlink.openTextLink.copy.multiple   "すべてのURIをコピー: &quot;&#37;s1&quot;～&quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.processing "URIをコピー: URIを探索中...">
+<!ENTITY textlink.openTextLink.copy.disabled   "URIをコピー: URIがありません">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 
