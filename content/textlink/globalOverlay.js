@@ -621,6 +621,15 @@ var TextLinkService = {
 			];
 		var self = this;
 
+		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var selection = this.rangeUtils.getSelection(target);
+		selection = selection && selection.toString();
+		if (this.lastSelectionForContextMenu) {
+			if (this.lastSelectionForContextMenu == selection)
+				return;
+		}
+		this.lastSelectionForContextMenu = selection;
+
 		items.forEach(function(aID) {
 			gContextMenu.showItem(aID, false);
 			var item = self.setLabel(aID, 'label-processing');
@@ -644,7 +653,7 @@ var TextLinkService = {
 				) &&
 				(
 					!gContextMenu.onTextInput ||
-					!this.rangeUtils.getSelection(gContextMenu.target)
+					!selection
 				)
 			)
 			)
@@ -659,7 +668,6 @@ var TextLinkService = {
 		gContextMenu.showItem('context-openTextLink-copy',
 			this.utils.contextItemCopy);
 
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
 		var uris = [];
 		var found = {};
 		this.rangeUtils.getFirstSelectionURIRange(target)
@@ -708,6 +716,7 @@ var TextLinkService = {
 				}
 			})
 			.error(function(e) {
+				self.lastSelectionForContextMenu = null;
 			});
 	},
 	setLabel : function(aID, aAttr, aTargets)
