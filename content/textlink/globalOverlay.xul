@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="chrome://textlink/skin/textlink.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://textlink/locale/">
 
 <overlay
@@ -21,6 +22,7 @@ window.addEventListener('load', TextLinkService, false);
 
 <popup id="contentAreaContextMenu">
 	<menuitem id="context-openTextLink-current"
+		class="textlink-menuitem menuitem-iconic"
 		insertbefore="context-searchselect context-sep-selectall context-sep-open"
 		label-base-single="&textlink.openTextLink.current.single;"
 		label-base-multiple="&textlink.openTextLink.current.multiple;"
@@ -31,6 +33,7 @@ window.addEventListener('load', TextLinkService, false);
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT, TextLinkService.popupNode);"
 		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-tab"
+		class="textlink-menuitem menuitem-iconic"
 		insertbefore="context-searchselect context-sep-selectall context-sep-open"
 		label-base-single="&textlink.openTextLink.tab.single;"
 		label-base-multiple="&textlink.openTextLink.tab.multiple;"
@@ -41,6 +44,7 @@ window.addEventListener('load', TextLinkService, false);
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB, TextLinkService.popupNode);"
 		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-window"
+		class="textlink-menuitem menuitem-iconic"
 		insertbefore="context-searchselect context-sep-selectall context-sep-open"
 		label-base-single="&textlink.openTextLink.window.single;"
 		label-base-multiple="&textlink.openTextLink.window.multiple;"
@@ -50,6 +54,7 @@ window.addEventListener('load', TextLinkService, false);
 		tooltip="textLinkTooltip-selectedURI"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_WINDOW, TextLinkService.popupNode);"/>
 	<menuitem id="context-openTextLink-copy"
+		class="textlink-menuitem menuitem-iconic"
 		insertafter="context-copy"
 		label-base-single="&textlink.openTextLink.copy.single;"
 		label-base-multiple="&textlink.openTextLink.copy.multiple;"

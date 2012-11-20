@@ -18,4 +18,6 @@ locale	textlink	pl-LP	jar:chrome/textlink.jar!/locale/pl-PL/textlink/
 locale	textlink	tr-TR	jar:chrome/textlink.jar!/locale/tr-TR/textlink/
 locale	textlink	de-DE	jar:chrome/textlink.jar!/locale/de-DE/textlink/
 
+skin	textlink	classic/1.0	jar:chrome/textlink.jar!/skin/classic/textlink/
+
 resource textlink-modules modules/
