@@ -36,15 +36,23 @@
 
 <!ENTITY textlink.openTextLink.current.single    "開啟 &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "全部開啟: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.processing "開啟: finding URIs…">
+<!ENTITY textlink.openTextLink.current.disabled   "開啟: no URI found">
 <!ENTITY textlink.openTextLink.current.accesskey "O">
 <!ENTITY textlink.openTextLink.tab.single        "在新分頁開啟: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.tab.multiple      "全部都在新分頁開啟: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.processing    "在新分頁開啟: finding URIs…">
+<!ENTITY textlink.openTextLink.tab.disabled      "在新分頁開啟: no URI found">
 <!ENTITY textlink.openTextLink.tab.accesskey     "T">
 <!ENTITY textlink.openTextLink.window.single     "在新視窗開啟: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "全部都在新視窗開啟: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.processing "在新視窗開啟: finding URIs…">
+<!ENTITY textlink.openTextLink.window.disabled   "在新視窗開啟: no URI found">
 <!ENTITY textlink.openTextLink.window.accesskey  "W">
 <!ENTITY textlink.openTextLink.copy.single     "複製 URI: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.copy.multiple   "複製全部的 URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.processing "複製 URI: finding URIs…">
+<!ENTITY textlink.openTextLink.copy.disabled   "複製 URI: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.current.pref "開啟 &lt;選取的 URI 字串&gt;">

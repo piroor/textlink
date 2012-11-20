@@ -36,15 +36,23 @@
 
 <!ENTITY textlink.openTextLink.current.single    "Megnyitás &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Mindegyik megnyitása: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.current.processing "Mindegyik megnyitása: finding URIs…">
+<!ENTITY textlink.openTextLink.current.disabled   "Mindegyik megnyitása: no URI found">
 <!ENTITY textlink.openTextLink.current.accesskey "g">
 <!ENTITY textlink.openTextLink.tab.single        "Megnyitás új lapon: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.tab.multiple      "Mindegyik megnyitása külön lapon: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.tab.processing    "Megnyitás új lapon: finding URIs…">
+<!ENTITY textlink.openTextLink.tab.disabled      "Megnyitás új lapon: no URI found">
 <!ENTITY textlink.openTextLink.tab.accesskey     "d">
 <!ENTITY textlink.openTextLink.window.single     "Megnyitás új ablakban: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.window.multiple   "Mindegyik megnyitása külön ablakban: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.window.processing "Megnyitás új ablakban: finding URIs…">
+<!ENTITY textlink.openTextLink.window.disabled   "Megnyitás új ablakban: no URI found">
 <!ENTITY textlink.openTextLink.window.accesskey  "y">
 <!ENTITY textlink.openTextLink.copy.single     "Webcím másolása: &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.copy.multiple   "Mindegyik webcím másolása: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
+<!ENTITY textlink.openTextLink.copy.processing "Webcím másolása: finding URIs…">
+<!ENTITY textlink.openTextLink.copy.disabled   "Webcím másolása: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "w">
 
 <!ENTITY textlink.context.current.pref "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;">
