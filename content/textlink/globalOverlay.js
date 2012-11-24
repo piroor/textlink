@@ -369,10 +369,10 @@ var TextLinkService = {
 		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict)
 			.next(function(aRanges) {
 				if (aRanges.length)
-					self.openClickedURIPostProcess(frame, aRanges);
+					self.openClickedURIPostProcess(aEvent, aAction, b, frame, aRanges);
 			});
 	},
-	openClickedURIPostProcess : function(aFrame, aRanges)
+	openClickedURIPostProcess : function(aEvent, aAction, aBrowser, aFrame, aRanges)
 	{
 		var range = aRanges[0];
 
@@ -390,17 +390,16 @@ var TextLinkService = {
 		var referrer = (aAction & this.utils.ACTION_STEALTH) ?
 					null :
 					this.utils.makeURIFromSpec(aFrame.location.href) ;
-		this.loadURI(uri, referrer, aEvent, aAction);
+		this.loadURI(uri, referrer, aBrowser, aEvent, aAction);
 	},
-	loadURI : function(aURI, aReferrer, aEvent, aAction)
+	loadURI : function(aURI, aReferrer, aBrowser, aEvent, aAction)
 	{
-		var b = aEvent.currentTarget;
 		var frame = aEvent.originalTarget.ownerDocument.defaultView;
 
 		if (aAction & this.utils.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
-			b.localName != 'tabbrowser') {
-			b.loadURI(aURI, aReferrer);
+			aBrowser.localName != 'tabbrowser') {
+			aBrowser.loadURI(aURI, aReferrer);
 		}
 		else if (aAction & this.utils.ACTION_OPEN_IN_WINDOW) {
 			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', aURI, null, aReferrer);
@@ -409,7 +408,7 @@ var TextLinkService = {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(frame);
 			}
-			b.loadOneTab(aURI, aReferrer, null, null, (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB));
+			aBrowser.loadOneTab(aURI, aReferrer, null, null, (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB));
 		}
 	},
  
