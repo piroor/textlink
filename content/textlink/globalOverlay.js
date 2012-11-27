@@ -461,7 +461,7 @@ var TextLinkService = {
 		}
 
 		if (aAction == this.utils.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
-			this.browser.loadURI(uris[i]);
+			this.browser.loadURI(uris[0]);
 			return;
 		}
 
