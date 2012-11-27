@@ -341,25 +341,24 @@ TextLinkRangeUtils.prototype = {
 
 		var startContainer = aRange.startContainer;
 		var startOffset = aRange.startOffset;
-		var isElement = startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE;
-		var shrinkStartBase = null;
+		var shrinkStartBase = startContainer;
 		if (
 			(
-				(isElement ?
-					startContainer.childNodes.length == startOffset :
-					String(startContainer.nodeValue).length == startOffset ) &&
-				(shrinkStartBase = startContainer.nextSibling)
+				startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				aRange.cloneContents().firstChild.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				(shrinkStartBase = startContainer.childNodes[startOffset])
 			) ||
 			(
-				isElement &&
-				startOffset == 0 &&
-				(shrinkStartBase = startContainer.firstChild)
+				startContainer.nodeType != Ci.nsIDOMNode.ELEMENT_NODE &&
+				String(startContainer.nodeValue).length == startOffset &&
+				(shrinkStartBase = startContainer.nextSibling)
 			)
 			) {
-			let node = shrinkStartBase;
-			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
-				node = node.firstChild;
-			}
+			let node = TextLinkUtils.evaluateXPath(
+					'following::text()[1]',
+					shrinkStartBase,
+					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
 			/**
 			 * Don't use setStartBefore, because it reproduces wrong selection
 			 * like "[<em>about]:config</em>".
@@ -370,10 +369,11 @@ TextLinkRangeUtils.prototype = {
 		var endContainer = aRange.endContainer;
 		var endOffset = aRange.endOffset;
 		if (endOffset == 0 && endContainer.previousSibling) {
-			let node = endContainer.previousSibling;
-			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
-				node = node.lastChild;
-			}
+			let node = TextLinkUtils.evaluateXPath(
+					'preceding::text()[1]',
+					endContainer,
+					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				).singleNodeValue;
 			if (node) aRange.setEnd(node, String(node.nodeValue).length);
 		}
 	},
