@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2002-2011
+ * Portions created by the Initial Developer are Copyright (C) 2002-2012
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -313,17 +313,55 @@ TextLinkRangeUtils.prototype = {
 			findRange.selectNode(editable);
 		}
 
+		this._shrinkSelectionRange(findRange);
+
+		// use cloned range instead of range from selection,
+		// because this operation may break the range.
+		aBaseRange = aBaseRange.cloneRange();
+		this._shrinkSelectionRange(aBaseRange);
+
 		var startPoint = findRange.cloneRange();
 		startPoint.collapse(!(aMode & this.FIND_LAST));
 		var endPoint = findRange.cloneRange();
 		endPoint.collapse(aMode & this.FIND_LAST);
 
 		return {
-				findRange  : findRange,
-				startPoint : startPoint,
-				endPoint   : endPoint,
-				base       : aBaseRange
-			};
+			findRange  : findRange,
+			startPoint : startPoint,
+			endPoint   : endPoint,
+			base       : aBaseRange
+		};
+	},
+	_shrinkSelectionRange : function(aRange)
+	{
+		/**
+		 * When I click "about" in a HTML like "<em>about:config</em>",
+		 * Firefox creates selection range like "[<em>about]:config</em>".
+		 * So, we must shrink the range like "<em>[about]:config</em>"
+		 * for "strictly matching".
+		 */
+
+		var startContainer = aRange.startContainer;
+		var startOffset = aRange.startOffset;
+		if ((startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE ?
+				startContainer.childNodes.length == startOffset :
+				String(startContainer.nodeValue).length == startOffset ) &&
+			startContainer.nextSibling) {
+			let node = startContainer.nextSibling;
+			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+				node = node.firstChild;
+			}
+			if (node) aRange.setStartBefore(node);
+		}
+
+		var endContainer = aRange.endContainer;
+		if (endOffset == 0 && endContainer.previousSibling) {
+			let node = endContainer.previousSibling;
+			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+				node = node.lastChild;
+			}
+			if (node) aRange.setEndAfterBefore(node);
+		}
 	},
 	_destroyRangeSet : function(aRangeSet)
 	{
