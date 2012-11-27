@@ -761,10 +761,10 @@ TextLinkRangeUtils.prototype = {
 			})
 			.error(function(e) {
 				if (e == self.ERRROR_NO_URI_RANGE)
-					return false;
+					return true;
 				if (!(e instanceof StopIteration))
 					throw e;
-				return true;
+				return false;
 			})
 			.next(function(aCanceled) {
 				if (aCanceled) return [];
