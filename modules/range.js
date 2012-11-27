@@ -661,7 +661,7 @@ TextLinkRangeUtils.prototype = {
 				do {
 					ranges.push(iterator.next());
 				} while (Date.now() - start < 20);
-				return Deferred.wait(0.2).call(arguments.callee);
+				return Deferred.wait(0.2).next(arguments.callee);
 			})
 			.error(function(e) {
 				if (!(e instanceof StopIteration))
@@ -705,7 +705,7 @@ TextLinkRangeUtils.prototype = {
 				do {
 					ranges.push(iterator.next());
 				} while (Date.now() - start < 20);
-				return Deferred.call(arguments.callee);
+				return Deferred.wait(0.2).next(arguments.callee);
 			})
 			.error(function(e) {
 				if (e == self.ERRROR_NO_URI_RANGE)
