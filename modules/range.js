@@ -343,12 +343,12 @@ TextLinkRangeUtils.prototype = {
 		var startOffset = aRange.startOffset;
 		var shrinkStartBase = startContainer;
 		if (
-			(
+			( // <startcontainer>text [<inline/>text]</startcontainer>
 				startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
 				aRange.cloneContents().firstChild.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
 				(shrinkStartBase = startContainer.childNodes[startOffset])
 			) ||
-			(
+			( // <block>start container text [<inline>text]</inline></block>
 				startContainer.nodeType != Ci.nsIDOMNode.ELEMENT_NODE &&
 				String(startContainer.nodeValue).length == startOffset &&
 				(shrinkStartBase = startContainer.nextSibling)
