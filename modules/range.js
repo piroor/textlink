@@ -658,12 +658,10 @@ TextLinkRangeUtils.prototype = {
 				if (aContinuationChecker && typeof aContinuationChecker == 'function')
 					aContinuationChecker();
 				var start = Date.now();
-				divide: {
-					do {
-						ranges.push(iterator.next());
-					} while (Date.now() - start < 20);
-					return Deferred.wait(0.2).call(arguments.callee);
-				}
+				do {
+					ranges.push(iterator.next());
+				} while (Date.now() - start < 20);
+				return Deferred.wait(0.2).call(arguments.callee);
 			})
 			.error(function(e) {
 				if (!(e instanceof StopIteration))
@@ -704,13 +702,10 @@ TextLinkRangeUtils.prototype = {
 		return Deferred
 			.next(function() {
 				var start = Date.now();
-				divide: {
-					do {
-						ranges.push(iterator.next());
-					} while (Date.now() - start < 20);
-					return Deferred.call(arguments.callee);
-				}
-				return true;
+				do {
+					ranges.push(iterator.next());
+				} while (Date.now() - start < 20);
+				return Deferred.call(arguments.callee);
 			})
 			.error(function(e) {
 				if (e == self.ERRROR_NO_URI_RANGE)
