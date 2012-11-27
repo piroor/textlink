@@ -313,8 +313,6 @@ TextLinkRangeUtils.prototype = {
 			findRange.selectNode(editable);
 		}
 
-		this._shrinkSelectionRange(findRange);
-
 		// use cloned range instead of range from selection,
 		// because this operation may break the range.
 		aBaseRange = aBaseRange.cloneRange();
@@ -355,6 +353,7 @@ TextLinkRangeUtils.prototype = {
 		}
 
 		var endContainer = aRange.endContainer;
+		var endOffset = aRange.endOffset;
 		if (endOffset == 0 && endContainer.previousSibling) {
 			let node = endContainer.previousSibling;
 			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
