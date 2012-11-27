@@ -341,15 +341,30 @@ TextLinkRangeUtils.prototype = {
 
 		var startContainer = aRange.startContainer;
 		var startOffset = aRange.startOffset;
-		if ((startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE ?
-				startContainer.childNodes.length == startOffset :
-				String(startContainer.nodeValue).length == startOffset ) &&
-			startContainer.nextSibling) {
-			let node = startContainer.nextSibling;
+		var isElement = startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE;
+		var shrinkStartBase = null;
+		if (
+			(
+				(isElement ?
+					startContainer.childNodes.length == startOffset :
+					String(startContainer.nodeValue).length == startOffset ) &&
+				(shrinkStartBase = startContainer.nextSibling)
+			) ||
+			(
+				isElement &&
+				startOffset == 0 &&
+				(shrinkStartBase = startContainer.firstChild)
+			)
+			) {
+			let node = shrinkStartBase;
 			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
 				node = node.firstChild;
 			}
-			if (node) aRange.setStartBefore(node);
+			/**
+			 * Don't use setStartBefore, because it reproduces wrong selection
+			 * like "[<em>about]:config</em>".
+			 */
+			if (node) aRange.setStart(node, 0);
 		}
 
 		var endContainer = aRange.endContainer;
@@ -359,7 +374,7 @@ TextLinkRangeUtils.prototype = {
 			while (node && node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
 				node = node.lastChild;
 			}
-			if (node) aRange.setEndAfterBefore(node);
+			if (node) aRange.setEnd(node, String(node.nodeValue).length);
 		}
 	},
 	_destroyRangeSet : function(aRangeSet)
