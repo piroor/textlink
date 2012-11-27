@@ -415,6 +415,7 @@ var TextLinkService = {
 	openTextLinkIn : function(aAction, aTarget) 
 	{
 		var frame = this.rangeUtils.getCurrentFrame();
+		var self = this;
 		this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
 			.next(function(aRanges) {
 				if (aRanges.length)
