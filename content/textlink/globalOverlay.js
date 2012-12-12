@@ -636,6 +636,7 @@ var TextLinkService = {
 			if (item) {
 				item.setAttribute('disabled', true);
 				item.setAttribute('uri-finding', true);
+				item.classList.add('menuitem-iconic');
 			}
 		});
 
@@ -710,14 +711,17 @@ var TextLinkService = {
 						if (item) {
 							item.removeAttribute('disabled');
 							item.removeAttribute('uri-finding');
+							item.classList.remove('menuitem-iconic');
 						}
 					});
 				}
 				else {
 					items.forEach(function(aID) {
 						var item = self.setLabel(aID, 'label-disabled');
-						if (item)
+						if (item) {
 							item.removeAttribute('uri-finding');
+							item.classList.remove('menuitem-iconic');
+						}
 					});
 				}
 			})
