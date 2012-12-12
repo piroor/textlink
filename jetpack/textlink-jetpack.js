@@ -751,10 +751,8 @@ var TextLinkService = {
 					((this._fixupTargetsPattern+'|')
 						.replace(
 							/([^|]+)\|/g,
-							<![CDATA[
-								if (/^$1$/.test(target))
-									table = table.replace(/\b$1\s*=>/, target+"=>");
-							]]>
+							'if (/^$1$/.test(target))' +
+								'table = table.replace(/\b$1\s*=>/, target+"=>");'
 						))+
 					'return table;'+
 				'})()');

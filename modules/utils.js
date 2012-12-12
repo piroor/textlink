@@ -945,10 +945,9 @@ var TextLinkUtils = {
 					((this._fixupTargetsPattern+'|')
 						.replace(
 							/([^|]+)\|/g,
-							<![CDATA[
-								if (/^$1$/.test(target))
-									table = table.replace(/\b$1\s*=>/, target+"=>");
-							]]>
+							'if (/^$1$/.test(target)) {'+
+								'table = table.replace(/\b$1\s*=>/, target+"=>");'+
+							'}'
 						))+
 					'return table;'+
 				'})()');
@@ -1103,24 +1102,22 @@ var TextLinkUtils = {
 	
 	initPrefs : function() 
 	{
-		var items = <![CDATA[
-			textlink.scheme
-			textlink.scheme.fixup.table
-			textlink.scheme.fixup.default
-			textlink.find_click_point.strict
-			textlink.relative.enabled
-			textlink.multibyte.enabled
-			textlink.multiline.enabled
-			textlink.idn.enabled
-			textlink.idn.scheme
-			textlink.i18nPath.enabled
-			textlink.contextmenu.openTextLink.current
-			textlink.contextmenu.openTextLink.window
-			textlink.contextmenu.openTextLink.tab
-			textlink.contextmenu.openTextLink.copy
-		]]>.toString()
-			.replace(/^\s+|\s+$/g, '')
-			.split(/\s+/);
+		var items = [
+			'textlink.scheme',
+			'textlink.scheme.fixup.table',
+			'textlink.scheme.fixup.default',
+			'textlink.find_click_point.strict',
+			'textlink.relative.enabled',
+			'textlink.multibyte.enabled',
+			'textlink.multiline.enabled',
+			'textlink.idn.enabled',
+			'textlink.idn.scheme',
+			'textlink.i18nPath.enabled',
+			'textlink.contextmenu.openTextLink.current',
+			'textlink.contextmenu.openTextLink.window',
+			'textlink.contextmenu.openTextLink.tab',
+			'textlink.contextmenu.openTextLink.copy'
+		];
 
 		items = items.concat(this.prefs.getDescendant('textlink.actions.'));
 
