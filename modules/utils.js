@@ -394,11 +394,20 @@ var TextLinkUtils = {
 				let part = '[0-9a-z-]+';
 				pattern = part + '(?:' + this.kDomainSeparators + part + ')*';
 			}
+
 			if (
 				!(aOptionsFlag & this.kDOMAIN_LAZY) ||
 				aOptionsFlag & this.kDOMAIN_IDN
 				)
 				pattern += this.getTLDPattern(aOptionsFlag);
+
+			if (aOptionsFlag & this.kDOMAIN_IDN ||
+				aOptionsFlag & this.kDOMAIN_MULTIBYTE) {
+				pattern += '(?:[:\uff1a][0-9\uff10-\uff19]+)?';
+			}
+			else {
+				pattern += '(?::[0-9]+)?';
+			}
 
 			this._domainPatterns[aOptionsFlag] = pattern;
 		}
