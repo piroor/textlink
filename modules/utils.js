@@ -939,15 +939,14 @@ var TextLinkUtils = {
 		if (match) {
 			var target = match[1];
 			var table = this.evalInSandbox('(function() {'+
-
 					'var table = '+this._fixupTable.quote()+';'+
 					'var target = '+target.quote()+';'+
 					((this._fixupTargetsPattern+'|')
 						.replace(
 							/([^|]+)\|/g,
-							'if (/^$1$/.test(target)) {'+
-								'table = table.replace(/\b$1\s*=>/, target+"=>");'+
-							'}'
+							'if (/^$1$/.test(target)) {\n' +
+							'  table = table.replace(/\\b$1\\s*=>/, target+"=>");\n' +
+							'}\n'
 						))+
 					'return table;'+
 				'})()');
