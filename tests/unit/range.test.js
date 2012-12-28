@@ -462,6 +462,7 @@ function test_getURIRangesFromRange_inputField()
 
 function test_shrinkSelectionRange()
 {
+	// [<startcontainer>text</startcontainer>]
 	var range = content.document.createRange();
 	range.setStartBefore($('inputfields-before'));
 	range.setEndAfter($('inputfields-after'));
@@ -469,6 +470,18 @@ function test_shrinkSelectionRange()
 
 	sv._shrinkSelectionRange(range);
 	assert.equal(before, range.toString());
+	assert.equal($('inputfields-before').firstChild, range.startContainer);
+
+	// <startcontainer>text [<inline/>text]</startcontainer>
+	range.setStartBefore($('br1'));
+	range.setEndBefore($('br2'));
+	before = range.toString();
+
+	sv._shrinkSelectionRange(range);
+	assert.equal(before, range.toString());
+	assert.equal($('br1').nextSibling, range.startContainer);
+
+	range.detach();
 }
 
 function test_getURIRangesFromRange_includingInputFields()
