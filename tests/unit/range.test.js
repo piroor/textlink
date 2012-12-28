@@ -236,7 +236,7 @@ function test_getURIRangesFromRange_simple()
 {
 	var range = content.document.createRange();
 	range.selectNodeContents($('first'));
-	range.setEndAfter($('auth-url'));
+	range.setEndAfter($('with-port'));
 
 	var ranges;
 	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
@@ -274,7 +274,10 @@ function test_getURIRangesFromRange_simple()
 			'chrome://browser/content/browser.xul',
 			'resource://gre/',
 			'ftp://anonymous:anonymous@ftp.mozilla.org/',
-			'http://test@example.com/test/'
+			'http://test@example.com/test/',
+			'http://example.com:80/test/',
+			'http://test@example.com:80/test/',
+			'http://test:pass@example.com:8080/test/'
 		],
 		ranges.map(rangesToString)
 	);
@@ -311,7 +314,10 @@ function test_getURIRangesFromRange_simple()
 			'chrome://browser/content/browser.xul',
 			'resource://gre/',
 			'ftp://anonymous:anonymous@ftp.mozilla.org/',
-			'http://test@example.com/test/'
+			'http://test@example.com/test/',
+			'http://example.com:80/test/',
+			'http://test@example.com:80/test/',
+			'http://test:pass@example.com:8080/test/'
 		],
 		ranges.map(rangesToURI)
 	);
@@ -321,7 +327,7 @@ function test_getURIRangesFromRange_simple_firstAndLast()
 {
 	var range = content.document.createRange();
 	range.selectNodeContents($('first'));
-	range.setEndAfter($('auth-url'));
+	range.setEndAfter($('with-port'));
 
 	var ranges;
 	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
@@ -331,8 +337,8 @@ function test_getURIRangesFromRange_simple_firstAndLast()
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
 	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
-	assert.equals(['http://test@example.com/test/'], ranges.map(rangesToString));
-	assert.equals(['http://test@example.com/test/'], ranges.map(rangesToURI));
+	assert.equals(['http://test:pass@example.com:8080/test/'], ranges.map(rangesToString));
+	assert.equals(['http://test:pass@example.com:8080/test/'], ranges.map(rangesToURI));
 }
 
 function test_getURIRangesFromRange_firstAndLastFromCollapsedSelection()
