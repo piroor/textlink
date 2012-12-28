@@ -355,7 +355,7 @@ TextLinkRangeUtils.prototype = {
 			)
 			) {
 			let node = TextLinkUtils.evaluateXPath(
-					'following::text()[1]',
+					'following::text()[1] | descendant::text()[1]',
 					shrinkStartBase,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
@@ -370,7 +370,7 @@ TextLinkRangeUtils.prototype = {
 		var endOffset = aRange.endOffset;
 		if (endOffset == 0 && endContainer.previousSibling) {
 			let node = TextLinkUtils.evaluateXPath(
-					'preceding::text()[1]',
+					'preceding::text()[1] | descendant::text()[last()]',
 					endContainer,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;

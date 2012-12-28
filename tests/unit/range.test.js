@@ -460,6 +460,17 @@ function test_getURIRangesFromRange_inputField()
 	range.detach();
 }
 
+function test_shrinkSelectionRange()
+{
+	var range = content.document.createRange();
+	range.setStartBefore($('inputfields-before'));
+	range.setEndAfter($('inputfields-after'));
+	var before = range.toString();
+
+	sv._shrinkSelectionRange(range);
+	assert.equal(before, range.toString());
+}
+
 function test_getURIRangesFromRange_includingInputFields()
 {
 	var range = content.document.createRange();
