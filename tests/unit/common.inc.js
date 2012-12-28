@@ -27,7 +27,7 @@ function getNewRangeUtils()
 {
 	var ns = utils.import(baseURL+'../../modules/range.js', namespace);
 	var obj = new ns.TextLinkRangeUtils(window);
-	obj.utils = getNewUtils();
+	ns.TextLinkUtils = obj.utils = getNewUtils();
 	return obj;
 }
 
