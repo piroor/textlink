@@ -549,22 +549,18 @@ TextLinkRangeUtils.prototype = {
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
-			try{ // Firefox 2 sometimes fails...
-				expandRange.setStart(lastNode, 0);
-				let string = expandRange.toString();
-				let part = TextLinkUtils.getURIPartFromEnd(string);
-				if (!part.length) break;
-				if (
-					part.length < string.length ||
-					(part.length == string.length && i == -1)
-					) {
-					offset = (expandRange.startContainer == aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
-					break;
-				}
-				if (i == -1) break;
+			expandRange.setStart(lastNode, 0);
+			let string = expandRange.toString();
+			let part = TextLinkUtils.getURIPartFromEnd(string);
+			if (!part.length) break;
+			if (
+				part.length < string.length ||
+				(part.length == string.length && i == -1)
+				) {
+				offset = (expandRange.startContainer == aRange.startContainer ? string : expandRange.startContainer.textContent ).length - part.length;
+				break;
 			}
-			catch(e){
-			}
+			if (i == -1) break;
 			node = nodes.snapshotItem(i--);
 			if (!node) break;
 			offset = node.textContent.length;
@@ -582,8 +578,7 @@ TextLinkRangeUtils.prototype = {
 	_expandURIRangeToAfter : function(aRange, aRanges)
 	{
 		var expandRange = aRange.cloneRange();
-		expandRange.selectNode(aRange.endContainer);
-		expandRange.setStart(aRange.endContainer, aRange.endOffset);
+		expandRange.collapse(false);
 
 		var node   = aRange.endContainer;
 		var offset = aRange.endOffset;
@@ -604,55 +599,50 @@ TextLinkRangeUtils.prototype = {
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
-			try{ // Firefox 2 sometimes fails...
-				expandRange.setEnd(lastNode, lastNode.textContent.length);
-				let string = expandRange.toString();
-				let delta = 0;
-				if (TextLinkUtils.multilineURIEnabled) {
-					// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
-					// 強制的にRangeの開始位置を元に戻す
-					if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
-						expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
-					}
-
-					let originalString = string;
-					string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
-					delta = originalString.indexOf(string);
-
-					originalString = string;
-					string = string.replace(TextLinkUtils.URIExceptionPattern_start, '');
-					if (originalString.indexOf(string) != 0) {
-						string = '';
-						delta = 0;
-					}
+			expandRange.setEnd(lastNode, lastNode.textContent.length);
+			let string = expandRange.toString();
+			let delta = 0;
+			if (TextLinkUtils.multilineURIEnabled) {
+				// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
+				// 強制的にRangeの開始位置を元に戻す
+				if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+					expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
 				}
-				if (!TextLinkUtils.multilineURIEnabled || string) {
-					let part = TextLinkUtils.getURIPartFromStart(string, headPartIsFound);
-					if (!part.length) break;
-					let partRange;
+
+				let originalString = string;
+				string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
+				delta = originalString.indexOf(string);
+
+				originalString = string;
+				string = string.replace(TextLinkUtils.URIExceptionPattern_start, '');
+				if (originalString.indexOf(string) != 0) {
+					string = '';
+					delta = 0;
+				}
+			}
+			if (!TextLinkUtils.multilineURIEnabled || string) {
+				let part = TextLinkUtils.getURIPartFromStart(string, headPartIsFound);
+				if (!part.length) break;
+				let partRange;
+				if (aRanges) {
+					if (!headPartIsFound && TextLinkUtils.isHeadOfNewURI(part)) headPartIsFound = true;
+					partRange = expandRange.cloneRange();
+					aRanges.push(partRange);
+					partRange.setStart(lastNode, partRange.startOffset + delta);
+					partRange.setEnd(lastNode, partRange.startOffset + part.length);
+				}
+				if (
+					part.length < string.length ||
+					(part.length == string.length && i == maxi)
+					) {
+					offset = expandRange.startOffset + part.length + delta;
 					if (aRanges) {
-						if (!headPartIsFound && TextLinkUtils.isHeadOfNewURI(part)) headPartIsFound = true;
-						partRange = expandRange.cloneRange();
-						aRanges.push(partRange);
-						partRange.setStart(lastNode, partRange.startOffset + delta);
-						partRange.setEnd(lastNode, partRange.startOffset + part.length);
+						partRange.setEnd(lastNode, offset);
 					}
-					if (
-						part.length < string.length ||
-						(part.length == string.length && i == maxi)
-						) {
-						offset = expandRange.startOffset + part.length + delta;
-						if (aRanges) {
-							partRange.setEnd(lastNode, offset);
-						}
-						break;
-					}
+					break;
 				}
-				if (i == maxi) break;
-
 			}
-			catch(e) {
-			}
+			if (i == maxi) break;
 			node = nodes.snapshotItem(i++);
 			if (!node) break;
 			offset = 0;
