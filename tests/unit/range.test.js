@@ -462,11 +462,13 @@ function test_getURIRangesFromRange_inputField()
 
 function test_shrinkSelectionRange()
 {
+	var range, before;
+
 	// [<startcontainer>text</startcontainer>]
-	var range = content.document.createRange();
+	range = content.document.createRange();
 	range.setStartBefore($('inputfields-before'));
 	range.setEndAfter($('inputfields-after'));
-	var before = range.toString();
+	before = range.toString();
 
 	sv._shrinkSelectionRange(range);
 	assert.equal(before, range.toString());
