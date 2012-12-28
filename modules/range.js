@@ -345,6 +345,7 @@ TextLinkRangeUtils.prototype = {
 		if (
 			( // <startcontainer>text [<inline/>text]</startcontainer>
 				startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				startOffset > 0 &&
 				aRange.cloneContents().firstChild.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
 				(shrinkStartBase = startContainer.childNodes[startOffset])
 			) ||
@@ -368,10 +369,18 @@ TextLinkRangeUtils.prototype = {
 
 		var endContainer = aRange.endContainer;
 		var endOffset = aRange.endOffset;
-		if (endOffset == 0 && endContainer.previousSibling) {
+		var shrinkEndBase = endContainer;
+		if (
+			(endOffset == 0 && endContainer.previousSibling) ||
+			(
+				endContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				endOffset > 0 &&
+				(shrinkEndBase = endContainer.childNodes[endOffset])
+			)
+			) {
 			let node = TextLinkUtils.evaluateXPath(
 					'preceding::text()[1] | descendant::text()[last()]',
-					endContainer,
+					shrinkEndBase,
 					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 			if (node) aRange.setEnd(node, String(node.nodeValue).length);

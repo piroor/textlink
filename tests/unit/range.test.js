@@ -315,6 +315,16 @@ function test_getURIRangesFromRange_simple()
 		],
 		ranges.map(rangesToURI)
 	);
+}
+
+function test_getURIRangesFromRange_simple_firstAndLast()
+{
+	var range = content.document.createRange();
+	range.selectNodeContents($('first'));
+	range.setEndAfter($('auth-url'));
+
+	var ranges;
+	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
 
 	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
@@ -460,28 +470,85 @@ function test_getURIRangesFromRange_inputField()
 	range.detach();
 }
 
-function test_shrinkSelectionRange()
+function assertBlockRangeShrunken(aRange, aStartContainer, aEndContainer)
 {
-	var range, before;
+	var startPoint = aRange.cloneRange();
+	startPoint.collapse(true);
 
-	// [<startcontainer>text</startcontainer>]
-	range = content.document.createRange();
+	var startMarker = content.document.createElement('img');
+	startMarker.id = 'start-marker';
+	startPoint.insertNode(startMarker);
+	aStartContainer.normalize();
+
+	assert.equal(startMarker, aStartContainer.firstChild);
+
+
+	aEndContainer = aEndContainer || aStartContainer;
+
+	var endPoint = aRange.cloneRange();
+	endPoint.collapse(false);
+
+	var endMarker = content.document.createElement('img');
+	endMarker.id = 'end-marker';
+	endPoint.insertNode(endMarker);
+	aEndContainer.normalize();
+
+	assert.equal(endMarker, aEndContainer.lastChild);
+}
+
+// [<startcontainer>text</startcontainer>]
+function test_shrinkSelectionRange_forBlockSelected()
+{
+	var range = content.document.createRange();
+	range.selectNode($('first'));
+
+	sv._shrinkSelectionRange(range);
+	assertBlockRangeShrunken(range, $('first'));
+
+	range.detach();
+}
+
+// <startcontainer>[text]</startcontainer>
+function test_shrinkSelectionRange_forBlockContentsSelected()
+{
+	var range = content.document.createRange();
+	range.selectNodeContents($('first'));
+
+	sv._shrinkSelectionRange(range);
+	assertBlockRangeShrunken(range, $('first'));
+
+	range.detach();
+}
+
+// [<startcontainer>text ... </startcontainer>]
+function test_shrinkSelectionRange_forMultipleBlocksSelected()
+{
+	var range = content.document.createRange();
 	range.setStartBefore($('inputfields-before'));
 	range.setEndAfter($('inputfields-after'));
-	before = range.toString();
 
 	sv._shrinkSelectionRange(range);
-	assert.equal(before, range.toString());
-	assert.equal($('inputfields-before').firstChild, range.startContainer);
+	assertBlockRangeShrunken(
+		range,
+		$('inputfields-before'),
+		$('inputfields-after')
+	);
 
-	// <startcontainer>text [<inline/>text]</startcontainer>
+	range.detach();
+}
+
+// <startcontainer>text [<inline/>text]</startcontainer>
+function test_shrinkSelectionRange_includingEmptyElementAtStart()
+{
+	var range = content.document.createRange();
 	range.setStartBefore($('br1'));
 	range.setEndBefore($('br2'));
-	before = range.toString();
+	var before = range.toString();
 
 	sv._shrinkSelectionRange(range);
 	assert.equal(before, range.toString());
-	assert.equal($('br1').nextSibling, range.startContainer);
+	assert.equal($('br1').nextSibling,
+				range.startContainer);
 
 	range.detach();
 }
