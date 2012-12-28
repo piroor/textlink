@@ -259,6 +259,8 @@ var TextLinkService = {
 	buildTooltip : function(aEvent) 
 	{
 		this.stopProgressiveBuildTooltip();
+		if (!this.popupNode)
+			return;
 
 		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
 		var selection = this.rangeUtils.getSelection(target);
@@ -416,7 +418,7 @@ var TextLinkService = {
 	{
 		var frame = this.rangeUtils.getCurrentFrame();
 		var self = this;
-		this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
+		return this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
 			.next(function(aRanges) {
 				if (aRanges.length)
 					return self.openTextLinkInPostProcess(aAction, aTarget, aRanges);
