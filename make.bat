@@ -1,3 +1,3 @@
 copy buildscript\makexpi.sh .\
-bash makexpi.sh textlink version=0
+bash makexpi.sh -n textlink -o
 del makexpi.sh
