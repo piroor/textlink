@@ -554,7 +554,7 @@ TextLinkRangeUtils.prototype = {
 			);
 		var i = nodes.snapshotLength-1,
 			lastNode;
-		while (node)
+		while (true)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
@@ -593,7 +593,7 @@ TextLinkRangeUtils.prototype = {
 		var offset = aRange.endOffset;
 		if (node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
 			node = this._getLastTextNodeFromRange(aRange);
-			offset = node && node.textContent.length || 0 ;
+			offset = node ? node.textContent.length : 0 ;
 		}
 		var baseBlock = this._getParentBlock(node);
 		var nodes = TextLinkUtils.evaluateXPath(
@@ -604,7 +604,7 @@ TextLinkRangeUtils.prototype = {
 			maxi = nodes.snapshotLength,
 			headPartIsFound = aRanges && TextLinkUtils.isHeadOfNewURI(aRange.toString()),
 			lastNode;
-		while (node)
+		while (true)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
@@ -641,11 +641,8 @@ TextLinkRangeUtils.prototype = {
 					partRange.setEnd(lastNode, partRange.startOffset + part.length);
 				}
 				if (
-					part.length < (expandRange.startOffset + delta) &&
-					(
-						part.length < string.length ||
-						(part.length == string.length && i == maxi)
-					)
+					part.length < string.length ||
+					(part.length == string.length && i == maxi)
 					) {
 					offset = expandRange.startOffset + part.length + delta;
 					if (aRanges) {
@@ -673,7 +670,7 @@ TextLinkRangeUtils.prototype = {
 	_getFirstTextNodeFromRange : function(aRange)
 	{
 		return TextLinkUtils.evaluateXPath(
-				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][1] | following::text()[1] | self::text()',
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][1]',
 				aRange.startContainer.childNodes.item(aRange.startOffset) || aRange.startContainer.firstChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
@@ -681,7 +678,7 @@ TextLinkRangeUtils.prototype = {
 	_getLastTextNodeFromRange : function(aRange)
 	{
 		return TextLinkUtils.evaluateXPath(
-				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][last()] | preceding::text()[1] | self::text()',
+				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][last()]',
 				aRange.endContainer.childNodes.item(aRange.endOffset) || aRange.endContainer.lastChild,
 				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
