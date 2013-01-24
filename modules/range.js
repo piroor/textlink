@@ -554,7 +554,7 @@ TextLinkRangeUtils.prototype = {
 			);
 		var i = nodes.snapshotLength-1,
 			lastNode;
-		while (true)
+		while (node)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
@@ -593,7 +593,7 @@ TextLinkRangeUtils.prototype = {
 		var offset = aRange.endOffset;
 		if (node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
 			node = this._getLastTextNodeFromRange(aRange);
-			offset = node ? node.textContent.length : 0 ;
+			offset = node && node.textContent.length || 0 ;
 		}
 		var baseBlock = this._getParentBlock(node);
 		var nodes = TextLinkUtils.evaluateXPath(
@@ -604,7 +604,7 @@ TextLinkRangeUtils.prototype = {
 			maxi = nodes.snapshotLength,
 			headPartIsFound = aRanges && TextLinkUtils.isHeadOfNewURI(aRange.toString()),
 			lastNode;
-		while (true)
+		while (node)
 		{
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
