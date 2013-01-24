@@ -609,15 +609,26 @@ TextLinkRangeUtils.prototype = {
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
 			expandRange.setEnd(lastNode, lastNode.textContent.length);
+			if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+				// Edge case workaround:
+				//   When a range starts with a text node and the text is a
+				//   child of an element node, Gecko automatically changes the
+				//   start point, for example:
+				//
+				//     <div>foobar<br/>[example]</div>
+				//       startContainer: text(example)
+				//       startOffset:    0
+				//     => 
+				//       startContainer: div
+				//       startOffset:    2
+				//
+				//   However, this method expects that the start container is
+				//   a text node. So, we have to revert the change manually.
+				expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
+			}
 			let string = expandRange.toString();
 			let delta = 0;
 			if (TextLinkUtils.multilineURIEnabled) {
-				// 勝手に最適化？されて、Rangeの開始位置がずれてしまうことがあるので、
-				// 強制的にRangeの開始位置を元に戻す
-				if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
-					expandRange.setStart(this._getFirstTextNodeFromRange(expandRange), 0);
-				}
-
 				let originalString = string;
 				string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
 				delta = originalString.indexOf(string);
