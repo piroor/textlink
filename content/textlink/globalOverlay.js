@@ -410,7 +410,13 @@ var TextLinkService = {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
 				TreeStyleTabService.readyToOpenChildTab(frame);
 			}
-			aBrowser.loadOneTab(aURI, aReferrer, null, null, (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB));
+			aBrowser.loadOneTab(aURI, {
+				referrerURI: aReferrer,
+				charset: null,
+				postData: null,
+				inBackground: (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB),
+				relatedToCurrent: true,
+			});
 		}
 	},
  
@@ -521,7 +527,7 @@ var TextLinkService = {
 			else {
 				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
 					TreeStyleTabService.readyToOpenChildTab(b, true);
-				let tab = b.addTab(aURI);
+				let tab = b.addTab(aURI, {relatedToCurrent: true});
 				if (!selectTab) selectTab = tab;
 				tabs.push(tab);
 			}
