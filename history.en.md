@@ -1,5 +1,8 @@
 # History
 
+ - master/HEAD
+   * Fixed: Some odd behaviors around selection range are corrected.
+   * Modified: "jar" archive is no longer included.
  - 4.1.2012122901
    * Works on Nightly 20.0a1.
    * Drop support for Firefox 9 and older versions.
@@ -111,7 +114,7 @@
  - 1.3.2007103001
    * Added: Chinese locale is available. (made by Carlos Oliveira)
  - 1.3.2007102201
-   * Improved: Works with [Tree Style Tab](http://piro.sakura.ne.jp/xul/../_treestyletab.html.en).
+   * Improved: Works with [Tree Style Tab](http://piro.sakura.ne.jp/xul/_treestyletab.html.en).
  - 1.3.2006100702
    * Improved: Warning for too many tabs to be opened is supported in Firefox 2.0.
  - 1.3.2006100701
