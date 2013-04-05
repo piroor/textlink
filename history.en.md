@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+ - 4.1.2013040601
    * Fixed: Some odd behaviors around selection range are corrected.
    * Modified: "jar" archive is no longer included.
  - 4.1.2012122901
