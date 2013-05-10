@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+   * Improved: Add a new locale hy-AM (Armenian), translated by [Hrant Ohanyan](http://haysoft.org). Thanks!
  - 4.1.2013040601
    * Fixed: Some odd behaviors around selection range are corrected.
    * Modified: "jar" archive is no longer included.

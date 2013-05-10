@@ -17,6 +17,7 @@ locale	textlink	hu-HU	locale/hu-HU/textlink/
 locale	textlink	pl-LP	locale/pl-PL/textlink/
 locale	textlink	tr-TR	locale/tr-TR/textlink/
 locale	textlink	de-DE	locale/de-DE/textlink/
+locale	textlink	hy-AM	locale/hy-AM/textlink/
 
 skin	textlink	classic/1.0	skin/classic/textlink/
 

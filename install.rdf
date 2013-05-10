@@ -116,6 +116,15 @@
 		<em:translator>Michael Baer, http://twitter.com/synapsos (de-DE)</em:translator>
       </RDF:Description>
     </em:localized>
+    <em:localized>
+      <RDF:Description em:locale="hy-AM"
+                       em:name="Text Link"
+                       em:description="Allows URI texts written in webpages to be loaded by double clicks."
+                       em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
+                       em:creator="YUKI &quot;Piro&quot; Hiroshi">
+		<em:translator>Hrant Ohanyan, http://haysoft.org (hy-AM)</em:translator>
+      </RDF:Description>
+    </em:localized>
 
 
     <em:targetApplication>
