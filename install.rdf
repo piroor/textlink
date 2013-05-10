@@ -119,7 +119,7 @@
     <em:localized>
       <RDF:Description em:locale="hy-AM"
                        em:name="Text Link"
-                       em:description="Allows URI texts written in webpages to be loaded by double clicks."
+                       em:description="Հնարավորություն է տալիս կրկնակի սեղմամբ բացել վեբ էջերում գրված URI տեքստերը:"
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
                        em:creator="YUKI &quot;Piro&quot; Hiroshi">
 		<em:translator>Hrant Ohanyan, http://haysoft.org (hy-AM)</em:translator>
