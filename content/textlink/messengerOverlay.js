@@ -1,4 +1,8 @@
-var TextLinkMessengerService = { 
+(function() {
+var namespace = {};
+Components.utils.import('resource://textlink-modules/inherit.jsm', namespace);
+
+var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inherit(TextLinkService, { 
  
 	get contextMenu() 
 	{
@@ -148,7 +152,7 @@ var TextLinkMessengerService = {
 		this.browser.removeEventListener('load', this, true);
 	}
   
-}; 
+}); 
 
-TextLinkMessengerService.__proto__ = TextLinkService;
+})();
  
