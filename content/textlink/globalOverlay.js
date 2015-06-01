@@ -432,38 +432,7 @@ var TextLinkService = {
 			this.browser.loadURI(uris[0]);
 			return;
 		}
-
-		if ('UndoTabService' in window && UndoTabService.isUndoable()) {
-			let self = this;
-			let state = UndoTabService.getTabState(this.browser.selectedTab);
-			let oldSelected = this.browser.selectedTab;
-			let entry;
-			UndoTabService.doOperation(
-				function(aInfo) {
-					let tabs = self.openTextLinkInTabs(uris, aAction);
-					let replace = tabs.length < uris.length;
-					entry.data = UndoTabService.getTabOpetarionTargetsData({
-						browser : self.browser,
-						tabs : {
-							oldSelected : oldSelected,
-							newSelected : self.browser.selectedTab,
-							first       : tabs[0]
-						}
-						}, {
-						replace : replace,
-						state   : replace ? state : null ,
-						uris    : uris
-					});
-				},
-				(entry = {
-					name  : 'textlink-openTabs',
-					label : this.bundle.getString('undo_openTextLinkInTabs_label')
-				})
-			);
-		}
-		else {
-			this.openTextLinkInTabs(uris, aAction);
-		}
+		this.openTextLinkInTabs(uris, aAction);
 	},
 	openTextLinkInTabs : function(aURIs, aAction)
 	{
@@ -504,47 +473,6 @@ var TextLinkService = {
 		}
 
 		return tabs;
-	},
-	onPreUndoOpenTextLinkInTabs : function(aEvent)
-	{
-		var data   = aEvent.entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (target.browser)
-			data.tabs.newSelected = UndoTabService.getId(target.browser.selectedTab);
-	},
-	onUndoOpenTextLinkInTabs : function(aEvent)
-	{
-		var entry  = aEvent.entry;
-		var data   = entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (!target.browser)
-			return aEvent.preventDefault();
-
-		if (target.tabs.oldSelected)
-			target.browser.selectedTab = target.tabs.oldSelected;
-		if (data.replace)
-			UndoTabService.setTabState(target.tab, target.state);
-	},
-	onRedoOpenTextLinkInTabs : function(aEvent)
-	{
-		var entry  = aEvent.entry;
-		var data   = entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		data.tabs.oldSelected = UndoTabService.getId(target.browser.selectedTab);
-		if (!data.replace)
-			return;
-
-		if (!target.tabs.first)
-			return aEvent.preventDefault();
-		data.state = UndoTabService.getTabState(target.tabs.first);
-		target.tabs.first.linkedBrowser.loadURI(data.uris[0]);
-	},
-	onPostRedoOpenTextLinkInTabs : function(aEvent)
-	{
-		var data   = aEvent.entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (target.tabs.newSelected)
-			target.browser.selectedTab = target.tabs.newSelected;
 	},
  
 	init : function() 
