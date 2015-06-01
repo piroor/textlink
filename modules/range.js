@@ -44,10 +44,12 @@ const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style ST
 
 Components.utils.import('resource://textlink-modules/utils.js');
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
-XPCOMUtils.defineLazyGetter(this, 'Deferred', function() {
-	var { Deferred } = Components.utils.import('resource://textlink-modules/jsdeferred.js', {});
-	return Deferred;
+XPCOMUtils.defineLazyGetter(this, 'Promise', function() {
+	var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
+	return Promise;
 });
+
+var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
  
 function TextLinkRangeUtils(aWindow) 
 {
@@ -715,21 +717,27 @@ TextLinkRangeUtils.prototype = {
 		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker);
 		var ranges = [];
 		var self = this;
-		return Deferred
-			.next(function() {
-				if (aContinuationChecker && typeof aContinuationChecker == 'function')
-					aContinuationChecker();
-				var start = Date.now();
-				do {
-					ranges.push(iterator.next());
-				} while (Date.now() - start < 20);
-				return Deferred.wait(0.2).next(arguments.callee);
+		return new Promise(function(aResolve, aReject) {
+				var timer = setInterval(function() {
+					try {
+						if (aContinuationChecker && typeof aContinuationChecker == 'function')
+							aContinuationChecker();
+						var start = Date.now();
+						do {
+							ranges.push(iterator.next());
+						} while (Date.now() - start < 20);
+					}
+					catch(error) {
+						clearInterval(timer);
+						aReject(error);
+					}
+				}, 200);
 			})
-			.error(function(e) {
-				if (!(e instanceof StopIteration))
-					throw e;
+			.catch(function(aError) {
+				if (!(aError instanceof StopIteration))
+					throw aError;
 			})
-			.next(function() {
+			.then(function() {
 				if (aContinuationChecker && typeof aContinuationChecker == 'function')
 					aContinuationChecker();
 				if (aMode & self.FIND_ALL)
@@ -741,7 +749,7 @@ TextLinkRangeUtils.prototype = {
 	getFirstSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
 		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_FIRST, aStrict, aExceptionsHash, aContinuationChecker)
-				.next(function(aRanges) {
+				.then(function(aRanges) {
 					return aRanges.length ? aRanges[0] : null ;
 				});
 	},
@@ -749,7 +757,7 @@ TextLinkRangeUtils.prototype = {
 	getLastSelectionURIRange : function(aFrameOrEditable, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
 		return this.getSelectionURIRanges(aFrameOrEditable, this.FIND_LAST, aStrict, aExceptionsHash, aContinuationChecker)
-				.next(function(aRanges) {
+				.then(function(aRanges) {
 					return aRanges.length ? aRanges[0] : null ;
 				});
 	},
@@ -761,22 +769,28 @@ TextLinkRangeUtils.prototype = {
 		var iterator = this.getURIRangesIteratorFromRange(aBaseRange, aMode, aStrict, aExceptionsHash);
 		var ranges = [];
 		var self = this;
-		return Deferred
-			.next(function() {
-				var start = Date.now();
-				do {
-					ranges.push(iterator.next());
-				} while (Date.now() - start < 20);
-				return Deferred.wait(0.2).next(arguments.callee);
+		return new Promise(function(aResolve, aReject) {
+				var timer = setInterval(function() {
+					try {
+						var start = Date.now();
+						do {
+							ranges.push(iterator.next());
+						} while (Date.now() - start < 20);
+					}
+					catch(error) {
+						clearInterval(timer);
+						aReject(error);
+					}
+				}, 200);
 			})
-			.error(function(e) {
-				if (e == self.ERRROR_NO_URI_RANGE)
+			.catch(function(aError) {
+				if (aError == self.ERRROR_NO_URI_RANGE)
 					return true;
-				if (!(e instanceof StopIteration))
-					throw e;
+				if (!(aError instanceof StopIteration))
+					throw aError;
 				return false;
 			})
-			.next(function(aCanceled) {
+			.then(function(aCanceled) {
 				if (aCanceled) return [];
 
 				if (aMode & self.FIND_ALL) {

@@ -1,3 +1,5 @@
+(function(aGlobal) {
+
 var TextLinkService = { 
 	
 	get window() 
@@ -369,7 +371,7 @@ var TextLinkService = {
 
 		var self = this;
 		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict)
-			.next(function(aRanges) {
+			.then(function(aRanges) {
 				if (aRanges.length)
 					self.openClickedURIPostProcess(aEvent, aAction, b, frame, aRanges);
 			});
@@ -425,7 +427,7 @@ var TextLinkService = {
 		var frame = this.rangeUtils.getCurrentFrame();
 		var self = this;
 		return this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
-			.next(function(aRanges) {
+			.then(function(aRanges) {
 				if (aRanges.length)
 					return self.openTextLinkInPostProcess(aAction, aTarget, aRanges);
 			});
@@ -684,7 +686,7 @@ var TextLinkService = {
 		var uris = [];
 		var found = {};
 		this.rangeUtils.getFirstSelectionURIRange(target, false, null, check)
-			.next(function(aFirstRange) {
+			.then(function(aFirstRange) {
 				check();
 				if (aFirstRange) {
 					uris.push(aFirstRange.uri);
@@ -693,7 +695,7 @@ var TextLinkService = {
 				}
 				return self.rangeUtils.getLastSelectionURIRange(target, false, found, check);
 			})
-			.next(function(aLastRange) {
+			.then(function(aLastRange) {
 				check();
 				if (aLastRange) {
 					uris.push(aLastRange.uri);
@@ -733,7 +735,7 @@ var TextLinkService = {
 					});
 				}
 			})
-			.error(function(e) {
+			.catch(function(e) {
 				self.lastSelectionForContextMenu = null;
 			});
 	},
@@ -781,12 +783,12 @@ var TextLinkService = {
 	}
    
 }; 
+aGlobal.TextLinkService = TextLinkService;
 
-(function() { 
 	var namespace = {};
 	Components.utils.import('resource://textlink-modules/utils.js', namespace);
 	Components.utils.import('resource://textlink-modules/range.js', namespace);
 	TextLinkService.utils = namespace.TextLinkUtils;
 	TextLinkService.rangeUtils = new namespace.TextLinkRangeUtils(window);
-})();
+})(this);
  
