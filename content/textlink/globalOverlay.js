@@ -90,54 +90,12 @@ var TextLinkService = {
 				this.stopProgressiveBuildTooltip();
 				return;
 
-			case 'SubBrowserAdded':
-				this.initBrowser(aEvent.originalTarget.browser);
-				return;
-
-			case 'SubBrowserRemoveRequest':
-				this.destroyBrowser(aEvent.originalTarget.browser);
-				return;
-
 			case 'keypress':
 				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
 					aEvent.keyCode != aEvent.DOM_VK_RETURN)
 					return;
 				break;
 
-			case 'UIOperationHistoryPreUndo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onPreUndoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
-
-			case 'UIOperationHistoryUndo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onUndoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
-
-			case 'UIOperationHistoryRedo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onRedoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-
-			case 'UIOperationHistoryRedo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onPostRedoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
 			case 'mousedown':
 				if (aEvent.detail == 2) {
 					this.forbidDblclick = false;
@@ -596,18 +554,9 @@ var TextLinkService = {
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 
-		window.addEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
-
-		var appcontent = document.getElementById('appcontent');
-		if (appcontent) {
-			appcontent.addEventListener('SubBrowserAdded', this, false);
-			appcontent.addEventListener('SubBrowserRemoveRequest', this, false);
-		}
-
 		this.initBrowser(gBrowser);
+
+		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
 
 		// hacks.js
 		this.overrideExtensions();
@@ -759,17 +708,6 @@ var TextLinkService = {
 		window.removeEventListener('unload', this, false);
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
-
-		var appcontent = document.getElementById('appcontent');
-		if (appcontent) {
-			appcontent.removeEventListener('SubBrowserAdded', this, false);
-			appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
-		}
-
-		window.removeEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
 
 		this.destroyBrowser(gBrowser);
 	},
