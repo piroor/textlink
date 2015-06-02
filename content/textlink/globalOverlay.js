@@ -545,38 +545,41 @@ var TextLinkService = inherit(TextLinkConstants, {
 		'network.IDN.blacklist_chars'
 	],
 
+	get prefKeys() {
+		if (!this._prefKeys) {
+			this._prefKeys = [
+				'network.enableIDN',
+				'network.IDN.blacklist_chars',
+				'textlink.scheme',
+				'textlink.scheme.fixup.table',
+				'textlink.scheme.fixup.default',
+				'textlink.find_click_point.strict',
+				'textlink.relative.enabled',
+				'textlink.multibyte.enabled',
+				'textlink.multiline.enabled',
+				'textlink.idn.enabled',
+				'textlink.idn.scheme',
+				'textlink.i18nPath.enabled',
+				'textlink.gTLD',
+				'textlink.ccTLD',
+				'textlink.IDN_TLD',
+				'textlink.extraTLD',
+				'textlink.idn.lazyDetection.separators',
+				'textlink.part.exception.whole',
+				'textlink.part.exception.start',
+				'textlink.part.exception.end',
+				'textlink.contextmenu.openTextLink.current',
+				'textlink.contextmenu.openTextLink.window',
+				'textlink.contextmenu.openTextLink.tab',
+				'textlink.contextmenu.openTextLink.copy'
+			];
+			this._prefKeys = this._prefKeys.concat(prefs.getDescendant('textlink.actions.'));
+		}
+		return this._prefKeys;
+	},
 	initPrefs : function() 
 	{
-		var items = [
-			'network.enableIDN',
-			'network.IDN.blacklist_chars',
-			'textlink.scheme',
-			'textlink.scheme.fixup.table',
-			'textlink.scheme.fixup.default',
-			'textlink.find_click_point.strict',
-			'textlink.relative.enabled',
-			'textlink.multibyte.enabled',
-			'textlink.multiline.enabled',
-			'textlink.idn.enabled',
-			'textlink.idn.scheme',
-			'textlink.i18nPath.enabled',
-			'textlink.gTLD',
-			'textlink.ccTLD',
-			'textlink.IDN_TLD',
-			'textlink.extraTLD',
-			'textlink.idn.lazyDetection.separators',
-			'textlink.part.exception.whole',
-			'textlink.part.exception.start',
-			'textlink.part.exception.end',
-			'textlink.contextmenu.openTextLink.current',
-			'textlink.contextmenu.openTextLink.window',
-			'textlink.contextmenu.openTextLink.tab',
-			'textlink.contextmenu.openTextLink.copy'
-		];
-
-		items = items.concat(prefs.getDescendant('textlink.actions.'));
-
-		items.sort().forEach(function(aPref) {
+		this.prefKeys.sort().forEach(function(aPref) {
 			this.observe(null, 'nsPref:changed', aPref);
 		}, this);
 	},
@@ -625,9 +628,13 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 
 		var manager = window.messageManager;
 		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
+
+		this.mTab.addEventListener('TabRemotenessChange', this, false);
 	},
 	destroy : function TLCB_destroy()
 	{
+		this.mTab.removeEventListener('TabRemotenessChange', this, false);
+
 		var manager = window.messageManager;
 		manager.removeMessageListener(this.MESSAGE_TYPE, this.handleMessage);
 
@@ -659,6 +666,25 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
 				return;
 		}
+	},
+	handleEvent: function TLCB_handleEvent(aEvent)
+	{
+		switch (aEvent.type)
+		{
+			case 'TabRemotenessChange':
+				return this.notifyConfigUpdatedMessage();
+		}
+	},
+	notifyConfigUpdatedMessage : function TLCB_notifyConfigUpdatedMessage()
+	{
+		var configs = {};
+		TextLinkService.prefKeys.forEach(function(aKey) {
+			configs[aKey] = prefs.getPref(aKey);
+		});
+		this.mTab.linkedBrowser.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+			command : this.COMMAND_NOTIFY_CONFIG_UPDATED,
+			config  : configs
+		});
 	}
 });
 aGlobal.TextLinkContentBridge = TextLinkContentBridge;
