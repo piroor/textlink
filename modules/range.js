@@ -51,9 +51,10 @@ XPCOMUtils.defineLazyGetter(this, 'Promise', function() {
 
 var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
  
-function TextLinkRangeUtils(aWindow) 
+function TextLinkRangeUtils(aWindow, aCurrentFrameGetter) 
 {
 	this.window = aWindow;
+	this.currentFrameGetter = aCurrentFrameGetter;
 }
 TextLinkRangeUtils.prototype = {
 	get document() 
@@ -83,9 +84,10 @@ TextLinkRangeUtils.prototype = {
 	
 	getCurrentFrame : function(aFrame) 
 	{
-		var frame = aFrame || this.document.commandDispatcher.focusedWindow;
-		if (!frame || frame.top != this.browser.contentWindow) {
-			frame = this.browser.contentWindow;
+		var frame = aFrame || Cc['@mozilla.org/focus-manager;1'].getService(Ci.nsIFocusManager).focusedWindow;
+		var contentFrame = this.currentFrameGetter();
+		if (!frame || frame.top != contentFrame) {
+			frame = contentFrame;
 		}
 		return frame;
 	},
@@ -730,8 +732,10 @@ TextLinkRangeUtils.prototype = {
 				}, 200);
 			})
 			.catch(function(aError) {
-				if (!(aError instanceof StopIteration))
+				if (!(aError instanceof StopIteration)) {
+					Components.utils.reportError(aError);
 					throw aError;
+				}
 			})
 			.then(function() {
 				if (aContinuationChecker && typeof aContinuationChecker == 'function')
@@ -782,8 +786,10 @@ TextLinkRangeUtils.prototype = {
 			.catch(function(aError) {
 				if (aError.message == self.ERRROR_NO_URI_RANGE)
 					return true;
-				if (!(aError instanceof StopIteration))
+				if (!(aError instanceof StopIteration)) {
+					Components.utils.reportError(aError);
 					throw aError;
+				}
 				return false;
 			})
 			.then(function(aCanceled) {
