@@ -56,11 +56,6 @@ function TextLinkRangeUtils(aWindow)
 	this.window = aWindow;
 }
 TextLinkRangeUtils.prototype = {
-	get prefs()
-	{
-		return TextLinkUtils.prefs;
-	},
-
 	get document() 
 	{
 		return this.window.document;
@@ -69,8 +64,7 @@ TextLinkRangeUtils.prototype = {
 	get browser() 
 	{
 		var w = this.window;
-		return 'SplitBrowser' in w ? w.SplitBrowser.activeBrowser :
-				'gBrowser' in w ? w.gBrowser :
+		return 'gBrowser' in w ? w.gBrowser :
 				this.document.getElementById('messagepane') ;
 	},
  
