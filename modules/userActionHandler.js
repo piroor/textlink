@@ -41,15 +41,16 @@ const Ci = Components.interfaces;
 Components.utils.import('resource://textlink-modules/utils.js');
 Components.utils.import('resource://textlink-modules/range.js');
  
-function TextLinkUserActionHandler(aGlobal) 
+function TextLinkUserActionHandler(aGlobal, aEventTarget) 
 {
 	this.rangeUtils = new TextLinkRangeUtils(aGlobal);
 
 	this.global = aGlobal;
-	this.global.addEventListener('mousedown', this, true);
-	this.global.addEventListener('mouseup', this, true);
-	this.global.addEventListener('dblclick', this, true);
-	this.global.addEventListener('keypress', this, true);
+	this.target = aEventTarget || aGlobal;
+	this.target.addEventListener('mousedown', this, true);
+	this.target.addEventListener('mouseup', this, true);
+	this.target.addEventListener('dblclick', this, true);
+	this.target.addEventListener('keypress', this, true);
 }
 TextLinkUserActionHandler.prototype = {
 	get contentDocument() {
@@ -58,10 +59,12 @@ TextLinkUserActionHandler.prototype = {
 
 	destroy : function()
 	{
-		this.global.removeEventListener('mousedown', this, true);
-		this.global.removeEventListener('mouseup', this, true);
-		this.global.removeEventListener('dblclick', this, true);
-		this.global.removeEventListener('keypress', this, true);
+		this.target.removeEventListener('mousedown', this, true);
+		this.target.removeEventListener('mouseup', this, true);
+		this.target.removeEventListener('dblclick', this, true);
+		this.target.removeEventListener('keypress', this, true);
+		delete this.target;
+		delete this.global;
 	},
 
 	forbidDblclick: false,
@@ -87,8 +90,9 @@ TextLinkUserActionHandler.prototype = {
 			case 'mouseup':
 				if (aEvent.detail != 2)
 					return;
-				if (this.contentDocument.commandDispatcher &&
-					this.contentDocument.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
+				if (this.global.document &&
+					this.global.document.commandDispatcher &&
+					this.global.document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
 					// Fix for https://github.com/piroor/textlink/issues/14
 					this.forbidDblclick = true;
 					return;

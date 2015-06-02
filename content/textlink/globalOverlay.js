@@ -330,7 +330,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
 //		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
-		this.userActionHandler = new TextLinkUserActionHandler(window);
+		this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
 		this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
 			aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
 			this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
