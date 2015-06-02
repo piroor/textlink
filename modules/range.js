@@ -51,23 +51,12 @@ XPCOMUtils.defineLazyGetter(this, 'Promise', function() {
 
 var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
  
-function TextLinkRangeUtils(aWindow, aCurrentFrameGetter) 
+function TextLinkRangeUtils(aGlobal, aCurrentFrameGetter) 
 {
-	this.window = aWindow;
+	this.global = aGlobal;
 	this.currentFrameGetter = aCurrentFrameGetter;
 }
 TextLinkRangeUtils.prototype = {
-	get document() 
-	{
-		return this.window.document;
-	},
- 
-	get browser() 
-	{
-		var w = this.window;
-		return 'gBrowser' in w ? w.gBrowser :
-				this.document.getElementById('messagepane') ;
-	},
  
 	// XPConnect 
 	
@@ -94,8 +83,13 @@ TextLinkRangeUtils.prototype = {
  
 	getSelection : function(aFrameOrEditable) 
 	{
-		if (!aFrameOrEditable ||
-			(this.window.Window && aFrameOrEditable instanceof this.window.Window)) {
+		if (
+			!aFrameOrEditable ||
+			(
+				typeof aFrameOrEditable.Window == 'function' &&
+				aFrameOrEditable instanceof aFrameOrEditable.Window
+			)
+			) {
 			return this.getCurrentFrame(aFrameOrEditable).getSelection();
 		}
 		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
@@ -131,7 +125,7 @@ TextLinkRangeUtils.prototype = {
 				encoder.setRange(aRange);
 				let result = encoder.encodeToString();
 				encoder.init(
-					this.document,
+					aRange.startContainer.ownerDocument,
 					'text/plain',
 					encoder.OutputBodyOnly
 				);
@@ -165,7 +159,8 @@ TextLinkRangeUtils.prototype = {
 	
 	getURIRangesIterator : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
-		if (!aMode) aMode = this.FIND_ALL;
+		if (!aMode)
+			aMode = this.FIND_ALL;
 
 		var ranges = [];
 		var selection = this.getSelection(aFrameOrEditable);
