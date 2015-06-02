@@ -158,8 +158,8 @@ TextLinkRangeUtils.prototype = {
 
 	FIND_SINGLE : 6,
 
-	ERRROR_FIND_MODE_NOT_SPECIFIED : new Error('you must specify find mode'),
-	ERRROR_NO_URI_RANGE : new Error('there is no range maybe URI'),
+	ERRROR_FIND_MODE_NOT_SPECIFIED : 'you must specify find mode',
+	ERRROR_NO_URI_RANGE : 'there is no range maybe URI',
 	
 	getURIRangesIterator : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
@@ -168,7 +168,7 @@ TextLinkRangeUtils.prototype = {
 		var ranges = [];
 		var selection = this.getSelection(aFrameOrEditable);
 		if (!selection || !selection.rangeCount)
-			throw this.ERRROR_NO_URI_RANGE;
+			throw new Error(this.ERRROR_NO_URI_RANGE);
 
 		var count, end, step;
 		if (aMode & this.FIND_LAST) {
@@ -208,13 +208,14 @@ TextLinkRangeUtils.prototype = {
  
 	getURIRangesIteratorFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
 	{
-		if (!aMode) throw this.ERRROR_FIND_MODE_NOT_SPECIFIED;
+		if (!aMode)
+			throw new Error(this.ERRROR_FIND_MODE_NOT_SPECIFIED);
 		var ranges = [];
 
 		var findRange = this.getFindRange(aBaseRange);
 		var terms = this._getFindTermsFromRange(findRange, aMode);
 		if (!terms.length)
-			throw this.ERRROR_NO_URI_RANGE;
+			throw new Error(this.ERRROR_NO_URI_RANGE);
 
 		var baseURI = aBaseRange.startContainer.ownerDocument.defaultView.location.href;
 		var findOnlyFirst = aBaseRange.collapsed || aMode & this.FIND_SINGLE;
@@ -779,7 +780,7 @@ TextLinkRangeUtils.prototype = {
 				}, 200);
 			})
 			.catch(function(aError) {
-				if (aError == self.ERRROR_NO_URI_RANGE)
+				if (aError.message == self.ERRROR_NO_URI_RANGE)
 					return true;
 				if (!(aError instanceof StopIteration))
 					throw aError;
