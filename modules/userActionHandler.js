@@ -38,8 +38,9 @@ const EXPORTED_SYMBOLS = ['TextLinkUserActionHandler'];
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
-Components.utils.import('resource://textlink-modules/utils.js');
-Components.utils.import('resource://textlink-modules/range.js');
+var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
+var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
+var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
  
 function TextLinkUserActionHandler(aGlobal, aEventTarget) 
 {
