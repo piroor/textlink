@@ -1,6 +1,10 @@
 (function(aGlobal) {
+var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
+var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
+var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
+var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 
-var TextLinkService = { 
+var TextLinkService = inherit(TextLinkConstants, { 
 	
 	get window() 
 	{
@@ -90,132 +94,14 @@ var TextLinkService = {
 				this.stopProgressiveBuildTooltip();
 				return;
 
-			case 'keypress':
-				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
-					aEvent.keyCode != aEvent.DOM_VK_RETURN)
-					return;
-				break;
+			case 'TabOpen':
+				return this.initTab(aEvent.originalTarget, gBrowser);
 
-			case 'mousedown':
-				if (aEvent.detail == 2) {
-					this.forbidDblclick = false;
-					this.mousedownPosition = { x: aEvent.screenX, y: aEvent.screenY };
-				}
-				return;
-			case 'mouseup':
-				if (aEvent.detail != 2)
-					return;
-				if (document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
-					// Fix for https://github.com/piroor/textlink/issues/14
-					this.forbidDblclick = true;
-					return;
-				}
-				let pos = this.mousedownPosition;
-				if (pos) {
-					this.mousedownPosition = null;
-					let delta = Math.sqrt(
-						Math.pow(aEvent.screenX - pos.x, 2),
-						Math.pow(aEvent.screenY - pos.y, 2)
-					);
-					if (delta > this.forbidDblclickTolerance)
-						this.forbidDblclick = true;
-				}
-				return;
-			case 'dblclick':
-				if (this.forbidDblclick)
-					return;
+			case 'TabClose':
+				return this.destroyTab(aEvent.originalTarget);
 		}
-
-		this.handleUserActionEvent(aEvent);
 	},
 	
-	handleUserActionEvent : function(aEvent) 
-	{
-		this.getActionsForEvent(aEvent).some(function(aAction) {
-			try {
-				this.openClickedURI(aEvent, aAction.action);
-				return true;
-			}
-			catch(e) {
-			}
-			return false;
-		}, this);
-	},
- 
-	getActionsForEvent : function(aEvent) 
-	{
-		var actions = [];
-		if (
-			aEvent.originalTarget.ownerDocument == document ||
-			aEvent.originalTarget.ownerDocument.designMode == 'on' ||
-			(
-				this.utils.evaluateXPath(
-					'ancestor-or-self::*[1]',
-					aEvent.originalTarget,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue
-					.localName
-					.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
-			)
-			) {
-			return actions;
-		}
-
-		for (let i in this.utils.actions)
-		{
-			let action = this.utils.actions[i];
-			if (this.actionShouldHandleEvent(action, aEvent)) {
-				actions.push(action);
-			}
-		}
-		return actions;
-	},
- 
-	actionShouldHandleEvent : function(aAction, aEvent) 
-	{
-		var trigger;
-		return (
-			(
-				(
-					aEvent.type == 'keypress' &&
-					(trigger = aAction.triggerKey.toLowerCase()) &&
-					/(VK_[^-,|\s]+)/i.test(trigger) &&
-					aEvent['DOM_'+RegExp.$1.toUpperCase()] &&
-					(
-						RegExp.$1.toUpperCase().search(/VK_(ENTER|RETURN)/) > -1 ?
-							(
-								aEvent.keyCode == aEvent.DOM_VK_ENTER ||
-								aEvent.keyCode == aEvent.DOM_VK_RETURN
-							) :
-							aEvent.keyCode == aEvent['DOM_'+RegExp.$1.toUpperCase()]
-					)
-				) ||
-				(
-					(trigger = aAction.triggerMouse.toLowerCase()) &&
-					(
-						aEvent.type == 'dblclick' ?
-							(aEvent.button == 0 && trigger.indexOf('dblclick') > -1) :
-						aEvent.type == 'click' ?
-							(aEvent.button == (trigger.indexOf('middleclick') > -1 ? 1 : 0 )) :
-							false
-					)
-				)
-			) &&
-			(
-				(
-					trigger.indexOf('accel') > -1 ?
-						(aEvent.ctrlKey || aEvent.metaKey) :
-						(
-							(trigger.indexOf('ctrl') > -1 == aEvent.ctrlKey) &&
-							(trigger.indexOf('meta') > -1 == aEvent.metaKey)
-						)
-				) &&
-				(trigger.indexOf('shift') > -1 == aEvent.shiftKey) &&
-				(trigger.indexOf('alt') > -1 == aEvent.altKey)
-			)
-		);
-	},
- 
 	buildTooltip : function(aEvent) 
 	{
 		this.stopProgressiveBuildTooltip();
@@ -311,53 +197,8 @@ var TextLinkService = {
 		range.detach();
 	},
   
-	openClickedURI : function(aEvent, aAction) 
+	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
 	{
-		var target = this.utils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
-
-		if (
-			aAction == this.utils.ACTION_DISABLED ||
-			aEvent.button > 0 ||
-			target.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
-			)
-			return;
-
-		var b = aEvent.currentTarget;
-		if (!b) return;
-
-		var frame = target.ownerDocument.defaultView;
-
-		var self = this;
-		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict)
-			.then(function(aRanges) {
-				if (aRanges.length)
-					self.openClickedURIPostProcess(aEvent, aAction, b, frame, aRanges);
-			});
-	},
-	openClickedURIPostProcess : function(aEvent, aAction, aBrowser, aFrame, aRanges)
-	{
-		var range = aRanges[0];
-
-		range.selection.removeAllRanges();
-		range.selection.addRange(range.range);
-
-		if (aAction & this.utils.ACTION_SELECT) return;
-
-		if (aAction & this.utils.ACTION_COPY) {
-			this.utils.setClipBoard(range.uri);
-			return;
-		}
-
-		var uri = range.uri;
-		var referrer = (aAction & this.utils.ACTION_STEALTH) ?
-					null :
-					this.utils.makeURIFromSpec(aFrame.location.href) ;
-		this.loadURI(uri, referrer, aBrowser, aEvent, aAction);
-	},
-	loadURI : function(aURI, aReferrer, aBrowser, aEvent, aAction)
-	{
-		var frame = aEvent.originalTarget.ownerDocument.defaultView;
-
 		if (aAction & this.utils.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			aBrowser.localName != 'tabbrowser') {
@@ -368,7 +209,7 @@ var TextLinkService = {
 		}
 		else {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
-				TreeStyleTabService.readyToOpenChildTab(frame);
+				TreeStyleTabService.readyToOpenChildTab(aOpener);
 			}
 			aBrowser.loadOneTab(aURI, {
 				referrerURI: aReferrer,
@@ -482,20 +323,26 @@ var TextLinkService = {
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 
-		this.initBrowser(gBrowser);
+		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+			this.initTab(aTab, gBrowser);
+		}, this);
+		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
+		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
-		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
+//		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
+		this.userActionHandler = new TextLinkUserActionHandler(window);
+		this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
+			aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
+			this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
+		}).bind(this);
 
 		// hacks.js
 		this.overrideExtensions();
 	},
 	
-	initBrowser : function(aBrowser) 
+	initTab : function(aTab, aTabBrowser) 
 	{
-		aBrowser.addEventListener('mousedown', this, true);
-		aBrowser.addEventListener('mouseup', this, true);
-		aBrowser.addEventListener('dblclick', this, true);
-		aBrowser.addEventListener('keypress', this, true);
+		aTab.__textlink__contentBridge = new TextLinkContentBridge(aTab, aTabBrowser);
 	},
  
 	initContextMenu : function() 
@@ -637,19 +484,83 @@ var TextLinkService = {
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 
-		this.destroyBrowser(gBrowser);
+		gBrowser.tabContainer.removeEventListener('TabOpen',  this, true);
+		gBrowser.tabContainer.removeEventListener('TabClose', this, true);
+//		window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+//			command : this.COMMAND_SHUTDOWN,
+//			params  : {}
+//		});
+		this.userActionHandler.destroy();
+
+		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+			this.destroyTab(aTab);
+		}, this);
 	},
 	
-	destroyBrowser : function(aBrowser) 
+	destroyTab : function(aTab) 
 	{
-		aBrowser.removeEventListener('mousedown', this, true);
-		aBrowser.removeEventListener('mouseup', this, true);
-		aBrowser.removeEventListener('dblclick', this, true);
-		aBrowser.removeEventListener('keypress', this, true);
+		if (aTab.__textlink__contentBridge) {
+			aTab.__textlink__contentBridge.destroy();
+			delete aTab.__textlink__contentBridge;
+		}
 	}
    
-}; 
+}); 
 aGlobal.TextLinkService = TextLinkService;
+
+
+function TextLinkContentBridge(aTab, aTabBrowser) 
+{
+	this.init(aTab, aTabBrowser);
+}
+TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
+	mTab : null,
+	mTabBrowser : null,
+	init : function TLCB_init(aTab, aTabBrowser)
+	{
+		this.mTab = aTab;
+		this.mTabBrowser = aTabBrowser;
+		this.handleMessage = this.handleMessage.bind(this);
+
+		var manager = window.messageManager;
+		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
+	},
+	destroy : function TLCB_destroy()
+	{
+		var manager = window.messageManager;
+		manager.removeMessageListener(this.MESSAGE_TYPE, this.handleMessage);
+
+		delete this.mTab;
+		delete this.mTabBrowser;
+	},
+	sendAsyncCommand : function TLCB_sendAsyncCommand(aCommandType, aCommandParams)
+	{
+		var manager = this.mTab.linkedBrowser.messageManager;
+		manager.sendAsyncMessage(this.MESSAGE_TYPE, {
+			command : aCommandType,
+			params  : aCommandParams || {}
+		});
+	},
+	handleMessage : function TLCB_handleMessage(aMessage)
+	{
+//		dump('*********************handleMessage*******************\n');
+//		dump('TARGET IS: '+aMessage.target.localName+'\n');
+//		dump(JSON.stringify(aMessage.json)+'\n');
+
+		if (aMessage.target != this.mTab.linkedBrowser)
+		  return;
+
+		switch (aMessage.json.command)
+		{
+			case this.COMMAND_LOAD_URI:
+				var params = aMessage.json;
+				var referrer = params.referrer && this.utils.makeURIFromSpec(params.referrer);
+				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
+				return;
+		}
+	}
+});
+aGlobal.TextLinkContentBridge = TextLinkContentBridge;
 
 	var namespace = {};
 	Components.utils.import('resource://textlink-modules/utils.js', namespace);
