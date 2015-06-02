@@ -553,10 +553,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 			'textlink.idn.enabled',
 			'textlink.idn.scheme',
 			'textlink.i18nPath.enabled',
-			'textlink.gTLD'
-			'textlink.ccTLD'
-			'textlink.IDN_TLD'
-			'textlink.extraTLD'
+			'textlink.gTLD',
+			'textlink.ccTLD',
+			'textlink.IDN_TLD',
+			'textlink.extraTLD',
 			'textlink.idn.lazyDetection.separators',
 			'textlink.part.exception.whole',
 			'textlink.part.exception.start',
