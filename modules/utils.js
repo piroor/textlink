@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2002-2012
+ * Portions created by the Initial Developer are Copyright (C) 2002-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -39,9 +39,12 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 
 Components.utils.import('resource://gre/modules/Services.jsm');
-Components.utils.import('resource://textlink-modules/prefs.js');
+
+var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
+var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
+var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
  
-var TextLinkUtils = { 
+var TextLinkUtils = inherit(TextLinkConstants, { 
 	
 	schemeFixupDefault : 'http', 
 	strict              : true,
@@ -220,15 +223,6 @@ var TextLinkUtils = {
 	},
 	_i18nPathEnabled : false,
  
-	ACTION_DISABLED               : 0, 
-	ACTION_STEALTH                : 1,
-	ACTION_SELECT                 : 2,
-	ACTION_OPEN_IN_CURRENT        : 4,
-	ACTION_OPEN_IN_WINDOW         : 8,
-	ACTION_OPEN_IN_TAB            : 16,
-	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
-	ACTION_COPY                   : 1024,
-
 	actions : {},
  
 // regexp 
@@ -413,13 +407,6 @@ var TextLinkUtils = {
 		return pattern;
 	},
 	_domainPatterns : {},
-	kDOMAIN_MULTIBYTE : (1 << 0),
-	kDOMAIN_LAZY      : (1 << 1),
-	kDOMAIN_IDN       : (1 << 2),
- 
-	kDomainSeparators          : '\\.', 
-	kMultibyteDomainSeparators : '\\.\uff0e',
-	kIDNDomainSeparators       : '\\.\u3002\uff0e',
  
 	getTLDPattern : function(aOptionsFlag) 
 	{
@@ -440,33 +427,6 @@ var TextLinkUtils = {
 				)+
 				TLDPattern;
 	},
- 
-	// Forbidden characters in IDN are defined by RFC 3491. 
-	//   http://www.ietf.org/rfc/rfc3491.txt
-	//   http://www5d.biglobe.ne.jp/~stssk/rfc/rfc3491j.html
-	// and
-	//   http://www.ietf.org/rfc/rfc3454.txt
-	//   http://www.jdna.jp/survey/rfc/rfc3454j.html
-	kStringprepForbiddenCharacters : '\\u0000-\\u0020\\u0080-\\u00A0\\u0340\\u0341\\u06DD\\u070F\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u2063\\u206A-\\u206F\\u2FF0-\\u2FFB\\u3000\\uD800-\\uF8FF\\uFDD0-\\uFDEF\\uFEFF\\uFFF9-\\uFFFF',
-	kStringprepReplaceToNothingRegExp : /[\u00AD\u034F\u1806\u180B-\u180D\u200B-\u200D\u2060\uFE00-\uFE0F\uFEFF]/g,
- 
-	URIPatterns_base : '\\(?(%URI_PATTERN%)', 
-	URIPatternsMultibyte_base : '[\\(\uff08]?(%URI_PATTERN%)', 
- 
-	URIPattern_base : '%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?', 
-	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
- 
-	URIPatternMultibyte_base : '%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?', 
-	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
- 
-	kSchemePattern : '[\\*\\+a-z0-9_]+:', 
-	kSchemePatternMultibyte : '[\\*\\+a-z0-9_\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff3f]+[:\uff1a]',
-
-	kLoginPattern : '(?:[^\\s\u3000/:]+(?::[^\\s\u3000/@]+)?@)?',
-	kLoginPatternMultibyte : '(?:[^\\s\u3000/:\uff0f\uff1a]+(?:[:\uff1a][^\\s\u3000@/\uff0f\uff20]+)?[@\uff20])?',
-
-	kURIPattern_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#]+',
-	kURIPatternMultibyte_part : '[-_\\.!~*\'()a-z0-9;/?:@&=+$,%#\u301c\uff0d\uff3f\uff0e\uff01\uff5e\uffe3\uff0a\u2019\uff08\uff09\uff41-\uff5a\uff21-\uff3a\uff10-\uff19\uff1b\uff0f\uff1f\uff1a\uff20\uff06\uff1d\uff0b\uff04\uff0c\uff05\uff03]+',
  
 	get URIPattern_part() 
 	{
@@ -912,34 +872,6 @@ var TextLinkUtils = {
 		while (this._parenPatterns.some(doRemoveParen)) {}
 		return aInput;
 	},
-	_parenPatterns : [
-		/^["\u201d\u201c\u301d\u301f](.+)["\u201d\u201c\u301d\u301f]$/,
-		/^[`'\u2019\u2018](.+)[`'\u2019\u2018]$/,
-		/^[(\uff08](.+)[)\uff09]$/,
-		/^[{\uff5b](.+)[}\uff5d]$/,
-		/^[\[\uff3b](.+)[\]\uff3d]$/,
-		/^[<\uff1c](.+)[>\uff1e]$/,
-		/^[\uff62\u300c](.+)[\uff63\u300d]$/,
-		/^\u226a(.+)\u226b$/,
-		/^\u3008(.+)\u3009$/,
-		/^\u300a(.+)\u300b$/,
-		/^\u300e(.+)\u300f$/,
-		/^\u3010(.+)\u3011$/,
-		/^\u3014(.+)\u3015$/,
-		/^(.+)["\u201d\u201c\u301d\u301f][^"\u201d\u201c\u301d\u301f]*$/,
-		/^(.+)[`'\u2019\u2018][^`'\u2019\u2018]*$/,
-		/^(.+)[(\uff08][^)\uff09]*$/,
-		/^(.+)[{\uff5b][^}\uff5d]*$/,
-		/^(.+)[\[\uff3b][^\]\uff3d]*$/,
-		/^(.+)[<\uff1c][^>\uff1e]*$/,
-		/^(.+)[\uff62\u300c][^\uff63\u300d]*$/,
-		/^(.+)\u226a[^\u226b$]*/,
-		/^(.+)\u3008[^\u3009$]*/,
-		/^(.+)\u300a[^\u300b$]*/,
-		/^(.+)\u300e[^\u300f$]*/,
-		/^(.+)\u3010[^\u3011$]*/,
-		/^(.+)\u3014[^\u3015$]*/
-	],
  
 	fixupScheme : function(aURI) 
 	{
@@ -1133,7 +1065,6 @@ var TextLinkUtils = {
 		}, this);
 	},
  
-	kPREF_VERSION : 1, 
 	migratePrefs : function()
 	{
 		// migrate old prefs
@@ -1164,7 +1095,7 @@ var TextLinkUtils = {
 		prefs.removePrefListener(this);
 	}
  
-};
+});
 
 TextLinkUtils.init(); 
   
