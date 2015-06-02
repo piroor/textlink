@@ -90,7 +90,10 @@ TextLinkRangeUtils.prototype = {
 				aFrameOrEditable instanceof aFrameOrEditable.Window
 			)
 			) {
-			return this.getCurrentFrame(aFrameOrEditable).getSelection();
+			let frame = this.getCurrentFrame(aFrameOrEditable);
+			if (!frame)
+				throw new Error('failed to find current frame from '+aFrameOrEditable);
+			return frame.getSelection();
 		}
 		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
 			return aFrameOrEditable
