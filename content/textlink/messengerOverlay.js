@@ -1,6 +1,7 @@
 (function() {
 var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
 var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
+var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 
 var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLinkService, { 
@@ -13,7 +14,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 	get isPlainTextMessage()
 	{
 		return prefs.getPref('mailnews.display.html_as') == 1 ||
-				this.utils.evaluateXPath(
+				TextLinkUtils.evaluateXPath(
 					'/descendant::*[local-name()="BODY" or local-name()="body"]/child::*[@class="moz-text-plain"]',
 					this.browser.contentDocument,
 					XPathResult.BOOLEAN_TYPE
@@ -51,7 +52,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 	{
 		Components.classes['@mozilla.org/uriloader/external-protocol-service;1']
 			.getService(Components.interfaces.nsIExternalProtocolService)
-			.loadUrl(this.utils.makeURIFromSpec(aURI));
+			.loadUrl(TextLinkUtils.makeURIFromSpec(aURI));
 	},
  
 	onContentLoad : function() 
@@ -69,7 +70,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 	unlinkifyAutoLinks : function() 
 	{
 		var doc = this.browser.contentDocument;
-		var links = this.utils.evaluateXPath(
+		var links = TextLinkUtils.evaluateXPath(
 				'/descendant::*[local-name()="A" or local-name()="a"][not('+(
 					'addbook,imap,mailbox,mailto,pop'.split(',')
 					.map(function(aScheme) {
@@ -123,7 +124,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 	},
 	_getParentLink : function(aNode)
 	{
-		return this.utils.evaluateXPath(
+		return TextLinkUtils.evaluateXPath(
 				'ancestor-or-self::*[local-name()="A" or local-name()="a"][@href]',
 				aNode,
 				XPathResult.FIRST_ORDERED_NODE_TYPE

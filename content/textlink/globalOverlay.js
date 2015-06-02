@@ -3,9 +3,13 @@ var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', 
 var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
 var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
+var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
+var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 
 var TextLinkService = inherit(TextLinkConstants, { 
+	utils : TextLinkUtils,
+	rangeUtils : new TextLinkRangeUtils(window),
 	
 	get window() 
 	{
@@ -200,12 +204,12 @@ var TextLinkService = inherit(TextLinkConstants, {
   
 	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
 	{
-		if (aAction & this.utils.ACTION_OPEN_IN_CURRENT ||
+		if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			aBrowser.localName != 'tabbrowser') {
 			aBrowser.loadURI(aURI, aReferrer);
 		}
-		else if (aAction & this.utils.ACTION_OPEN_IN_WINDOW) {
+		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
 			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', aURI, null, aReferrer);
 		}
 		else {
@@ -216,7 +220,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				referrerURI: aReferrer,
 				charset: null,
 				postData: null,
-				inBackground: (aAction & this.utils.ACTION_OPEN_IN_BACKGROUND_TAB),
+				inBackground: (aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB),
 				relatedToCurrent: true,
 			});
 		}
@@ -245,32 +249,32 @@ var TextLinkService = inherit(TextLinkConstants, {
 			});
 		selections = void(0);
 
-		if (aAction == this.utils.ACTION_COPY) {
+		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (uris.length > 1) uris.push('');
-			this.utils.setClipBoard(uris.join('\r\n'));
+			TextLinkUtils.setClipBoard(uris.join('\r\n'));
 			return;
 		}
 
 		if (aAction === void(0))
-			aAction = this.utils.ACTION_OPEN_IN_CURRENT;
+			aAction = TextLinkConstants.ACTION_OPEN_IN_CURRENT;
 
 		if (
 			uris.length > 1 &&
-			(aAction == this.utils.ACTION_OPEN_IN_TAB ||
-			aAction == this.utils.ACTION_OPEN_IN_BACKGROUND_TAB) &&
+			(aAction == TextLinkConstants.ACTION_OPEN_IN_TAB ||
+			aAction == TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) &&
 			!PlacesUIUtils._confirmOpenInTabs(uris.length)
 			) {
 			return;
 		}
 
-		if (aAction == this.utils.ACTION_OPEN_IN_WINDOW) {
+		if (aAction == TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
 			uris.forEach(function(aURI) {
 				window.open(aURI);
 			});
 			return;
 		}
 
-		if (aAction == this.utils.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
+		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
 			this.browser.loadURI(uris[0]);
 			return;
 		}
@@ -285,7 +289,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 			if (
 				aIndex == 0 &&
 				(
-					(aAction == this.utils.ACTION_OPEN_IN_CURRENT) ||
+					(aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT) ||
 					(b.currentURI && (window.isBlankPageURL ? window.isBlankPageURL(b.currentURI.spec) : (b.currentURI.spec == 'about:blank')))
 				)
 				) {
@@ -308,7 +312,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
-			aAction != this.utils.ACTION_OPEN_IN_BACKGROUND_TAB) {
+			aAction != TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
 			b.selectedTab = selectTab;
 			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
 			if ('setFocusInternal' in b) b.setFocusInternal();
@@ -336,7 +340,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		else {
 			this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
 			this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
-				aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
+				aReferrer = aReferrer && TextLinkUtils.makeURIFromSpec(aReferrer);
 				this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
 			}).bind(this);
 		}
@@ -381,10 +385,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		if (
 			(
-				!this.utils.contextItemCurrent &&
-				!this.utils.contextItemWindow &&
-				!this.utils.contextItemTab &&
-				!this.utils.contextItemCopy
+				!TextLinkUtils.contextItemCurrent &&
+				!TextLinkUtils.contextItemWindow &&
+				!TextLinkUtils.contextItemTab &&
+				!TextLinkUtils.contextItemCopy
 			) ||
 			(
 				(
@@ -400,13 +404,13 @@ var TextLinkService = inherit(TextLinkConstants, {
 			return;
 
 		gContextMenu.showItem('context-openTextLink-current',
-			this.utils.contextItemCurrent);
+			TextLinkUtils.contextItemCurrent);
 		gContextMenu.showItem('context-openTextLink-window',
-			this.utils.contextItemWindow);
+			TextLinkUtils.contextItemWindow);
 		gContextMenu.showItem('context-openTextLink-tab',
-			this.utils.contextItemTab);
+			TextLinkUtils.contextItemTab);
 		gContextMenu.showItem('context-openTextLink-copy',
-			this.utils.contextItemCopy);
+			TextLinkUtils.contextItemCopy);
 
 		var check = function() {
 				if (!gContextMenu) throw new Error('context menu is already closed');
@@ -564,7 +568,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 		{
 			case this.COMMAND_LOAD_URI:
 				var params = aMessage.json;
-				var referrer = params.referrer && this.utils.makeURIFromSpec(params.referrer);
+				var referrer = params.referrer && TextLinkUtils.makeURIFromSpec(params.referrer);
 				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
 				return;
 		}
@@ -572,10 +576,5 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 });
 aGlobal.TextLinkContentBridge = TextLinkContentBridge;
 
-	var namespace = {};
-	Components.utils.import('resource://textlink-modules/utils.js', namespace);
-	Components.utils.import('resource://textlink-modules/range.js', namespace);
-	TextLinkService.utils = namespace.TextLinkUtils;
-	TextLinkService.rangeUtils = new namespace.TextLinkRangeUtils(window);
 })(this);
  

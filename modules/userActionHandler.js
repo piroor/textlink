@@ -209,7 +209,7 @@ TextLinkUserActionHandler.prototype = {
 		var target = TextLinkUtils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
 		if (
-			aAction == TextLinkUtils.ACTION_DISABLED ||
+			aAction == TextLinkConstants.ACTION_DISABLED ||
 			aEvent.button > 0 ||
 			target.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
 			)
@@ -234,15 +234,15 @@ TextLinkUserActionHandler.prototype = {
 		range.selection.removeAllRanges();
 		range.selection.addRange(range.range);
 
-		if (aAction & TextLinkUtils.ACTION_SELECT) return;
+		if (aAction & TextLinkConstants.ACTION_SELECT) return;
 
-		if (aAction & TextLinkUtils.ACTION_COPY) {
+		if (aAction & TextLinkConstants.ACTION_COPY) {
 			TextLinkUtils.setClipBoard(range.uri);
 			return;
 		}
 
 		var uri = range.uri;
-		var referrer = (aAction & TextLinkUtils.ACTION_STEALTH) ?
+		var referrer = (aAction & TextLinkConstants.ACTION_STEALTH) ?
 					null :
 					aFrame.location.href ;
 		this.loadURI(uri, referrer, aAction, aFrame);
