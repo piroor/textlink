@@ -42,7 +42,6 @@ Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://textlink-modules/prefs.js');
  
 var TextLinkUtils = { 
-	prefs : prefs,
 	
 	schemeFixupDefault : 'http', 
 	strict              : true,
@@ -374,10 +373,10 @@ var TextLinkUtils = {
 											this.kIDNDomainSeparators+
 											':/@\uff1a\uff0f\uff20';
 				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
-					forbiddenCharacters += this.prefs.getPref('textlink.idn.lazyDetection.separators');
+					forbiddenCharacters += prefs.getPref('textlink.idn.lazyDetection.separators');
 				let part = '[^'+
 							forbiddenCharacters+
-							(this.prefs.getPref('network.IDN.blacklist_chars') || '')
+							(prefs.getPref('network.IDN.blacklist_chars') || '')
 								.replace(new RegExp('['+forbiddenCharacters+']', 'g'), '')
 								.replace(/(.)\1+/g, '$1')
 								.replace(/./g, function(aChar) {
@@ -515,12 +514,12 @@ var TextLinkUtils = {
 	{
 		if (!this._topLevelDomains) {
 			let TLD = [
-					this.prefs.getPref('textlink.gTLD'),
-					this.prefs.getPref('textlink.ccTLD'),
-					this.prefs.getPref('textlink.extraTLD')
+					prefs.getPref('textlink.gTLD'),
+					prefs.getPref('textlink.ccTLD'),
+					prefs.getPref('textlink.extraTLD')
 				];
 			if (this.IDNEnabled)
-				TLD .push(this.prefs.getPref('textlink.IDN_TLD'));
+				TLD .push(prefs.getPref('textlink.IDN_TLD'));
 			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
 										.reverse(); // this is required to match "com" instead of "co".
 		}
@@ -555,9 +554,9 @@ var TextLinkUtils = {
 	_updateURIExceptionPattern : function()
 	{
 		try {
-			var whole = '^(?:'+this.prefs.getPref('textlink.part.exception.whole')+')$';
-			var start = '^(?:'+this.prefs.getPref('textlink.part.exception.start')+')';
-			var end = '(?:'+this.prefs.getPref('textlink.part.exception.end')+')$';
+			var whole = '^(?:'+prefs.getPref('textlink.part.exception.whole')+')$';
+			var start = '^(?:'+prefs.getPref('textlink.part.exception.start')+')';
+			var end = '(?:'+prefs.getPref('textlink.part.exception.end')+')$';
 			this._URIExceptionPattern = new RegExp(whole, 'i');
 			this._URIExceptionPattern_start = new RegExp(start, 'i');
 			this._URIExceptionPattern_end = new RegExp(end, 'i');
@@ -1002,7 +1001,7 @@ var TextLinkUtils = {
 	{
 		if (aTopic != 'nsPref:changed') return;
 
-		var value = this.prefs.getPref(aData);
+		var value = prefs.getPref(aData);
 		switch (aData)
 		{
 			case 'textlink.scheme':
@@ -1027,7 +1026,7 @@ var TextLinkUtils = {
 
 			case 'textlink.idn.enabled':
 			case 'network.enableIDN':
-				this.IDNEnabled = this.prefs.getPref('network.enableIDN') && this.prefs.getPref('textlink.idn.enabled');
+				this.IDNEnabled = prefs.getPref('network.enableIDN') && prefs.getPref('textlink.idn.enabled');
 				return;
 
 			case 'textlink.idn.scheme':
@@ -1035,7 +1034,7 @@ var TextLinkUtils = {
 				return;
 
 			case 'textlink.i18nPath.enabled':
-				this.i18nPathEnabled = this.prefs.getPref('textlink.i18nPath.enabled');
+				this.i18nPathEnabled = prefs.getPref('textlink.i18nPath.enabled');
 				return;
 
 			case 'textlink.gTLD':
@@ -1103,7 +1102,7 @@ var TextLinkUtils = {
  
 	init : function() 
 	{
-		this.prefs.addPrefListener(this);
+		prefs.addPrefListener(this);
 		this.migratePrefs();
 		this.initPrefs();
 	},
@@ -1127,7 +1126,7 @@ var TextLinkUtils = {
 			'textlink.contextmenu.openTextLink.copy'
 		];
 
-		items = items.concat(this.prefs.getDescendant('textlink.actions.'));
+		items = items.concat(prefs.getDescendant('textlink.actions.'));
 
 		items.sort().forEach(function(aPref) {
 			this.observe(null, 'nsPref:changed', aPref);
@@ -1139,7 +1138,7 @@ var TextLinkUtils = {
 	{
 		// migrate old prefs
 		var orientalPrefs = [];
-		switch (this.prefs.getPref('textlink.prefsVersion'))
+		switch (prefs.getPref('textlink.prefsVersion'))
 		{
 			case 0:
 				[
@@ -1148,21 +1147,21 @@ var TextLinkUtils = {
 					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
 				].forEach(function(aPref) {
 					var keys = aPref.split(':');
-					var value = this.prefs.getPref(keys[0]);
+					var value = prefs.getPref(keys[0]);
 					if (value !== null) {
-						this.prefs.setPref(keys[1], value);
-						this.prefs.clearPref(keys[0]);
+						prefs.setPref(keys[1], value);
+						prefs.clearPref(keys[0]);
 					}
 				}, this);
 			default:
 				break;
 		}
-		this.prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
+		prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
 	},
   
 	destroy : function() 
 	{
-		this.prefs.removePrefListener(this);
+		prefs.removePrefListener(this);
 	}
  
 };

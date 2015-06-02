@@ -11,7 +11,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 	
 	get isPlainTextMessage()
 	{
-		return this.utils.prefs.getPref('mailnews.display.html_as') == 1 ||
+		return prefs.getPref('mailnews.display.html_as') == 1 ||
 				this.utils.evaluateXPath(
 					'/descendant::*[local-name()="BODY" or local-name()="body"]/child::*[@class="moz-text-plain"]',
 					this.browser.contentDocument,
@@ -21,7 +21,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
  
 	get multilineURIEnabled()
 	{
-		return this.utils.prefs.getPref('textlink.multiline.enabled') &&
+		return prefs.getPref('textlink.multiline.enabled') &&
 			this.isPlainTextMessage;
 	},
  
@@ -57,7 +57,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 	{
 		if (
 			!this.isPlainTextMessage ||
-			!this.utils.prefs.getPref('textlink.messenger.linkify')
+			!prefs.getPref('textlink.messenger.linkify')
 			)
 			return;
 
@@ -144,6 +144,8 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 	destroy : function() 
 	{
 		window.removeEventListener('unload', this, false);
+
+		this.userActionHandler.destroy();
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 

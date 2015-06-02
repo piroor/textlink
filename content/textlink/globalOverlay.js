@@ -1,6 +1,7 @@
 (function(aGlobal) {
 var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
 var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
+var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 
@@ -19,7 +20,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	get browserURI() 
 	{
 		if (!this._browserURI) {
-			var uri = this.utils.prefs.getPref('browser.chromeURL');
+			var uri = prefs.getPref('browser.chromeURL');
 			if (!uri) {
 				try {
 					var handler = Components.classes['@mozilla.org/commandlinehandler/general-startup;1?type=browser'].getService(Components.interfaces.nsICmdLineHandler);
@@ -329,7 +330,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
 		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
-		if (this.utils.getPref('browser.tabs.remote.autostart')) {
+		if (prefs.getPref('browser.tabs.remote.autostart')) {
 			window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
 		}
 		else {
@@ -491,7 +492,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gBrowser.tabContainer.removeEventListener('TabOpen',  this, true);
 		gBrowser.tabContainer.removeEventListener('TabClose', this, true);
 
-		if (this.utils.getPref('browser.tabs.remote.autostart')) {
+		if (prefs.getPref('browser.tabs.remote.autostart')) {
 			window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
 				command : this.COMMAND_SHUTDOWN,
 				params  : {}
