@@ -133,6 +133,10 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
   
 	init : function() 
 	{
+		prefs.addPrefListener(this);
+		this.migratePrefs();
+		this.initPrefs();
+
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
 
@@ -148,6 +152,8 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
  
 	destroy : function() 
 	{
+		prefs.removePrefListener(this);
+
 		window.removeEventListener('unload', this, false);
 
 		this.userActionHandler.destroy();

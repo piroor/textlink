@@ -45,6 +45,7 @@ var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', 
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
  
 var TextLinkUtils = inherit(TextLinkConstants, { 
+	prefValues : {},
 	
 	schemeFixupDefault : 'http', 
 	strict              : true,
@@ -367,10 +368,10 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 											this.kIDNDomainSeparators+
 											':/@\uff1a\uff0f\uff20';
 				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
-					forbiddenCharacters += prefs.getPref('textlink.idn.lazyDetection.separators');
+					forbiddenCharacters += this.lazyDetectionSeparators;
 				let part = '[^'+
 							forbiddenCharacters+
-							(prefs.getPref('network.IDN.blacklist_chars') || '')
+							(this.prefValues['network.IDN.blacklist_chars'] || '')
 								.replace(new RegExp('['+forbiddenCharacters+']', 'g'), '')
 								.replace(/(.)\1+/g, '$1')
 								.replace(/./g, function(aChar) {
@@ -474,12 +475,12 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	{
 		if (!this._topLevelDomains) {
 			let TLD = [
-					prefs.getPref('textlink.gTLD'),
-					prefs.getPref('textlink.ccTLD'),
-					prefs.getPref('textlink.extraTLD')
+					this.prefValues['textlink.gTLD'],
+					this.prefValues['textlink.ccTLD'],
+					this.prefValues['textlink.extraTLD']
 				];
 			if (this.IDNEnabled)
-				TLD .push(prefs.getPref('textlink.IDN_TLD'));
+				TLD.push(this.prefValues['textlink.IDN_TLD']);
 			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
 										.reverse(); // this is required to match "com" instead of "co".
 		}
@@ -514,9 +515,9 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	_updateURIExceptionPattern : function()
 	{
 		try {
-			var whole = '^(?:'+prefs.getPref('textlink.part.exception.whole')+')$';
-			var start = '^(?:'+prefs.getPref('textlink.part.exception.start')+')';
-			var end = '(?:'+prefs.getPref('textlink.part.exception.end')+')$';
+			var whole = '^(?:'+this.prefValues['textlink.part.exception.whole']+')$';
+			var start = '^(?:'+this.prefValues['textlink.part.exception.start']+')';
+			var end = '(?:'+this.prefValues['textlink.part.exception.end']+')$';
 			this._URIExceptionPattern = new RegExp(whole, 'i');
 			this._URIExceptionPattern_start = new RegExp(start, 'i');
 			this._URIExceptionPattern_end = new RegExp(end, 'i');
@@ -929,44 +930,47 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		return Services.io.newURI(aURI, null, baseURI).spec;
 	},
    
-	observe : function(aSubject, aTopic, aData) 
+	onPrefValueChanged : function(aKey, aValue) 
 	{
-		if (aTopic != 'nsPref:changed') return;
+		this.prefValues[aKey] = aValue;
 
-		var value = prefs.getPref(aData);
-		switch (aData)
+		switch (aKey)
 		{
 			case 'textlink.scheme':
-				this.scheme = value;
+				this.scheme = aValue;
 				return;
 
 			case 'textlink.scheme.fixup.table':
-				this.schemeFixupTable = value;
+				this.schemeFixupTable = aValue;
 				return;
 
 			case 'textlink.scheme.fixup.default':
-				this.schemeFixupDefault = value;
+				this.schemeFixupDefault = aValue;
 				return;
 
 			case 'textlink.find_click_point.strict':
-				this.strict = value;
+				this.strict = aValue;
 				return;
 
 			case 'textlink.relative.enabled':
-				this.relativePathEnabled = value;
+				this.relativePathEnabled = aValue;
 				return;
 
 			case 'textlink.idn.enabled':
 			case 'network.enableIDN':
-				this.IDNEnabled = prefs.getPref('network.enableIDN') && prefs.getPref('textlink.idn.enabled');
+				this.IDNEnabled = this.prefValues['network.enableIDN'] && this.prefValues['textlink.idn.enabled'];
 				return;
 
 			case 'textlink.idn.scheme':
-				this.IDNScheme = value;
+				this.IDNScheme = aValue;
 				return;
 
 			case 'textlink.i18nPath.enabled':
-				this.i18nPathEnabled = prefs.getPref('textlink.i18nPath.enabled');
+				this.i18nPathEnabled = aValue;
+				return;
+
+			case 'textlink.idn.lazyDetection.separators':
+				this.lazyDetectionSeparators = aValue;
 				return;
 
 			case 'textlink.gTLD':
@@ -978,23 +982,23 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 				return;
 
 			case 'textlink.multibyte.enabled':
-				this.multibyteEnabled = value;
+				this.multibyteEnabled = aValue;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.current':
-				this.contextItemCurrent = value;
+				this.contextItemCurrent = aValue;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.window':
-				this.contextItemWindow = value;
+				this.contextItemWindow = aValue;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.tab':
-				this.contextItemTab = value;
+				this.contextItemTab = aValue;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.copy':
-				this.contextItemCopy = value;
+				this.contextItemCopy = aValue;
 				return;
 
 			case 'textlink.part.exception.whole':
@@ -1004,8 +1008,9 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 				return;
 		}
 
-		var match = aData.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
-		if (!match) return;
+		var match = aKey.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
+		if (!match)
+			return;
 
 		var key = match[1];
 		if (!(key in this.actions)) {
@@ -1018,84 +1023,14 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 		switch (match[2])
 		{
-			case 'action'       : this.actions[key].action = value; break;
-			case 'trigger.key'  : this.actions[key].triggerKey = value; break;
-			case 'trigger.mouse': this.actions[key].triggerMouse = value; break;
+			case 'action'       : this.actions[key].action = aValue; break;
+			case 'trigger.key'  : this.actions[key].triggerKey = aValue; break;
+			case 'trigger.mouse': this.actions[key].triggerMouse = aValue; break;
 		}
 		if (this.actions[key].action === null) {
 			delete this.actions[key];
 		}
-	},
-	domains : [
-		'textlink.',
-		'network.enableIDN',
-		'network.IDN.blacklist_chars'
-	],
- 
-	init : function() 
-	{
-		prefs.addPrefListener(this);
-		this.migratePrefs();
-		this.initPrefs();
-	},
-	
-	initPrefs : function() 
-	{
-		var items = [
-			'textlink.scheme',
-			'textlink.scheme.fixup.table',
-			'textlink.scheme.fixup.default',
-			'textlink.find_click_point.strict',
-			'textlink.relative.enabled',
-			'textlink.multibyte.enabled',
-			'textlink.multiline.enabled',
-			'textlink.idn.enabled',
-			'textlink.idn.scheme',
-			'textlink.i18nPath.enabled',
-			'textlink.contextmenu.openTextLink.current',
-			'textlink.contextmenu.openTextLink.window',
-			'textlink.contextmenu.openTextLink.tab',
-			'textlink.contextmenu.openTextLink.copy'
-		];
-
-		items = items.concat(prefs.getDescendant('textlink.actions.'));
-
-		items.sort().forEach(function(aPref) {
-			this.observe(null, 'nsPref:changed', aPref);
-		}, this);
-	},
- 
-	migratePrefs : function()
-	{
-		// migrate old prefs
-		var orientalPrefs = [];
-		switch (prefs.getPref('textlink.prefsVersion'))
-		{
-			case 0:
-				[
-					'textlink.schemer:textlink.scheme',
-					'textlink.schemer.fixup.table:textlink.scheme.fixup.table',
-					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
-				].forEach(function(aPref) {
-					var keys = aPref.split(':');
-					var value = prefs.getPref(keys[0]);
-					if (value !== null) {
-						prefs.setPref(keys[1], value);
-						prefs.clearPref(keys[0]);
-					}
-				}, this);
-			default:
-				break;
-		}
-		prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
-	},
-  
-	destroy : function() 
-	{
-		prefs.removePrefListener(this);
 	}
  
 });
-
-TextLinkUtils.init(); 
   

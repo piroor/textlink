@@ -323,6 +323,10 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	init : function() 
 	{
+		prefs.addPrefListener(this);
+		this.migratePrefs();
+		this.initPrefs();
+
 		window.removeEventListener('load', this, false);
 		window.addEventListener('unload', this, false);
 
@@ -489,6 +493,8 @@ var TextLinkService = inherit(TextLinkConstants, {
   
 	destroy : function() 
 	{
+		prefs.removePrefListener(this);
+
 		window.removeEventListener('unload', this, false);
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
@@ -517,6 +523,80 @@ var TextLinkService = inherit(TextLinkConstants, {
 			aTab.__textlink__contentBridge.destroy();
 			delete aTab.__textlink__contentBridge;
 		}
+	},
+
+	observe : function(aSubject, aTopic, aData) 
+	{
+		if (aTopic != 'nsPref:changed') return;
+
+		var value = prefs.getPref(aData);
+		TextLinkUtils.onPrefValueChanged(aKey, aValue);
+	},
+	domains : [
+		'textlink.',
+		'network.enableIDN',
+		'network.IDN.blacklist_chars'
+	],
+
+	initPrefs : function() 
+	{
+		var items = [
+			'network.enableIDN',
+			'network.IDN.blacklist_chars',
+			'textlink.scheme',
+			'textlink.scheme.fixup.table',
+			'textlink.scheme.fixup.default',
+			'textlink.find_click_point.strict',
+			'textlink.relative.enabled',
+			'textlink.multibyte.enabled',
+			'textlink.multiline.enabled',
+			'textlink.idn.enabled',
+			'textlink.idn.scheme',
+			'textlink.i18nPath.enabled',
+			'textlink.gTLD'
+			'textlink.ccTLD'
+			'textlink.IDN_TLD'
+			'textlink.extraTLD'
+			'textlink.idn.lazyDetection.separators',
+			'textlink.part.exception.whole',
+			'textlink.part.exception.start',
+			'textlink.part.exception.end',
+			'textlink.contextmenu.openTextLink.current',
+			'textlink.contextmenu.openTextLink.window',
+			'textlink.contextmenu.openTextLink.tab',
+			'textlink.contextmenu.openTextLink.copy'
+		];
+
+		items = items.concat(prefs.getDescendant('textlink.actions.'));
+
+		items.sort().forEach(function(aPref) {
+			this.observe(null, 'nsPref:changed', aPref);
+		}, this);
+	},
+ 
+	migratePrefs : function()
+	{
+		// migrate old prefs
+		var orientalPrefs = [];
+		switch (prefs.getPref('textlink.prefsVersion'))
+		{
+			case 0:
+				[
+					'textlink.schemer:textlink.scheme',
+					'textlink.schemer.fixup.table:textlink.scheme.fixup.table',
+					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
+				].forEach(function(aPref) {
+					var keys = aPref.split(':');
+					var value = prefs.getPref(keys[0]);
+					if (value !== null) {
+						prefs.setPref(keys[1], value);
+						prefs.clearPref(keys[0]);
+					}
+				}, this);
+			default:
+				break;
+		}
+		prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
 	}
    
 }); 
