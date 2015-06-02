@@ -92,7 +92,8 @@ TextLinkRangeUtils.prototype = {
  
 	getSelection : function(aFrameOrEditable) 
 	{
-		if (!aFrameOrEditable || aFrameOrEditable instanceof this.window.Window) {
+		if (!aFrameOrEditable ||
+			(this.window.Window && aFrameOrEditable instanceof this.window.Window)) {
 			return this.getCurrentFrame(aFrameOrEditable).getSelection();
 		}
 		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
