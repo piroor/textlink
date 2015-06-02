@@ -1,8 +1,9 @@
 (function() {
-var namespace = {};
-Components.utils.import('resource://textlink-modules/inherit.jsm', namespace);
+var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
+var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
+var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 
-var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inherit(TextLinkService, { 
+var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLinkService, { 
  
 	get contextMenu() 
 	{
@@ -136,8 +137,11 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 
-		this.browser.addEventListener('dblclick', this, true);
-		this.browser.addEventListener('keypress', this, true);
+		this.userActionHandler = new TextLinkUserActionHandler(window, this.browser);
+		this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
+			this.loadURI(aURI, null, aAction, this.browser, aOpener);
+		}).bind(this);
+
 		this.browser.addEventListener('load', this, true);
 	},
  
@@ -149,8 +153,6 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 
-		this.browser.removeEventListener('dblclick', this, true);
-		this.browser.removeEventListener('keypress', this, true);
 		this.browser.removeEventListener('load', this, true);
 	}
   
