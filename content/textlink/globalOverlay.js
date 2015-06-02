@@ -329,12 +329,16 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
 		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
-//		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
-		this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
-		this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
-			aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
-			this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
-		}).bind(this);
+		if (this.utils.getPref('browser.tabs.remote.autostart')) {
+			window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
+		}
+		else {
+			this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
+			this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
+				aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
+				this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
+			}).bind(this);
+		}
 
 		// hacks.js
 		this.overrideExtensions();
@@ -486,11 +490,16 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		gBrowser.tabContainer.removeEventListener('TabOpen',  this, true);
 		gBrowser.tabContainer.removeEventListener('TabClose', this, true);
-//		window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
-//			command : this.COMMAND_SHUTDOWN,
-//			params  : {}
-//		});
-		this.userActionHandler.destroy();
+
+		if (this.utils.getPref('browser.tabs.remote.autostart')) {
+			window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+				command : this.COMMAND_SHUTDOWN,
+				params  : {}
+			});
+		}
+		else {
+			this.userActionHandler.destroy();
+		}
 
 		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
 			this.destroyTab(aTab);
