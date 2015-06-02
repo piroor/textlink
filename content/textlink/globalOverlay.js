@@ -632,6 +632,8 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
 
 		this.mTab.addEventListener('TabRemotenessChange', this, false);
+
+		this.notifyConfigUpdatedMessage();
 	},
 	destroy : function TLCB_destroy()
 	{
