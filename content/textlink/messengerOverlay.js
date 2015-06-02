@@ -100,7 +100,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = namespace.inher
 		this.rangeUtils.getURIRangesFromRange(
 			range,
 			this.rangeUtils.FIND_ALL | this.rangeUtils.ALLOW_SAME_URIS
-		).next(function(aRanges) {
+		).then(function(aRanges) {
 			aRanges.reverse().forEach(function(aRange) {
 				if (!self._getParentLink(aRange.range.startContainer)) {
 					let link = doc.createElement('a');

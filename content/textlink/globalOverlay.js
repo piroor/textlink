@@ -1,4 +1,10 @@
-var TextLinkService = { 
+(function(aGlobal) {
+var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
+var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
+var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
+var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
+
+var TextLinkService = inherit(TextLinkConstants, { 
 	
 	get window() 
 	{
@@ -88,174 +94,14 @@ var TextLinkService = {
 				this.stopProgressiveBuildTooltip();
 				return;
 
-			case 'SubBrowserAdded':
-				this.initBrowser(aEvent.originalTarget.browser);
-				return;
+			case 'TabOpen':
+				return this.initTab(aEvent.originalTarget, gBrowser);
 
-			case 'SubBrowserRemoveRequest':
-				this.destroyBrowser(aEvent.originalTarget.browser);
-				return;
-
-			case 'keypress':
-				if (aEvent.keyCode != aEvent.DOM_VK_ENTER &&
-					aEvent.keyCode != aEvent.DOM_VK_RETURN)
-					return;
-				break;
-
-			case 'UIOperationHistoryPreUndo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onPreUndoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
-
-			case 'UIOperationHistoryUndo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onUndoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
-
-			case 'UIOperationHistoryRedo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onRedoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-
-			case 'UIOperationHistoryRedo:TabbarOperations':
-				switch (aEvent.entry.name)
-				{
-					case 'textlink-openTabs':
-						this.onPostRedoOpenTextLinkInTabs(aEvent);
-						return;
-				}
-				break;
-			case 'mousedown':
-				if (aEvent.detail == 2) {
-					this.forbidDblclick = false;
-					this.mousedownPosition = { x: aEvent.screenX, y: aEvent.screenY };
-				}
-				return;
-			case 'mouseup':
-				if (aEvent.detail != 2)
-					return;
-				if (document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
-					// Fix for https://github.com/piroor/textlink/issues/14
-					this.forbidDblclick = true;
-					return;
-				}
-				let pos = this.mousedownPosition;
-				if (pos) {
-					this.mousedownPosition = null;
-					let delta = Math.sqrt(
-						Math.pow(aEvent.screenX - pos.x, 2),
-						Math.pow(aEvent.screenY - pos.y, 2)
-					);
-					if (delta > this.forbidDblclickTolerance)
-						this.forbidDblclick = true;
-				}
-				return;
-			case 'dblclick':
-				if (this.forbidDblclick)
-					return;
+			case 'TabClose':
+				return this.destroyTab(aEvent.originalTarget);
 		}
-
-		this.handleUserActionEvent(aEvent);
 	},
 	
-	handleUserActionEvent : function(aEvent) 
-	{
-		this.getActionsForEvent(aEvent).some(function(aAction) {
-			try {
-				this.openClickedURI(aEvent, aAction.action);
-				return true;
-			}
-			catch(e) {
-			}
-			return false;
-		}, this);
-	},
- 
-	getActionsForEvent : function(aEvent) 
-	{
-		var actions = [];
-		if (
-			aEvent.originalTarget.ownerDocument == document ||
-			aEvent.originalTarget.ownerDocument.designMode == 'on' ||
-			(
-				this.utils.evaluateXPath(
-					'ancestor-or-self::*[1]',
-					aEvent.originalTarget,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				).singleNodeValue
-					.localName
-					.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
-			)
-			) {
-			return actions;
-		}
-
-		for (let i in this.utils.actions)
-		{
-			let action = this.utils.actions[i];
-			if (this.actionShouldHandleEvent(action, aEvent)) {
-				actions.push(action);
-			}
-		}
-		return actions;
-	},
- 
-	actionShouldHandleEvent : function(aAction, aEvent) 
-	{
-		var trigger;
-		return (
-			(
-				(
-					aEvent.type == 'keypress' &&
-					(trigger = aAction.triggerKey.toLowerCase()) &&
-					/(VK_[^-,|\s]+)/i.test(trigger) &&
-					aEvent['DOM_'+RegExp.$1.toUpperCase()] &&
-					(
-						RegExp.$1.toUpperCase().search(/VK_(ENTER|RETURN)/) > -1 ?
-							(
-								aEvent.keyCode == aEvent.DOM_VK_ENTER ||
-								aEvent.keyCode == aEvent.DOM_VK_RETURN
-							) :
-							aEvent.keyCode == aEvent['DOM_'+RegExp.$1.toUpperCase()]
-					)
-				) ||
-				(
-					(trigger = aAction.triggerMouse.toLowerCase()) &&
-					(
-						aEvent.type == 'dblclick' ?
-							(aEvent.button == 0 && trigger.indexOf('dblclick') > -1) :
-						aEvent.type == 'click' ?
-							(aEvent.button == (trigger.indexOf('middleclick') > -1 ? 1 : 0 )) :
-							false
-					)
-				)
-			) &&
-			(
-				(
-					trigger.indexOf('accel') > -1 ?
-						(aEvent.ctrlKey || aEvent.metaKey) :
-						(
-							(trigger.indexOf('ctrl') > -1 == aEvent.ctrlKey) &&
-							(trigger.indexOf('meta') > -1 == aEvent.metaKey)
-						)
-				) &&
-				(trigger.indexOf('shift') > -1 == aEvent.shiftKey) &&
-				(trigger.indexOf('alt') > -1 == aEvent.altKey)
-			)
-		);
-	},
- 
 	buildTooltip : function(aEvent) 
 	{
 		this.stopProgressiveBuildTooltip();
@@ -351,53 +197,8 @@ var TextLinkService = {
 		range.detach();
 	},
   
-	openClickedURI : function(aEvent, aAction) 
+	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
 	{
-		var target = this.utils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
-
-		if (
-			aAction == this.utils.ACTION_DISABLED ||
-			aEvent.button > 0 ||
-			target.localName.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
-			)
-			return;
-
-		var b = aEvent.currentTarget;
-		if (!b) return;
-
-		var frame = target.ownerDocument.defaultView;
-
-		var self = this;
-		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, this.utils.strict)
-			.next(function(aRanges) {
-				if (aRanges.length)
-					self.openClickedURIPostProcess(aEvent, aAction, b, frame, aRanges);
-			});
-	},
-	openClickedURIPostProcess : function(aEvent, aAction, aBrowser, aFrame, aRanges)
-	{
-		var range = aRanges[0];
-
-		range.selection.removeAllRanges();
-		range.selection.addRange(range.range);
-
-		if (aAction & this.utils.ACTION_SELECT) return;
-
-		if (aAction & this.utils.ACTION_COPY) {
-			this.utils.setClipBoard(range.uri);
-			return;
-		}
-
-		var uri = range.uri;
-		var referrer = (aAction & this.utils.ACTION_STEALTH) ?
-					null :
-					this.utils.makeURIFromSpec(aFrame.location.href) ;
-		this.loadURI(uri, referrer, aBrowser, aEvent, aAction);
-	},
-	loadURI : function(aURI, aReferrer, aBrowser, aEvent, aAction)
-	{
-		var frame = aEvent.originalTarget.ownerDocument.defaultView;
-
 		if (aAction & this.utils.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			aBrowser.localName != 'tabbrowser') {
@@ -408,7 +209,7 @@ var TextLinkService = {
 		}
 		else {
 			if ('TreeStyleTabService' in window) { // Tree Style Tab
-				TreeStyleTabService.readyToOpenChildTab(frame);
+				TreeStyleTabService.readyToOpenChildTab(aOpener);
 			}
 			aBrowser.loadOneTab(aURI, {
 				referrerURI: aReferrer,
@@ -425,7 +226,7 @@ var TextLinkService = {
 		var frame = this.rangeUtils.getCurrentFrame();
 		var self = this;
 		return this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
-			.next(function(aRanges) {
+			.then(function(aRanges) {
 				if (aRanges.length)
 					return self.openTextLinkInPostProcess(aAction, aTarget, aRanges);
 			});
@@ -472,38 +273,7 @@ var TextLinkService = {
 			this.browser.loadURI(uris[0]);
 			return;
 		}
-
-		if ('UndoTabService' in window && UndoTabService.isUndoable()) {
-			let self = this;
-			let state = UndoTabService.getTabState(this.browser.selectedTab);
-			let oldSelected = this.browser.selectedTab;
-			let entry;
-			UndoTabService.doOperation(
-				function(aInfo) {
-					let tabs = self.openTextLinkInTabs(uris, aAction);
-					let replace = tabs.length < uris.length;
-					entry.data = UndoTabService.getTabOpetarionTargetsData({
-						browser : self.browser,
-						tabs : {
-							oldSelected : oldSelected,
-							newSelected : self.browser.selectedTab,
-							first       : tabs[0]
-						}
-						}, {
-						replace : replace,
-						state   : replace ? state : null ,
-						uris    : uris
-					});
-				},
-				(entry = {
-					name  : 'textlink-openTabs',
-					label : this.bundle.getString('undo_openTextLinkInTabs_label')
-				})
-			);
-		}
-		else {
-			this.openTextLinkInTabs(uris, aAction);
-		}
+		this.openTextLinkInTabs(uris, aAction);
 	},
 	openTextLinkInTabs : function(aURIs, aAction)
 	{
@@ -545,47 +315,6 @@ var TextLinkService = {
 
 		return tabs;
 	},
-	onPreUndoOpenTextLinkInTabs : function(aEvent)
-	{
-		var data   = aEvent.entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (target.browser)
-			data.tabs.newSelected = UndoTabService.getId(target.browser.selectedTab);
-	},
-	onUndoOpenTextLinkInTabs : function(aEvent)
-	{
-		var entry  = aEvent.entry;
-		var data   = entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (!target.browser)
-			return aEvent.preventDefault();
-
-		if (target.tabs.oldSelected)
-			target.browser.selectedTab = target.tabs.oldSelected;
-		if (data.replace)
-			UndoTabService.setTabState(target.tab, target.state);
-	},
-	onRedoOpenTextLinkInTabs : function(aEvent)
-	{
-		var entry  = aEvent.entry;
-		var data   = entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		data.tabs.oldSelected = UndoTabService.getId(target.browser.selectedTab);
-		if (!data.replace)
-			return;
-
-		if (!target.tabs.first)
-			return aEvent.preventDefault();
-		data.state = UndoTabService.getTabState(target.tabs.first);
-		target.tabs.first.linkedBrowser.loadURI(data.uris[0]);
-	},
-	onPostRedoOpenTextLinkInTabs : function(aEvent)
-	{
-		var data   = aEvent.entry.data;
-		var target = UndoTabService.getTabOpetarionTargetsBy(data);
-		if (target.tabs.newSelected)
-			target.browser.selectedTab = target.tabs.newSelected;
-	},
  
 	init : function() 
 	{
@@ -594,29 +323,26 @@ var TextLinkService = {
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 
-		window.addEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
-		window.addEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
+		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+			this.initTab(aTab, gBrowser);
+		}, this);
+		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
+		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
-		var appcontent = document.getElementById('appcontent');
-		if (appcontent) {
-			appcontent.addEventListener('SubBrowserAdded', this, false);
-			appcontent.addEventListener('SubBrowserRemoveRequest', this, false);
-		}
-
-		this.initBrowser(gBrowser);
+//		window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
+		this.userActionHandler = new TextLinkUserActionHandler(window);
+		this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
+			aReferrer = aReferrer && this.utils.makeURIFromSpec(aReferrer);
+			this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
+		}).bind(this);
 
 		// hacks.js
 		this.overrideExtensions();
 	},
 	
-	initBrowser : function(aBrowser) 
+	initTab : function(aTab, aTabBrowser) 
 	{
-		aBrowser.addEventListener('mousedown', this, true);
-		aBrowser.addEventListener('mouseup', this, true);
-		aBrowser.addEventListener('dblclick', this, true);
-		aBrowser.addEventListener('keypress', this, true);
+		aTab.__textlink__contentBridge = new TextLinkContentBridge(aTab, aTabBrowser);
 	},
  
 	initContextMenu : function() 
@@ -684,7 +410,7 @@ var TextLinkService = {
 		var uris = [];
 		var found = {};
 		this.rangeUtils.getFirstSelectionURIRange(target, false, null, check)
-			.next(function(aFirstRange) {
+			.then(function(aFirstRange) {
 				check();
 				if (aFirstRange) {
 					uris.push(aFirstRange.uri);
@@ -693,7 +419,7 @@ var TextLinkService = {
 				}
 				return self.rangeUtils.getLastSelectionURIRange(target, false, found, check);
 			})
-			.next(function(aLastRange) {
+			.then(function(aLastRange) {
 				check();
 				if (aLastRange) {
 					uris.push(aLastRange.uri);
@@ -733,7 +459,7 @@ var TextLinkService = {
 					});
 				}
 			})
-			.error(function(e) {
+			.catch(function(e) {
 				self.lastSelectionForContextMenu = null;
 			});
 	},
@@ -758,35 +484,88 @@ var TextLinkService = {
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 
-		var appcontent = document.getElementById('appcontent');
-		if (appcontent) {
-			appcontent.removeEventListener('SubBrowserAdded', this, false);
-			appcontent.removeEventListener('SubBrowserRemoveRequest', this, false);
-		}
+		gBrowser.tabContainer.removeEventListener('TabOpen',  this, true);
+		gBrowser.tabContainer.removeEventListener('TabClose', this, true);
+//		window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+//			command : this.COMMAND_SHUTDOWN,
+//			params  : {}
+//		});
+		this.userActionHandler.destroy();
 
-		window.removeEventListener('UIOperationHistoryPreUndo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryUndo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryRedo:TabbarOperations', this, false);
-		window.removeEventListener('UIOperationHistoryPostRedo:TabbarOperations', this, false);
-
-		this.destroyBrowser(gBrowser);
+		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+			this.destroyTab(aTab);
+		}, this);
 	},
 	
-	destroyBrowser : function(aBrowser) 
+	destroyTab : function(aTab) 
 	{
-		aBrowser.removeEventListener('mousedown', this, true);
-		aBrowser.removeEventListener('mouseup', this, true);
-		aBrowser.removeEventListener('dblclick', this, true);
-		aBrowser.removeEventListener('keypress', this, true);
+		if (aTab.__textlink__contentBridge) {
+			aTab.__textlink__contentBridge.destroy();
+			delete aTab.__textlink__contentBridge;
+		}
 	}
    
-}; 
+}); 
+aGlobal.TextLinkService = TextLinkService;
 
-(function() { 
+
+function TextLinkContentBridge(aTab, aTabBrowser) 
+{
+	this.init(aTab, aTabBrowser);
+}
+TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
+	mTab : null,
+	mTabBrowser : null,
+	init : function TLCB_init(aTab, aTabBrowser)
+	{
+		this.mTab = aTab;
+		this.mTabBrowser = aTabBrowser;
+		this.handleMessage = this.handleMessage.bind(this);
+
+		var manager = window.messageManager;
+		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
+	},
+	destroy : function TLCB_destroy()
+	{
+		var manager = window.messageManager;
+		manager.removeMessageListener(this.MESSAGE_TYPE, this.handleMessage);
+
+		delete this.mTab;
+		delete this.mTabBrowser;
+	},
+	sendAsyncCommand : function TLCB_sendAsyncCommand(aCommandType, aCommandParams)
+	{
+		var manager = this.mTab.linkedBrowser.messageManager;
+		manager.sendAsyncMessage(this.MESSAGE_TYPE, {
+			command : aCommandType,
+			params  : aCommandParams || {}
+		});
+	},
+	handleMessage : function TLCB_handleMessage(aMessage)
+	{
+//		dump('*********************handleMessage*******************\n');
+//		dump('TARGET IS: '+aMessage.target.localName+'\n');
+//		dump(JSON.stringify(aMessage.json)+'\n');
+
+		if (aMessage.target != this.mTab.linkedBrowser)
+		  return;
+
+		switch (aMessage.json.command)
+		{
+			case this.COMMAND_LOAD_URI:
+				var params = aMessage.json;
+				var referrer = params.referrer && this.utils.makeURIFromSpec(params.referrer);
+				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
+				return;
+		}
+	}
+});
+aGlobal.TextLinkContentBridge = TextLinkContentBridge;
+
 	var namespace = {};
 	Components.utils.import('resource://textlink-modules/utils.js', namespace);
 	Components.utils.import('resource://textlink-modules/range.js', namespace);
 	TextLinkService.utils = namespace.TextLinkUtils;
 	TextLinkService.rangeUtils = new namespace.TextLinkRangeUtils(window);
-})();
+})(this);
  
