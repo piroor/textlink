@@ -529,8 +529,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	{
 		if (aTopic != 'nsPref:changed') return;
 
-		var value = prefs.getPref(aData);
-		TextLinkUtils.onPrefValueChanged(aKey, aValue);
+		TextLinkUtils.onPrefValueChanged(aData, prefs.getPref(aData));
 	},
 	domains : [
 		'textlink.',
