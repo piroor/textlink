@@ -92,7 +92,7 @@ TextLinkUserActionHandler.prototype = {
 					return;
 				if (this.global.document &&
 					this.global.document.commandDispatcher &&
-					this.global.document.commandDispatcher.focusedElement instanceof HTMLAnchorElement) {
+					this.global.document.commandDispatcher.focusedElement instanceof this.global.HTMLAnchorElement) {
 					// Fix for https://github.com/piroor/textlink/issues/14
 					this.forbidDblclick = true;
 					return;
