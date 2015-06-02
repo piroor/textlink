@@ -44,7 +44,9 @@ var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-module
  
 function TextLinkUserActionHandler(aGlobal, aEventTarget) 
 {
-	this.rangeUtils = new TextLinkRangeUtils(aGlobal);
+	this.rangeUtils = new TextLinkRangeUtils(aGlobal, function() {
+		return aGlobal.content;
+	});
 
 	this.global = aGlobal;
 	this.target = aEventTarget || aGlobal;
@@ -91,9 +93,8 @@ TextLinkUserActionHandler.prototype = {
 			case 'mouseup':
 				if (aEvent.detail != 2)
 					return;
-				if (this.global.document &&
-					this.global.document.commandDispatcher &&
-					this.global.document.commandDispatcher.focusedElement instanceof this.global.HTMLAnchorElement) {
+				let focusedElement = Cc['@mozilla.org/focus-manager;1'].getService(Ci.nsIFocusManager).focusedElement;
+				if (focusedElement instanceof aEvent.view.HTMLAnchorElement) {
 					// Fix for https://github.com/piroor/textlink/issues/14
 					this.forbidDblclick = true;
 					return;

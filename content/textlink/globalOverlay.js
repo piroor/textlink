@@ -9,7 +9,9 @@ var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink
 
 var TextLinkService = inherit(TextLinkConstants, { 
 	utils : TextLinkUtils,
-	rangeUtils : new TextLinkRangeUtils(window),
+	rangeUtils : new TextLinkRangeUtils(window, function() {
+		return gBrowser.contentWindow;
+	}),
 	
 	get window() 
 	{
