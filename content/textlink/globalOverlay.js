@@ -339,7 +339,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
 		if (prefs.getPref('browser.tabs.remote.autostart')) {
-			window.messageManager.loadFrameScript(this.CONTENT_SCRIPT, true);
+			window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 		}
 		else {
 			this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
@@ -529,7 +529,15 @@ var TextLinkService = inherit(TextLinkConstants, {
 	{
 		if (aTopic != 'nsPref:changed') return;
 
-		TextLinkUtils.onPrefValueChanged(aData, prefs.getPref(aData));
+		var value = prefs.getPref(aData);
+		TextLinkUtils.onPrefValueChanged(aData, value);
+
+		var configs = {};
+		configs[aData] = value;
+		window.messageManager.broadcastAsyncMessage(this.MESSAGE_TYPE, {
+			command : TextLinkConstants.COMMAND_NOTIFY_CONFIG_UPDATED,
+			config  : configs
+		});
 	},
 	domains : [
 		'textlink.',
@@ -636,9 +644,9 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
-//		dump('*********************handleMessage*******************\n');
-//		dump('TARGET IS: '+aMessage.target.localName+'\n');
-//		dump(JSON.stringify(aMessage.json)+'\n');
+		dump('*********************handleMessage*******************\n');
+		dump('TARGET IS: '+aMessage.target.localName+'\n');
+		dump(JSON.stringify(aMessage.json)+'\n');
 
 		if (aMessage.target != this.mTab.linkedBrowser)
 		  return;

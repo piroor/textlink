@@ -12,12 +12,15 @@
 	var Cr = Components.results;
 
 	var { TextLinkConstants } = Cu.import('resource://textlink-modules/constants.js', {});
+	var { TextLinkUtils } = Cu.import('resource://textlink-modules/utils.js', {});
 	var { TextLinkUserActionHandler } = Cu.import('resource://textlink-modules/userActionHandler.js', {});
 
 	function free() {
 		cleanup =
 			Cc = Ci = Cu = Cr =
 			TextLinkConstants =
+			TextLinkUtils =
+			TextLinkUserActionHandler =
 			messageListener =
 			mydump =
 			userActionHandler =
@@ -33,6 +36,13 @@
 				global.removeMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);
 				userActionHandler.destroy();
 				free();
+				return;
+
+			case TextLinkConstants.COMMAND_NOTIFY_CONFIG_UPDATED:
+				Object.keys(aMessage.json.config).forEach(function(aKey) {
+					var value = aMessage.json.config[aKey];
+					TextLinkUtils.onPrefValueChanged(aKey, value);
+				});
 				return;
 		}
 	};
