@@ -655,9 +655,9 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
-		dump('*********************handleMessage*******************\n');
-		dump('TARGET IS: '+aMessage.target.localName+'\n');
-		dump(JSON.stringify(aMessage.json)+'\n');
+//		dump('*********************handleMessage*******************\n');
+//		dump('TARGET IS: '+aMessage.target.localName+'\n');
+//		dump(JSON.stringify(aMessage.json)+'\n');
 
 		if (aMessage.target != this.mTab.linkedBrowser)
 		  return;
