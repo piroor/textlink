@@ -20,7 +20,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 	get browser()
 	{
-		return this.rangeUtils.browser;
+		return 'gBrowser' in window ? window.gBrowser :
+				this.document.getElementById('messagepane');
 	},
  
 	get browserURI() 
@@ -102,7 +103,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				return;
 
 			case 'TabOpen':
-				return this.initTab(aEvent.originalTarget, gBrowser);
+				return this.initTab(aEvent.originalTarget, this.browser);
 
 			case 'TabClose':
 				return this.destroyTab(aEvent.originalTarget);
@@ -338,18 +339,18 @@ var TextLinkService = inherit(TextLinkConstants, {
 			window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 		}
 		else {
-			this.userActionHandler = new TextLinkUserActionHandler(window, gBrowser);
+			this.userActionHandler = new TextLinkUserActionHandler(window, this.browser);
 			this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
 				aReferrer = aReferrer && TextLinkUtils.makeURIFromSpec(aReferrer);
-				this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
+				this.loadURI(aURI, aReferrer, aAction, this.browser, aOpener);
 			}).bind(this);
 		}
 
-		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
-			this.initTab(aTab, gBrowser);
+		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
+			this.initTab(aTab, this.browser);
 		}, this);
-		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
-		gBrowser.tabContainer.addEventListener('TabClose', this, true);
+		this.browser.tabContainer.addEventListener('TabOpen',  this, true);
+		this.browser.tabContainer.addEventListener('TabClose', this, true);
 
 		// hacks.js
 		this.overrideExtensions();
@@ -501,8 +502,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 
-		gBrowser.tabContainer.removeEventListener('TabOpen',  this, true);
-		gBrowser.tabContainer.removeEventListener('TabClose', this, true);
+		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
+		this.browser.tabContainer.removeEventListener('TabClose', this, true);
 
 		if (prefs.getPref('browser.tabs.remote.autostart')) {
 			window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
@@ -514,7 +515,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 			this.userActionHandler.destroy();
 		}
 
-		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
 			this.destroyTab(aTab);
 		}, this);
 	},
