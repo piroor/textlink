@@ -41,7 +41,6 @@ const Ci = Components.interfaces;
 Components.utils.import('resource://gre/modules/Services.jsm');
 
 var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
-var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
  
 var TextLinkUtils = inherit(TextLinkConstants, { 
