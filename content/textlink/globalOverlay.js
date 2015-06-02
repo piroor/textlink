@@ -332,12 +332,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 
-		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
-			this.initTab(aTab, gBrowser);
-		}, this);
-		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
-		gBrowser.tabContainer.addEventListener('TabClose', this, true);
-
 		if (prefs.getPref('browser.tabs.remote.autostart')) {
 			window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 		}
@@ -348,6 +342,12 @@ var TextLinkService = inherit(TextLinkConstants, {
 				this.loadURI(aURI, aReferrer, aAction, gBrowser, aOpener);
 			}).bind(this);
 		}
+
+		Array.forEach(gBrowser.tabContainer.childNodes, function(aTab) {
+			this.initTab(aTab, gBrowser);
+		}, this);
+		gBrowser.tabContainer.addEventListener('TabOpen',  this, true);
+		gBrowser.tabContainer.addEventListener('TabClose', this, true);
 
 		// hacks.js
 		this.overrideExtensions();
