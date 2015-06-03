@@ -65,6 +65,30 @@
 			case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY:
 				selectionHandler.summaryCancelled = true;
 				return;
+
+			case TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS:
+				selectionHandler.getURIs(function(aURIs) {
+						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
+							command : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS,
+							uris    : aURIs
+						});
+					})
+					.catch(function(aError) {
+						Components.utils.reportError(aError);
+						return null;
+					})
+					.then(function(aURIs) {
+						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
+							command : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS,
+							id      : aMessage.json.params.id,
+							uris    : aURIs
+						});
+					});
+				return;
+
+			case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS:
+				selectionHandler.urisCancelled = true;
+				return;
 		}
 	};
 	global.addMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);

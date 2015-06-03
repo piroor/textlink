@@ -91,21 +91,17 @@ var TextLinkService = inherit(TextLinkConstants, {
 				return;
 
 			case 'popupshowing':
-				if (aEvent.currentTarget == this.tooltip) {
-					this.buildTooltip(aEvent);
-				}
-				else if (aEvent.target == this.contextMenu) {
+				if (aEvent.currentTarget == this.tooltip)
+					this.buildTooltip();
+				else if (aEvent.target == this.contextMenu)
 					this.initContextMenu();
-				}
 				return;
 
 			case 'popuphiding':
-				if (aEvent.currentTarget == this.tooltip) {
+				if (aEvent.currentTarget == this.tooltip)
 					this.destroyTooltip();
-					this.stopProgressiveBuildTooltip();
-				else if (aEvent.target == this.contextMenu) {
+				else if (aEvent.target == this.contextMenu)
 					this.destroyContextMenu();
-				}
 				return;
 
 			case 'TabOpen':
@@ -116,92 +112,32 @@ var TextLinkService = inherit(TextLinkConstants, {
 		}
 	},
 	
-	buildTooltip : function(aEvent) 
-	{
-		this.stopProgressiveBuildTooltip();
-		if (!this.popupNode)
-			return;
-
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
-		var selection = this.rangeUtils.getSelection(target);
-		selection = selection ?
-			[
-				this.popupNode.ownerDocument.defaultView.location.href,
-				(function() {
-					var positions = [];
-					for (let i = 0, maxi = selection.rangeCount; i < maxi; i++)
-					{
-						let range = selection.getRangeAt(i);
-						let position = range.cloneRange();
-						position.collapse(true);
-						try {
-							position.setStartBefore(range.startContainer.ownerDocument.documentElement);
-							positions.push(position.toString().length+'+'+range.toString().length);
-						}
-						catch(e) {
-						}
-					}
-					return positions.join(',');
-				})(),
-				selection.toString()
-			].join('\n') :
-			null ;
-
-		if (this.tooltip.lastSelection != selection) {
-			this.tooltip.findURIsIterator = this.rangeUtils.getURIRangesIterator(target);
-			this.tooltip.foundURIRanges   = [];
-			this.tooltip.lastSelection    = selection;
-		}
-
-		this.tooltip.buildTimer = window.setInterval(function(aSelf) {
-			if (aSelf.updateTooltip()) return;
-			window.clearInterval(aSelf.tooltip.buildTimer);
-			aSelf.tooltip.buildTimer       = null;
-			aSelf.tooltip.foundURIRanges.forEach(function(aRange) {
-				aRange.range.detach();
-			});
-			aSelf.tooltip.foundURIRanges   = [];
-			aSelf.tooltip.findURIsIterator = null;
-		}, 1, this);
-	},
-	stopProgressiveBuildTooltip : function()
-	{
-		if (this.tooltip.buildTimer) {
-			window.clearInterval(this.tooltip.buildTimer);
-			this.tooltip.buildTimer = null;
-		}
-	},
-	updateTooltip : function()
+	buildTooltip : function() 
 	{
 		this.destroyTooltip();
 
-		var iterator = this.tooltip.findURIsIterator;
-		if (iterator) {
-			var ranges = this.tooltip.foundURIRanges;
-			try {
-				ranges.push(iterator.next());
-			}
-			catch(e if e instanceof StopIteration) {
-			}
-			catch(e) {
-				return false;
-			}
-			ranges.sort(this.rangeUtils._compareRangePosition);
+		if (!this.popupNode)
+			return;
 
-			this.tooltip.foundURIs = ranges.map(function(aRange) {
-				return aRange.uri;
+		var buildLinesForURIs = (function(aURIs) {
+			var fragment = document.createDocumentFragment();
+			aURIs.forEach(function(aURI) {
+				var line = document.createElement('description');
+				line.setAttribute('value', aURI);
+				fragment.appendChild(line);
 			});
-		}
+			this.tooltipBox.appendChild(fragment);
+		}).bind(this);
 
-		var fragment = document.createDocumentFragment();
-		this.tooltip.foundURIs.forEach(function(aURI) {
-			var line = document.createElement('description');
-			line.setAttribute('value', aURI);
-			fragment.appendChild(line);
-		});
-
-		this.tooltipBox.appendChild(fragment);
-		return iterator;
+		gBrowser.selectedTab.__textlink__contentBridge
+			.getSelectionURIs(buildLinesForURIs)
+			.then((function(aURIs) {
+				var range = document.createRange();
+				range.selectNodeContents(this.tooltipBox);
+				range.deleteContents();
+				range.detach();
+				buildLinesForURIs(aURIs);
+			}).bind(this));
 	},
 	destroyTooltip : function()
 	{
@@ -209,6 +145,9 @@ var TextLinkService = inherit(TextLinkConstants, {
 		range.selectNodeContents(this.tooltipBox);
 		range.deleteContents();
 		range.detach();
+
+		gBrowser.selectedTab.__textlink__contentBridge
+			.cancelSelectionURIs();
 	},
   
 	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
@@ -657,6 +596,20 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 					resolver(aMessage.json.summary);
 				}
 				return;
+
+			case this.COMMAND_REPORT_SELECTION_URIS:
+				var id = aMessage.json.id;
+				if (id in this.resolvers) {
+					let resolver = this.resolvers[id];
+					delete this.resolvers[id];
+					resolver(aMessage.json.uris);
+				}
+				return;
+
+			case this.COMMAND_REPORT_SELECTION_URIS_PROGRESS:
+				if (typeof this.onSelectionURIProgress == 'function')
+					this.onSelectionURIProgress(aMessage.json.uris);
+				return;
 		}
 	},
 	handleEvent: function TLCB_handleEvent(aEvent)
@@ -692,6 +645,23 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	{
 		this.resolvers = {};
 		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY);
+	},
+	getSelectionURIs : function TLCB_getSelectionURIs(aOnProgress)
+	{
+		this.onSelectionURIProgress = aOnProgress;
+		return new Promise((function(aResolve, aReject) {
+			var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
+			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_URIS, {
+				id : id
+			});
+			return this.resolvers[id] = aResolve;
+		}).bind(this));
+	},
+	cancelSelectionURIs : function TLCB_cancelSelectionURIs()
+	{
+		this.onSelectionURIProgress = null;
+		this.resolvers = {};
+		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_URIS);
 	}
 });
 aGlobal.TextLinkContentBridge = TextLinkContentBridge;

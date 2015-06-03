@@ -40,6 +40,8 @@ const Ci = Components.interfaces;
 
 var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
 
+var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
+
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
@@ -52,10 +54,15 @@ function TextLinkSelectionHandler(aGlobal, aEventTarget)
 	this.global = aGlobal;
 }
 TextLinkSelectionHandler.prototype = {
-	lastSelection    : null,
-	findURIsIterator : null,
-	foundURIRanges   : [],
-	summaryCancelled : false,
+	lastSummarySelection : null,
+	lastSummary          : null,
+	lastRangesSelection  : null,
+	lastRanges           : [],
+	summaryCancelled     : false,
+	rangesCancelled      : false,
+	set urisCancelled(aValue) {
+		return this.rangesCancelled = aValue;
+	},
 
 	get contentDocument() {
 		return this.global.content.document;
@@ -70,8 +77,6 @@ TextLinkSelectionHandler.prototype = {
 		delete this.global;
 	},
 
-	lastSummary : null,
-
 	getSummary : function()
 	{
 		this.summaryCancelled = false;
@@ -79,11 +84,11 @@ TextLinkSelectionHandler.prototype = {
 		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
 		var selection = this.rangeUtils.getSelection(target);
 		selection = selection && selection.toString();
-		if (this.lastSelection) {
-			if (this.lastSelection == selection)
+		if (this.lastSummarySelection) {
+			if (this.lastSummarySelection == selection)
 				return Promise.resolve(this.lastSummary);
 		}
-		this.lastSelection = selection;
+		this.lastSummarySelection = selection;
 
 		var assertContinuable = (function() {
 			if (this.summaryCancelled)
@@ -132,8 +137,91 @@ TextLinkSelectionHandler.prototype = {
 				}
 			}).bind(this))
 			.catch((function(e) {
-				this.lastSelection = null;
+				this.lastSummarySelection = null;
 				throw e;
 			}).bind(this));
+	},
+
+	getRanges : function(aOnProgress)
+	{
+		this.rangesCancelled = false;
+		if (this.getRangesTimer)
+			clearInterval(this.getRangesTimer);
+
+		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var selection = this.rangeUtils.getSelection(target);
+		selection = selection && selection.toString();
+		if (this.lastRangesSelection) {
+			if (this.lastRangesSelection == selection)
+				return Promise.resolve(this.lastRanges);
+		}
+		this.lastRangesSelection = selection;
+
+		this.lastRanges.forEach(function(aRange) {
+			try {
+				aRange.range.detach();
+			}
+			catch(e) {
+			}
+		});
+		this.lastRanges = [];
+
+		var assertContinuable = (function() {
+			if (this.rangesCancelled)
+				throw new Error('operation was cancellled');
+		}).bind(this);
+
+		var findURIsIterator = this.rangeUtils.getURIRangesIterator(target, null, null, null, assertContinuable);
+		return new Promise((function(aResolve, aReject) {
+			this.getRangesTimer = setInterval((function() {
+				if (this.rangesCancelled) {
+					clearInterval(this.getRangesTimer);
+					this.getRangesTimer = null;
+					this.lastRangesSelection = null;
+					this.lastRanges.forEach(function(aRange) {
+						try {
+							aRange.range.detach();
+						}
+						catch(e) {
+						}
+					});
+					this.lastRanges = [];
+					return aReject();
+				}
+				try {
+					assertContinuable();
+					var range = findURIsIterator.next();
+					this.lastRanges.push(range);
+					if (typeof aOnProgress == 'function')
+						aOnProgress([range]);
+				}
+				catch(aError if aError instanceof StopIteration) {
+					findURIsIterator = null;
+					clearInterval(this.getRangesTimer);
+					this.getRangesTimer = null;
+				}
+				catch(aError) {
+					aReject(aError);
+				}
+				this.lastRanges.sort(this.rangeUtils._compareRangePosition);
+				aResolve(this.lastRanges);
+			}).bind(this), 1);
+		}).bind(this));
+	},
+
+	getURIs : function(aOnProgress)
+	{
+		return this.getRanges(function(aRanges) {
+				var uris = aRanges.map(function(aRange) {
+					return aRange.uri;
+				});
+				aOnProgress(uris);
+			})
+			.then(function(aRanges) {
+				var uris = aRanges.map(function(aRange) {
+					return aRange.uri;
+				});
+				return uris;
+			});
 	}
 };

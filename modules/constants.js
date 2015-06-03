@@ -116,8 +116,15 @@ var TextLinkConstants = {
 
 	COMMAND_SHUTDOWN              : 'shutdown',
 	COMMAND_NOTIFY_CONFIG_UPDATED : 'notify-config-updated',
-	COMMAND_REQUEST_SELECTION_SUMMARY : 'request-selection-summary',
-	COMMAND_REPORT_SELECTION_SUMMARY  : 'report-selection-summary',
+
+	COMMAND_REQUEST_SELECTION_SUMMARY        : 'request-selection-summary',
+	COMMAND_REPORT_SELECTION_SUMMARY         : 'report-selection-summary',
 	COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY : 'request-cancel-selection-summary',
+
+	COMMAND_REQUEST_SELECTION_URIS           : 'request-selection-uris',
+	COMMAND_REPORT_SELECTION_URIS            : 'report-selection-uris',
+	COMMAND_REPORT_SELECTION_URIS_PROGRESS   : 'report-selection-uris-progress',
+	COMMAND_REQUEST_CANCEL_SELECTION_URIS    : 'request-cancel-selection-uris',
+
 	COMMAND_LOAD_URI              : 'load-uri'
 };
