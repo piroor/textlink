@@ -371,26 +371,16 @@ var TextLinkService = inherit(TextLinkConstants, {
 				'context-openTextLink-tab',
 				'context-openTextLink-copy'
 			];
-		var self = this;
 
 		items.forEach(function(aID) {
 			gContextMenu.showItem(aID, false);
-			var item = self.setLabel(aID, 'label-processing');
+			var item = this.setLabel(aID, 'label-processing');
 			if (item) {
 				item.setAttribute('disabled', true);
 				item.setAttribute('uri-finding', true);
 				item.classList.add('menuitem-iconic');
 			}
-		});
-
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
-		var selection = this.rangeUtils.getSelection(target);
-		selection = selection && selection.toString();
-		if (this.lastSelectionForContextMenu) {
-			if (this.lastSelectionForContextMenu == selection)
-				return;
-		}
-		this.lastSelectionForContextMenu = selection;
+		}, this);
 
 		if (
 			(
@@ -421,70 +411,42 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gContextMenu.showItem('context-openTextLink-copy',
 			TextLinkUtils.contextItemCopy);
 
-		var check = function() {
-				if (!gContextMenu) throw new Error('context menu is already closed');
-			};
-
-		var uris = [];
-		var found = {};
-		this.rangeUtils.getFirstSelectionURIRange(target, false, null, check)
-			.then(function(aFirstRange) {
-				check();
-				if (aFirstRange) {
-					uris.push(aFirstRange.uri);
-					aFirstRange.range.detach();
-					found[aFirstRange.uri] = true;
-				}
-				return self.rangeUtils.getLastSelectionURIRange(target, false, found, check);
-			})
-			.then(function(aLastRange) {
-				check();
-				if (aLastRange) {
-					uris.push(aLastRange.uri);
-					aLastRange.range.detach();
-				}
-
-				if (uris.length) {
-					var uri1, uri2;
-
-					uri1 = uris[0];
-					if (uri1.length > 20) uri1 = uri1.substring(0, 15).replace(/\.+$/, '')+'..';
-
-					if (uris.length > 1) {
-						uri2 = uris[uris.length-1];
-						if (uri2.length > 20) uri2 = uri2.substring(0, 15).replace(/\.+$/, '')+'..';
-					}
-
-					var targets = [/\%s1/i, uri1, /\%s2/i, uri2, /\%s/i, uri1];
-					var attr = (uris.length > 1) ? 'label-base-multiple' : 'label-base-single' ;
+		gBrowser.selectedTab.__textlink__contentBridge
+			.getSelectionSummary()
+			.then((function(aSummary) {
+				if (aSummary) {
+					var targets = [
+						/\%s1/i, aSummary.first,
+						/\%s2/i, aSummary.last,
+						/\%s/i,  aSummary.first
+					];
+					var attr = aSummary.last ? 'label-base-multiple' : 'label-base-single' ;
 
 					items.forEach(function(aID) {
-						var item = self.setLabel(aID, attr, targets);
+						var item = this.setLabel(aID, attr, targets);
 						if (item) {
 							item.removeAttribute('disabled');
 							item.removeAttribute('uri-finding');
 							item.classList.remove('menuitem-iconic');
 						}
-					});
+					}, this);
 				}
 				else {
 					items.forEach(function(aID) {
-						var item = self.setLabel(aID, 'label-disabled');
+						var item = this.setLabel(aID, 'label-disabled');
 						if (item) {
 							item.removeAttribute('uri-finding');
 							item.classList.remove('menuitem-iconic');
 						}
-					});
+					}, this);
 				}
-			})
-			.catch(function(e) {
-				self.lastSelectionForContextMenu = null;
-			});
+			}).bind(this));
 	},
 	setLabel : function(aID, aAttr, aTargets)
 	{
 		var item = document.getElementById(aID);
-		if (!item) return;
+		if (!item)
+			return;
 		var base = item.getAttribute(aAttr);
 		if (aTargets) {
 			for (var i = 0; i < aTargets.length; i+=2)
@@ -630,6 +592,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 		this.mTab = aTab;
 		this.mTabBrowser = aTabBrowser;
 		this.handleMessage = this.handleMessage.bind(this);
+		this.resolvers = {};
 
 		var manager = window.messageManager;
 		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
@@ -647,6 +610,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 
 		delete this.mTab;
 		delete this.mTabBrowser;
+		delete this.resolvers;
 	},
 	sendAsyncCommand : function TLCB_sendAsyncCommand(aCommandType, aCommandParams)
 	{
@@ -672,6 +636,15 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 				var referrer = params.referrer && TextLinkUtils.makeURIFromSpec(params.referrer);
 				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
 				return;
+
+			case this.COMMAND_REPORT_SELECTION_SUMMARY:
+				var id = aMessage.json.id;
+				if (id in this.resolvers) {
+					let resolver = this.resolvers[id];
+					delete this.resolvers[id];
+					resolver(aMessage.json.summary);
+				}
+				return;
 		}
 	},
 	handleEvent: function TLCB_handleEvent(aEvent)
@@ -692,6 +665,16 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 			command : this.COMMAND_NOTIFY_CONFIG_UPDATED,
 			config  : configs
 		});
+	},
+	getSelectionSummary : function TLCB_getSelectionSummary()
+	{
+		return new Promise((function(aResolve, aReject) {
+			var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
+			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_SUMMARY, {
+				id : id
+			});
+			return this.resolvers[id] = aResolve;
+		}).bind(this));
 	}
 });
 aGlobal.TextLinkContentBridge = TextLinkContentBridge;

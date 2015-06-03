@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2002-2012
+ * Portions created by the Initial Developer are Copyright (C) 2002-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -42,12 +42,8 @@ const INPUT_FIELD_CONDITITON = 'contains(" input INPUT textarea TEXTAREA textbox
 const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"';
 const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
 
-Components.utils.import('resource://textlink-modules/utils.js');
-Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
-XPCOMUtils.defineLazyGetter(this, 'Promise', function() {
-	var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
-	return Promise;
-});
+var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
+var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
 
 var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
  
@@ -91,9 +87,7 @@ TextLinkRangeUtils.prototype = {
 			)
 			) {
 			let frame = this.getCurrentFrame(aFrameOrEditable);
-			if (!frame)
-				throw new Error('failed to find current frame from '+aFrameOrEditable);
-			return frame.getSelection();
+			return frame && frame.getSelection();
 		}
 		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
 			return aFrameOrEditable

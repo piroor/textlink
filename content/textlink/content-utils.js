@@ -14,6 +14,7 @@
 	var { TextLinkConstants } = Cu.import('resource://textlink-modules/constants.js', {});
 	var { TextLinkUtils } = Cu.import('resource://textlink-modules/utils.js', {});
 	var { TextLinkUserActionHandler } = Cu.import('resource://textlink-modules/userActionHandler.js', {});
+	var { TextLinkSelectionHandler } = Cu.import('resource://textlink-modules/selectionHandler.js', {});
 
 	function free() {
 		cleanup =
@@ -24,6 +25,7 @@
 			messageListener =
 			mydump =
 			userActionHandler =
+			selectionHandler =
 				undefined;
 	}
 
@@ -44,6 +46,21 @@
 					TextLinkUtils.onPrefValueChanged(aKey, value);
 				});
 				return;
+
+			case TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY:
+				selectionHandler.getSummary()
+					.catch(function(aError) {
+						Components.utils.reportError(aError);
+						return null;
+					})
+					.then(function(aSummary) {
+						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
+							command : TextLinkConstants.COMMAND_REPORT_SELECTION_SUMMARY,
+							id      : aMessage.json.params.id,
+							summary : aSummary
+						});
+					});
+				return;
 		}
 	};
 	global.addMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);
@@ -57,4 +74,6 @@
 			action   : aAction
 		});
 	};
+
+	var selectionHandler = new TextLinkSelectionHandler(global);
 })(this);
