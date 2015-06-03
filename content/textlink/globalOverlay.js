@@ -61,7 +61,9 @@ var TextLinkService = inherit(TextLinkConstants, {
 	get popupNode() 
 	{
 		var popup = this.contextMenu;
-		return popup && popup.triggerNode || document.popupNode ;
+		return (gContextMenuContentData && gContextMenuContentData.popupNode) ||
+				(popup && popup.triggerNode) ||
+				document.popupNode ;
 	},
  
 	get bundle() { 
@@ -371,15 +373,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 			];
 		var self = this;
 
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
-		var selection = this.rangeUtils.getSelection(target);
-		selection = selection && selection.toString();
-		if (this.lastSelectionForContextMenu) {
-			if (this.lastSelectionForContextMenu == selection)
-				return;
-		}
-		this.lastSelectionForContextMenu = selection;
-
 		items.forEach(function(aID) {
 			gContextMenu.showItem(aID, false);
 			var item = self.setLabel(aID, 'label-processing');
@@ -389,6 +382,15 @@ var TextLinkService = inherit(TextLinkConstants, {
 				item.classList.add('menuitem-iconic');
 			}
 		});
+
+		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var selection = this.rangeUtils.getSelection(target);
+		selection = selection && selection.toString();
+		if (this.lastSelectionForContextMenu) {
+			if (this.lastSelectionForContextMenu == selection)
+				return;
+		}
+		this.lastSelectionForContextMenu = selection;
 
 		if (
 			(
