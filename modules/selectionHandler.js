@@ -68,8 +68,10 @@ TextLinkSelectionHandler.prototype = {
 		return this.global.content.document;
 	},
 
-	get popupNode() {
-		return null;
+	get focusedElement() {
+		return Cc['@mozilla.org/focus-manager;1']
+				.getService(Ci.nsIFocusManager)
+				.focusedElement;
 	},
 
 	destroy : function()
@@ -81,7 +83,7 @@ TextLinkSelectionHandler.prototype = {
 	{
 		this.summaryCancelled = false;
 
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var target = this.rangeUtils.getEditableFromChild(this.focusedElement);
 		var selection = this.rangeUtils.getSelection(target);
 		selection = selection && selection.toString();
 		if (this.lastSummarySelection) {
@@ -149,7 +151,7 @@ TextLinkSelectionHandler.prototype = {
 		if (this.getRangesTimer)
 			clearInterval(this.getRangesTimer);
 
-		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
+		var target = this.rangeUtils.getEditableFromChild(this.focusedElement);
 		var selection = this.rangeUtils.getSelection(target);
 		selection = selection && selection.toString();
 		if (this.lastRangesSelection) {
