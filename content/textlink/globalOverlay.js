@@ -281,16 +281,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		this.contextMenu.addEventListener('popupshowing', this, false);
 		this.contextMenu.addEventListener('popuphiding', this, false);
 
-		if (prefs.getPref('browser.tabs.remote.autostart')) {
-			window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
-		}
-		else {
-			this.userActionHandler = new TextLinkUserActionHandler(window, this.browser);
-			this.userActionHandler.loadURI = (function(aURI, aReferrer, aAction, aOpener) {
-				aReferrer = aReferrer && TextLinkUtils.makeURIFromSpec(aReferrer);
-				this.loadURI(aURI, aReferrer, aAction, this.browser, aOpener);
-			}).bind(this);
-		}
+		window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 
 		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
 			this.initTab(aTab, this.browser);
@@ -420,15 +411,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
 		this.browser.tabContainer.removeEventListener('TabClose', this, true);
 
-		if (prefs.getPref('browser.tabs.remote.autostart')) {
-			window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
-				command : this.COMMAND_SHUTDOWN,
-				params  : {}
-			});
-		}
-		else {
-			this.userActionHandler.destroy();
-		}
+		window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+			command : this.COMMAND_SHUTDOWN,
+			params  : {}
+		});
 
 		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
 			this.destroyTab(aTab);
