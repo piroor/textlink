@@ -114,6 +114,9 @@ var TextLinkService = inherit(TextLinkConstants, {
 	
 	buildTooltip : function() 
 	{
+		gBrowser.selectedTab.__textlink__contentBridge
+			.cancelSelectionURIs();
+
 		this.destroyTooltip();
 
 		if (!this.popupNode)
@@ -130,14 +133,20 @@ var TextLinkService = inherit(TextLinkConstants, {
 		}).bind(this);
 
 		gBrowser.selectedTab.__textlink__contentBridge
-			.getSelectionURIs(buildLinesForURIs)
+			.getSelectionURIs({
+				select     : false,
+				onProgress : buildLinesForURIs
+			})
 			.then((function(aURIs) {
 				var range = document.createRange();
 				range.selectNodeContents(this.tooltipBox);
 				range.deleteContents();
 				range.detach();
 				buildLinesForURIs(aURIs);
-			}).bind(this));
+			}).bind(this))
+			.catch(function(aError) {
+				Components.utils.reportError(aError);
+			});
 	},
 	destroyTooltip : function()
 	{
@@ -145,9 +154,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 		range.selectNodeContents(this.tooltipBox);
 		range.deleteContents();
 		range.detach();
-
-		gBrowser.selectedTab.__textlink__contentBridge
-			.cancelSelectionURIs();
 	},
   
 	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
@@ -176,30 +182,24 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	openTextLinkIn : function(aAction, aTarget) 
 	{
-		var frame = this.rangeUtils.getCurrentFrame();
-		var self = this;
-		return this.rangeUtils.getSelectionURIRanges(this.rangeUtils.getEditableFromChild(aTarget) || frame)
-			.then(function(aRanges) {
-				if (aRanges.length)
-					return self.openTextLinkInPostProcess(aAction, aTarget, aRanges);
+		return gBrowser.selectedTab.__textlink__contentBridge
+			.getSelectionURIs({
+				select : true
+			})
+			.then((function(aURIs) {
+				if (aURIs.length > 0)
+					this.openTextLinkInPostProcess(aAction, aTarget, aURIs);
+			}).bind(this))
+			.catch(function(aError) {
+				Components.utils.reportError(aError);
 			});
 	},
-	openTextLinkInPostProcess : function(aAction, aTarget, aRanges)
+	openTextLinkInPostProcess : function(aAction, aTarget, aURIs)
 	{
-		var selections = [];
-		var uris = aRanges.map(function(aRange) {
-				if (selections.indexOf(aRange.selection) < 0) {
-					selections.push(aRange.selection);
-					aRange.selection.removeAllRanges();
-				}
-				aRange.selection.addRange(aRange.range);
-				return aRange.uri;
-			});
-		selections = void(0);
-
 		if (aAction == TextLinkConstants.ACTION_COPY) {
-			if (uris.length > 1) uris.push('');
-			TextLinkUtils.setClipBoard(uris.join('\r\n'));
+			if (aURIs.length > 1)
+				aURIs.push('');
+			TextLinkUtils.setClipBoard(aURIs.join('\r\n'));
 			return;
 		}
 
@@ -207,26 +207,26 @@ var TextLinkService = inherit(TextLinkConstants, {
 			aAction = TextLinkConstants.ACTION_OPEN_IN_CURRENT;
 
 		if (
-			uris.length > 1 &&
+			aURIs.length > 1 &&
 			(aAction == TextLinkConstants.ACTION_OPEN_IN_TAB ||
 			aAction == TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) &&
-			!PlacesUIUtils._confirmOpenInTabs(uris.length)
+			!PlacesUIUtils._confirmOpenInTabs(aURIs.length)
 			) {
 			return;
 		}
 
 		if (aAction == TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
-			uris.forEach(function(aURI) {
+			aURIs.forEach(function(aURI) {
 				window.open(aURI);
 			});
 			return;
 		}
 
-		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT && uris.length == 1) {
-			this.browser.loadURI(uris[0]);
+		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT && aURIs.length == 1) {
+			this.browser.loadURI(aURIs[0]);
 			return;
 		}
-		this.openTextLinkInTabs(uris, aAction);
+		this.openTextLinkInTabs(aURIs, aAction);
 	},
 	openTextLinkInTabs : function(aURIs, aAction)
 	{
@@ -338,10 +338,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 					!gContextMenu.isTextSelected ||
 					!gContextMenu.isContentSelected
 				) &&
-				(
-					!gContextMenu.onTextInput ||
-					!selection
-				)
+				!gContextMenu.onTextInput
 			)
 			)
 			return;
@@ -384,7 +381,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 						}
 					}, this);
 				}
-			}).bind(this));
+			}).bind(this))
+			.catch(function(aError) {
+				Components.utils.reportError(aError);
+			});
 	},
 	setLabel : function(aID, aAttr, aTargets)
 	{
@@ -633,34 +633,49 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionSummary : function TLCB_getSelectionSummary()
 	{
+		this.cancelSelectionSummary();
 		return new Promise((function(aResolve, aReject) {
-			var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
+			var id = this.getSelectionSummaryIDPrefix + Date.now() + '-' + Math.floor(Math.random() * 65000);
 			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_SUMMARY, {
 				id : id
 			});
 			return this.resolvers[id] = aResolve;
 		}).bind(this));
 	},
+	getSelectionSummaryIDPrefix : 'selectionSummary-',
 	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
 	{
-		this.resolvers = {};
+		Object.keys(this.resolvers).forEach(function(aKey) {
+			if (aKey.indexOf(this.getSelectionSummaryIDPrefix) == 0)
+				delete this.resolvers[aKey];
+		}, this);
 		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY);
 	},
-	getSelectionURIs : function TLCB_getSelectionURIs(aOnProgress)
+	getSelectionURIs : function TLCB_getSelectionURIs(aOptions)
 	{
-		this.onSelectionURIProgress = aOnProgress;
+		this.cancelSelectionURIs(aOptions);
+		aOptions = aOptions || {};
+		this.onSelectionURIProgress = aOptions.onProgress;
 		return new Promise((function(aResolve, aReject) {
-			var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
+			var id = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '') +
+						Date.now() + '-' + Math.floor(Math.random() * 65000);
 			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_URIS, {
-				id : id
+				id     : id,
+				select : aOptions.select || false
 			});
 			return this.resolvers[id] = aResolve;
 		}).bind(this));
 	},
-	cancelSelectionURIs : function TLCB_cancelSelectionURIs()
+	getSelectionURIsIDPrefix : 'selectionURIs-',
+	cancelSelectionURIs : function TLCB_cancelSelectionURIs(aOptions)
 	{
+		aOptions = aOptions || {};
 		this.onSelectionURIProgress = null;
-		this.resolvers = {};
+		var prefix = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '');
+		Object.keys(this.resolvers).forEach(function(aKey) {
+			if (aKey.indexOf(prefix) == 0)
+				delete this.resolvers[aKey];
+		}, this);
 		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_URIS);
 	}
 });

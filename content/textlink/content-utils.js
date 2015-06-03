@@ -67,11 +67,14 @@
 				return;
 
 			case TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS:
-				selectionHandler.getURIs(function(aURIs) {
-						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
-							command : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS,
-							uris    : aURIs
-						});
+				selectionHandler.getURIs({
+						select     : aMessage.json.params.select,
+						onProgress : function(aURIs) {
+							global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
+								command : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS,
+								uris    : aURIs
+							});
+						}
 					})
 					.catch(function(aError) {
 						Components.utils.reportError(aError);

@@ -136,9 +136,10 @@ TextLinkSelectionHandler.prototype = {
 					return this.lastSummary = {};
 				}
 			}).bind(this))
-			.catch((function(e) {
+			.catch((function(aError) {
 				this.lastSummarySelection = null;
-				throw e;
+				this.lastSummary = null;
+				throw aError;
 			}).bind(this));
 	},
 
@@ -209,19 +210,34 @@ TextLinkSelectionHandler.prototype = {
 		}).bind(this));
 	},
 
-	getURIs : function(aOnProgress)
+	getURIs : function(aOptions)
 	{
+		aOptions = aOptions || {};
 		return this.getRanges(function(aRanges) {
 				var uris = aRanges.map(function(aRange) {
 					return aRange.uri;
 				});
-				aOnProgress(uris);
+				if (typeof aOptions.onProgress == 'function')
+					aOptions.onProgress(uris);
 			})
 			.then(function(aRanges) {
+				var selections = [];
 				var uris = aRanges.map(function(aRange) {
+					if (aOptions.select) {
+						if (selections.indexOf(aRange.selection) < 0) {
+							selections.push(aRange.selection);
+							aRange.selection.removeAllRanges();
+						}
+						aRange.selection.addRange(aRange.range);
+					}
 					return aRange.uri;
 				});
+				selections = undefined;
 				return uris;
+			})
+			.catch(function(aError) {
+				Components.utils.reportError(aError);
+				return [];
 			});
 	}
 };
