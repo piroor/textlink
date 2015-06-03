@@ -114,8 +114,11 @@ var TextLinkService = inherit(TextLinkConstants, {
 	
 	buildTooltip : function() 
 	{
-		gBrowser.selectedTab.__textlink__contentBridge
-			.cancelSelectionURIs();
+		if (this.selectionHandler)
+			this.selectionHandler.urisCancelled = true;
+		else
+			gBrowser.selectedTab.__textlink__contentBridge
+				.cancelSelectionURIs({ select : false });
 
 		this.destroyTooltip();
 
@@ -132,11 +135,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 			this.tooltipBox.appendChild(fragment);
 		}).bind(this);
 
-		gBrowser.selectedTab.__textlink__contentBridge
-			.getSelectionURIs({
-				select     : false,
-				onProgress : buildLinesForURIs
-			})
+		this.getSelectionURIs({
+			select     : false,
+			onProgress : buildLinesForURIs
+		})
 			.then((function(aURIs) {
 				var range = document.createRange();
 				range.selectNodeContents(this.tooltipBox);
@@ -147,6 +149,13 @@ var TextLinkService = inherit(TextLinkConstants, {
 			.catch(function(aError) {
 				Components.utils.reportError(aError);
 			});
+	},
+	getSelectionURIs : function(aOptions) {
+		if (this.selectionHandler)
+			return this.selectionHandler.getURIs(aOptions);
+		else
+			return gBrowser.selectedTab.__textlink__contentBridge
+					.getSelectionURIs(aOptions)
 	},
 	destroyTooltip : function()
 	{
@@ -182,8 +191,7 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	openTextLinkIn : function(aAction, aTarget) 
 	{
-		return gBrowser.selectedTab.__textlink__contentBridge
-			.getSelectionURIs({
+		return this.getSelectionURIs({
 				select : true
 			})
 			.then((function(aURIs) {
@@ -343,8 +351,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gContextMenu.showItem('context-openTextLink-copy',
 			TextLinkUtils.contextItemCopy);
 
-		gBrowser.selectedTab.__textlink__contentBridge
-			.getSelectionSummary()
+		this.getSelectionSummary()
 			.then((function(aSummary) {
 				if (aSummary) {
 					var targets = [
@@ -377,6 +384,14 @@ var TextLinkService = inherit(TextLinkConstants, {
 				Components.utils.reportError(aError);
 			});
 	},
+	getSelectionSummary : function()
+	{
+		if (this.selectionHandler)
+			return this.selectionHandler.getSummary();
+		else
+			return gBrowser.selectedTab.__textlink__contentBridge
+					.getSelectionSummary();
+	},
 	setLabel : function(aID, aAttr, aTargets)
 	{
 		var item = document.getElementById(aID);
@@ -395,8 +410,11 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 	destroyContextMenu : function()
 	{
-		gBrowser.selectedTab.__textlink__contentBridge
-			.cancelSelectionSummary();
+		if (this.selectionHandler)
+			this.selectionHandler.summaryCancelled = true;
+		else
+			gBrowser.selectedTab.__textlink__contentBridge
+				.cancelSelectionSummary();
 	},
   
 	destroy : function() 

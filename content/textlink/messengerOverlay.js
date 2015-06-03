@@ -3,6 +3,7 @@ var { inherit } = Components.utils.import('resource://textlink-modules/inherit.j
 var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
+var { TextLinkSelectionHandler } = Cu.import('resource://textlink-modules/selectionHandler.js', {});
 
 var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLinkService, { 
  
@@ -147,6 +148,8 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 			this.loadURI(aURI, null, aAction, this.browser, aOpener);
 		}).bind(this);
 
+		this.selectionHandler = new TextLinkSelectionHandler(window);
+
 		this.browser.addEventListener('load', this, true);
 	},
  
@@ -157,6 +160,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLin
 		window.removeEventListener('unload', this, false);
 
 		this.userActionHandler.destroy();
+		this.selectionHandler.destroy();
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 
