@@ -52,6 +52,11 @@ function TextLinkSelectionHandler(aGlobal, aEventTarget)
 	this.global = aGlobal;
 }
 TextLinkSelectionHandler.prototype = {
+	lastSelection    : null,
+	findURIsIterator : null,
+	foundURIRanges   : [],
+	summaryCancelled : false,
+
 	get contentDocument() {
 		return this.global.content.document;
 	},
@@ -69,6 +74,8 @@ TextLinkSelectionHandler.prototype = {
 
 	getSummary : function()
 	{
+		this.summaryCancelled = false;
+
 		var target = this.rangeUtils.getEditableFromChild(this.popupNode);
 		var selection = this.rangeUtils.getSelection(target);
 		selection = selection && selection.toString();
@@ -79,8 +86,8 @@ TextLinkSelectionHandler.prototype = {
 		this.lastSelection = selection;
 
 		var assertContinuable = (function() {
-//			if (!this.global.gContextMenu)
-//				throw new Error('context menu is already closed');
+			if (this.summaryCancelled)
+				throw new Error('context menu is already closed');
 		}).bind(this);
 
 		var uris = [];

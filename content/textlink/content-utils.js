@@ -61,6 +61,10 @@
 						});
 					});
 				return;
+
+			case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY:
+				selectionHandler.summaryCancelled = true;
+				return;
 		}
 	};
 	global.addMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);

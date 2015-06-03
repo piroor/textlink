@@ -100,8 +100,12 @@ var TextLinkService = inherit(TextLinkConstants, {
 				return;
 
 			case 'popuphiding':
-				this.destroyTooltip();
-				this.stopProgressiveBuildTooltip();
+				if (aEvent.currentTarget == this.tooltip) {
+					this.destroyTooltip();
+					this.stopProgressiveBuildTooltip();
+				else if (aEvent.target == this.contextMenu) {
+					this.destroyContextMenu();
+				}
 				return;
 
 			case 'TabOpen':
@@ -336,6 +340,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		window.addEventListener('unload', this, false);
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
+		this.contextMenu.addEventListener('popuphiding', this, false);
 
 		if (prefs.getPref('browser.tabs.remote.autostart')) {
 			window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
@@ -457,6 +462,12 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		return item;
 	},
+
+	destroyContextMenu : function()
+	{
+		gBrowser.selectedTab.__textlink__contentBridge
+			.cancelSelectionSummary();
+	},
   
 	destroy : function() 
 	{
@@ -465,6 +476,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		window.removeEventListener('unload', this, false);
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
+		this.contextMenu.removeEventListener('popuphiding', this, false);
 
 		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
 		this.browser.tabContainer.removeEventListener('TabClose', this, true);
@@ -675,6 +687,11 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 			});
 			return this.resolvers[id] = aResolve;
 		}).bind(this));
+	},
+	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
+	{
+		this.resolvers = {};
+		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY);
 	}
 });
 aGlobal.TextLinkContentBridge = TextLinkContentBridge;
