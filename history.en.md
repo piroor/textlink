@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+ - 5.0.2015060501
    * Works correctly on the multi-process mode (E10S).
    * Improved: Add a new locale hy-AM (Armenian), translated by [Hrant Ohanyan](http://haysoft.org). Thanks!
  - 4.1.2013040601

@@ -1,6 +1,7 @@
 # 更新履歴
 
  - master/HEAD
+ - 5.0.2015060501
    * マルチプロセスモード（E10S）に対応
    * hy-AM（アルメニア語）ロケールを追加（by [Hrant Ohanyan](http://haysoft.org). Thanks!）
  - 4.1.2013040601
