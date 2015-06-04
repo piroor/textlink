@@ -2,6 +2,7 @@
 var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
 var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
+var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
 var { TextLinkSelectionHandler } = Components.utils.import('resource://textlink-modules/selectionHandler.js', {});
 
