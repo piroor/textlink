@@ -82,7 +82,7 @@ TextLinkRangeUtils.prototype = {
 		if (
 			!aFrameOrEditable ||
 			(
-				typeof aFrameOrEditable.Window == 'function' &&
+				typeof aFrameOrEditable.Window != 'undefined' &&
 				aFrameOrEditable instanceof aFrameOrEditable.Window
 			)
 			) {

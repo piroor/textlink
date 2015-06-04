@@ -42,14 +42,14 @@ var { TextLinkConstants } = Components.utils.import('resource://textlink-modules
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
  
-function TextLinkUserActionHandler(aGlobal, aEventTarget) 
+function TextLinkUserActionHandler(aGlobal, aBrowser)
 {
 	this.rangeUtils = new TextLinkRangeUtils(aGlobal, function() {
-		return aGlobal.content;
+		return aBrowser ? aBrowser.contentWindow : aGlobal.content ;
 	});
 
 	this.global = aGlobal;
-	this.target = aEventTarget || aGlobal;
+	this.target = aBrowser || aGlobal;
 	this.target.addEventListener('mousedown', this, true);
 	this.target.addEventListener('mouseup', this, true);
 	this.target.addEventListener('dblclick', this, true);
@@ -218,7 +218,8 @@ TextLinkUserActionHandler.prototype = {
 			return;
 
 		var b = aEvent.currentTarget;
-		if (!b) return;
+		if (!b)
+			return;
 
 		var frame = target.ownerDocument.defaultView;
 
@@ -236,7 +237,8 @@ TextLinkUserActionHandler.prototype = {
 		range.selection.removeAllRanges();
 		range.selection.addRange(range.range);
 
-		if (aAction & TextLinkConstants.ACTION_SELECT) return;
+		if (aAction & TextLinkConstants.ACTION_SELECT)
+			return;
 
 		if (aAction & TextLinkConstants.ACTION_COPY) {
 			TextLinkUtils.setClipBoard(range.uri);

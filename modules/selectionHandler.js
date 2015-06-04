@@ -46,10 +46,10 @@ var { TextLinkConstants } = Components.utils.import('resource://textlink-modules
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
  
-function TextLinkSelectionHandler(aGlobal, aEventTarget) 
+function TextLinkSelectionHandler(aGlobal, aBrowser)
 {
 	this.rangeUtils = new TextLinkRangeUtils(aGlobal, function() {
-		return aGlobal.content;
+		return aBrowser ? aBrowser.contentWindow : aGlobal.content ;
 	});
 	this.global = aGlobal;
 }
