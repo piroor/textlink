@@ -6,6 +6,9 @@ var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink
 var { TextLinkSelectionHandler } = Components.utils.import('resource://textlink-modules/selectionHandler.js', {});
 
 var TextLinkMessengerService = window.TextLinkMessengerService = inherit(window.TextLinkService, { 
+	rangeUtils : new TextLinkRangeUtils(window, function() {
+		return TextLinkMessengerService.browser.contentWindow;
+	}),
  
 	get browser()
 	{
