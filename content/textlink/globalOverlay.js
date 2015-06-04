@@ -10,7 +10,7 @@ var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink
 var TextLinkService = inherit(TextLinkConstants, { 
 	utils : TextLinkUtils,
 	rangeUtils : new TextLinkRangeUtils(window, function() {
-		return gBrowser.contentWindow;
+		return TextLinkService.browser.contentWindow;
 	}),
 	
 	get window() 
@@ -116,7 +116,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (this.selectionHandler)
 			this.selectionHandler.urisCancelled = true;
 		else
-			gBrowser.selectedTab.__textlink__contentBridge
+			this.browser.selectedTab.__textlink__contentBridge
 				.cancelSelectionURIs({ select : false });
 
 		this.destroyTooltip();
@@ -153,7 +153,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (this.selectionHandler)
 			return this.selectionHandler.getURIs(aOptions);
 		else
-			return gBrowser.selectedTab.__textlink__contentBridge
+			return this.browser.selectedTab.__textlink__contentBridge
 					.getSelectionURIs(aOptions)
 	},
 	destroyTooltip : function()
@@ -388,7 +388,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (this.selectionHandler)
 			return this.selectionHandler.getSummary();
 		else
-			return gBrowser.selectedTab.__textlink__contentBridge
+			return this.browser.selectedTab.__textlink__contentBridge
 					.getSelectionSummary();
 	},
 	setLabel : function(aID, aAttr, aTargets)
@@ -412,7 +412,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (this.selectionHandler)
 			this.selectionHandler.summaryCancelled = true;
 		else
-			gBrowser.selectedTab.__textlink__contentBridge
+			this.browser.selectedTab.__textlink__contentBridge
 				.cancelSelectionSummary();
 	},
   
