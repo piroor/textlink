@@ -20,8 +20,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 	get browser()
 	{
-		return 'gBrowser' in window ? window.gBrowser :
-				this.document.getElementById('messagepane');
+		return gBrowser;
 	},
  
 	get browserURI() 

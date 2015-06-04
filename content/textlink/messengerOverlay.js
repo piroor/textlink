@@ -3,10 +3,15 @@ var { inherit } = Components.utils.import('resource://textlink-modules/inherit.j
 var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
-var { TextLinkSelectionHandler } = Cu.import('resource://textlink-modules/selectionHandler.js', {});
+var { TextLinkSelectionHandler } = Components.utils.import('resource://textlink-modules/selectionHandler.js', {});
 
-var TextLinkMessengerService = window.TextLinkMessengerService = inherit(TextLinkService, { 
+var TextLinkMessengerService = window.TextLinkMessengerService = inherit(window.TextLinkService, { 
  
+	get browser()
+	{
+		return document.getElementById('messagepane');
+	},
+
 	get contextMenu() 
 	{
 		return document.getElementById('messagePaneContext') || document.getElementById('mailContext');
