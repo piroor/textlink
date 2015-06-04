@@ -8,10 +8,9 @@ function getNewUtils()
 					.TextLinkUtils;
 
 	var prefs = utils.loadPrefs('../../defaults/preferences/textlink.js');
-	for (var i in prefs)
-	{
-		obj.observe(null, 'nsPref:changed', i);
-	}
+	Object.keys(prefs).forEach(function(aKey) {
+		obj.onPrefValueChanged(aKey, prefs[aKey]);
+	});
 
 	obj.relativePathEnabled = false;
 	obj.multibyteEnabled = true;
@@ -26,7 +25,9 @@ function getNewUtils()
 function getNewRangeUtils()
 {
 	var ns = utils.import(baseURL+'../../modules/range.js', namespace);
-	var obj = new ns.TextLinkRangeUtils(window);
+	var obj = new ns.TextLinkRangeUtils(window, function() {
+	  return content;
+	});
 	ns.TextLinkUtils = obj.utils = getNewUtils();
 	return obj;
 }

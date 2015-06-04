@@ -7,7 +7,6 @@ function setUp()
 
 function tearDown()
 {
-	sv.destroy();
 }
 
 const HALF_WIDTH = (1 << 0);

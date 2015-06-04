@@ -10,7 +10,6 @@ function setUp()
 
 function tearDown()
 {
-	sv.utils.destroy();
 }
 
 function test_getCurrentFrame()
@@ -239,7 +238,7 @@ function test_getURIRangesFromRange_simple()
 	range.setEndAfter($('with-port'));
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 
 	assert.equals(
 		[
@@ -330,13 +329,13 @@ function test_getURIRangesFromRange_simple_firstAndLast()
 	range.setEndAfter($('with-port'));
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://test:pass@example.com:8080/test/'], ranges.map(rangesToString));
 	assert.equals(['http://test:pass@example.com:8080/test/'], ranges.map(rangesToURI));
 }
@@ -348,15 +347,15 @@ function test_getURIRangesFromRange_firstAndLastFromCollapsedSelection()
 	range.collapse(true);
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 }
@@ -367,7 +366,7 @@ function test_getURIRangesFromRange_splitNodes()
 	range.selectNodeContents($('split'));
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -389,11 +388,11 @@ function test_getURIRangesFromRange_splitNodes()
 		ranges.map(rangesToURI)
 	);
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.org/'], ranges.map(rangesToURI));
 
-	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['ttp://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToString));
 	assert.equals(['http://ftp.netscape.com/pub/netscape6/'], ranges.map(rangesToURI));
 }
@@ -405,7 +404,7 @@ function test_getURIRangesFromRange_table()
 	range.setEnd($('table-cell6').firstChild, 8);
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://piro.sakura.ne.jp/latest/',
@@ -437,19 +436,19 @@ function test_getURIRangesFromRange_inputField()
 	selection = getSelectionInEditable($('input'));
 	var range = sv.getFindRange(selection.getRangeAt(0));
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
-	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
-	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToString));
 	assert.equals(['http://www.mozilla.com/'], ranges.map(rangesToURI));
 
 	selection = getSelectionInEditable($('textarea'));
 	range = sv.getFindRange(selection.getRangeAt(0));
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://getfirefox.com/',
@@ -466,10 +465,10 @@ function test_getURIRangesFromRange_inputField()
 		],
 		ranges.map(rangesToURI)
 	);
-	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_FIRST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToString));
 	assert.equals(['http://getfirefox.com/'], ranges.map(rangesToURI));
-	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range, sv.FIND_LAST).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(['http://荒川智則.jp/#textarea'], ranges.map(rangesToString));
 	assert.equals(['http://荒川智則.jp/#textarea'], ranges.map(rangesToURI));
 
@@ -566,7 +565,7 @@ function test_getURIRangesFromRange_includingInputFields()
 	range.setEndAfter($('inputfields-after'));
 
 	var ranges;
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://www.example.com/#before',
@@ -609,7 +608,7 @@ function test_getURIRangesFromRange_plainText()
 			return aRange.uri;
 		};
 
-	yield sv.getURIRangesFromRange(range).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getURIRangesFromRange(range).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -711,7 +710,7 @@ function test_getSelectionURIRanges()
 	var rangeCollapsed = content.document.createRange();
 	rangeCollapsed.setStart($('split').firstChild, 60);
 	selection.addRange(rangeCollapsed);
-	yield sv.getSelectionURIRanges(content).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getSelectionURIRanges(content).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(1, ranges.length);
 	assert.equals('http://www.mozilla.org/', ranges[0].range.toString());
 	assert.equals('http://www.mozilla.org/', ranges[0].uri);
@@ -730,7 +729,7 @@ function test_getSelectionURIRanges()
 	selection.addRange(range2);
 	selection.addRange(range3);
 
-	yield sv.getSelectionURIRanges(content).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getSelectionURIRanges(content).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://www.mozilla.org/',
@@ -786,7 +785,7 @@ function test_getSelectionURIRanges()
 	selection.removeAllRanges();
 	selection.addRange(range);
 	assert.equals($('input').value, range.toString());
-	yield sv.getSelectionURIRanges($('input')).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getSelectionURIRanges($('input')).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		['http://www.mozilla.com/'],
 		ranges.map(function(aRange) {
@@ -805,7 +804,7 @@ function test_getSelectionURIRanges()
 	selection.removeAllRanges();
 	selection.addRange(range);
 	assert.equals($('textarea').value, range.toString());
-	yield sv.getSelectionURIRanges($('textarea')).next(function(aRanges) { ranges = aRanges; });
+	yield sv.getSelectionURIRanges($('textarea')).then(function(aRanges) { ranges = aRanges; });
 	assert.equals(
 		[
 			'http://getfirefox.com/',
