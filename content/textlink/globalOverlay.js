@@ -428,7 +428,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
 		this.browser.tabContainer.removeEventListener('TabClose', this, true);
 
-		window.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
+		window.messageManager.broadcastAsyncMessage(this.MESSAGE_TYPE, {
 			command : this.COMMAND_SHUTDOWN,
 			params  : {}
 		});
