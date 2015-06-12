@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+   * Deactivate context menu items correctly when there is no URI in the selection.
+   * Deactivate tooltip on disabled menu items in the context menu.
  - 5.0.2015060501
    * Works correctly on the multi-process mode (E10S).
    * Improved: Add a new locale hy-AM (Armenian), translated by [Hrant Ohanyan](http://haysoft.org). Thanks!
