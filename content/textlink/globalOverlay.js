@@ -353,7 +353,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		this.getSelectionSummary()
 			.then((function(aSummary) {
-				if (aSummary) {
+				if (aSummary && aSummary.first) {
 					var targets = [
 						/\%s1/i, aSummary.first,
 						/\%s2/i, aSummary.last,
