@@ -29,7 +29,6 @@ window.addEventListener('load', TextLinkService, false);
 		label-processing="&textlink.openTextLink.current.processing;"
 		label-disabled="&textlink.openTextLink.current.disabled;"
 		accesskey="&textlink.openTextLink.current.accesskey;"
-		tooltip="textLinkTooltip-selectedURI"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT, TextLinkService.popupNode);"
 		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-tab"
@@ -40,7 +39,6 @@ window.addEventListener('load', TextLinkService, false);
 		label-processing="&textlink.openTextLink.tab.processing;"
 		label-disabled="&textlink.openTextLink.tab.disabled;"
 		accesskey="&textlink.openTextLink.tab.accesskey;"
-		tooltip="textLinkTooltip-selectedURI"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_TAB, TextLinkService.popupNode);"
 		onclick="if (event.button == 1) { TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_CURRENT); this.parentNode.hidePopup(); }"/>
 	<menuitem id="context-openTextLink-window"
@@ -51,7 +49,6 @@ window.addEventListener('load', TextLinkService, false);
 		label-processing="&textlink.openTextLink.window.processing;"
 		accesskey="&textlink.openTextLink.window.accesskey;"
 		label-disabled="&textlink.openTextLink.window.disabled;"
-		tooltip="textLinkTooltip-selectedURI"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_OPEN_IN_WINDOW, TextLinkService.popupNode);"/>
 	<menuitem id="context-openTextLink-copy"
 		class="textlink-menuitem menuitem-iconic"
@@ -61,7 +58,6 @@ window.addEventListener('load', TextLinkService, false);
 		label-processing="&textlink.openTextLink.copy.processing;"
 		label-disabled="&textlink.openTextLink.copy.disabled;"
 		accesskey="&textlink.openTextLink.copy.accesskey;"
-		tooltip="textLinkTooltip-selectedURI"
 		oncommand="TextLinkService.openTextLinkIn(TextLinkService.utils.ACTION_COPY, TextLinkService.popupNode);"/>
 </popup>
 

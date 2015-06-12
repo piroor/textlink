@@ -321,6 +321,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				item.setAttribute('disabled', true);
 				item.setAttribute('uri-finding', true);
 				item.classList.add('menuitem-iconic');
+				item.removeAttribute('tooltip');
 			}
 		}, this);
 
@@ -366,6 +367,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 							item.removeAttribute('disabled');
 							item.removeAttribute('uri-finding');
 							item.classList.remove('menuitem-iconic');
+							item.setAttribute('tooltip', this.tooltip.id);
 						}
 					}, this);
 				}
