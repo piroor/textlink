@@ -93,10 +93,11 @@
     <em:localized>
       <RDF:Description em:locale="pl-PL"
                        em:name="Text Link"
-                       em:description="Pozwala na otwieranie nieklikalnych (tekstowych) linków przy pomocy podwójnego kliknięcia"
+                       em:description="Umożliwia otwieranie nieklikalnych (tekstowych) odnośników za pomocą podwójnego kliknięcia."
                        em:homepageURL="http://piro.sakura.ne.jp/xul/_textlink.html.en"
-                       em:creator="YUKI &quot;Piro&quot; Hiroshi">
+                       em:creator="YUKI „Piro” Hiroshi">
 		<em:translator>Paweł Sobczak, http://blog.pawelsobczak.pl (pl-PL)</em:translator>
+		<em:translator>Piotr Drąg (pl-PL)</em:translator>
       </RDF:Description>
     </em:localized>
     <em:localized>
