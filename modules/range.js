@@ -33,7 +33,7 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-const EXPORTED_SYMBOLS = ['TextLinkRangeUtils']; 
+var EXPORTED_SYMBOLS = ['TextLinkRangeUtils']; 
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;

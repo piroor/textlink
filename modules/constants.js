@@ -33,7 +33,7 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-const EXPORTED_SYMBOLS = ['TextLinkConstants']; 
+var EXPORTED_SYMBOLS = ['TextLinkConstants']; 
 
 var TextLinkConstants = {
 	ACTION_DISABLED               : 0, 

@@ -33,7 +33,7 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-const EXPORTED_SYMBOLS = ['TextLinkSelectionHandler']; 
+var EXPORTED_SYMBOLS = ['TextLinkSelectionHandler']; 
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
