@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2008
+   - Portions created by the Initial Developer are Copyright (C) 2004-2011
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -34,48 +34,48 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.openTextLink.current.single    "Otwórz &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "Otwórz wszystkie: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Otwórz wszystkie: finding URIs…">
-<!ENTITY textlink.openTextLink.current.disabled   "Otwórz wszystkie: no URI found">
+<!ENTITY textlink.openTextLink.current.single     "Otwórz „&#37;s”">
+<!ENTITY textlink.openTextLink.current.multiple   "Otwórz wszystkie: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.current.processing "Otwórz: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.current.disabled   "Otwórz: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "Otwórz w nowej karcie: finding URIs…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Otwórz w nowej karcie: no URI found">
+<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: „&#37;s”">
+<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.tab.processing    "Otwórz w nowej karcie: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.tab.disabled      "Otwórz w nowej karcie: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.tab.accesskey     "k">
-<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "Otwórz w nowym oknie: finding URIs…">
-<!ENTITY textlink.openTextLink.window.disabled   "Otwórz w nowym oknie: no URI found">
+<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: „&#37;s”">
+<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.window.processing "Otwórz w nowym oknie: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.window.disabled   "Otwórz w nowym oknie: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.window.accesskey  "n">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "Copy URI: finding URIs…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Copy URI: no URI found">
+<!ENTITY textlink.openTextLink.copy.single     "Kopiuj adres: „&#37;s”">
+<!ENTITY textlink.openTextLink.copy.multiple   "Kopiuj wszystkie adresy: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.copy.processing "Kopiuj adres: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.copy.disabled   "Kopiuj adres: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
-<!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres URI&gt;">
-<!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy URI&gt; w nowych kartach">
-<!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy URI&gt; w nowych oknach">
-<!ENTITY textlink.context.copy.pref    "Copy &lt;selected URI strings&gt;">
+<!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres&gt;">
+<!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach">
+<!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy&gt; w nowych oknach">
+<!ENTITY textlink.context.copy.pref    "Kopiuj &lt;zaznaczone adresy&gt;">
 
 
 
 
-<!ENTITY textlink.title "Konfiguracja Text Link">
+<!ENTITY textlink.title "Konfiguracja rozszerzenia Text Link">
 
 
-<!ENTITY textlink.group.general "Główne">
+<!ENTITY textlink.group.general "Ogólne">
 
-<!ENTITY textlink.actions.tab0    "Działanie 1">
-<!ENTITY textlink.actions.tab1    "Działanie 2">
-<!ENTITY textlink.actions.tab2    "Działanie 3">
-<!ENTITY textlink.actions.tab3    "Działanie 4">
-<!ENTITY textlink.actions.tab4    "Działanie 5">
+<!ENTITY textlink.actions.tab0    "1. działanie">
+<!ENTITY textlink.actions.tab1    "2. działanie">
+<!ENTITY textlink.actions.tab2    "3. działanie">
+<!ENTITY textlink.actions.tab3    "4. działanie">
+<!ENTITY textlink.actions.tab4    "5. działanie">
 
 <!ENTITY textlink.trigger.mouse_before "Kiedy zostanie wciśnięta kombinacja">
-<!ENTITY textlink.trigger.mouse.ignore               "(ignoruj zachowanie myszy)">
+<!ENTITY textlink.trigger.mouse.ignore               "(ignorowanie zachowań myszy)">
 <!ENTITY textlink.trigger.mouse.dblclick             "podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.accel       "Ctrl + podwójne kliknięcie">
 <!ENTITY textlink.trigger.mouse.dblclick.accel.mac   "⌘ + podwójne kliknięcie">
@@ -87,7 +87,7 @@
 <!ENTITY textlink.trigger.mouse_after  ",">
 
 <!ENTITY textlink.trigger.key_before "lub">
-<!ENTITY textlink.trigger.key.ignore            "(ignoruj naciśnięte klawisze)">
+<!ENTITY textlink.trigger.key.ignore            "(ignorowanie zachowań myszy)">
 <!ENTITY textlink.trigger.key.enter             "naciśnięto klawisz Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel       "naciśnięto klawisze Ctrl + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel.mac   "naciśnięto klawisze ⌘ + Enter przy zaznaczonym tekście">
@@ -95,50 +95,50 @@
 <!ENTITY textlink.trigger.key.enter.accel.shift.mac "naciśnięto klawisze ⌘ + Shift + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.alt         "naciśnięto klawisze Alt + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.alt.shift   "naciśnięto klawisze Alt + Shift + Enter przy zaznaczonym tekście">
-<!ENTITY textlink.trigger.key.enter.shift       "naciśnięto klawisz Shift przy zaznaczonym tekście">
+<!ENTITY textlink.trigger.key.enter.shift       "naciśnięto klawisze Shift + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key_after  ",">
 
 <!ENTITY textlink.action_before "">
 <!ENTITY textlink.action.blank         "nic nie rób.">
-<!ENTITY textlink.action.select        "zaznacz adres URI.">
-<!ENTITY textlink.action.current       "otwórz adres URI w aktualnej karcie.">
-<!ENTITY textlink.action.window        "otwórz adres URI w nowym oknie.">
-<!ENTITY textlink.action.tab           "otwórz adres URI w nowej karcie (i przejdź do niej).">
-<!ENTITY textlink.action.tabBackground "otwórz adres URI w nowej karcie (w tle).">
-<!ENTITY textlink.action.current.stealth       "otwórz adres URI w aktualnej karcie (usuń HTTP_REFERER).">
-<!ENTITY textlink.action.window.stealth        "otwórz adres URI w nowym oknie (usuń HTTP_REFERER).">
-<!ENTITY textlink.action.tab.stealth           "otwórz adres URI w nowej karcie (i przejdź do niej; usuń HTTP_REFERER).">
-<!ENTITY textlink.action.tabBackground.stealth "otwórz adres URI w nowej karcie (w tle; usuń HTTP_REFERER).">
-<!ENTITY textlink.action.copy          "copy it to the clipboard">
-<!ENTITY textlink.action.openByBrowser "open by browser">
+<!ENTITY textlink.action.select        "zaznacz adres.">
+<!ENTITY textlink.action.current       "otwórz adres w bieżącej karcie.">
+<!ENTITY textlink.action.window        "otwórz adres w nowym oknie.">
+<!ENTITY textlink.action.tab           "otwórz adres w nowej karcie (i przejdź do niej).">
+<!ENTITY textlink.action.tabBackground "otwórz adres w nowej karcie (w tle).">
+<!ENTITY textlink.action.current.stealth       "otwórz adres w bieżącej karcie (usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.window.stealth        "otwórz adres w nowym oknie (usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.tab.stealth           "otwórz adres w nowej karcie (i przejdź do niej, usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.tabBackground.stealth "otwórz adres w nowej karcie (w tle, usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.copy          "kopiuj adres do schowka.">
+<!ENTITY textlink.action.openByBrowser "otwórz przez przeglądarkę.">
 <!ENTITY textlink.action_after  "">
 
 <!ENTITY textlink.actions.default "Przywróć domyślne">
 
 
 
-<!ENTITY textlink.group.contextmenu    "Dodatkowe elementy menu kontekstowego kiedy zaznaczono adres URI">
+<!ENTITY textlink.group.contextmenu    "Dodatkowe elementy menu kontekstowego, kiedy zaznaczono adres">
 
 
-<!ENTITY textlink.messenger.linkify    "Linkify URI strings in plain text messages">
+<!ENTITY textlink.messenger.linkify    "Zmienianie tekstowych adresów na odnośniki w zwykłym tekście">
 
 
 
-<!ENTITY textlink.group.advanced    "Zawansowane">
+<!ENTITY textlink.group.advanced    "Zaawansowane">
 
 <!ENTITY textlink.group.find        "Wykrywanie adresów URI">
 
-<!ENTITY textlink.scheme             "Rozpoznaj tekst jako adres URI, jeśli zaczyna się od słów: (np. &quot;http,ftp,mailto&quot;)">
+<!ENTITY textlink.scheme             "Rozpoznawanie tekstu jako adres, jeśli zaczyna się od słów (np. „http,ftp,mailto”):">
 <!ENTITY textlink.scheme.default     "Przywróć domyślne">
-<!ENTITY textlink.scheme.fixup.table "Popraw błędne adresy przy pomocy następujących reguł: (np. &quot;ttp=>http,ttps=>https&quot;)">
+<!ENTITY textlink.scheme.fixup.table "Poprawianie błędnych adresów za pomocą tych reguł (np. „ttp=>http,ttps=>https”):">
 <!ENTITY textlink.scheme.fixup.table.default "Przywróć domyślne">
 
-<!ENTITY textlink.relative.enabled    "Odczytuj adresy względne (unrecommended)">
-<!ENTITY textlink.multibyte.enabled   "Odczytuj znaki kilkubajtowe">
-<!ENTITY textlink.multiline.enabled   "Parse URIs split in multiple lines (unrecommended)">
-<!ENTITY textlink.idn.enabled         "Parse IDN(Internationalized Domain Names)s for URIs starts with">
-<!ENTITY textlink.idn.scheme.default  "Reset">
-<!ENTITY textlink.i18nPath.enabled    "Parse non-ASCII paths">
+<!ENTITY textlink.relative.enabled    "Przetwarzanie względnych ścieżek (niezalecane)">
+<!ENTITY textlink.multibyte.enabled   "Przetwarzanie znaków wielobajtowych">
+<!ENTITY textlink.multiline.enabled   "Przetwarzanie adresów podzielonych na wiele wierszy (niezalecane)">
+<!ENTITY textlink.idn.enabled         "Przetwarzanie wielojęzycznych adresów IDN zaczynających się od słów:">
+<!ENTITY textlink.idn.scheme.default  "Przywróć domyślne">
+<!ENTITY textlink.i18nPath.enabled    "Przetwarzanie ścieżek ze znakami spoza zestawu ASCII">
 
 <!ENTITY textlink.find_click_point.strict        "Rozpoznawanie punktów kliknięcia">
 <!ENTITY textlink.find_click_point.strict.strict "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)">
