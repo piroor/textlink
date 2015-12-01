@@ -87,7 +87,7 @@
 <!ENTITY textlink.trigger.mouse_after  ",">
 
 <!ENTITY textlink.trigger.key_before "lub">
-<!ENTITY textlink.trigger.key.ignore            "(ignorowanie zachowań myszy)">
+<!ENTITY textlink.trigger.key.ignore            "(ignorowanie naciśniętych klawiszy)">
 <!ENTITY textlink.trigger.key.enter             "naciśnięto klawisz Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel       "naciśnięto klawisze Ctrl + Enter przy zaznaczonym tekście">
 <!ENTITY textlink.trigger.key.enter.accel.mac   "naciśnięto klawisze ⌘ + Enter przy zaznaczonym tekście">
