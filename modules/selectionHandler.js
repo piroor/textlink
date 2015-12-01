@@ -198,13 +198,15 @@ TextLinkSelectionHandler.prototype = {
 					if (typeof aOnProgress == 'function')
 						aOnProgress([range]);
 				}
-				catch(aError if aError instanceof StopIteration) {
-					findURIsIterator = null;
-					clearInterval(this.getRangesTimer);
-					this.getRangesTimer = null;
-				}
-				catch(aError) {
-					aReject(aError);
+				catch(aError)
+					if (aError instanceof StopIteration) {
+						findURIsIterator = null;
+						clearInterval(this.getRangesTimer);
+						this.getRangesTimer = null;
+					}
+					else {
+						aReject(aError);
+					}
 				}
 				this.lastRanges.sort(this.rangeUtils._compareRangePosition);
 				aResolve(this.lastRanges);
