@@ -198,7 +198,7 @@ TextLinkSelectionHandler.prototype = {
 					if (typeof aOnProgress == 'function')
 						aOnProgress([range]);
 				}
-				catch(aError)
+				catch(aError) {
 					if (aError instanceof StopIteration) {
 						findURIsIterator = null;
 						clearInterval(this.getRangesTimer);
