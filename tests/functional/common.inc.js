@@ -19,7 +19,7 @@ function commonSetUp(aPath)
 
 	win = utils.getTestWindow();
 	sv = win.TextLinkService;
-	tabs = gBrowser.mTabs;
+	tabs = gBrowser.mTabs || gBrowser.tabContainer.childNodes;
 
 	sv.actions = {
 		test : {
