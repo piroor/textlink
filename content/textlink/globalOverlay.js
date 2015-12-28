@@ -106,10 +106,9 @@ var TextLinkService = inherit(TextLinkConstants, {
 			case 'popuphiding':
 				if (aEvent.currentTarget == this.tooltip)
 					this.destroyTooltip();
-				else if (aEvent.target == this.contextMenu)
+				else if (aEvent.target == this.contextMenu ||
+						aEvent.target == this.subMenu)
 					this.destroyContextMenu();
-				else if (aEvent.target == this.subMenu)
-					this.destroySubMenu();
 				return;
 
 			case 'TabOpen':
@@ -532,8 +531,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 				'textlink.part.exception.whole',
 				'textlink.part.exception.start',
 				'textlink.part.exception.end',
-				'textlink.part.exception.end',
 				'textlink.contextmenu.submenu',
+				'textlink.contextmenu.openTextLink.current',
 				'textlink.contextmenu.openTextLink.window',
 				'textlink.contextmenu.openTextLink.tab',
 				'textlink.contextmenu.openTextLink.copy'
