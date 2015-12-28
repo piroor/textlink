@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2011
+   - Portions created by the Initial Developer are Copyright (C) 2004-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -34,6 +34,7 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
+<!ENTITY textlink.menu.label "Autodetected URIs">
 <!ENTITY textlink.openTextLink.current.single     "Otwórz „&#37;s”">
 <!ENTITY textlink.openTextLink.current.multiple   "Otwórz wszystkie: „&#37;s1” — „&#37;s2”">
 <!ENTITY textlink.openTextLink.current.processing "Otwórz: wyszukiwanie adresów…">
@@ -55,6 +56,7 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "Kopiuj adres: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
+<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres&gt;">
 <!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach">
 <!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy&gt; w nowych oknach">

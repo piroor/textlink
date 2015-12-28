@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2011
+   - Portions created by the Initial Developer are Copyright (C) 2004-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -34,6 +34,7 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
+<!ENTITY textlink.menu.label "Autodetected URIs">
 <!ENTITY textlink.openTextLink.current.single    "Atverti &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Atverti visus: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.current.processing "Atverti visus: finding URIs…">
@@ -55,6 +56,7 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "Kopijuoti URI: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "K">
 
+<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Atverti &lt;pažymėtą URI eilutę&gt;">
 <!ENTITY textlink.context.tab.pref     "Atverti &lt;pažymėtus URI&gt; naujose kortelėse">
 <!ENTITY textlink.context.window.pref  "Atverti &lt;pažymėtus URI&gt; naujuose languose">

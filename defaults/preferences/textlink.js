@@ -31,10 +31,11 @@ pref("textlink.actions.5.trigger.mouse", "");
 pref("textlink.actions.5.trigger.key",   "");
 // you can add more and more definitions!
 
+pref("textlink.contextmenu.submenu",              true);
 pref("textlink.contextmenu.openTextLink.current", false);
 pref("textlink.contextmenu.openTextLink.window",  false);
-pref("textlink.contextmenu.openTextLink.tab",     true);
-pref("textlink.contextmenu.openTextLink.copy",    true);
+pref("textlink.contextmenu.openTextLink.tab",     false);
+pref("textlink.contextmenu.openTextLink.copy",    false);
 
 pref("textlink.messenger.linkify", true);
 

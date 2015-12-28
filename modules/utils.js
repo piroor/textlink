@@ -48,6 +48,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	
 	schemeFixupDefault : 'http', 
 	strict              : true,
+	contextMenuItem     : true,
 	contextItemCurrent  : true,
 	contextItemWindow   : true,
 	contextItemTab      : true,
@@ -982,6 +983,10 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 			case 'textlink.multibyte.enabled':
 				this.multibyteEnabled = aValue;
+				return;
+
+			case 'textlink.contextmenu.submenu':
+				this.contextMenuItem = aValue;
 				return;
 
 			case 'textlink.contextmenu.openTextLink.current':

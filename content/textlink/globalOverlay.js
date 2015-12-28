@@ -57,6 +57,11 @@ var TextLinkService = inherit(TextLinkConstants, {
 		return document.getElementById('contentAreaContextMenu');
 	},
  
+	get subMenu() 
+	{
+		return document.getElementById('context-textLink-menu').firstChild;
+	},
+ 
 	get popupNode() 
 	{
 		var popup = this.contextMenu;
@@ -94,6 +99,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 					this.buildTooltip();
 				else if (aEvent.target == this.contextMenu)
 					this.initContextMenu();
+				else if (aEvent.target == this.subMenu)
+					this.initSubMenu();
 				return;
 
 			case 'popuphiding':
@@ -101,6 +108,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 					this.destroyTooltip();
 				else if (aEvent.target == this.contextMenu)
 					this.destroyContextMenu();
+				else if (aEvent.target == this.subMenu)
+					this.destroySubMenu();
 				return;
 
 			case 'TabOpen':
@@ -287,6 +296,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		this.contextMenu.addEventListener('popupshowing', this, false);
 		this.contextMenu.addEventListener('popuphiding', this, false);
+		this.subMenu.addEventListener('popupshowing', this, false);
+		this.subMenu.addEventListener('popuphiding', this, false);
 
 		window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 
@@ -307,6 +318,16 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	initContextMenu : function() 
 	{
+		var isAvailableContext = (
+				(
+					gContextMenu.isTextSelected &&
+					gContextMenu.isContentSelected
+				) ||
+				gContextMenu.onTextInput
+			);
+		gContextMenu.showItem('context-textLink-menu',
+			TextLinkUtils.contextMenuItem && isAvailableContext);
+
 		var items = [
 				'context-openTextLink-current',
 				'context-openTextLink-window',
@@ -332,13 +353,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				!TextLinkUtils.contextItemTab &&
 				!TextLinkUtils.contextItemCopy
 			) ||
-			(
-				(
-					!gContextMenu.isTextSelected ||
-					!gContextMenu.isContentSelected
-				) &&
-				!gContextMenu.onTextInput
-			)
+			!isAvailableContext
 			)
 			return;
 
@@ -351,6 +366,30 @@ var TextLinkService = inherit(TextLinkConstants, {
 		gContextMenu.showItem('context-openTextLink-copy',
 			TextLinkUtils.contextItemCopy);
 
+		this.updateMenuItems(items);
+	}
+	initSubMenu : function() 
+	{
+		var items = [
+				'submenu-context-openTextLink-current',
+				'submenu-context-openTextLink-window',
+				'submenu-context-openTextLink-tab',
+				'submenu-context-openTextLink-copy'
+			];
+
+		items.forEach(function(aID) {
+			var item = this.setLabel(aID, 'label-processing');
+			if (item) {
+				item.setAttribute('disabled', true);
+				item.setAttribute('uri-finding', true);
+				item.classList.add('menuitem-iconic');
+				item.removeAttribute('tooltip');
+			}
+		}, this);
+		this.updateMenuItems(items);
+	},
+	updateMenuItems : function(aItems)
+	{
 		this.getSelectionSummary()
 			.then((function(aSummary) {
 				if (aSummary && aSummary.first) {
@@ -361,7 +400,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 					];
 					var attr = aSummary.last ? 'label-base-multiple' : 'label-base-single' ;
 
-					items.forEach(function(aID) {
+					aItems.forEach(function(aID) {
 						var item = this.setLabel(aID, attr, targets);
 						if (item) {
 							item.removeAttribute('disabled');
@@ -372,7 +411,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 					}, this);
 				}
 				else {
-					items.forEach(function(aID) {
+					aItems.forEach(function(aID) {
 						var item = this.setLabel(aID, 'label-disabled');
 						if (item) {
 							item.removeAttribute('uri-finding');
@@ -426,6 +465,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		this.contextMenu.removeEventListener('popupshowing', this, false);
 		this.contextMenu.removeEventListener('popuphiding', this, false);
+		this.subMenu.removeEventListener('popupshowing', this, false);
+		this.subMenu.removeEventListener('popuphiding', this, false);
 
 		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
 		this.browser.tabContainer.removeEventListener('TabClose', this, true);
@@ -491,7 +532,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 				'textlink.part.exception.whole',
 				'textlink.part.exception.start',
 				'textlink.part.exception.end',
-				'textlink.contextmenu.openTextLink.current',
+				'textlink.part.exception.end',
+				'textlink.contextmenu.submenu',
 				'textlink.contextmenu.openTextLink.window',
 				'textlink.contextmenu.openTextLink.tab',
 				'textlink.contextmenu.openTextLink.copy'

@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2008
+   - Portions created by the Initial Developer are Copyright (C) 2008-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): Anıl Yıldız <manilyildiz@hotmail.com>
@@ -34,6 +34,7 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
+<!ENTITY textlink.menu.label "Autodetected URIs">
 <!ENTITY textlink.openTextLink.current.single    "Aç &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Tümünü Aç: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.current.processing "Tümünü Aç: finding URIs…">
@@ -55,6 +56,7 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "URL'yi Kopyala: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "K">
 
+<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "&lt;Seçili URL metnini&gt; Aç">
 <!ENTITY textlink.context.tab.pref     "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç">
 <!ENTITY textlink.context.window.pref  "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç">

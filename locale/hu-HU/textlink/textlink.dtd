@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2007
+   - Portions created by the Initial Developer are Copyright (C) 2004-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): Gianny111   <jan.gallik@gmail.com>
@@ -34,6 +34,7 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
+<!ENTITY textlink.menu.label "Autodetected URIs">
 <!ENTITY textlink.openTextLink.current.single    "Megnyitás &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Mindegyik megnyitása: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.current.processing "Mindegyik megnyitása: finding URIs…">
@@ -55,6 +56,7 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "Webcím másolása: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "w">
 
+<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.tab.pref     "Megnyitás új lapon &lt;webcímet tartalmazó szövegrész&gt;">
 <!ENTITY textlink.context.window.pref  "Megnyitás új ablakban &lt;webcímet tartalmazó szövegrész&gt;">
