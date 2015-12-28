@@ -65,10 +65,10 @@ var TextLinkConstants = {
 	URIPatterns_base : '\\(?(%URI_PATTERN%)', 
 	URIPatternsMultibyte_base : '[\\(\uff08]?(%URI_PATTERN%)', 
  
-	URIPattern_base : '%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:/%PART_PATTERN%)?', 
+	URIPattern_base : '%SCHEME_PATTERN%(?://)?%LOGIN_PATTERN%(?:%POSSIBLE_DOMAIN_PATTERN%)?(?:/(?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%(?:%DOMAIN_PATTERN%)?(?:/%PART_PATTERN%)?', 
 	URIPatternRelative_base : '%PART_PATTERN%(?:\\.|/)%PART_PATTERN%',
  
-	URIPatternMultibyte_base : '%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%%POSSIBLE_DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%%DOMAIN_PATTERN%(?:[/\uff0f](?:%PART_PATTERN%)?)?', 
+	URIPatternMultibyte_base : '%SCHEME_PATTERN%(?://|\uff0f\uff0f)?%LOGIN_PATTERN%(?:%POSSIBLE_DOMAIN_PATTERN%)?(?:[/\uff0f](?:%PART_PATTERN%)?)?|%LOGIN_PATTERN%(?:%DOMAIN_PATTERN%)?(?:[/\uff0f](?:%PART_PATTERN%)?)?', 
 	URIPatternMultibyteRelative_base : '%PART_PATTERN%[\\.\uff0e/\uff0f]%PART_PATTERN%',
  
 	kSchemePattern : '[\\*\\+a-z0-9_]+:', 
