@@ -56,6 +56,9 @@
 		<preference id="textlink.actions.4.action"
 			name="textlink.actions.4.action"
 			type="int"/>
+		<preference id="textlink.contextmenu.submenu"
+			name="textlink.contextmenu.submenu"
+			type="bool"/>
 		<preference id="textlink.contextmenu.openTextLink.current"
 			name="textlink.contextmenu.openTextLink.current"
 			type="bool"/>
@@ -596,6 +599,10 @@
 	<groupbox orient="vertical" class="product-browser">
 		<caption id="textlink.group.contextmenu"
 			label="&textlink.group.contextmenu;"/>
+		<checkbox id="textlink.contextmenu.submenu-check"
+			label="&textlink.context.submenu.pref;"
+			preference="textlink.contextmenu.submenu"/>
+		<separator/>
 		<checkbox id="textlink.contextmenu.openTextLink.current-check"
 			label="&textlink.context.current.pref;"
 			preference="textlink.contextmenu.openTextLink.current"/>

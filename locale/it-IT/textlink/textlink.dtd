@@ -14,7 +14,7 @@
    - The Original Code is the Text Link.
    -
    - The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
-   - Portions created by the Initial Developer are Copyright (C) 2004-2006
+   - Portions created by the Initial Developer are Copyright (C) 2004-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s): Marco C. <marcopcef@alice.it>
@@ -34,6 +34,7 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
+<!ENTITY textlink.menu.label "Autodetected URIs">
 <!ENTITY textlink.openTextLink.current.single    "Apri &quot;&#37;s&quot;">
 <!ENTITY textlink.openTextLink.current.multiple  "Apri tutti: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
 <!ENTITY textlink.openTextLink.current.processing "Apri tutti: finding URIs…">
@@ -55,6 +56,7 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "Copy URI: no URI found">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
+<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Apri &lt;URI selezionati&gt;">
 <!ENTITY textlink.context.tab.pref     "Apri &lt;URI selezionati&gt; in nuove schede">
 <!ENTITY textlink.context.window.pref  "Apri &lt;URI selezionati&gt; in nuove finestre">
