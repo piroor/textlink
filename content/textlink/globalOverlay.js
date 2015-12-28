@@ -366,7 +366,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 			TextLinkUtils.contextItemCopy);
 
 		this.updateMenuItems(items);
-	}
+	},
 	initSubMenu : function() 
 	{
 		var items = [
