@@ -34,21 +34,21 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Autodetected URIs">
+<!ENTITY textlink.menu.label "Automatycznie wykryte adresy">
 <!ENTITY textlink.openTextLink.current.single     "Otwórz „&#37;s”">
 <!ENTITY textlink.openTextLink.current.multiple   "Otwórz wszystkie: „&#37;s1” — „&#37;s2”">
 <!ENTITY textlink.openTextLink.current.processing "Otwórz: wyszukiwanie adresów…">
 <!ENTITY textlink.openTextLink.current.disabled   "Otwórz: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: „&#37;s”">
-<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.tab.processing    "Otwórz w nowej karcie: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Otwórz w nowej karcie: nie odnaleziono adresu">
+<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: „&#37;s”">
+<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.tab.processing    "Otwórz w nowej karcie: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.tab.disabled      "Otwórz w nowej karcie: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.tab.accesskey     "k">
-<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: „&#37;s”">
-<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.window.processing "Otwórz w nowym oknie: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.window.disabled   "Otwórz w nowym oknie: nie odnaleziono adresu">
+<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: „&#37;s”">
+<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: „&#37;s1” — „&#37;s2”">
+<!ENTITY textlink.openTextLink.window.processing "Otwórz w nowym oknie: wyszukiwanie adresów…">
+<!ENTITY textlink.openTextLink.window.disabled   "Otwórz w nowym oknie: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.window.accesskey  "n">
 <!ENTITY textlink.openTextLink.copy.single     "Kopiuj adres: „&#37;s”">
 <!ENTITY textlink.openTextLink.copy.multiple   "Kopiuj wszystkie adresy: „&#37;s1” — „&#37;s2”">
@@ -56,10 +56,10 @@
 <!ENTITY textlink.openTextLink.copy.disabled   "Kopiuj adres: nie odnaleziono adresu">
 <!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
-<!ENTITY textlink.context.submenu.pref "Autodetected URIs">
+<!ENTITY textlink.context.submenu.pref "Automatycznie wykryte adresy">
 <!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres&gt;">
-<!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach">
-<!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy&gt; w nowych oknach">
+<!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach">
+<!ENTITY textlink.context.window.pref  "Otwórz &lt;zaznaczone adresy&gt; w nowych oknach">
 <!ENTITY textlink.context.copy.pref    "Kopiuj &lt;zaznaczone adresy&gt;">
 
 
@@ -103,14 +103,14 @@
 <!ENTITY textlink.action_before "">
 <!ENTITY textlink.action.blank         "nic nie rób.">
 <!ENTITY textlink.action.select        "zaznacz adres.">
-<!ENTITY textlink.action.current       "otwórz adres w bieżącej karcie.">
-<!ENTITY textlink.action.window        "otwórz adres w nowym oknie.">
-<!ENTITY textlink.action.tab           "otwórz adres w nowej karcie (i przejdź do niej).">
-<!ENTITY textlink.action.tabBackground "otwórz adres w nowej karcie (w tle).">
-<!ENTITY textlink.action.current.stealth       "otwórz adres w bieżącej karcie (usuwając „HTTP_REFERER”).">
-<!ENTITY textlink.action.window.stealth        "otwórz adres w nowym oknie (usuwając „HTTP_REFERER”).">
-<!ENTITY textlink.action.tab.stealth           "otwórz adres w nowej karcie (i przejdź do niej, usuwając „HTTP_REFERER”).">
-<!ENTITY textlink.action.tabBackground.stealth "otwórz adres w nowej karcie (w tle, usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.current       "otwórz adres w bieżącej karcie.">
+<!ENTITY textlink.action.window        "otwórz adres w nowym oknie.">
+<!ENTITY textlink.action.tab           "otwórz adres w nowej karcie (i przejdź do niej).">
+<!ENTITY textlink.action.tabBackground "otwórz adres w nowej karcie (w tle).">
+<!ENTITY textlink.action.current.stealth       "otwórz adres w bieżącej karcie (usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.window.stealth        "otwórz adres w nowym oknie (usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.tab.stealth           "otwórz adres w nowej karcie (i przejdź do niej, usuwając „HTTP_REFERER”).">
+<!ENTITY textlink.action.tabBackground.stealth "otwórz adres w nowej karcie (w tle, usuwając „HTTP_REFERER”).">
 <!ENTITY textlink.action.copy          "kopiuj adres do schowka.">
 <!ENTITY textlink.action.openByBrowser "otwórz przez przeglądarkę.">
 <!ENTITY textlink.action_after  "">
@@ -122,7 +122,7 @@
 <!ENTITY textlink.group.contextmenu    "Dodatkowe elementy menu kontekstowego, kiedy zaznaczono adres">
 
 
-<!ENTITY textlink.messenger.linkify    "Zmienianie tekstowych adresów na odnośniki w zwykłym tekście">
+<!ENTITY textlink.messenger.linkify    "Zmienianie tekstowych adresów na odnośniki w zwykłym tekście">
 
 
 
