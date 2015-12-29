@@ -97,7 +97,9 @@ var TextLinkService = inherit(TextLinkConstants, {
 			case 'popupshowing':
 				if (aEvent.currentTarget == this.tooltip)
 					this.buildTooltip();
-				else if (aEvent.target == this.contextMenu)
+				else if (aEvent.target != aEvent.currentTarget)
+					return;
+				if (aEvent.target == this.contextMenu)
 					this.initContextMenu();
 				else if (aEvent.target == this.subMenu)
 					this.initSubMenu();
@@ -106,8 +108,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 			case 'popuphiding':
 				if (aEvent.currentTarget == this.tooltip)
 					this.destroyTooltip();
-				else if (aEvent.target == this.contextMenu ||
-						aEvent.target == this.subMenu)
+				else if (aEvent.target != aEvent.currentTarget)
+					return;
+				if (aEvent.target == this.contextMenu ||
+					aEvent.target == this.subMenu)
 					this.destroyContextMenu();
 				return;
 
