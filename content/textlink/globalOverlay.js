@@ -178,6 +178,7 @@ var TextLinkService = inherit(TextLinkConstants, {
   
 	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
 	{
+		this.utils.log('loadURI', { action: aAction, uri: aURI });
 		if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			aBrowser.localName != 'tabbrowser') {
@@ -202,19 +203,23 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	openTextLinkIn : function(aAction, aTarget) 
 	{
+		this.utils.log('openTextLinkIn', { action: aAction, target: aTarget });
 		return this.getSelectionURIs({
 				select : true
 			})
 			.then((function(aURIs) {
+				this.utils.log('openTextLinkIn:step2', { uris: aURIs });
 				if (aURIs.length > 0)
 					this.openTextLinkInPostProcess(aAction, aTarget, aURIs);
 			}).bind(this))
 			.catch(function(aError) {
+				this.utils.log('openTextLinkIn:error', aError);
 				Components.utils.reportError(aError);
 			});
 	},
 	openTextLinkInPostProcess : function(aAction, aTarget, aURIs)
 	{
+		this.utils.log('openTextLinkInPostProcess', { action: aAction, target: aTarget, uris: aURIs });
 		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (aURIs.length > 1)
 				aURIs.push('');
@@ -249,6 +254,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	openTextLinkInTabs : function(aURIs, aAction)
 	{
+		this.utils.log('openTextLinkInTabs', { uris: aURIs, action: aAction });
 		var selectTab;
 		var tabs = [];
 		var b = this.browser;
@@ -321,6 +327,7 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	initContextMenu : function() 
 	{
+		this.utils.log('initContextMenu');
 		var isAvailableContext = (
 				(
 					gContextMenu.isTextSelected &&
@@ -373,6 +380,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	initSubMenu : function() 
 	{
+		this.utils.log('initSubMenu');
 		var items = [
 				'submenu-context-openTextLink-current',
 				'submenu-context-openTextLink-window',
@@ -393,8 +401,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	updateMenuItems : function(aItems)
 	{
+		this.utils.log('updateMenuItems');
 		this.getSelectionSummary()
 			.then((function(aSummary) {
+				this.utils.log('updateMenuItems:getSelectionSummary', aSummary);
 				if (aSummary && aSummary.first) {
 					var targets = [
 						/\%s1/i, aSummary.first,
@@ -424,11 +434,13 @@ var TextLinkService = inherit(TextLinkConstants, {
 				}
 			}).bind(this))
 			.catch(function(aError) {
+				this.utils.log('updateMenuItems:error', aError);
 				Components.utils.reportError(aError);
 			});
 	},
 	getSelectionSummary : function()
 	{
+		this.utils.log('getSelectionSummary');
 		if (this.selectionHandler)
 			return this.selectionHandler.getSummary();
 		else
