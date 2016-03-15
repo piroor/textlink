@@ -1,4 +1,5 @@
 Components.utils.import('resource://gre/modules/Services.jsm');
+var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
 
 function init()
 {
@@ -85,25 +86,25 @@ function resetActions()
 {
 	var suffix = '-menulist';
 	[
-		'textlink.actions.0.action',
-		'textlink.actions.0.trigger.mouse',
-		'textlink.actions.0.trigger.key',
-		'textlink.actions.1.action',
-		'textlink.actions.1.trigger.mouse',
-		'textlink.actions.1.trigger.key',
-		'textlink.actions.2.action',
-		'textlink.actions.2.trigger.mouse',
-		'textlink.actions.2.trigger.key',
-		'textlink.actions.3.action',
-		'textlink.actions.3.trigger.mouse',
-		'textlink.actions.3.trigger.key',
-		'textlink.actions.4.action',
-		'textlink.actions.4.trigger.mouse',
-		'textlink.actions.4.trigger.key'
+		'actions.0.action',
+		'actions.0.trigger.mouse',
+		'actions.0.trigger.key',
+		'actions.1.action',
+		'actions.1.trigger.mouse',
+		'actions.1.trigger.key',
+		'actions.2.action',
+		'actions.2.trigger.mouse',
+		'actions.2.trigger.key',
+		'actions.3.action',
+		'actions.3.trigger.mouse',
+		'actions.3.trigger.key',
+		'actions.4.action',
+		'actions.4.trigger.mouse',
+		'actions.4.trigger.key'
 	].forEach(function(aPref) {
-		var value = getDefaultPref(aPref);
-		var preference = document.getElementById(aPref);
-		var menulist = document.getElementById(aPref+suffix);
+		var value = getDefaultPref(TextLinkConstants.DOMAIN + aPref);
+		var preference = document.getElementById('textlink.' + aPref);
+		var menulist = document.getElementById('textlink.' + aPref + suffix);
 		preference.value = menulist.value = value;
 	});
 }

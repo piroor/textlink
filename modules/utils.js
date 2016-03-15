@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2002-2015
+ * Portions created by the Initial Developer are Copyright (C) 2002-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -932,7 +932,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
    
 	onPrefValueChanged : function(aKey, aValue) 
 	{
-		this.prefValues[aKey] = aValue;
+		this.prefValues[aKey.replace(this.DOMAIN, 'textlink.')] = aValue;
 
 		switch (aKey)
 		{

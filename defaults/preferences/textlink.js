@@ -1,4 +1,4 @@
-pref("textlink.debug", false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.debug", false);
 
 // load to...
 //   0  = do nothing
@@ -13,57 +13,57 @@ pref("textlink.debug", false);
 // example:
 //   4  + 1 = 5  : load in current tab without referrer
 //   16 + 0 = 16 : open new foreground tab with referrer
-pref("textlink.actions.0.action",        16);
-pref("textlink.actions.0.trigger.mouse", "dblclick");
-pref("textlink.actions.0.trigger.key",   "VK_ENTER");
-pref("textlink.actions.1.action",        32);
-pref("textlink.actions.1.trigger.mouse", "shift-dblclick");
-pref("textlink.actions.1.trigger.key",   "shift-VK_ENTER");
-pref("textlink.actions.2.action",        4);
-pref("textlink.actions.2.trigger.mouse", "accel-dblclick");
-pref("textlink.actions.2.trigger.key",   "accel-VK_ENTER");
-pref("textlink.actions.3.action",        0);
-pref("textlink.actions.3.trigger.mouse", "");
-pref("textlink.actions.3.trigger.key",   "");
-pref("textlink.actions.4.action",        0);
-pref("textlink.actions.4.trigger.mouse", "");
-pref("textlink.actions.4.trigger.key",   "");
-pref("textlink.actions.5.action",        0);
-pref("textlink.actions.5.trigger.mouse", "");
-pref("textlink.actions.5.trigger.key",   "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.action",        16);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.trigger.mouse", "dblclick");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.trigger.key",   "VK_ENTER");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.action",        32);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.trigger.mouse", "shift-dblclick");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.trigger.key",   "shift-VK_ENTER");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.action",        4);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.trigger.mouse", "accel-dblclick");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.trigger.key",   "accel-VK_ENTER");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.action",        0);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.trigger.mouse", "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.trigger.key",   "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.action",        0);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.trigger.mouse", "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.trigger.key",   "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.5.action",        0);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.5.trigger.mouse", "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.5.trigger.key",   "");
 // you can add more and more definitions!
 
-pref("textlink.contextmenu.submenu",              true);
-pref("textlink.contextmenu.openTextLink.current", false);
-pref("textlink.contextmenu.openTextLink.window",  false);
-pref("textlink.contextmenu.openTextLink.tab",     false);
-pref("textlink.contextmenu.openTextLink.copy",    false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.submenu",              true);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.current", false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.window",  false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.tab",     false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.copy",    false);
 
-pref("textlink.messenger.linkify", true);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.messenger.linkify", true);
 
-pref("textlink.scheme",            "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data");
-pref("textlink.scheme.fixup.table", "www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
-pref("textlink.scheme.fixup.default", "http");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme",            "http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme.fixup.table", "www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme.fixup.default", "http");
 
-pref("textlink.relative.enabled",    false);
-pref("textlink.multibyte.enabled",   true);
-pref("textlink.multiline.enabled",   false);
-pref("textlink.idn.enabled",         true);
-pref("textlink.idn.scheme",          "http https ftp news nntp telnet irc");
-pref("textlink.i18nPath.enabled",    false);
-pref("textlink.part.exception.whole", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
-pref("textlink.part.exception.start", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?|[\\.\u3002\uff0e]+[^\\.\u3002\uff0e\/\uff0f]");
-pref("textlink.part.exception.end",   "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.relative.enabled",    false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.multibyte.enabled",   true);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.multiline.enabled",   false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.enabled",         true);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.scheme",          "http https ftp news nntp telnet irc");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.i18nPath.enabled",    false);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.part.exception.whole", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.part.exception.start", "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?|[\\.\u3002\uff0e]+[^\\.\u3002\uff0e\/\uff0f]");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.part.exception.end",   "-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?");
 
-pref("textlink.idn.lazyDetection.separators", "\u3001\u3002");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.lazyDetection.separators", "\u3001\u3002");
 
-pref("textlink.find_click_point.strict", true);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.find_click_point.strict", true);
 
 
 // http://www4.plala.or.jp/nomrax/TLD/ 
 // http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
 // http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
-pref("textlink.gTLD", "
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.gTLD", "
 		aero
 		arpa
 		asia
@@ -87,7 +87,7 @@ pref("textlink.gTLD", "
 		tel
 		travel
 	");
-pref("textlink.ccTLD", "
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.ccTLD", "
 		ac
 		ad
 		ae
@@ -342,7 +342,7 @@ pref("textlink.ccTLD", "
 		zr
 		zw
 	");
-pref("textlink.IDN_TLD", "
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.IDN_TLD", "
 		\u4e2d\u56fd
 		\u4e2d\u570b
 		\u0645\u0635\u0631
@@ -360,7 +360,7 @@ pref("textlink.IDN_TLD", "
 		\u062a\u0648\u0646\u0633
 		\u0627\u0645\u0627\u0631\u0627\u062a
 	");
-pref("textlink.extraTLD", "");
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.extraTLD", "");
 
 
-pref("textlink.prefsVersion", 0);
+pref("extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.prefsVersion", 0);

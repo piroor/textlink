@@ -109,7 +109,8 @@ var TextLinkConstants = {
 		/^(.+)\u3014[^\u3015$]*/
 	],
 
-	kPREF_VERSION : 1,
+	kPREF_VERSION : 2,
+	DOMAIN : 'extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.',
 
 	CONTENT_SCRIPT : 'chrome://textlink/content/content-utils.js',
 	MESSAGE_TYPE : 'textlink',

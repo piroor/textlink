@@ -519,7 +519,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		});
 	},
 	domains : [
-		'textlink.',
+		TextLinkConstants.DOMAIN,
 		'network.enableIDN',
 		'network.IDN.blacklist_chars'
 	],
@@ -528,33 +528,37 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (!this._prefKeys) {
 			this._prefKeys = [
 				'network.enableIDN',
-				'network.IDN.blacklist_chars',
-				'textlink.debug',
-				'textlink.scheme',
-				'textlink.scheme.fixup.table',
-				'textlink.scheme.fixup.default',
-				'textlink.find_click_point.strict',
-				'textlink.relative.enabled',
-				'textlink.multibyte.enabled',
-				'textlink.multiline.enabled',
-				'textlink.idn.enabled',
-				'textlink.idn.scheme',
-				'textlink.i18nPath.enabled',
-				'textlink.gTLD',
-				'textlink.ccTLD',
-				'textlink.IDN_TLD',
-				'textlink.extraTLD',
-				'textlink.idn.lazyDetection.separators',
-				'textlink.part.exception.whole',
-				'textlink.part.exception.start',
-				'textlink.part.exception.end',
-				'textlink.contextmenu.submenu',
-				'textlink.contextmenu.openTextLink.current',
-				'textlink.contextmenu.openTextLink.window',
-				'textlink.contextmenu.openTextLink.tab',
-				'textlink.contextmenu.openTextLink.copy'
+				'network.IDN.blacklist_chars'
 			];
-			this._prefKeys = this._prefKeys.concat(prefs.getDescendant('textlink.actions.'));
+			this._prefKeys = this._prefKeys.cocnat([
+				'debug',
+				'scheme',
+				'scheme.fixup.table',
+				'scheme.fixup.default',
+				'find_click_point.strict',
+				'relative.enabled',
+				'multibyte.enabled',
+				'multiline.enabled',
+				'idn.enabled',
+				'idn.scheme',
+				'i18nPath.enabled',
+				'gTLD',
+				'ccTLD',
+				'IDN_TLD',
+				'extraTLD',
+				'idn.lazyDetection.separators',
+				'part.exception.whole',
+				'part.exception.start',
+				'part.exception.end',
+				'contextmenu.submenu',
+				'contextmenu.openTextLink.current',
+				'contextmenu.openTextLink.window',
+				'contextmenu.openTextLink.tab',
+				'contextmenu.openTextLink.copy'
+			].map(function(aKey) {
+				return this.DOMAIN + aKey;
+			, this}));
+			this._prefKeys = this._prefKeys.concat(prefs.getDescendant(this.DOMAIN + 'actions.'));
 		}
 		return this._prefKeys;
 	},
@@ -569,7 +573,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 	{
 		// migrate old prefs
 		var orientalPrefs = [];
-		switch (prefs.getPref('textlink.prefsVersion'))
+		var version = prefs.getPref(this.DOMAIN + 'prefsVersion') ||
+						prefs.getPref('textlink.prefsVersion') ||
+						0;
+		switch (version)
 		{
 			case 0:
 				[
@@ -584,10 +591,18 @@ var TextLinkService = inherit(TextLinkConstants, {
 						prefs.clearPref(keys[0]);
 					}
 				}, this);
+			case 1:
+				{
+					prefs.getDescendant('textlink.').forEach(function(aKey) {
+						var value = prefs.getPref(aKey);
+						var newKey = this.DOMAIN + aKey.replace(/^textlink\./, '');
+						prefs.setPref(newKey, value);
+					}, this);
+				}
 			default:
 				break;
 		}
-		prefs.setPref('textlink.prefsVersion', this.kPREF_VERSION);
+		prefs.setPref(this.DOMAIN + 'prefsVersion', this.kPREF_VERSION);
 	}
    
 }); 

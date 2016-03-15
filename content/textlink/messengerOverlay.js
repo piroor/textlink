@@ -33,7 +33,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(window.
  
 	get multilineURIEnabled()
 	{
-		return prefs.getPref('textlink.multiline.enabled') &&
+		return prefs.getPref(this.DOMAIN + 'multiline.enabled') &&
 			this.isPlainTextMessage;
 	},
  
@@ -69,7 +69,7 @@ var TextLinkMessengerService = window.TextLinkMessengerService = inherit(window.
 	{
 		if (
 			!this.isPlainTextMessage ||
-			!prefs.getPref('textlink.messenger.linkify')
+			!prefs.getPref(this.DOMAIN + 'messenger.linkify')
 			)
 			return;
 

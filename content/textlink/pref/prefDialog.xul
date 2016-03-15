@@ -12,70 +12,70 @@
 <prefpane id="prefpane-general" label="&textlink.group.general;">
 	<preferences>
 		<preference id="textlink.actions.0.trigger.mouse"
-			name="textlink.actions.0.trigger.mouse"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.trigger.mouse"
 			type="string"/>
 		<preference id="textlink.actions.0.trigger.key"
-			name="textlink.actions.0.trigger.key"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.trigger.key"
 			type="string"/>
 		<preference id="textlink.actions.0.action"
-			name="textlink.actions.0.action"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.0.action"
 			type="int"/>
 		<preference id="textlink.actions.1.trigger.mouse"
-			name="textlink.actions.1.trigger.mouse"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.trigger.mouse"
 			type="string"/>
 		<preference id="textlink.actions.1.trigger.key"
-			name="textlink.actions.1.trigger.key"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.trigger.key"
 			type="string"/>
 		<preference id="textlink.actions.1.action"
-			name="textlink.actions.1.action"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.1.action"
 			type="int"/>
 		<preference id="textlink.actions.2.trigger.mouse"
-			name="textlink.actions.2.trigger.mouse"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.trigger.mouse"
 			type="string"/>
 		<preference id="textlink.actions.2.trigger.key"
-			name="textlink.actions.2.trigger.key"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.trigger.key"
 			type="string"/>
 		<preference id="textlink.actions.2.action"
-			name="textlink.actions.2.action"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.2.action"
 			type="int"/>
 		<preference id="textlink.actions.3.trigger.mouse"
-			name="textlink.actions.3.trigger.mouse"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.trigger.mouse"
 			type="string"/>
 		<preference id="textlink.actions.3.trigger.key"
-			name="textlink.actions.3.trigger.key"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.trigger.key"
 			type="string"/>
 		<preference id="textlink.actions.3.action"
-			name="textlink.actions.3.action"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.3.action"
 			type="int"/>
 		<preference id="textlink.actions.4.trigger.mouse"
-			name="textlink.actions.4.trigger.mouse"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.trigger.mouse"
 			type="string"/>
 		<preference id="textlink.actions.4.trigger.key"
-			name="textlink.actions.4.trigger.key"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.trigger.key"
 			type="string"/>
 		<preference id="textlink.actions.4.action"
-			name="textlink.actions.4.action"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.actions.4.action"
 			type="int"/>
 		<preference id="textlink.contextmenu.submenu"
-			name="textlink.contextmenu.submenu"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.submenu"
 			type="bool"/>
 		<preference id="textlink.contextmenu.openTextLink.current"
-			name="textlink.contextmenu.openTextLink.current"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.current"
 			type="bool"/>
 		<preference id="textlink.contextmenu.openTextLink.tab"
-			name="textlink.contextmenu.openTextLink.tab"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.tab"
 			type="bool"/>
 		<preference id="textlink.contextmenu.openTextLink.window"
-			name="textlink.contextmenu.openTextLink.window"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.window"
 			type="bool"/>
 		<preference id="textlink.contextmenu.openTextLink.copy"
-			name="textlink.contextmenu.openTextLink.copy"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.contextmenu.openTextLink.copy"
 			type="bool"/>
 		<preference id="textlink.messenger.linkify"
-			name="textlink.messenger.linkify"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.messenger.linkify"
 			type="bool"/>
 		<preference id="textlink.multiline.enabled"
-			name="textlink.multiline.enabled"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.multiline.enabled"
 			type="bool"/>
 	</preferences>
 
@@ -635,28 +635,28 @@
 <prefpane id="prefpane-advanced" label="&textlink.group.advanced;">
 	<preferences>
 		<preference id="textlink.scheme"
-			name="textlink.scheme"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme"
 			type="string"/>
 		<preference id="textlink.scheme.fixup.table"
-			name="textlink.scheme.fixup.table"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme.fixup.table"
 			type="string"/>
 		<preference id="textlink.relative.enabled"
-			name="textlink.relative.enabled"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.relative.enabled"
 			type="bool"/>
 		<preference id="textlink.multibyte.enabled"
-			name="textlink.multibyte.enabled"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.multibyte.enabled"
 			type="bool"/>
 		<preference id="textlink.idn.enabled"
-			name="textlink.idn.enabled"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.enabled"
 			type="bool"/>
 		<preference id="textlink.idn.scheme"
-			name="textlink.idn.scheme"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.scheme"
 			type="string"/>
 		<preference id="textlink.i18nPath.enabled"
-			name="textlink.i18nPath.enabled"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.i18nPath.enabled"
 			type="bool"/>
 		<preference id="textlink.find_click_point.strict"
-			name="textlink.find_click_point.strict"
+			name="extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.find_click_point.strict"
 			type="bool"/>
 	</preferences>
 
@@ -676,7 +676,7 @@
 				class="reset-button"
 				oncommand="document.getElementById('textlink.scheme').value =
 							this.previousSibling.value =
-								getDefaultPref('textlink.scheme');"/>
+								getDefaultPref('extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme');"/>
 		</hbox>
 
 		<checkbox id="textlink.idn.enabled-check"
@@ -691,7 +691,7 @@
 				class="reset-button"
 				oncommand="document.getElementById('textlink.idn.scheme').value =
 							this.previousSibling.value =
-								getDefaultPref('textlink.idn.scheme');"/>
+								getDefaultPref('extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.idn.scheme');"/>
 		</hbox>
 
 		<label id="textlink.scheme.fixup.table.label"
@@ -706,7 +706,7 @@
 				class="reset-button"
 				oncommand="document.getElementById('textlink.scheme.fixup.table').value =
 							this.previousSibling.value =
-								getDefaultPref('textlink.scheme.fixup.table');"/>
+								getDefaultPref('extensions.{54BB9F3F-07E5-486c-9B39-C7398B99391C}.textlink.scheme.fixup.table');"/>
 		</hbox>
 
 		<checkbox id="textlink.relative.enabled-check"
