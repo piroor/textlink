@@ -182,10 +182,12 @@ TextLinkSelectionHandler.prototype = {
 				throw new Error('operation was cancellled');
 		}).bind(this);
 
+		log('getRanges:start');
 		var findURIsIterator = this.rangeUtils.getURIRangesIterator(target, null, null, null, assertContinuable);
 		return new Promise((function(aResolve, aReject) {
 			this.getRangesTimer = setInterval((function() {
 				if (this.rangesCancelled) {
+					log('getRanges:cancelled');
 					clearInterval(this.getRangesTimer);
 					this.getRangesTimer = null;
 					this.lastRangesSelection = null;
@@ -203,10 +205,12 @@ TextLinkSelectionHandler.prototype = {
 					assertContinuable();
 					var range = findURIsIterator.next();
 					this.lastRanges.push(range);
+					log('getRanges:new range ', range);
 					if (typeof aOnProgress == 'function')
 						aOnProgress([range]);
 				}
 				catch(aError) {
+					log('getRanges:error ', aError);
 					if (aError instanceof StopIteration) {
 						findURIsIterator = null;
 						clearInterval(this.getRangesTimer);
