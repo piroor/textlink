@@ -2,6 +2,7 @@
 
  - master/HEAD
    * Nightly 48.0a1対応
+   * 設定を専用の名前空間の下で管理するようにした
    * 「〜をタブで開く」が即座に実行された場合でもすべての処理対象URIを正しく開くように修正
    * plロケール更新 ([by Piotr Drąg, thanks!](https://github.com/piroor/textlink/pull/52))
    * 選択範囲にURIが存在しない場合に、コンテキストメニューの項目を正しく無効化するように修正

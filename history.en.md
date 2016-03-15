@@ -2,6 +2,7 @@
 
  - master/HEAD
    * Works on Nightly 48.0a1.
+   * Manages custom preferences under its own namespace.
    * Open all URIs correctly when the menu item "Open ... in Tabs" is selected immediately.
    * Update pl locale ([by Piotr Drąg, thanks!](https://github.com/piroor/textlink/pull/52))
    * Deactivate context menu items correctly when there is no URI in the selection.
