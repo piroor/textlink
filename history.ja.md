@@ -1,6 +1,8 @@
 # 更新履歴
 
  - master/HEAD
+   * Nightly 48.0a1対応
+   * plロケール更新 ([by Piotr Drąg, thanks!](https://github.com/piroor/textlink/pull/52))
    * 選択範囲にURIが存在しない場合に、コンテキストメニューの項目を正しく無効化するように修正
    * コンテキストメニュー内の無効化されたメニュー項目に対してツールチップを表示しないようにした
  - 5.0.2015060501

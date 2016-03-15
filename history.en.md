@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+   * Works on Nightly 48.0a1.
+   * Update pl locale ([by Piotr DrÄ…g, thanks!](https://github.com/piroor/textlink/pull/52))
    * Deactivate context menu items correctly when there is no URI in the selection.
    * Deactivate tooltip on disabled menu items in the context menu.
  - 5.0.2015060501
@@ -40,7 +42,7 @@
    * Fixed: Keyboard events are ignored except Enter (Return) key.
    * Fixed: Safer code.
    * French locale is updated. (by menet)
-   * Turkish locale is updated. (by An©Ål Y©Åld©Åz)
+   * Turkish locale is updated. (by Anå¨¼ï¾…l Yå¨¼ï¾…ldå¨¼ï¾…z)
  - 3.1.2009032701
    * Fixed: Open-parenthesis after URI strings are correctly ignored.
    * Fixed: Some links wrongly linkified by Thunderbird are correctly unlinkified.
@@ -64,10 +66,10 @@
  - 3.0.2009022401
    * Fixed: Works on plain text files correctly.
    * Fixed: Works on pages which have hidden texts.
-   * Modified: Both full-width characters "\u301c" and "\uff5e" are regarded as "~".
+   * Modified: Both full-width characters "Â¥u301c" and "Â¥uff5e" are regarded as "â€¾".
  - 3.0.2009021901
    * Fixed: Mistake in default rule of URI fixup for domains which start with "www." or "ftp." is corrected.
-   * Turkish locale is updated. (by An©Ål Y©Åld©Åz)
+   * Turkish locale is updated. (by Anå¨¼ï¾…l Yå¨¼ï¾…ldå¨¼ï¾…z)
  - 3.0.2009021801
    * Fixed: Operations on webpages which have many short text are optimized.
  - 3.0.2009021601
@@ -90,9 +92,9 @@
    * Improved: New "Reset" button is available to get default settings back.
    * Fixed: Features in the context menu work correctly.
    * French locale is updated. (by BlackJack)
-   * Turkish locale is available. (by An©Ål Y©Åld©Åz)
+   * Turkish locale is available. (by Anå¨¼ï¾…l Yå¨¼ï¾…ldå¨¼ï¾…z)
  - 2.0.2008052701
-   * Hungarian locale is available. (by Mikes Kaszm«¡n Istv«¡n)
+   * Hungarian locale is available. (by Mikes Kaszmå°†ï½¡n Istvå°†ï½¡n)
    * French locale is updated. (by menet)
  - 2.0.2008052601
    * Fixed: Domain names without schemer part are loaded correctly.
