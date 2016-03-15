@@ -557,7 +557,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				'contextmenu.openTextLink.copy'
 			].map(function(aKey) {
 				return this.DOMAIN + aKey;
-			, this}));
+			}, this));
 			this._prefKeys = this._prefKeys.concat(prefs.getDescendant(this.DOMAIN + 'actions.'));
 		}
 		return this._prefKeys;
