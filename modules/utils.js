@@ -933,7 +933,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	onPrefValueChanged : function(aKey, aValue) 
 	{
 		var shortKey = aKey.replace(this.DOMAIN, 'textlink.');
-		this.prefValues[shortkey] = aValue;
+		this.prefValues[shortKey] = aValue;
 
 		switch (shortKey)
 		{
