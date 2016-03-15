@@ -45,6 +45,10 @@ var { setInterval, clearInterval } = Components.utils.import('resource://textlin
 var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
 var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
 var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
+
+function log(aMessage, ...aArgs) {
+	TextLinkUtils.log('<selectionHandler> '+aMessage, ...aArgs);
+}
  
 function TextLinkSelectionHandler(aGlobal, aBrowser)
 {
@@ -81,6 +85,7 @@ TextLinkSelectionHandler.prototype = {
 
 	getSummary : function()
 	{
+		log('getSummary');
 		this.summaryCancelled = false;
 
 		var target = this.rangeUtils.getEditableFromChild(this.focusedElement);
@@ -101,6 +106,7 @@ TextLinkSelectionHandler.prototype = {
 		var foundURIs = {};
 		return this.rangeUtils.getFirstSelectionURIRange(target, false, null, assertContinuable)
 			.then((function(aFirstRange) {
+				log('getSummary:first ', aFirstRange);
 				assertContinuable();
 				if (aFirstRange) {
 					uris.push(aFirstRange.uri);
@@ -110,6 +116,7 @@ TextLinkSelectionHandler.prototype = {
 				return this.rangeUtils.getLastSelectionURIRange(target, false, foundURIs, assertContinuable);
 			}).bind(this))
 			.then((function(aLastRange) {
+				log('getSummary:last ', aLastRange);
 				assertContinuable();
 				if (aLastRange) {
 					uris.push(aLastRange.uri);
@@ -139,6 +146,7 @@ TextLinkSelectionHandler.prototype = {
 				}
 			}).bind(this))
 			.catch((function(aError) {
+				log('getSummary:error ', aError);
 				this.lastSummarySelection = null;
 				this.lastSummary = null;
 				throw aError;
@@ -216,11 +224,13 @@ TextLinkSelectionHandler.prototype = {
 
 	getURIs : function(aOptions)
 	{
+		log('getURIs ', aOptions);
 		aOptions = aOptions || {};
 		return this.getRanges(function(aRanges) {
 				var uris = aRanges.map(function(aRange) {
 					return aRange.uri;
 				});
+				log('getURIs: uris ', uris);
 				if (typeof aOptions.onProgress == 'function')
 					aOptions.onProgress(uris);
 			})
@@ -237,9 +247,11 @@ TextLinkSelectionHandler.prototype = {
 					return aRange.uri;
 				});
 				selections = undefined;
+				log('getURIs: final uris ', uris);
 				return uris;
 			})
 			.catch(function(aError) {
+				log('getURIs: error ', aError);
 				Components.utils.reportError(aError);
 				return [];
 			});
