@@ -1034,6 +1034,81 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		if (this.actions[key].action === null) {
 			delete this.actions[key];
 		}
+	},
+
+	log : function(...aArgs)
+	{
+		if (!this.prefValues['textlink.debug'])
+			return;
+
+		var logString = '[textlink] '+ aArgs.map(this.objectToLogString, this).join('');
+		Services.console.logStringMessage(logString);
+		dump(logString+'\n');
+	},
+	logWithStackTrace : function(aModule, ...aArgs)
+	{
+		var stack = (new Error()).stack.replace(/^/gm, '  ');
+		return this.log.apply(this, [aModule].concat(aArgs).concat([stack]));
+	},
+	objectToLogString : function(aObject)
+	{
+		if (!aObject)
+			return JSON.stringify(aObject);
+
+		if (/^(string|number|boolean)$/.test(typeof aObject))
+			return aObject;
+
+		return this.objectToString(aObject);
+	},
+	objectToString : function(aObject)
+	{
+		try {
+			if (!aObject ||
+				/^(string|number|boolean)$/.test(typeof aObject))
+				return JSON.stringify(aObject);
+
+			if (Array.isArray(aObject))
+				return '['+aObject.map(this.objectToString, this).join(', ')+']';
+
+			var constructor = String(aObject.constructor).match(/^function ([^\(]+)/);
+			if (constructor) {
+				constructor = constructor[1];
+				switch (constructor)
+				{
+					case 'String':
+					case 'Number':
+					case 'Boolean':
+						return JSON.stringify(aObject);
+
+					case 'Object':
+						return '{' + Object.keys(aObject).map(function(aKey) {
+							return '"' + aKey + '":' + this.objectToString(aObject[aKey]);
+						}, this).join(', ') + '}';
+
+					default:
+						break;
+				}
+
+				if (/Element$/.test(constructor)) {
+					let id = '';
+					if (aObject.hasAttribute('id'))
+						id = '#' + aObject.getAttribute('id');
+
+					let classes = '';
+					if (aObject.className)
+						classes = '.' + aObject.className.replace(/\s+/g, '.');
+
+					return '<' + aObject.localName + id + classes + '>';
+				}
+
+				return '<object '+constructor+'>';
+			}
+
+			return String(aObject);
+		}
+		catch(e) {
+			return String(e);
+		}
 	}
  
 });

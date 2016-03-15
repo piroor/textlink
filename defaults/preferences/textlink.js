@@ -1,3 +1,5 @@
+pref("textlink.debug", false);
+
 // load to...
 //   0  = do nothing
 //   2  = only select
