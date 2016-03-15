@@ -1,10 +1,8 @@
 (function(global) {
-	var DEBUG = false;
-	function mydump(aMessage) {
-		if (DEBUG)
-			dump('textlink content utils: '+aMessage +'\n');
+	function log(aMessage, ...aArgs) {
+		TextLinkUtils.log('<content> '+aMessage, ...aArgs);
 	}
-	mydump('CONTENT SCRIPT LOADED');
+	log('CONTENT SCRIPT LOADED');
 
 	var Cc = Components.classes;
 	var Ci = Components.interfaces;
@@ -23,24 +21,25 @@
 			TextLinkUtils =
 			TextLinkUserActionHandler =
 			messageListener =
-			mydump =
+			log =
 			userActionHandler =
 			selectionHandler =
 				undefined;
 	}
 
 	var messageListener = function(aMessage) {
-		mydump('CONTENT MESSAGE LISTENED');
-		mydump(JSON.stringify(aMessage.json));
+		log('CONTENT MESSAGE LISTENED', aMessage.json);
 		switch (aMessage.json.command)
 		{
 			case TextLinkConstants.COMMAND_SHUTDOWN:
+				log('shutting down...');
 				global.removeMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);
 				userActionHandler.destroy();
 				free();
 				return;
 
 			case TextLinkConstants.COMMAND_NOTIFY_CONFIG_UPDATED:
+				log('updating config...');
 				Object.keys(aMessage.json.config).forEach(function(aKey) {
 					var value = aMessage.json.config[aKey];
 					TextLinkUtils.onPrefValueChanged(aKey, value);
@@ -48,12 +47,15 @@
 				return;
 
 			case TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY:
+				log('getting summary...');
 				selectionHandler.getSummary()
 					.catch(function(aError) {
+						log('Error: ', aError);
 						Components.utils.reportError(aError);
 						return null;
 					})
 					.then(function(aSummary) {
+						log('summary: ', aSummary);
 						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
 							command : TextLinkConstants.COMMAND_REPORT_SELECTION_SUMMARY,
 							id      : aMessage.json.params.id,
@@ -67,6 +69,7 @@
 				return;
 
 			case TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS:
+				log('getting uris...');
 				selectionHandler.getURIs({
 						select     : aMessage.json.params.select,
 						onProgress : function(aURIs) {
@@ -77,10 +80,12 @@
 						}
 					})
 					.catch(function(aError) {
+						log('Error: ', aError);
 						Components.utils.reportError(aError);
 						return null;
 					})
 					.then(function(aURIs) {
+						log('uris: ', aURIs);
 						global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
 							command : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS,
 							id      : aMessage.json.params.id,
