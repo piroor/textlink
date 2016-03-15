@@ -530,7 +530,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				'network.enableIDN',
 				'network.IDN.blacklist_chars'
 			];
-			this._prefKeys = this._prefKeys.cocnat([
+			this._prefKeys = this._prefKeys.concat([
 				'debug',
 				'scheme',
 				'scheme.fixup.table',
