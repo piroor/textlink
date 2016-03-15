@@ -597,6 +597,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 						var value = prefs.getPref(aKey);
 						var newKey = this.DOMAIN + aKey.replace(/^textlink\./, '');
 						prefs.setPref(newKey, value);
+						prefs.clearPref(aKey);
 					}, this);
 				}
 			default:
