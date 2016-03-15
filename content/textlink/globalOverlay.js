@@ -636,9 +636,10 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
-//		dump('*********************handleMessage*******************\n');
-//		dump('TARGET IS: '+aMessage.target.localName+'\n');
-//		dump(JSON.stringify(aMessage.json)+'\n');
+		TextLinkService.utils.log('TextLinkContentBridge#handlemessage', {
+			target : aMessage.target,
+			json   : aMessage.json
+		});
 
 		if (aMessage.target != this.mTab.linkedBrowser)
 		  return;
@@ -696,6 +697,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionSummary : function TLCB_getSelectionSummary()
 	{
+		TextLinkService.utils.log('TextLinkContentBridge#getSelectionSummary');
 		this.cancelSelectionSummary();
 		return new Promise((function(aResolve, aReject) {
 			var id = this.getSelectionSummaryIDPrefix + Date.now() + '-' + Math.floor(Math.random() * 65000);
@@ -707,7 +709,8 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionSummaryIDPrefix : 'selectionSummary-',
 	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
-	{
+	{	{
+		TextLinkService.utils.log('TextLinkContentBridge#cancelSelectionSummary');
 		Object.keys(this.resolvers).forEach(function(aKey) {
 			if (aKey.indexOf(this.getSelectionSummaryIDPrefix) == 0)
 				delete this.resolvers[aKey];
@@ -716,6 +719,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionURIs : function TLCB_getSelectionURIs(aOptions)
 	{
+		TextLinkService.utils.log('TextLinkContentBridge#getSelectionURIs', aOptions);
 		this.cancelSelectionURIs(aOptions);
 		aOptions = aOptions || {};
 		this.onSelectionURIProgress = aOptions.onProgress;
@@ -732,6 +736,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	getSelectionURIsIDPrefix : 'selectionURIs-',
 	cancelSelectionURIs : function TLCB_cancelSelectionURIs(aOptions)
 	{
+		TextLinkService.utils.log('TextLinkContentBridge#cancelSelectionURIs', aOptions);
 		aOptions = aOptions || {};
 		this.onSelectionURIProgress = null;
 		var prefix = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '');
