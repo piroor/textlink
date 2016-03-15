@@ -709,7 +709,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionSummaryIDPrefix : 'selectionSummary-',
 	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
-	{	{
+	{
 		TextLinkService.utils.log('TextLinkContentBridge#cancelSelectionSummary');
 		Object.keys(this.resolvers).forEach(function(aKey) {
 			if (aKey.indexOf(this.getSelectionSummaryIDPrefix) == 0)
