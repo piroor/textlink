@@ -2,7 +2,6 @@
 	function log(aMessage, ...aArgs) {
 		TextLinkUtils.log('<content> '+aMessage, ...aArgs);
 	}
-	log('CONTENT SCRIPT LOADED');
 
 	var Cc = Components.classes;
 	var Ci = Components.interfaces;
