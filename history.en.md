@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+ - 5.0.2016031501
    * Works on Nightly 48.0a1.
    * Manages custom preferences under its own namespace.
    * Open all URIs correctly when the menu item "Open ... in Tabs" is selected immediately.
