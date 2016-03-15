@@ -1013,7 +1013,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 				return;
 		}
 
-		var match = aKey.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
+		var match = shortKey.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
 		if (!match)
 			return;
 
