@@ -1,0 +1,5 @@
+{
+  "name": { "message": "Text Link" },
+  "description": { "message": "Permet de charger une page WEB seulement grâce à un double-clic sur le texte du lien URL." },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+}

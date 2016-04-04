@@ -1,0 +1,5 @@
+{
+  "name": { "message": "Text Link" },
+  "description": { "message": "Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással." },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+}

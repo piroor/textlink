@@ -1,0 +1,5 @@
+{
+  "name": { "message": "Text Link" },
+  "description": { "message": "讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。" },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+}

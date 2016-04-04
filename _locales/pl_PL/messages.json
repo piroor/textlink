@@ -1,0 +1,5 @@
+{
+  "name": { "message": "Text Link" },
+  "description": { "message": "Umożliwia otwieranie nieklikalnych (tekstowych) odnośników za pomocą podwójnego kliknięcia." },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+}

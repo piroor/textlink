@@ -1,0 +1,5 @@
+{
+  "name": { "message": "Text Link" },
+  "description": { "message": "Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím." },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+}

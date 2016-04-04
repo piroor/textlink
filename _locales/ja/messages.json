@@ -1,0 +1,5 @@
+{
+  "name": { "message": "テキストリンク" },
+  "description": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html" }
+}
