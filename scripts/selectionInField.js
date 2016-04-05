@@ -27,7 +27,7 @@ SelectionInField.prototype = {
 	getRangeAt : function(aIndex)
 	{
 		if (aIndex > this.rangeCount)
-			throw new IndexSizeError('too larget index');
+			throw new Error('too larget index');
 
 		return new RangeInField(this._element, this.toString());
 	}
