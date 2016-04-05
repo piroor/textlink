@@ -1,3 +1,6 @@
 [submodule "makexpi"]
 	path = makexpi
 	url = https://github.com/piroor/makexpi.git
+[submodule "extlib/fxaddonlib-inherit"]
+	path = extlib/fxaddonlib-inherit
+	url = https://github.com/piroor/fxaddonlib-inherit.git

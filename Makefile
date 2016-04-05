@@ -4,10 +4,15 @@ PACKAGE_NAME = textlink
 
 all: xpi
 
-xpi: makexpi/makexpi.sh
+xpi: makexpi/makexpi.sh extlib/fxaddonlib-inherit/inherit.jsm
+	cp extlib/fxaddonlib-inherit/inherit.jsm scripts/
+	sed -e '/EXPORTED_SYMBOLS/d' -i scripts/inherit.jsm
 	makexpi/makexpi.sh -n $(PACKAGE_NAME) -o
 
 makexpi/makexpi.sh:
+	git submodule update --init
+
+extlib/fxaddonlib-inherit/inherit.jsm:
 	git submodule update --init
 
 signed: xpi

@@ -32,8 +32,6 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ******/
- 
-var EXPORTED_SYMBOLS = ['TextLinkConstants']; 
 
 var TextLinkConstants = {
 	ACTION_DISABLED               : 0, 
