@@ -20,6 +20,11 @@
         "<all_urls>"
       ],
       "js": [
+        "scripts/constants.js",
+        "scripts/inherit.jsm",
+        "scripts/utils.js",
+        "scripts/selectionInField.js",
+        "scripts/range.js",
         "scripts/content.js"
       ],
       "run_at": "document_start"
