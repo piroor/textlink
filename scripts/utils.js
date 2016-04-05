@@ -33,16 +33,6 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-var EXPORTED_SYMBOLS = ['TextLinkUtils']; 
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
-Components.utils.import('resource://gre/modules/Services.jsm');
-
-var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
-var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
- 
 var TextLinkUtils = inherit(TextLinkConstants, { 
 	prefValues : {},
 	
@@ -567,22 +557,11 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		this._URIExceptionPattern_all = null;
 	},
   
-	// XPConnect 
-	
-	get URIFixup() 
-	{
-		if (!this._URIFixup) {
-			this._URIFixup = Cc['@mozilla.org/docshell/urifixup;1'].getService(Ci.nsIURIFixup);
-		}
-		return this._URIFixup;
-	},
-	_URIFixup : null,
-  
 // utilities 
 	
 	evaluateXPath : function(aExpression, aContext, aType) 
 	{
-		if (!aType) aType = Ci.nsIDOMXPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+		if (!aType) aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
 		try {
 			var xpathResult = (aContext.ownerDocument || aContext || this.document).evaluate(
 					aExpression,
@@ -604,22 +583,9 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		return xpathResult;
 	},
  
-	evalInSandbox : function(aCode, aOwner) 
-	{
-		try {
-			var sandbox = new Components.utils.Sandbox(aOwner || 'about:blank');
-			return Components.utils.evalInSandbox(aCode, sandbox);
-		}
-		catch(e) {
-		}
-		return void(0);
-	},
- 
 	setClipBoard : function(aString) 
 	{
-		Cc['@mozilla.org/widget/clipboardhelper;1']
-			.getService(Ci.nsIClipboardHelper)
-			.copyString(aString);
+		throw new Error('NOT IMPLEMENTED!');
 	},
  
 	cleanUpArray : function(aArray) 
@@ -680,27 +646,6 @@ var TextLinkUtils = inherit(TextLinkConstants, {
   
 // uri operations 
 	
-	makeURIFromSpec : function(aURI) 
-	{
-		try {
-			var newURI;
-			aURI = aURI || '';
-			if (aURI && String(aURI).match(/^file:/)) {
-				var fileHandler = Services.io.getProtocolHandler('file').QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-				var tempLocalFile = fileHandler.getFileFromURLSpec(aURI);
-				newURI = Services.io.newFileURI(tempLocalFile);
-			}
-			else {
-				newURI = Services.io.newURI(aURI, null, null);
-			}
-
-			return newURI;
-		}
-		catch(e){
-		}
-		return null;
-	},
- 
 	matchURIRegExp : function(aString) 
 	{
 		this._updateURIRegExp();
@@ -879,7 +824,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		var match = aURI.match(this._fixupTargetsRegExp);
 		if (match) {
 			var target = match[1];
-			var table = this.evalInSandbox('(function() {'+
+			var table = new Function(
 					'var table = '+JSON.stringify(this._fixupTable)+';'+
 					'var target = '+JSON.stringify(target)+';'+
 					((this._fixupTargetsPattern+'|')
@@ -889,8 +834,8 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 							'  table = table.replace(/\\b$1\\s*=>/, target+"=>");\n' +
 							'}\n'
 						))+
-					'return table;'+
-				'})()');
+					'return table;'
+				)();
 			match = table.match(new RegExp(
 					'(?:[,\\| \\n\\r\\t]|^)'+
 					target.replace(/([\(\)\+\?\.\{\}])/g, '\\$1')
@@ -915,19 +860,17 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	_fixupTargetsPattern : '',
 	_fixupTargetsRegExp : '',
  
-	// ‘Š‘ÎƒpƒX‚Ì‰ðŒˆ 
+	// resolve relative path
 	makeURIComplete : function(aURI, aSourceURI)
 	{
 		if (aURI.match(/^(urn|mailto):/i)) return aURI;
 
 		if (aURI.match(/^([^\/\.]+\.)+([^\/\.]+)/) &&
 			RegExp.$2.match(new RegExp(['^(', this.topLevelDomains.join('|'), ')$'].join('')))) {
-			var fixedURI = this.URIFixup.createFixupURI(aURI || 'about:blank', this.URIFixup.FIXUP_FLAG_ALLOW_KEYWORD_LOOKUP);
-			return fixedURI.spec;
+			return 'http://' + aURI;
 		}
-
-		var baseURI = Services.io.newURI(aSourceURI, null, null);
-		return Services.io.newURI(aURI, null, baseURI).spec;
+		aSourceURI = aSourceURI.replace(/#.*$/, '').replace(/\?.*$/, '');
+		return aSoruceURI + '/' + aURI;
 	},
    
 	onPrefValueChanged : function(aKey, aValue) 
@@ -1043,8 +986,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 			return;
 
 		var logString = '[textlink] '+ aArgs.map(this.objectToLogString, this).join('');
-		Services.console.logStringMessage(logString);
-		dump(logString+'\n');
+		console.log(logString);
 	},
 	logWithStackTrace : function(aModule, ...aArgs)
 	{
