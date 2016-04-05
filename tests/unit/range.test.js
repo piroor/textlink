@@ -12,20 +12,6 @@ function tearDown()
 {
 }
 
-function test_getCurrentFrame()
-{
-	assert.equals(content, sv.getCurrentFrame());
-	assert.equals(content, sv.getCurrentFrame(content));
-	assert.equals(content, sv.getCurrentFrame(window));
-
-	yield Do(utils.loadURI('../fixtures/frame.html'));
-
-	assert.equals(content, sv.getCurrentFrame());
-	assert.equals(content, sv.getCurrentFrame(content));
-	assert.equals(content, sv.getCurrentFrame(window));
-	assert.equals(content.frames[0], sv.getCurrentFrame(content.frames[0]));
-}
-
 function test_getEditableFromChild()
 {
 	var input = $('input');

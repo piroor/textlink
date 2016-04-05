@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2002-2015
+ * Portions created by the Initial Developer are Copyright (C) 2002-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -33,50 +33,24 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-var EXPORTED_SYMBOLS = ['TextLinkRangeUtils']; 
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
 const INPUT_FIELD_CONDITITON = 'contains(" input INPUT textarea TEXTAREA textbox ", concat(" ", local-name(), " "))';
 const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"';
 const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
 
-var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
-var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
-
-var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
- 
 function TextLinkRangeUtils(aGlobal, aCurrentFrameGetter) 
 {
 	this.global = aGlobal;
 	this.currentFrameGetter = aCurrentFrameGetter;
 }
 TextLinkRangeUtils.prototype = {
- 
-	// XPConnect 
-	
-	get Find() 
+
+	get Find()
 	{
-		if (!this._Find) {
-			this._Find = Cc['@mozilla.org/embedcomp/rangefind;1'].createInstance(Ci.nsIFind);
-		}
-		return this._Find;
+		throw new Error('NOT IMPLEMENTED'); // requires APIs of nsIFind
 	},
-	_Find : null,
   
 // utilities 
 	
-	getCurrentFrame : function(aFrame) 
-	{
-		var frame = aFrame || Cc['@mozilla.org/focus-manager;1'].getService(Ci.nsIFocusManager).focusedWindow;
-		var contentFrame = this.currentFrameGetter();
-		if (!frame || frame.top != contentFrame) {
-			frame = contentFrame;
-		}
-		return frame;
-	},
- 
 	getSelection : function(aFrameOrEditable) 
 	{
 		if (
@@ -86,15 +60,11 @@ TextLinkRangeUtils.prototype = {
 				aFrameOrEditable instanceof aFrameOrEditable.Window
 			)
 			) {
-			let frame = this.getCurrentFrame(aFrameOrEditable);
+			let frame = aFrameOrEditable;
 			return frame && frame.getSelection();
 		}
-		else if (aFrameOrEditable instanceof Ci.nsIDOMNSEditableElement) {
-			return aFrameOrEditable
-					.QueryInterface(Ci.nsIDOMNSEditableElement)
-					.editor
-					.selectionController
-					.getSelection(Ci.nsISelectionController.SELECTION_NORMAL);
+		else if (aFrameOrEditable instanceof Element) {
+			return new SelectionInField(aFrameOrEditable);
 		}
 		return null;
 	},
@@ -105,7 +75,7 @@ TextLinkRangeUtils.prototype = {
 		return TextLinkUtils.evaluateXPath(
 				'ancestor-or-self::*['+INPUT_FIELD_CONDITITON+'][1]',
 				aNode,
-				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				DOMXPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
 	},
  
@@ -136,11 +106,7 @@ TextLinkRangeUtils.prototype = {
 	},
 	get _textEncoder()
 	{
-		if (!this.__textEncoder) {
-			this.__textEncoder = Cc['@mozilla.org/layout/documentEncoder;1?type=text/plain']
-									.createInstance(Ci.nsIDocumentEncoder);
-		}
-		return this.__textEncoder;
+		return null; // not available in WebExtensions!
 	},
   
 // range operations 
@@ -336,13 +302,13 @@ TextLinkRangeUtils.prototype = {
 		var shrinkStartBase = startContainer;
 		if (
 			( // <startcontainer>text [<inline/>text]</startcontainer>
-				startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				startContainer.nodeType == Node.ELEMENT_NODE &&
 				startOffset > 0 &&
-				aRange.cloneContents().firstChild.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				aRange.cloneContents().firstChild.nodeType == Node.ELEMENT_NODE &&
 				(shrinkStartBase = startContainer.childNodes[startOffset])
 			) ||
 			( // <block>start container text [<inline>text]</inline></block>
-				startContainer.nodeType != Ci.nsIDOMNode.ELEMENT_NODE &&
+				startContainer.nodeType != Node.ELEMENT_NODE &&
 				String(startContainer.nodeValue).length == startOffset &&
 				(shrinkStartBase = startContainer.nextSibling)
 			)
@@ -350,7 +316,7 @@ TextLinkRangeUtils.prototype = {
 			let node = TextLinkUtils.evaluateXPath(
 					'following::text()[1] | descendant::text()[1]',
 					shrinkStartBase,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 			/**
 			 * Don't use setStartBefore, because it reproduces wrong selection
@@ -365,7 +331,7 @@ TextLinkRangeUtils.prototype = {
 		if (
 			(endOffset == 0 && endContainer.previousSibling) ||
 			(
-				endContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE &&
+				endContainer.nodeType == Node.ELEMENT_NODE &&
 				endOffset > 0 &&
 				(shrinkEndBase = endContainer.childNodes[endOffset])
 			)
@@ -373,7 +339,7 @@ TextLinkRangeUtils.prototype = {
 			let node = TextLinkUtils.evaluateXPath(
 					'preceding::text()[1] | descendant::text()[last()]',
 					shrinkEndBase,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 			if (node) aRange.setEnd(node, String(node.nodeValue).length);
 		}
@@ -497,18 +463,18 @@ TextLinkRangeUtils.prototype = {
 			let root = TextLinkUtils.evaluateXPath(
 					'ancestor-or-self::node()[parent::*['+INPUT_FIELD_CONDITITON+']]',
 					findRange.startContainer,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue;
 			// setStartBefore causes error...
 			findRange.setStart(TextLinkUtils.evaluateXPath(
 					'preceding-sibling::node()[1]',
 					root,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue || root, 0);
 			findRange.setEndAfter(TextLinkUtils.evaluateXPath(
 					'(child::node()[last()] | following-sibling::node()[last()])[1]',
 					root,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue || root);
 			return findRange;
 		}
@@ -535,7 +501,7 @@ TextLinkRangeUtils.prototype = {
 
 		var node   = aRange.startContainer;
 		var offset = aRange.startOffset;
-		if (node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+		if (node.nodeType == Node.ELEMENT_NODE) {
 			node = this._getFirstTextNodeFromRange(aRange);
 			offset = 0;
 		}
@@ -583,7 +549,7 @@ TextLinkRangeUtils.prototype = {
 
 		var node   = aRange.endContainer;
 		var offset = aRange.endOffset;
-		if (node.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+		if (node.nodeType == Node.ELEMENT_NODE) {
 			node = this._getLastTextNodeFromRange(aRange);
 			offset = node && node.textContent.length || 0 ;
 		}
@@ -601,7 +567,7 @@ TextLinkRangeUtils.prototype = {
 			lastNode = node;
 			if (this._getParentBlock(lastNode) != baseBlock) break;
 			expandRange.setEnd(lastNode, lastNode.textContent.length);
-			if (expandRange.startContainer.nodeType == Ci.nsIDOMNode.ELEMENT_NODE) {
+			if (expandRange.startContainer.nodeType == Node.ELEMENT_NODE) {
 				// Edge case workaround:
 				//   When a range starts with a text node and the text is a
 				//   child of an element node, Gecko automatically changes the
@@ -675,7 +641,7 @@ TextLinkRangeUtils.prototype = {
 		return TextLinkUtils.evaluateXPath(
 				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][1]',
 				aRange.startContainer.childNodes.item(aRange.startOffset) || aRange.startContainer.firstChild,
-				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
 	},
 	_getLastTextNodeFromRange : function(aRange)
@@ -683,14 +649,14 @@ TextLinkRangeUtils.prototype = {
 		return TextLinkUtils.evaluateXPath(
 				'descendant-or-self::text()[not('+IGNORE_TEXT_CONDITION+')][last()]',
 				aRange.endContainer.childNodes.item(aRange.endOffset) || aRange.endContainer.lastChild,
-				Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
 	},
 	_getParentBlock : function(aNode)
 	{
 		if (!aNode) return null;
 		var win = aNode.ownerDocument.defaultView;
-		if (aNode.nodeType != Ci.nsIDOMNode.ELEMENT_NODE) aNode = aNode.parentNode;
+		if (aNode.nodeType != Node.ELEMENT_NODE) aNode = aNode.parentNode;
 		while (aNode)
 		{
 			let display = win.getComputedStyle(aNode, null).getPropertyValue('display');
