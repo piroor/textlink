@@ -370,9 +370,20 @@ TextLinkRangeUtils.prototype = {
 	},
 	_findRangesForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash, aMode)
 	{
-		var uriRanges = [];
-		if (!this.Find)
-			return uriRanges;
+		if (!this.Find) {
+			return aRanges.map(function(aRange) {
+				return {
+					range     : aRange,
+					uri       : aRange.toString(),
+					base      : aRangeSet.base,
+					selection : this.getSelection(
+						this.getEditableFromChild(range.startContainer) ||
+						range.startContainer && range.startContainer.ownerDocument.defaultView ||
+						window
+					)
+				};
+			});
+		}
 
 		if (!aFoundURIsHash) aFoundURIsHash = {};
 		if (!aRanges) aRanges = [];
@@ -385,6 +396,7 @@ TextLinkRangeUtils.prototype = {
 		aRangeSet.startPoint.collapse(true);
 		var termRange;
 		var uriRange = null;
+		var uriRanges = [];
 		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 		FIND_URI_RANGE:
 		while (termRange = this.Find.Find(aTerm, aRangeSet.findRange, aRangeSet.startPoint, aRangeSet.endPoint))
