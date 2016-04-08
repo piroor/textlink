@@ -169,7 +169,6 @@ TextLinkRangeUtils.prototype = {
  
 	getURIRangesIteratorFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
 	{
-		TextLinkUtils.log('getURIRangesIteratorFromRange:', aMode);
 		if (!aMode)
 			throw new Error(this.ERRROR_FIND_MODE_NOT_SPECIFIED);
 		var ranges = [];
