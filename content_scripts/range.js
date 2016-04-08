@@ -681,6 +681,7 @@ TextLinkRangeUtils.prototype = {
   
 	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
+		TextLinkUtils.log('getSelectionURIRanges');
 		if (!aMode) aMode = this.FIND_ALL;
 
 		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker);
@@ -704,7 +705,7 @@ TextLinkRangeUtils.prototype = {
 			})
 			.catch(function(aError) {
 				if (!(aError instanceof StopIteration)) {
-					Components.utils.reportError(aError);
+					TextLinkUtils.log('error:' + aError);
 					throw aError;
 				}
 			})
@@ -758,7 +759,7 @@ TextLinkRangeUtils.prototype = {
 				if (aError.message == self.ERRROR_NO_URI_RANGE)
 					return true;
 				if (!(aError instanceof StopIteration)) {
-					Components.utils.reportError(aError);
+					TextLinkUtils.log('error:' + aError);
 					throw aError;
 				}
 				return false;
