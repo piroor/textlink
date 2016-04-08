@@ -1,31 +1,4 @@
 (function(global) {
-	function log(aMessage, ...aArgs) {
-		TextLinkUtils.log('<content> '+aMessage, ...aArgs);
-	}
-
-	var Cc = Components.classes;
-	var Ci = Components.interfaces;
-	var Cu = Components.utils;
-	var Cr = Components.results;
-
-	var { TextLinkConstants } = Cu.import('resource://textlink-modules/constants.js', {});
-	var { TextLinkUtils } = Cu.import('resource://textlink-modules/utils.js', {});
-	var { TextLinkUserActionHandler } = Cu.import('resource://textlink-modules/userActionHandler.js', {});
-	var { TextLinkSelectionHandler } = Cu.import('resource://textlink-modules/selectionHandler.js', {});
-
-	function free() {
-		cleanup =
-			Cc = Ci = Cu = Cr =
-			TextLinkConstants =
-			TextLinkUtils =
-			TextLinkUserActionHandler =
-			messageListener =
-			log =
-			userActionHandler =
-			selectionHandler =
-				undefined;
-	}
-
 	var messageListener = function(aMessage) {
 		log('CONTENT MESSAGE LISTENED', aMessage.json);
 		switch (aMessage.json.command)
@@ -98,7 +71,6 @@
 				return;
 		}
 	};
-	global.addMessageListener(TextLinkConstants.MESSAGE_TYPE, messageListener);
 
 	var userActionHandler = new TextLinkUserActionHandler(global);
 	userActionHandler.loadURI = function(aURI, aReferrer, aAction) {
@@ -110,5 +82,5 @@
 		});
 	};
 
-	var selectionHandler = new TextLinkSelectionHandler(global);
+	var selectionHandler = new TextLinkSelectionHandler();
 })(this);

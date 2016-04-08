@@ -37,10 +37,8 @@ const INPUT_FIELD_CONDITITON = 'contains(" input INPUT textarea TEXTAREA textbox
 const IGNORE_NODE_CONDITION = 'contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"';
 const IGNORE_TEXT_CONDITION = 'ancestor-or-self::*[contains(" head HEAD style STYLE script SCRIPT iframe IFRAME object OBJECT embed EMBED input INPUT textarea TEXTAREA ", concat(" ", local-name(), " ")) or (contains(" a A ", concat(" ", local-name(), " ")) and @href) or @class="moz-txt-citetags"]';
 
-function TextLinkRangeUtils(aGlobal, aCurrentFrameGetter) 
+function TextLinkRangeUtils() 
 {
-	this.global = aGlobal;
-	this.currentFrameGetter = aCurrentFrameGetter;
 }
 TextLinkRangeUtils.prototype = {
 

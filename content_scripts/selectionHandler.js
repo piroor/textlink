@@ -33,29 +33,9 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-var EXPORTED_SYMBOLS = ['TextLinkSelectionHandler']; 
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
-var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
-
-var { setInterval, clearInterval } = Components.utils.import('resource://textlink-modules/jstimer.jsm', {});
-
-var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
-var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
-var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
-
-function log(aMessage, ...aArgs) {
-	TextLinkUtils.log('<selectionHandler> '+aMessage, ...aArgs);
-}
- 
-function TextLinkSelectionHandler(aGlobal, aBrowser)
+function TextLinkSelectionHandler()
 {
-	this.rangeUtils = new TextLinkRangeUtils(aGlobal, function() {
-		return aBrowser ? aBrowser.contentWindow : aGlobal.content ;
-	});
-	this.global = aGlobal;
+	this.rangeUtils = new TextLinkRangeUtils();
 }
 TextLinkSelectionHandler.prototype = {
 	lastSummarySelection : null,
@@ -68,19 +48,17 @@ TextLinkSelectionHandler.prototype = {
 		return this.rangesCancelled = aValue;
 	},
 
-	get contentDocument() {
-		return this.global.content.document;
-	},
-
 	get focusedElement() {
+		return null;
+/*
 		return Cc['@mozilla.org/focus-manager;1']
 				.getService(Ci.nsIFocusManager)
 				.focusedElement;
+*/
 	},
 
 	destroy : function()
 	{
-		delete this.global;
 	},
 
 	getSummary : function()
@@ -257,7 +235,6 @@ TextLinkSelectionHandler.prototype = {
 			})
 			.catch(function(aError) {
 				log('getURIs: error ', aError);
-				Components.utils.reportError(aError);
 				return [];
 			});
 	}
