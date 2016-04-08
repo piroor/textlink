@@ -190,10 +190,10 @@ TextLinkRangeUtils.prototype = {
 			}
 		}
 
-		if (this.Find) {
-			let rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
-			let shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
+		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
+		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 
+		if (this.Find) {
 			this.Find.findBackwards = (aMode & this.FIND_LAST);
 			for (let i in terms)
 			{
@@ -221,19 +221,19 @@ TextLinkRangeUtils.prototype = {
 
 				if (ranges.length && findOnlyFirst) break;
 			}
-
-			this._destroyRangeSet(rangeSet);
 		}
 		else {
 			for (let i = 0, maxi = terms.length; i < maxi; i++)
 			{
 				let uri = terms[i];
-				if (foundURIsHash[uri])
+				let range = this._rangeToFoundResult(new FakeRange(uri), rangeSet, baseURI);
+				if (foundURIsHash[range.uri])
 					continue;
-				foundURIsHash[uri] = true;
-				yield new FakeRange(uri);
+				foundURIsHash[range.uri] = true;
+				yield range;
 			}
 		}
+		this._destroyRangeSet(rangeSet);
 	},
 	_getFindTermsFromRange : function(aRange, aMode)
 	{
@@ -368,21 +368,25 @@ TextLinkRangeUtils.prototype = {
 		delete aRangeSet.endPoint;
 		delete aRangeSet.base;
 	},
+	_rangeToFoundResult : function(aRange, aRangeSet, aBaseURI)
+	{
+		return {
+			range     : aRange,
+			uri       : TextLinkUtils.fixupURI(aRange.toString(), aBaseURI),
+			base      : aRangeSet.base,
+			selection : this.getSelection(
+				this.getEditableFromChild(aRange.startContainer) ||
+				aRange.startContainer && aRange.startContainer.ownerDocument.defaultView ||
+				window
+			)
+		};
+	},
 	_findRangesForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash, aMode)
 	{
 		if (!this.Find) {
 			return aRanges.map(function(aRange) {
-				return {
-					range     : aRange,
-					uri       : aRange.toString(),
-					base      : aRangeSet.base,
-					selection : this.getSelection(
-						this.getEditableFromChild(range.startContainer) ||
-						range.startContainer && range.startContainer.ownerDocument.defaultView ||
-						window
-					)
-				};
-			});
+				return this._rangeToFoundResult(aRange, aRangeSet, aBaseURI);
+			}, this);
 		}
 
 		if (!aFoundURIsHash) aFoundURIsHash = {};

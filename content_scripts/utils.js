@@ -913,3 +913,10 @@ configs.$addObserver(function(aKey) {
 			break;
 	}
 });
+
+configs.$loaded.then(function() {
+	TextLinkUtils.scheme = configs.scheme;
+	TextLinkUtils.schemeFixupTable = configs.schemeFixupTable;
+	TextLinkUtils.IDNEnabled = configs.IDNEnabled;
+	TextLinkUtils.IDNScheme = configs.IDNScheme;
+});
