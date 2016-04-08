@@ -358,6 +358,10 @@ TextLinkRangeUtils.prototype = {
 	},
 	_findRangesForTerm : function(aTerm, aRangeSet, aBaseURI, aStrict, aRanges, aFoundURIsHash, aMode)
 	{
+		var uriRanges = [];
+		if (!this.Find)
+			return uriRanges;
+
 		if (!aFoundURIsHash) aFoundURIsHash = {};
 		if (!aRanges) aRanges = [];
 		if (this.Find.findBackwards) {
@@ -368,7 +372,6 @@ TextLinkRangeUtils.prototype = {
 		}
 		aRangeSet.startPoint.collapse(true);
 		var termRange;
-		var uriRanges = [];
 		var uriRange = null;
 		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 		FIND_URI_RANGE:
