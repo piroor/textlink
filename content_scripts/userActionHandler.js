@@ -109,6 +109,7 @@ TextLinkUserActionHandler.prototype = {
 				return true;
 			}
 			catch(e) {
+				TextLinkUtils.log('error:' + e);
 			}
 			return false;
 		}, this);
