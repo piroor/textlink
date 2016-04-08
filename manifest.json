@@ -16,6 +16,7 @@
   "background": {
     "scripts": [
       "common/Configs.js",
+      "common/constants.js",
       "common/common.js"
     ]
   },
