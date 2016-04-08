@@ -25,8 +25,8 @@
         "common/FakeRange.js",
         "content_scripts/utils.js",
         "content_scripts/range.js",
-        "content_scripts/userActionHandler.js"
-        "content_scripts/selectionHandler.js"
+        "content_scripts/userActionHandler.js",
+        "content_scripts/selectionHandler.js",
         "content_scripts/content.js"
       ],
       "run_at": "document_start"
