@@ -46,7 +46,7 @@ TextLinkRangeUtils.prototype = {
 
 	get Find()
 	{
-		throw new Error('NOT IMPLEMENTED'); // requires APIs of nsIFind
+		return null; // nsIFind or RangeFinder
 	},
   
 // utilities 
