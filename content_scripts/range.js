@@ -192,35 +192,35 @@ TextLinkRangeUtils.prototype = {
 			let rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
 			let shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 
-		this.Find.findBackwards = (aMode & this.FIND_LAST);
-		for (let i in terms)
-		{
-			let rangesForTerm = this._findRangesForTerm(
-					terms[i],
-					rangeSet,
-					baseURI,
-					aStrict,
-					ranges,
-					foundURIsHash,
-					aMode
-				);
-			if (!rangesForTerm.length) continue;
-
-			ranges = ranges.concat(rangesForTerm);
-			if (shouldReturnSingleResult) {
-				rangesForTerm.forEach(function(aRange) {
-					foundURIsHash[aRange.uri] = true;
-				});
-			}
-			for (let i in rangesForTerm)
+			this.Find.findBackwards = (aMode & this.FIND_LAST);
+			for (let i in terms)
 			{
-				yield rangesForTerm[i];
+				let rangesForTerm = this._findRangesForTerm(
+						terms[i],
+						rangeSet,
+						baseURI,
+						aStrict,
+						ranges,
+						foundURIsHash,
+						aMode
+					);
+				if (!rangesForTerm.length) continue;
+
+				ranges = ranges.concat(rangesForTerm);
+				if (shouldReturnSingleResult) {
+					rangesForTerm.forEach(function(aRange) {
+						foundURIsHash[aRange.uri] = true;
+					});
+				}
+				for (let i in rangesForTerm)
+				{
+					yield rangesForTerm[i];
+				}
+
+				if (ranges.length && findOnlyFirst) break;
 			}
 
-			if (ranges.length && findOnlyFirst) break;
-		}
-
-		this._destroyRangeSet(rangeSet);
+			this._destroyRangeSet(rangeSet);
 		}
 	},
 	_getFindTermsFromRange : function(aRange, aMode)
