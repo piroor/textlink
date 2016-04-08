@@ -5,8 +5,8 @@ PACKAGE_NAME = textlink
 all: xpi
 
 xpi: makexpi/makexpi.sh extlib/fxaddonlib-inherit/inherit.jsm
-	cp extlib/fxaddonlib-inherit/inherit.jsm scripts/
-	sed -e '/EXPORTED_SYMBOLS/d' -i scripts/inherit.jsm
+	cp extlib/fxaddonlib-inherit/inherit.jsm common/
+	sed -e '/EXPORTED_SYMBOLS/d' -i common/inherit.jsm
 	makexpi/makexpi.sh -n $(PACKAGE_NAME) -o
 
 makexpi/makexpi.sh:
