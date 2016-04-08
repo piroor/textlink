@@ -336,7 +336,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				gContextMenu.onTextInput
 			);
 		gContextMenu.showItem('context-textLink-menu',
-			TextLinkUtils.contextMenuItem && isAvailableContext);
+			configs.contextItemSubmenu && isAvailableContext);
 
 		var items = [
 				'context-openTextLink-current',

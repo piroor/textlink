@@ -131,9 +131,9 @@ TextLinkUserActionHandler.prototype = {
 			return actions;
 		}
 
-		for (let i in TextLinkUtils.actions)
+		for (let i in configs.actions)
 		{
-			let action = TextLinkUtils.actions[i];
+			let action = configs.actions[i];
 			if (this.actionShouldHandleEvent(action, aEvent)) {
 				actions.push(action);
 			}
@@ -205,7 +205,7 @@ TextLinkUserActionHandler.prototype = {
 		var frame = target.ownerDocument.defaultView;
 
 		var self = this;
-		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, TextLinkUtils.strict)
+		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, configs.findClickPointStrictly)
 			.then(function(aRanges) {
 				if (aRanges.length)
 					self.openClickedURIPostProcess(aEvent, aAction, b, frame, aRanges);

@@ -34,25 +34,12 @@
  * ***** END LICENSE BLOCK ******/
  
 var TextLinkUtils = inherit(TextLinkConstants, { 
-	prefValues : {},
-	
-	schemeFixupDefault : 'http', 
-	strict              : true,
-	contextMenuItem     : true,
-	contextItemCurrent  : true,
-	contextItemWindow   : true,
-	contextItemTab      : true,
-	contextItemCopy     : true,
-
-	multilineURIEnabled : false,
-
 	get scheme()
 	{
-		return this._scheme;
+		return configs.scheme;
 	},
 	set scheme(aValue)
 	{
-		this._scheme = aValue;
 		this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
 		this.IDNScheme = this.IDNScheme; // reset IDN-enabled schemes list
 		this.invalidatePatterns();
@@ -68,8 +55,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 	set IDNScheme(aValue)
 	{
-		this._IDNScheme = aValue;
-		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme))
+		this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(configs.IDNScheme))
 							.filter(function(aScheme) {
 								return this.schemes.indexOf(aScheme) > -1;
 							}, this);
@@ -78,12 +64,11 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	},
 	get IDNScheme()
 	{
-		return this._IDNScheme;
+		return configs.IDNScheme;
 	},
-	_IDNScheme : '',
 	get IDNSchemes()
 	{
-		if (this.IDNEnabled) {
+		if (configs.IDNEnabled) {
 			if (this._fixupIDNSchemes === null) {
 				this._fixupIDNSchemes = [];
 				for (let i in this._fixupTargetsHash)
@@ -111,7 +96,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 	get nonIDNSchemes()
 	{
-		if (this.IDNEnabled) {
+		if (configs.IDNEnabled) {
 			if (this._nonIDNSchemes === null) {
 				let IDNSchemes = this.IDNSchemes;
 				this._nonIDNSchemes = this.schemes
@@ -129,13 +114,11 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 	get schemeFixupTable()
 	{
-		return this._schemeFixupTable;
+		return configs.schemeFixupTable;
 	},
 	set schemeFixupTable(aValue)
 	{
-		this._schemeFixupTable = aValue;
-
-		this._fixupTable = this._schemeFixupTable
+		this._fixupTable = this.schemeFixupTable
 					.replace(/(\s*[^:,\s]+)\s*=>\s*([^:,\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
 
 		this._fixupTargets     = [];
@@ -164,57 +147,6 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		this.invalidatePatterns();
 		return aValue;
 	},
-	_schemeFixupTable : '',
-
-	get relativePathEnabled()
-	{
-		return this._relativePathEnabled;
-	},
-	set relativePathEnabled(val)
-	{
-		this._relativePathEnabled = val;
-		this.invalidatePatterns();
-		return val;
-	},
-	_relativePathEnabled : false,
-
-	get multibyteEnabled()
-	{
-		return this._multibyteEnabled;
-	},
-	set multibyteEnabled(val)
-	{
-		this._multibyteEnabled = val;
-		this.invalidatePatterns();
-		return val;
-	},
-	_multibyteEnabled : true,
-
-	get IDNEnabled()
-	{
-		return this._IDNEnabled;
-	},
-	set IDNEnabled(val)
-	{
-		this._IDNEnabled = val;
-		this.invalidatePatterns();
-		return val;
-	},
-	_IDNEnabled : true,
-
-	get i18nPathEnabled()
-	{
-		return this._i18nPathEnabled;
-	},
-	set i18nPathEnabled(val)
-	{
-		this._i18nPathEnabled = val;
-		this.invalidatePatterns();
-		return val;
-	},
-	_i18nPathEnabled : false,
- 
-	actions : {},
  
 // regexp 
 	
@@ -244,7 +176,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 								/%DOMAIN_PATTERN%/g,
 								this.getDomainPattern()
 							));
-			if (this.IDNEnabled)
+			if (configs.IDNEnabled)
 				patterns.push(base
 								.replace(
 									/%SCHEME_PATTERN%/g,
@@ -309,7 +241,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 								/%DOMAIN_PATTERN%/g,
 								this.getDomainPattern(this.kDOMAIN_MULTIBYTE)
 							));
-			if (this.IDNEnabled)
+			if (configs.IDNEnabled)
 				patterns.push(base
 								.replace(
 									/%SCHEME_PATTERN%/g,
@@ -358,7 +290,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 											this.kIDNDomainSeparators+
 											':/@\uff1a\uff0f\uff20';
 				if (!(aOptionsFlag & this.kDOMAIN_LAZY))
-					forbiddenCharacters += this.lazyDetectionSeparators;
+					forbiddenCharacters += configs.IDNLazyDetectionSeparators;
 				let part = '[^'+
 							forbiddenCharacters+
 							(this.prefValues['network.IDN.blacklist_chars'] || '')
@@ -422,7 +354,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	get URIPattern_part() 
 	{
 		if (!this._URIPattern_part) {
-			this._URIPattern_part = this.i18nPathEnabled ?
+			this._URIPattern_part = configs.i18nPathEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPattern_part ;
 		}
@@ -432,7 +364,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	get URIPatternMultibyte_part()
 	{
 		if (!this._URIPatternMultibyte_part) {
-			this._URIPatternMultibyte_part = this.i18nPathEnabled ?
+			this._URIPatternMultibyte_part = configs.i18nPathEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPatternMultibyte_part ;
 		}
@@ -443,7 +375,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	get findURIPatternPart() 
 	{
 		if (!this._findURIPatternPart) {
-			this._findURIPatternPart = this.i18nPathEnabled || this.IDNEnabled ?
+			this._findURIPatternPart = configs.i18nPathEnabled || configs.IDNEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPattern_part ;
 		}
@@ -453,7 +385,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	get findURIPatternMultibytePart()
 	{
 		if (!this._findURIPatternMultibytePart) {
-			this._findURIPatternMultibytePart = this.i18nPathEnabled || this.IDNEnabled ?
+			this._findURIPatternMultibytePart = configs.i18nPathEnabled || configs.IDNEnabled ?
 				'[^'+this.kStringprepForbiddenCharacters+']+' :
 				this.kURIPatternMultibyte_part ;
 		}
@@ -469,7 +401,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 					this.prefValues['textlink.ccTLD'],
 					this.prefValues['textlink.extraTLD']
 				];
-			if (this.IDNEnabled)
+			if (configs.IDNEnabled)
 				TLD.push(this.prefValues['textlink.IDN_TLD']);
 			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
 										.reverse(); // this is required to match "com" instead of "co".
@@ -677,15 +609,15 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	{
 		if (this._URIMatchingRegExp) return;
 		var regexp = [];
-		if (this.multibyteEnabled) {
+		if (configs.multibyteEnabled) {
 			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPatternMultibyte, 'i');
 			regexp.push(this.URIPatternMultibyte);
-			if (this.relativePathEnabled) regexp.push(this.URIPatternMultibyteRelative);
+			if (configs.relativePathEnabled) regexp.push(this.URIPatternMultibyteRelative);
 		}
 		else {
 			this._URIMatchingRegExp_fromHead = new RegExp(this.URIPattern, 'i');
 			regexp.push(this.URIPattern);
-			if (this.relativePathEnabled) regexp.push(this.URIPatternRelative);
+			if (configs.relativePathEnabled) regexp.push(this.URIPatternRelative);
 		}
 		this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
 	},
@@ -710,7 +642,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		if (this._URIPartFinderRegExp_start && this._URIPartFinderRegExp_end)
 			return;
 
-		var base = this.multibyteEnabled ?
+		var base = configs.multibyteEnabled ?
 				this.findURIPatternMultibytePart :
 				this.findURIPatternPart ;
 		this._URIPartFinderRegExp_start = new RegExp('^('+base+')', 'i');
@@ -744,7 +676,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
  
 	fixupURI : function(aURIComponent, aBaseURI) 
 	{
-		if (this.multibyteEnabled) {
+		if (configs.multibyteEnabled) {
 			aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 		}
 
@@ -755,7 +687,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 		aURIComponent = this.fixupScheme(aURIComponent);
 
-		if (this.relativePathEnabled) {
+		if (configs.relativePathEnabled) {
 			aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 		}
 
@@ -768,7 +700,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		if (!this._topLevelDomainsRegExp) {
 			this._topLevelDomainsRegExp = new RegExp('^(' + this.topLevelDomains.join('|') + ')$');
 		}
-		if (this.relativePathEnabled) {
+		if (configs.relativePathEnabled) {
 			if (
 				(
 					aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
@@ -791,7 +723,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 			aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
 			aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
 			(
-				!this.relativePathEnabled &&
+				!configs.relativePathEnabled &&
 				aURIComponent.match(/^[\.\/:](.+)$/)
 			)
 			) {
@@ -800,7 +732,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 		aURIComponent = this.removeParen(aURIComponent);
 
-		if (this.IDNEnabled || this.i18nPathEnabled)
+		if (configs.IDNEnabled || configs.i18nPathEnabled)
 			aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
 		return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
@@ -847,7 +779,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 				aURI = aURI.replace(target, match[1]);
 		}
 		else if (!this._firstSchemeRegExp.test(aURI)) {
-			var scheme = this.schemeFixupDefault;
+			var scheme = configs.schemeFixupDefault;
 			if (scheme)
 				aURI = scheme+'://'+aURI;
 		}
@@ -871,113 +803,6 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		}
 		aSourceURI = aSourceURI.replace(/#.*$/, '').replace(/\?.*$/, '');
 		return aSoruceURI + '/' + aURI;
-	},
-   
-	onPrefValueChanged : function(aKey, aValue) 
-	{
-		var shortKey = aKey.replace(this.DOMAIN, 'textlink.');
-		this.prefValues[shortKey] = aValue;
-
-		switch (shortKey)
-		{
-			case 'textlink.scheme':
-				this.scheme = aValue;
-				return;
-
-			case 'textlink.scheme.fixup.table':
-				this.schemeFixupTable = aValue;
-				return;
-
-			case 'textlink.scheme.fixup.default':
-				this.schemeFixupDefault = aValue;
-				return;
-
-			case 'textlink.find_click_point.strict':
-				this.strict = aValue;
-				return;
-
-			case 'textlink.relative.enabled':
-				this.relativePathEnabled = aValue;
-				return;
-
-			case 'textlink.idn.enabled':
-			case 'network.enableIDN':
-				this.IDNEnabled = this.prefValues['network.enableIDN'] && this.prefValues['textlink.idn.enabled'];
-				return;
-
-			case 'textlink.idn.scheme':
-				this.IDNScheme = aValue;
-				return;
-
-			case 'textlink.i18nPath.enabled':
-				this.i18nPathEnabled = aValue;
-				return;
-
-			case 'textlink.idn.lazyDetection.separators':
-				this.lazyDetectionSeparators = aValue;
-				return;
-
-			case 'textlink.gTLD':
-			case 'textlink.ccTLD':
-			case 'textlink.IDN_TLD':
-			case 'textlink.extraTLD':
-			case 'network.IDN.blacklist_chars':
-				this.invalidatePatterns();
-				return;
-
-			case 'textlink.multibyte.enabled':
-				this.multibyteEnabled = aValue;
-				return;
-
-			case 'textlink.contextmenu.submenu':
-				this.contextMenuItem = aValue;
-				return;
-
-			case 'textlink.contextmenu.openTextLink.current':
-				this.contextItemCurrent = aValue;
-				return;
-
-			case 'textlink.contextmenu.openTextLink.window':
-				this.contextItemWindow = aValue;
-				return;
-
-			case 'textlink.contextmenu.openTextLink.tab':
-				this.contextItemTab = aValue;
-				return;
-
-			case 'textlink.contextmenu.openTextLink.copy':
-				this.contextItemCopy = aValue;
-				return;
-
-			case 'textlink.part.exception.whole':
-			case 'textlink.part.exception.start':
-			case 'textlink.part.exception.end':
-				this.invalidateExceptionPatterns();
-				return;
-		}
-
-		var match = shortKey.match(/^textlink\.actions\.(.+)\.(action|trigger\.key|trigger\.mouse)$/);
-		if (!match)
-			return;
-
-		var key = match[1];
-		if (!(key in this.actions)) {
-			this.actions[key] = {
-				action       : null,
-				triggerKey   : null,
-				triggerMouse : null
-			};
-		}
-
-		switch (match[2])
-		{
-			case 'action'       : this.actions[key].action = aValue; break;
-			case 'trigger.key'  : this.actions[key].triggerKey = aValue; break;
-			case 'trigger.mouse': this.actions[key].triggerMouse = aValue; break;
-		}
-		if (this.actions[key].action === null) {
-			delete this.actions[key];
-		}
 	},
 
 	log : function(...aArgs)
@@ -1056,3 +881,37 @@ var TextLinkUtils = inherit(TextLinkConstants, {
  
 });
   
+configs.$addObserver(function(aKey) {
+	switch (aKey)
+	{
+		case 'relativePathEnabled':
+		case 'multibyteEnabled':
+		case 'i18nPathEnabled':
+		case 'IDNLazyDetectionSeparators':
+		case 'gTLD':
+		case 'ccTLD':
+		case 'IDN_TLD':
+		case 'extraTLD':
+		// Firefox internal: how can I observe them?
+		case 'network.IDN.enabled':
+		case 'network.IDN.blacklist_chars':
+			TextLinkUtils.invalidatePatterns();
+			break;
+
+		case 'scheme':
+		case 'schemeFixupTable':
+		case 'IDNEnabled':
+		case 'IDNScheme':
+			TextLinkUtils[aKey] = configs[aKey];
+			break;
+
+		case 'partExceptionWhole':
+		case 'partExceptionStart':
+		case 'partExceptionEnd':
+			TextLinkUtils.invalidateExceptionPatterns();
+			break;
+
+		deafult:
+			break;
+	}
+});

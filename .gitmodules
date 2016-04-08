@@ -4,3 +4,6 @@
 [submodule "extlib/fxaddonlib-inherit"]
 	path = extlib/fxaddonlib-inherit
 	url = https://github.com/piroor/fxaddonlib-inherit.git
+[submodule "extlib/webextensions-lib-configs"]
+	path = extlib/webextensions-lib-configs
+	url = https://github.com/piroor/webextensions-lib-configs.git

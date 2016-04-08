@@ -248,7 +248,7 @@ TextLinkRangeUtils.prototype = {
 			if (!aTerm || terms.indexOf(aTerm) > -1) return;
 
 			let hadlWidthTerm = TextLinkUtils.convertFullWidthToHalfWidth(aTerm);
-			if (!TextLinkUtils.relativePathEnabled && TextLinkUtils.hasScheme(aTerm)) {
+			if (!configs.relativePathEnabled && TextLinkUtils.hasScheme(aTerm)) {
 				let termForCheck = hadlWidthTerm;
 				while (TextLinkUtils.hasScheme(termForCheck))
 				{
@@ -599,7 +599,7 @@ TextLinkRangeUtils.prototype = {
 			}
 			let string = expandRange.toString();
 			let delta = 0;
-			if (TextLinkUtils.multilineURIEnabled) {
+			if (cofnigs.multilineEnabled) {
 				let originalString = string;
 				string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
 				delta = originalString.indexOf(string);
@@ -611,7 +611,7 @@ TextLinkRangeUtils.prototype = {
 					delta = 0;
 				}
 			}
-			if (!TextLinkUtils.multilineURIEnabled || string) {
+			if (!cofnigs.multilineEnabled || string) {
 				let part = TextLinkUtils.getURIPartFromStart(string, headPartIsFound);
 				if (!part.length) break;
 				let partRange;
@@ -804,7 +804,7 @@ TextLinkRangeUtils.prototype = {
 	getFollowingURIPartRanges : function(aRange) 
 	{
 		var ranges = [];
-		if (TextLinkUtils.multilineURIEnabled) {
+		if (cofnigs.multilineEnabled) {
 			this._expandURIRangeToAfter(aRange, ranges);
 		}
 		return ranges;
