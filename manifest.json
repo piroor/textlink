@@ -21,7 +21,7 @@
       ],
       "js": [
         "common/inherit.jsm",
-        "common/common.js",
+        "common/constants.js",
         "common/FakeRange.js",
         "content_scripts/utils.js",
         "content_scripts/range.js",
@@ -32,7 +32,6 @@
       "run_at": "document_start"
     }
   ],
-  "options_page": "options/options.html",
   "permissions": [
     "storage"
   ]
