@@ -982,9 +982,9 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 	log : function(...aArgs)
 	{
-		if (!this.prefValues['textlink.debug'])
+/*		if (!this.prefValues['textlink.debug'])
 			return;
-
+*/
 		var logString = '[textlink] '+ aArgs.map(this.objectToLogString, this).join('');
 		console.log(logString);
 	},
