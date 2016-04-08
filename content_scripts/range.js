@@ -188,8 +188,9 @@ TextLinkRangeUtils.prototype = {
 			}
 		}
 
-		var rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
-		var shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
+		if (this.Find) {
+			let rangeSet = this._getRangeSetFromRange(aBaseRange, findRange, aMode);
+			let shouldReturnSingleResult = !(aMode & this.ALLOW_SAME_URIS);
 
 		this.Find.findBackwards = (aMode & this.FIND_LAST);
 		for (let i in terms)
@@ -220,6 +221,7 @@ TextLinkRangeUtils.prototype = {
 		}
 
 		this._destroyRangeSet(rangeSet);
+		}
 	},
 	_getFindTermsFromRange : function(aRange, aMode)
 	{
