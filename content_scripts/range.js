@@ -255,7 +255,7 @@ TextLinkRangeUtils.prototype = {
 			if (terms.indexOf(aTerm) < 0) terms.push(aTerm);
 		}, this);
 		if (aMode & this.FIND_ALL) {
-			// •¶Žš—ñ’·‚ª’·‚¢‚à‚Ì‚©‚çæ‚ÉƒT[ƒ`‚·‚é‚½‚ß‚É•À‚×‘Ö‚¦‚éi•”•ªˆê’v‚ðœŠO‚·‚é‚½‚ßj
+			// æ–‡å­—åˆ—é•·ãŒé•·ã„ã‚‚ã®ã‹ã‚‰å…ˆã«ã‚µãƒ¼ãƒã™ã‚‹ãŸã‚ã«ä¸¦ã¹æ›¿ãˆã‚‹ï¼ˆéƒ¨åˆ†ä¸€è‡´ã‚’é™¤å¤–ã™ã‚‹ãŸã‚ï¼‰
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
 		return terms;
@@ -391,7 +391,7 @@ TextLinkRangeUtils.prototype = {
 				) {
 				for (let i = 0, maxi = ranges.length; i < maxi; i++)
 				{
-					// Šù‚ÉŒ©‚Â‚©‚Á‚½‚æ‚è’·‚¢URI•¶Žš—ñ‚Ìˆê•”‚Å‚ ‚éê‡‚ÍœŠO‚·‚éB
+					// æ—¢ã«è¦‹ã¤ã‹ã£ãŸã‚ˆã‚Šé•·ã„URIæ–‡å­—åˆ—ã®ä¸€éƒ¨ã§ã‚ã‚‹å ´åˆã¯é™¤å¤–ã™ã‚‹ã€‚
 					let range = ranges[i];
 					uriRange = {
 						range     : range,
@@ -433,9 +433,9 @@ TextLinkRangeUtils.prototype = {
 		return uriRanges;
 	},
 	_containsRange : function(aBase, aTarget, aStrict)
-	{/* nsIDOMRange‚ÌcompareBoundaryPoints‚ðŽg‚¤‚ÆAƒeƒLƒXƒg“ü—Í—““à‚ÌRange‚Ì”äŠrŽž‚É
-	    NS_ERROR_DOM_WRONG_DOCUMENT_ERR—áŠO‚ª”­¶‚µ‚Ä‚µ‚Ü‚¤‚Ì‚ÅA‘ã‚í‚è‚É
-	    nsIDOMNSRange‚ÌcomparePoint‚ðŽg‚¤ */
+	{/* nsIDOMRangeã®compareBoundaryPointsã‚’ä½¿ã†ã¨ã€ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›æ¬„å†…ã®Rangeã®æ¯”è¼ƒæ™‚ã«
+	    NS_ERROR_DOM_WRONG_DOCUMENT_ERRä¾‹å¤–ãŒç™ºç”Ÿã—ã¦ã—ã¾ã†ã®ã§ã€ä»£ã‚ã‚Šã«
+	    nsIDOMNSRangeã®comparePointã‚’ä½¿ã† */
 		return 	aStrict ?
 			(
 				(aBase.comparePoint(aTarget.startContainer, aTarget.startOffset) == 0 &&
@@ -762,16 +762,16 @@ TextLinkRangeUtils.prototype = {
   
 	shrinkURIRange : function(aRange) 
 	{
-		// ‹­§‰üsˆÈ~‚ðØ‚è—Ž‚Æ‚·
+		// å¼·åˆ¶æ”¹è¡Œä»¥é™ã‚’åˆ‡ã‚Šè½ã¨ã™
 		var nodes = TextLinkUtils.evaluateXPath(
 				'following::*[local-name()="br" or local-name()="BR"] | '+
 				'descendant-or-self::*[local-name()="br" or local-name()="BR"]',
 				aRange.startContainer
 			);
 		var br;
-		/* nsIDOMRange‚ÌcompareBoundaryPoints‚ðŽg‚¤‚ÆAƒeƒLƒXƒg“ü—Í—““à‚ÌRange‚Ì”äŠrŽž‚É
-		   NS_ERROR_DOM_WRONG_DOCUMENT_ERR—áŠO‚ª”­¶‚µ‚Ä‚µ‚Ü‚¤‚Ì‚ÅA‘ã‚í‚è‚É
-		   nsIDOMNSRange‚ÌcomparePoint‚ðŽg‚¤ */
+		/* nsIDOMRangeã®compareBoundaryPointsã‚’ä½¿ã†ã¨ã€ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›æ¬„å†…ã®Rangeã®æ¯”è¼ƒæ™‚ã«
+		   NS_ERROR_DOM_WRONG_DOCUMENT_ERRä¾‹å¤–ãŒç™ºç”Ÿã—ã¦ã—ã¾ã†ã®ã§ã€ä»£ã‚ã‚Šã«
+		   nsIDOMNSRangeã®comparePointã‚’ä½¿ã† */
 		for (var i = 0, maxi = nodes.snapshotLength; i < maxi; i++)
 		{
 			br = nodes.snapshotItem(i);
