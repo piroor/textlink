@@ -14,7 +14,7 @@
  * The Original Code is the Text Link.
  *
  * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
- * Portions created by the Initial Developer are Copyright (C) 2015
+ * Portions created by the Initial Developer are Copyright (C) 2015-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
@@ -33,41 +33,22 @@
  *
  * ***** END LICENSE BLOCK ******/
  
-var EXPORTED_SYMBOLS = ['TextLinkUserActionHandler']; 
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
-var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
-var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
-var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
- 
-function TextLinkUserActionHandler(aGlobal, aBrowser)
+function TextLinkUserActionHandler()
 {
-	this.rangeUtils = new TextLinkRangeUtils(aGlobal, function() {
-		return aBrowser ? aBrowser.contentWindow : aGlobal.content ;
-	});
+	this.rangeUtils = new TextLinkRangeUtils();
 
-	this.global = aGlobal;
-	this.target = aBrowser || aGlobal;
-	this.target.addEventListener('mousedown', this, true);
-	this.target.addEventListener('mouseup', this, true);
-	this.target.addEventListener('dblclick', this, true);
-	this.target.addEventListener('keypress', this, true);
+	document.addEventListener('mousedown', this, true);
+	document.addEventListener('mouseup', this, true);
+	document.addEventListener('dblclick', this, true);
+	document.addEventListener('keypress', this, true);
 }
 TextLinkUserActionHandler.prototype = {
-	get contentDocument() {
-		return this.global.content.document;
-	},
-
 	destroy : function()
 	{
-		this.target.removeEventListener('mousedown', this, true);
-		this.target.removeEventListener('mouseup', this, true);
-		this.target.removeEventListener('dblclick', this, true);
-		this.target.removeEventListener('keypress', this, true);
-		delete this.target;
-		delete this.global;
+		document.removeEventListener('mousedown', this, true);
+		document.removeEventListener('mouseup', this, true);
+		document.removeEventListener('dblclick', this, true);
+		document.removeEventListener('keypress', this, true);
 	},
 
 	forbidDblclick: false,
@@ -93,8 +74,8 @@ TextLinkUserActionHandler.prototype = {
 			case 'mouseup':
 				if (aEvent.detail != 2)
 					return;
-				let focusedElement = Cc['@mozilla.org/focus-manager;1'].getService(Ci.nsIFocusManager).focusedElement;
-				if (focusedElement instanceof aEvent.view.HTMLAnchorElement) {
+				let focusedElement = null; // Cc['@mozilla.org/focus-manager;1'].getService(Ci.nsIFocusManager).focusedElement;
+				if (focusedElement && focusedElement instanceof HTMLAnchorElement) {
 					// Fix for https://github.com/piroor/textlink/issues/14
 					this.forbidDblclick = true;
 					return;
@@ -135,13 +116,13 @@ TextLinkUserActionHandler.prototype = {
 	{
 		var actions = [];
 		if (
-			aEvent.originalTarget.ownerDocument != this.contentDocument ||
+			aEvent.originalTarget.ownerDocument != document ||
 			aEvent.originalTarget.ownerDocument.designMode == 'on' ||
 			(
 				TextLinkUtils.evaluateXPath(
 					'ancestor-or-self::*[1]',
 					aEvent.originalTarget,
-					Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE
+					XPathResult.FIRST_ORDERED_NODE_TYPE
 				).singleNodeValue
 					.localName
 					.search(/^(textarea|input|textbox|select|menulist|scrollbar(button)?|slider|thumb)$/i) > -1
@@ -208,7 +189,7 @@ TextLinkUserActionHandler.prototype = {
 
 	openClickedURI : function(aEvent, aAction) 
 	{
-		var target = TextLinkUtils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, Ci.nsIDOMXPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
+		var target = TextLinkUtils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
 		if (
 			aAction == TextLinkConstants.ACTION_DISABLED ||
@@ -254,5 +235,6 @@ TextLinkUserActionHandler.prototype = {
 	loadURI : function(aURI, aReferrer, aAction, aOpener)
 	{
 		//XXX REPLACE ME!
+		window.open(aURI);
 	}
 };
