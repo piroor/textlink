@@ -73,7 +73,7 @@ TextLinkRangeUtils.prototype = {
 		return TextLinkUtils.evaluateXPath(
 				'ancestor-or-self::*['+INPUT_FIELD_CONDITITON+'][1]',
 				aNode,
-				DOMXPathResult.FIRST_ORDERED_NODE_TYPE
+				XPathResult.FIRST_ORDERED_NODE_TYPE
 			).singleNodeValue;
 	},
  
