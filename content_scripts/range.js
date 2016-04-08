@@ -125,7 +125,6 @@ TextLinkRangeUtils.prototype = {
 
 		var ranges = [];
 		var selection = this.getSelection(aFrameOrEditable);
-		TextLinkUtils.log('getURIRangesIterator, from selection: ' + (selection && selection.rangeCount));
 		if (!selection || !selection.rangeCount)
 			throw new Error(this.ERRROR_NO_URI_RANGE);
 
@@ -148,7 +147,6 @@ TextLinkRangeUtils.prototype = {
 				while(true)
 				{
 					let foundRange = iterator.next();
-					TextLinkUtils.log('getURIRangesIterator, found: ', foundRange);
 					yield foundRange;
 					ranges.push(foundRange);
 					if (aContinuationChecker && typeof aContinuationChecker == 'function')
@@ -175,7 +173,6 @@ TextLinkRangeUtils.prototype = {
 
 		var findRange = this.getFindRange(aBaseRange);
 		var terms = this._getFindTermsFromRange(findRange, aMode);
-		TextLinkUtils.log('found terms:', terms);
 		if (!terms.length)
 			throw new Error(this.ERRROR_NO_URI_RANGE);
 
@@ -701,14 +698,12 @@ TextLinkRangeUtils.prototype = {
   
 	getSelectionURIRanges : function(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker) 
 	{
-		TextLinkUtils.log('getSelectionURIRanges');
 		if (!aMode) aMode = this.FIND_ALL;
 
 		var iterator = this.getURIRangesIterator(aFrameOrEditable, aMode, aStrict, aExceptionsHash, aContinuationChecker);
 		var ranges = [];
 		var self = this;
 		return new Promise(function(aResolve, aReject) {
-				TextLinkUtils.log('getSelectionURIRanges: start timer');
 				var timer = setInterval(function() {
 					try {
 						if (aContinuationChecker && typeof aContinuationChecker == 'function')
@@ -731,7 +726,6 @@ TextLinkRangeUtils.prototype = {
 				}
 			})
 			.then(function() {
-				TextLinkUtils.log('getSelectionURIRanges: after collection');
 				if (aContinuationChecker && typeof aContinuationChecker == 'function')
 					aContinuationChecker();
 				if (aMode & self.FIND_ALL)
