@@ -208,16 +208,21 @@ TextLinkUserActionHandler.prototype = {
 		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, configs.findClickPointStrictly)
 			.then(function(aRanges) {
 				TextLinkUtils.log('aRanges:', aRanges);
-				if (aRanges.length)
+				if (aRanges.length > 0)
 					self.openClickedURIPostProcess(aEvent, aAction, frame, aRanges);
+			})
+			.catch(function(aError) {
+				TextLinkUtils.log('error: '+aError);
 			});
 	},
 	openClickedURIPostProcess : function(aEvent, aAction, aFrame, aRanges)
 	{
 		var range = aRanges[0];
 
-		range.selection.removeAllRanges();
-		range.selection.addRange(range.range);
+		if (range && range.range instanceof Range) {
+			range.selection.removeAllRanges();
+			range.selection.addRange(range.range);
+		}
 
 		if (aAction & TextLinkConstants.ACTION_SELECT)
 			return;
