@@ -599,7 +599,7 @@ TextLinkRangeUtils.prototype = {
 			}
 			let string = expandRange.toString();
 			let delta = 0;
-			if (cofnigs.multilineEnabled) {
+			if (configs.multilineEnabled) {
 				let originalString = string;
 				string = string.replace(/^[\n\r]+|[\n\r]+$/g, '');
 				delta = originalString.indexOf(string);
@@ -611,7 +611,7 @@ TextLinkRangeUtils.prototype = {
 					delta = 0;
 				}
 			}
-			if (!cofnigs.multilineEnabled || string) {
+			if (!configs.multilineEnabled || string) {
 				let part = TextLinkUtils.getURIPartFromStart(string, headPartIsFound);
 				if (!part.length) break;
 				let partRange;
@@ -805,7 +805,7 @@ TextLinkRangeUtils.prototype = {
 	getFollowingURIPartRanges : function(aRange) 
 	{
 		var ranges = [];
-		if (cofnigs.multilineEnabled) {
+		if (configs.multilineEnabled) {
 			this._expandURIRangeToAfter(aRange, ranges);
 		}
 		return ranges;
