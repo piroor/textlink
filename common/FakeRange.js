@@ -4,11 +4,30 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-function SelectionInField(aElement)
+function FakeRange(aText)
+{
+	this._text = aText;
+}
+FakeRange.prototype = {
+	comparePoint : function(aContainer, aOffset)
+	{
+		return 0;
+	},
+	detach : function()
+	{
+		delete this._text;
+	},
+	toString : function()
+	{
+		return this._text;
+	}
+};
+
+function FakeSelectionInField(aElement)
 {
 	this._element = aElement;
 }
-SelectionInField.prototype = {
+FakeSelectionInField.prototype = {
 	toString : function()
 	{
 		return this._element.value.substring(
@@ -29,19 +48,14 @@ SelectionInField.prototype = {
 		if (aIndex > this.rangeCount)
 			throw new Error('too larget index');
 
-		return new RangeInField(this._element, this.toString());
+		return new FakeRangeInField(this._element, this.toString());
 	}
 };
 
-function RangeInField(aElement, aText)
+function FakeRangeInField(aElement, aText)
 {
 	this._element = aElement;
 	this._text = aText;
 }
-
-RangeInField.prototype = {
-	toString : function()
-	{
-		return this._text;
-	}
-};
+FakeRangeInField.prototype = inherit(FakeRange.prototype, {
+});

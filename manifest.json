@@ -22,8 +22,8 @@
       "js": [
         "common/inherit.jsm",
         "common/constants.js",
+        "common/FakeRange.js",
         "content_scripts/utils.js",
-        "content_scripts/selectionInField.js",
         "content_scripts/range.js",
         "content_scripts/content.js"
       ],

@@ -222,6 +222,16 @@ TextLinkRangeUtils.prototype = {
 
 			this._destroyRangeSet(rangeSet);
 		}
+		else {
+			for (let i = 0, maxi = terms.length; i < maxi; i++)
+			{
+				let uri = terms[i];
+				if (foundURIsHash[uri])
+					continue;
+				foundURIsHash[uri] = true;
+				yield new FakeRange(uri);
+			}
+		}
 	},
 	_getFindTermsFromRange : function(aRange, aMode)
 	{
