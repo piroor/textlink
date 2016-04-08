@@ -241,6 +241,6 @@ TextLinkUserActionHandler.prototype = {
 	loadURI : function(aURI, aReferrer, aAction, aOpener)
 	{
 		//XXX REPLACE ME!
-		window.open(aURI);
+		location.href = aURI;
 	}
 };
