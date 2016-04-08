@@ -73,6 +73,7 @@
 	};
 
 	var userActionHandler = new TextLinkUserActionHandler(global);
+/*
 	userActionHandler.loadURI = function(aURI, aReferrer, aAction) {
 		global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
 			command  : TextLinkConstants.COMMAND_LOAD_URI,
@@ -81,6 +82,7 @@
 			action   : aAction
 		});
 	};
+*/
 
 	var selectionHandler = new TextLinkSelectionHandler();
 })(this);
