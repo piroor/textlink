@@ -293,7 +293,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 					forbiddenCharacters += configs.IDNLazyDetectionSeparators;
 				let part = '[^'+
 							forbiddenCharacters+
-							(this.prefValues['network.IDN.blacklist_chars'] || '')
+							(configs['network.IDN.blacklist_chars'] || '')
 								.replace(new RegExp('['+forbiddenCharacters+']', 'g'), '')
 								.replace(/(.)\1+/g, '$1')
 								.replace(/./g, function(aChar) {
@@ -396,13 +396,11 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	get topLevelDomains() 
 	{
 		if (!this._topLevelDomains) {
-			let TLD = [
-					this.prefValues['textlink.gTLD'],
-					this.prefValues['textlink.ccTLD'],
-					this.prefValues['textlink.extraTLD']
-				];
+			let TLD = configs.gTLD
+						.concat(configs.ccTLD)
+						.concat(configs.extraTLD)
 			if (configs.IDNEnabled)
-				TLD.push(this.prefValues['textlink.IDN_TLD']);
+				TLD = TLD.concat(configs.IDN_TLD);
 			this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
 										.reverse(); // this is required to match "com" instead of "co".
 		}
@@ -437,9 +435,9 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 	_updateURIExceptionPattern : function()
 	{
 		try {
-			var whole = '^(?:'+this.prefValues['textlink.part.exception.whole']+')$';
-			var start = '^(?:'+this.prefValues['textlink.part.exception.start']+')';
-			var end = '(?:'+this.prefValues['textlink.part.exception.end']+')$';
+			var whole = '^(?:'+configs.partExceptionWhole+')$';
+			var start = '^(?:'+configs.partExceptionStart+')';
+			var end = '(?:'+configs.partExceptionEnd+')$';
 			this._URIExceptionPattern = new RegExp(whole, 'i');
 			this._URIExceptionPattern_start = new RegExp(start, 'i');
 			this._URIExceptionPattern_end = new RegExp(end, 'i');
@@ -807,7 +805,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 
 	log : function(...aArgs)
 	{
-/*		if (!this.prefValues['textlink.debug'])
+/*		if (!configs.debug)
 			return;
 */
 		var logString = '[textlink] '+ aArgs.map(this.objectToLogString, this).join('');
