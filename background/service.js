@@ -603,6 +603,22 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	}
 });
 
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-item-test',
+	title    : 'test',
+	contexts : ['selection']
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-item-test-child',
+	parentId : 'context-item-test',
+	title    : 'test child',
+	onclick  : function() {
+		log('child');
+	}
+});
+
 chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 	switch (aMessage.type)
 	{
