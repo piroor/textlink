@@ -109,11 +109,6 @@ var TextLinkConstants = {
 
 	kCONFIG_VERSION : 2,
 
-	MESSAGE_TYPE : 'textlink',
-
-	COMMAND_SHUTDOWN              : 'shutdown',
-	COMMAND_NOTIFY_CONFIG_UPDATED : 'notify-config-updated',
-
 	COMMAND_REQUEST_SELECTION_SUMMARY        : 'request-selection-summary',
 	COMMAND_REPORT_SELECTION_SUMMARY         : 'report-selection-summary',
 	COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY : 'request-cancel-selection-summary',
