@@ -1,48 +1,41 @@
-(function(aGlobal) {
-var { Promise } = Components.utils.import('resource://gre/modules/Promise.jsm', {});
-var { inherit } = Components.utils.import('resource://textlink-modules/inherit.jsm', {});
-var { prefs } = Components.utils.import('resource://textlink-modules/prefs.js', {});
-var { TextLinkConstants } = Components.utils.import('resource://textlink-modules/constants.js', {});
-var { TextLinkUtils } = Components.utils.import('resource://textlink-modules/utils.js', {});
-var { TextLinkRangeUtils } = Components.utils.import('resource://textlink-modules/range.js', {});
-var { TextLinkUserActionHandler } = Components.utils.import('resource://textlink-modules/userActionHandler.js', {});
+/* ***** BEGIN LICENSE BLOCK ***** 
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Text Link.
+ *
+ * The Initial Developer of the Original Code is YUKI "Piro" Hiroshi.
+ * Portions created by the Initial Developer are Copyright (C) 2002-2016
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s): YUKI "Piro" Hiroshi <piro.outsider.reflex@gmail.com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ******/
 
-var TextLinkService = inherit(TextLinkConstants, { 
-	utils : TextLinkUtils,
-	rangeUtils : new TextLinkRangeUtils(window, function() {
-		return TextLinkService.browser.contentWindow;
-	}),
-	
-	get window() 
-	{
-		return window;
-	},
 
-	get browser()
-	{
-		return gBrowser;
-	},
- 
-	get browserURI() 
-	{
-		if (!this._browserURI) {
-			var uri = prefs.getPref('browser.chromeURL');
-			if (!uri) {
-				try {
-					var handler = Components.classes['@mozilla.org/commandlinehandler/general-startup;1?type=browser'].getService(Components.interfaces.nsICmdLineHandler);
-					uri = handler.chromeUrlForTask;
-				}
-				catch(e) {
-				}
-			}
-			if (uri.charAt(uri.length-1) == '/')
-				uri = uri.replace(/chrome:\/\/([^\/]+)\/content\//, 'chrome://$1/content/$1.xul');
-			this._browserURI = uri;
-		}
-		return this._browserURI;
-	},
-	_browserURI : null,
- 
+var TextLinkService = inherit(TextLinkConstants, { 	
+/*
 	get tooltip() 
 	{
 		return document.getElementById('textLinkTooltip-selectedURI');
@@ -69,18 +62,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				(popup && popup.triggerNode) ||
 				document.popupNode ;
 	},
- 
-	get bundle() { 
-		if (!this._bundle) {
-			this._bundle = document.getElementById('textlink-bundle');
-		}
-		return this._bundle;
-	},
-	_bundle : null,
- 
-	forbidDblclick: false,
-	mousedownPosition: null,
-	forbidDblclickTolerance: 24,
+*/
  
 	handleEvent : function(aEvent) 
 	{
@@ -94,6 +76,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				this.destroy();
 				return;
 
+/*
 			case 'popupshowing':
 				if (aEvent.currentTarget == this.tooltip)
 					this.buildTooltip();
@@ -114,12 +97,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 					aEvent.target == this.subMenu)
 					this.destroyContextMenu();
 				return;
-
-			case 'TabOpen':
-				return this.initTab(aEvent.originalTarget, this.browser);
-
-			case 'TabClose':
-				return this.destroyTab(aEvent.originalTarget);
+*/
 		}
 	},
 	
@@ -176,27 +154,30 @@ var TextLinkService = inherit(TextLinkConstants, {
 		range.detach();
 	},
   
-	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
+	openURI : function(aURI, aReferrer, aAction, aOpenerTabId)
 	{
 		log('loadURI', { action: aAction, uri: aURI });
+		var active = !(aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB);
 		if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT ||
-			aURI.match(/^mailto:/) ||
-			aBrowser.localName != 'tabbrowser') {
-			aBrowser.loadURI(aURI, aReferrer);
+			aURI.match(/^mailto:/)) {
+			chrome.tabs.sendMessage(aOpenerTabId, {
+				type     : TextLinkConstants.COMMAND_LOAD_URI,
+				uri      : aURI,
+				referrer : aReferrer
+			});
 		}
 		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
-			window.openDialog(this.browserURI, '_blank', 'chrome,all,dialog=no', aURI, null, aReferrer);
+			chrome.windows.create({
+				url     : aURI,
+				focused : active
+			});
 		}
 		else {
-			if ('TreeStyleTabService' in window) { // Tree Style Tab
-				TreeStyleTabService.readyToOpenChildTab(aOpener);
-			}
-			aBrowser.loadOneTab(aURI, {
-				referrerURI: aReferrer,
-				charset: null,
-				postData: null,
-				inBackground: (aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB),
-				relatedToCurrent: true,
+			chrome.tabs.create({
+				url         : aURI,
+				// this parameter does not supported yet and raises an error...
+				// openerTabId : aOpenerTabId,
+				active      : active
 			});
 		}
 	},
@@ -319,12 +300,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		// hacks.js
 		this.overrideExtensions();
 	},
-	
-	initTab : function(aTab, aTabBrowser) 
-	{
-		aTab.__textlink__contentBridge = new TextLinkContentBridge(aTab, aTabBrowser);
-	},
- 
+
 	initContextMenu : function() 
 	{
 		log('initContextMenu');
@@ -358,23 +334,23 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		if (
 			(
-				!TextLinkUtils.contextItemCurrent &&
-				!TextLinkUtils.contextItemWindow &&
-				!TextLinkUtils.contextItemTab &&
-				!TextLinkUtils.contextItemCopy
+				!configs.contextItemCurrent &&
+				!configs.contextItemWindow &&
+				!configs.contextItemTab &&
+				!configs.contextItemCopy
 			) ||
 			!isAvailableContext
 			)
 			return;
 
 		gContextMenu.showItem('context-openTextLink-current',
-			TextLinkUtils.contextItemCurrent);
+			configs.contextItemCurrent);
 		gContextMenu.showItem('context-openTextLink-window',
-			TextLinkUtils.contextItemWindow);
+			configs.contextItemWindow);
 		gContextMenu.showItem('context-openTextLink-tab',
-			TextLinkUtils.contextItemTab);
+			configs.contextItemTab);
 		gContextMenu.showItem('context-openTextLink-copy',
-			TextLinkUtils.contextItemCopy);
+			configs.contextItemCopy);
 
 		this.updateMenuItems(items);
 	},
@@ -494,120 +470,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
 			this.destroyTab(aTab);
 		}, this);
-	},
-	
-	destroyTab : function(aTab) 
-	{
-		if (aTab.__textlink__contentBridge) {
-			aTab.__textlink__contentBridge.destroy();
-			delete aTab.__textlink__contentBridge;
-		}
-	},
-
-	observe : function(aSubject, aTopic, aData) 
-	{
-		if (aTopic != 'nsPref:changed') return;
-
-		var value = prefs.getPref(aData);
-		TextLinkUtils.onPrefValueChanged(aData, value);
-
-		var configs = {};
-		configs[aData] = value;
-		window.messageManager.broadcastAsyncMessage(this.MESSAGE_TYPE, {
-			command : TextLinkConstants.COMMAND_NOTIFY_CONFIG_UPDATED,
-			config  : configs
-		});
-	},
-	domains : [
-		TextLinkConstants.DOMAIN,
-		'network.enableIDN',
-		'network.IDN.blacklist_chars'
-	],
-
-	get prefKeys() {
-		if (!this._prefKeys) {
-			this._prefKeys = [
-				'network.enableIDN',
-				'network.IDN.blacklist_chars'
-			];
-			this._prefKeys = this._prefKeys.concat([
-				'debug',
-				'scheme',
-				'scheme.fixup.table',
-				'scheme.fixup.default',
-				'find_click_point.strict',
-				'relative.enabled',
-				'multibyte.enabled',
-				'multiline.enabled',
-				'idn.enabled',
-				'idn.scheme',
-				'i18nPath.enabled',
-				'gTLD',
-				'ccTLD',
-				'IDN_TLD',
-				'extraTLD',
-				'idn.lazyDetection.separators',
-				'part.exception.whole',
-				'part.exception.start',
-				'part.exception.end',
-				'contextmenu.submenu',
-				'contextmenu.openTextLink.current',
-				'contextmenu.openTextLink.window',
-				'contextmenu.openTextLink.tab',
-				'contextmenu.openTextLink.copy'
-			].map(function(aKey) {
-				return this.DOMAIN + aKey;
-			}, this));
-			this._prefKeys = this._prefKeys.concat(prefs.getDescendant(this.DOMAIN + 'actions.'));
-		}
-		return this._prefKeys;
-	},
-	initPrefs : function() 
-	{
-		this.prefKeys.sort().forEach(function(aPref) {
-			this.observe(null, 'nsPref:changed', aPref);
-		}, this);
-	},
- 
-	migratePrefs : function()
-	{
-		// migrate old prefs
-		var orientalPrefs = [];
-		var version = prefs.getPref(this.DOMAIN + 'prefsVersion') ||
-						prefs.getPref('textlink.prefsVersion') ||
-						0;
-		switch (version)
-		{
-			case 0:
-				[
-					'textlink.schemer:textlink.scheme',
-					'textlink.schemer.fixup.table:textlink.scheme.fixup.table',
-					'textlink.schemer.fixup.default:textlink.scheme.fixup.default'
-				].forEach(function(aPref) {
-					var keys = aPref.split(':');
-					var value = prefs.getPref(keys[0]);
-					if (value !== null) {
-						prefs.setPref(keys[1], value);
-						prefs.clearPref(keys[0]);
-					}
-				}, this);
-			case 1:
-				{
-					prefs.getDescendant('textlink.').forEach(function(aKey) {
-						var value = prefs.getPref(aKey);
-						var newKey = this.DOMAIN + aKey.replace(/^textlink\./, '');
-						prefs.setPref(newKey, value);
-						prefs.clearPref(aKey);
-					}, this);
-				}
-			default:
-				break;
-		}
-		prefs.setPref(this.DOMAIN + 'prefsVersion', this.kPREF_VERSION);
 	}
-   
-}); 
-aGlobal.TextLinkService = TextLinkService;
+});
 
 
 function TextLinkContentBridge(aTab, aTabBrowser) 
@@ -662,12 +526,6 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 
 		switch (aMessage.json.command)
 		{
-			case this.COMMAND_LOAD_URI:
-				var params = aMessage.json;
-				var referrer = params.referrer && TextLinkUtils.makeURIFromSpec(params.referrer);
-				TextLinkService.loadURI(params.uri, referrer, params.action, this.mTabBrowser, this.mTab);
-				return;
-
 			case this.COMMAND_REPORT_SELECTION_SUMMARY:
 				var id = aMessage.json.id;
 				if (id in this.resolvers) {
@@ -691,25 +549,6 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 					this.onSelectionURIProgress(aMessage.json.uris);
 				return;
 		}
-	},
-	handleEvent: function TLCB_handleEvent(aEvent)
-	{
-		switch (aEvent.type)
-		{
-			case 'TabRemotenessChange':
-				return this.notifyConfigUpdatedMessage();
-		}
-	},
-	notifyConfigUpdatedMessage : function TLCB_notifyConfigUpdatedMessage()
-	{
-		var configs = {};
-		TextLinkService.prefKeys.forEach(function(aKey) {
-			configs[aKey] = prefs.getPref(aKey);
-		});
-		this.mTab.linkedBrowser.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
-			command : this.COMMAND_NOTIFY_CONFIG_UPDATED,
-			config  : configs
-		});
 	},
 	getSelectionSummary : function TLCB_getSelectionSummary()
 	{
@@ -763,7 +602,12 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_URIS);
 	}
 });
-aGlobal.TextLinkContentBridge = TextLinkContentBridge;
 
-})(this);
- 
+chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
+	switch (aMessage.type)
+	{
+		case TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION:
+			TextLinkService.openURI(aMessage.uri, aMessage.referrer, aMessage.action, aSender.tab.id);
+			break;
+	}
+});

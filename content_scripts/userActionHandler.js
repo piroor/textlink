@@ -134,14 +134,9 @@ TextLinkUserActionHandler.prototype = {
 			return actions;
 		}
 
-		for (let i in configs.actions)
-		{
-			let action = configs.actions[i];
-			if (this.actionShouldHandleEvent(action, aEvent)) {
-				actions.push(action);
-			}
-		}
-		return actions;
+		return configs.actions.map(function(aAction) {
+			return this.actionShouldHandleEvent(aAction, aEvent);
+		}, this);
 	},
 
 	actionShouldHandleEvent : function(aAction, aEvent) 
@@ -236,11 +231,12 @@ TextLinkUserActionHandler.prototype = {
 		var referrer = (aAction & TextLinkConstants.ACTION_STEALTH) ?
 					null :
 					aFrame.location.href ;
-		this.loadURI(uri, referrer, aAction, aFrame);
-	},
-	loadURI : function(aURI, aReferrer, aAction, aOpener)
-	{
-		//XXX REPLACE ME!
-		location.href = aURI;
+
+		chrome.runtime.sendMessage({
+			type     : TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION,
+			uri      : uri,
+			referrer : referrer,
+			action   : aAction
+		});
 	}
 };

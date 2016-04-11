@@ -72,17 +72,15 @@
 		}
 	};
 
-	var userActionHandler = new TextLinkUserActionHandler(global);
-/*
-	userActionHandler.loadURI = function(aURI, aReferrer, aAction) {
-		global.sendAsyncMessage(TextLinkConstants.MESSAGE_TYPE, {
-			command  : TextLinkConstants.COMMAND_LOAD_URI,
-			uri      : aURI,
-			referrer : aReferrer,
-			action   : aAction
-		});
-	};
-*/
-
+	var userActionHandler = new TextLinkUserActionHandler();
 	var selectionHandler = new TextLinkSelectionHandler();
 })(this);
+
+chrome.runtime.onMessage.addListener(function(aMessage) {
+	switch (aMessage.type)
+	{
+		case TextLinkConstants.COMMAND_LOAD_URI:
+			location.href = aMessage.uri;
+			break;
+	}
+});

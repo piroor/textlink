@@ -123,5 +123,6 @@ var TextLinkConstants = {
 	COMMAND_REPORT_SELECTION_URIS_PROGRESS   : 'report-selection-uris-progress',
 	COMMAND_REQUEST_CANCEL_SELECTION_URIS    : 'request-cancel-selection-uris',
 
-	COMMAND_LOAD_URI              : 'load-uri'
+	COMMAND_OPEN_URI_WITH_ACTION : 'open-uri-with-action',
+	COMMAND_LOAD_URI             : 'load-uri'
 };
