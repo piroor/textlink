@@ -178,7 +178,7 @@ var TextLinkService = inherit(TextLinkConstants, {
   
 	loadURI : function(aURI, aReferrer, aAction, aBrowser, aOpener)
 	{
-		this.utils.log('loadURI', { action: aAction, uri: aURI });
+		log('loadURI', { action: aAction, uri: aURI });
 		if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/) ||
 			aBrowser.localName != 'tabbrowser') {
@@ -203,23 +203,23 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	openTextLinkIn : function(aAction, aTarget) 
 	{
-		this.utils.log('openTextLinkIn', { action: aAction, target: aTarget });
+		log('openTextLinkIn', { action: aAction, target: aTarget });
 		return this.getSelectionURIs({
 				select : true
 			})
 			.then((function(aURIs) {
-				this.utils.log('openTextLinkIn:step2', { uris: aURIs });
+				log('openTextLinkIn:step2', { uris: aURIs });
 				if (aURIs.length > 0)
 					this.openTextLinkInPostProcess(aAction, aTarget, aURIs);
 			}).bind(this))
 			.catch(function(aError) {
-				this.utils.log('openTextLinkIn:error', aError);
+				log('openTextLinkIn:error', aError);
 				Components.utils.reportError(aError);
 			});
 	},
 	openTextLinkInPostProcess : function(aAction, aTarget, aURIs)
 	{
-		this.utils.log('openTextLinkInPostProcess', { action: aAction, target: aTarget, uris: aURIs });
+		log('openTextLinkInPostProcess', { action: aAction, target: aTarget, uris: aURIs });
 		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (aURIs.length > 1)
 				aURIs.push('');
@@ -254,7 +254,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	openTextLinkInTabs : function(aURIs, aAction)
 	{
-		this.utils.log('openTextLinkInTabs', { uris: aURIs, action: aAction });
+		log('openTextLinkInTabs', { uris: aURIs, action: aAction });
 		var selectTab;
 		var tabs = [];
 		var b = this.browser;
@@ -327,7 +327,7 @@ var TextLinkService = inherit(TextLinkConstants, {
  
 	initContextMenu : function() 
 	{
-		this.utils.log('initContextMenu');
+		log('initContextMenu');
 		var isAvailableContext = (
 				(
 					gContextMenu.isTextSelected &&
@@ -380,7 +380,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	initSubMenu : function() 
 	{
-		this.utils.log('initSubMenu');
+		log('initSubMenu');
 		var items = [
 				'submenu-context-openTextLink-current',
 				'submenu-context-openTextLink-window',
@@ -401,10 +401,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 	},
 	updateMenuItems : function(aItems)
 	{
-		this.utils.log('updateMenuItems');
+		log('updateMenuItems');
 		this.getSelectionSummary()
 			.then((function(aSummary) {
-				this.utils.log('updateMenuItems:getSelectionSummary', aSummary);
+				log('updateMenuItems:getSelectionSummary', aSummary);
 				if (aSummary && aSummary.first) {
 					var targets = [
 						/\%s1/i, aSummary.first,
@@ -434,13 +434,13 @@ var TextLinkService = inherit(TextLinkConstants, {
 				}
 			}).bind(this))
 			.catch(function(aError) {
-				this.utils.log('updateMenuItems:error', aError);
+				log('updateMenuItems:error', aError);
 				Components.utils.reportError(aError);
 			});
 	},
 	getSelectionSummary : function()
 	{
-		this.utils.log('getSelectionSummary');
+		log('getSelectionSummary');
 		if (this.selectionHandler)
 			return this.selectionHandler.getSummary();
 		else
@@ -652,7 +652,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
-		TextLinkService.utils.log('TextLinkContentBridge#handlemessage', {
+		log('TextLinkContentBridge#handlemessage', {
 			target : aMessage.target,
 			json   : aMessage.json
 		});
@@ -713,7 +713,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionSummary : function TLCB_getSelectionSummary()
 	{
-		TextLinkService.utils.log('TextLinkContentBridge#getSelectionSummary');
+		log('TextLinkContentBridge#getSelectionSummary');
 		this.cancelSelectionSummary();
 		return new Promise((function(aResolve, aReject) {
 			var id = this.getSelectionSummaryIDPrefix + Date.now() + '-' + Math.floor(Math.random() * 65000);
@@ -726,7 +726,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	getSelectionSummaryIDPrefix : 'selectionSummary-',
 	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
 	{
-		TextLinkService.utils.log('TextLinkContentBridge#cancelSelectionSummary');
+		log('TextLinkContentBridge#cancelSelectionSummary');
 		Object.keys(this.resolvers).forEach(function(aKey) {
 			if (aKey.indexOf(this.getSelectionSummaryIDPrefix) == 0)
 				delete this.resolvers[aKey];
@@ -735,7 +735,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	getSelectionURIs : function TLCB_getSelectionURIs(aOptions)
 	{
-		TextLinkService.utils.log('TextLinkContentBridge#getSelectionURIs', aOptions);
+		log('TextLinkContentBridge#getSelectionURIs', aOptions);
 		this.cancelSelectionURIs(aOptions);
 		aOptions = aOptions || {};
 		this.onSelectionURIProgress = aOptions.onProgress;
@@ -752,7 +752,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	getSelectionURIsIDPrefix : 'selectionURIs-',
 	cancelSelectionURIs : function TLCB_cancelSelectionURIs(aOptions)
 	{
-		TextLinkService.utils.log('TextLinkContentBridge#cancelSelectionURIs', aOptions);
+		log('TextLinkContentBridge#cancelSelectionURIs', aOptions);
 		aOptions = aOptions || {};
 		this.onSelectionURIProgress = null;
 		var prefix = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '');

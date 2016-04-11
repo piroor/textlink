@@ -101,15 +101,15 @@ TextLinkUserActionHandler.prototype = {
 
 	handleUserActionEvent : function(aEvent) 
 	{
-		TextLinkUtils.log('handleUserActionEvent');
+		log('handleUserActionEvent ', aEvent.type);
 		this.getActionsForEvent(aEvent).some(function(aAction) {
-			TextLinkUtils.log('action:', aAction);
+			log('action:', aAction);
 			try {
 				this.openClickedURI(aEvent, aAction.action);
 				return true;
 			}
 			catch(e) {
-				TextLinkUtils.log('error:' + e);
+				log('error:' + e);
 			}
 			return false;
 		}, this);
@@ -192,7 +192,7 @@ TextLinkUserActionHandler.prototype = {
 
 	openClickedURI : function(aEvent, aAction) 
 	{
-		TextLinkUtils.log('openClickedURI:', aAction);
+		log('openClickedURI:', aAction);
 		var target = TextLinkUtils.evaluateXPath('ancestor-or-self::*[1]', aEvent.originalTarget, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue;
 
 		if (
@@ -207,12 +207,12 @@ TextLinkUserActionHandler.prototype = {
 		var self = this;
 		this.rangeUtils.getSelectionURIRanges(frame, this.rangeUtils.FIND_FIRST, configs.findClickPointStrictly)
 			.then(function(aRanges) {
-				TextLinkUtils.log('aRanges:', aRanges);
+				log('aRanges:', aRanges);
 				if (aRanges.length > 0)
 					self.openClickedURIPostProcess(aEvent, aAction, frame, aRanges);
 			})
 			.catch(function(aError) {
-				TextLinkUtils.log('error: '+aError);
+				log('error: '+aError);
 			});
 	},
 	openClickedURIPostProcess : function(aEvent, aAction, aFrame, aRanges)

@@ -162,7 +162,7 @@ TextLinkRangeUtils.prototype = {
 				break;
 			}
 		}
-		TextLinkUtils.log('getURIRangesIterator: done');
+		log('getURIRangesIterator: done');
 	},
  
 	getURIRangesIteratorFromRange : function(aBaseRange, aMode, aStrict, aExceptionsHash) 
@@ -721,7 +721,7 @@ TextLinkRangeUtils.prototype = {
 			})
 			.catch(function(aError) {
 				if (!(aError instanceof StopIteration)) {
-					TextLinkUtils.log('error:' + aError);
+					log('error:' + aError);
 					throw aError;
 				}
 			})
@@ -775,7 +775,7 @@ TextLinkRangeUtils.prototype = {
 				if (aError.message == self.ERRROR_NO_URI_RANGE)
 					return true;
 				if (!(aError instanceof StopIteration)) {
-					TextLinkUtils.log('error:' + aError);
+					log('error:' + aError);
 					throw aError;
 				}
 				return false;
