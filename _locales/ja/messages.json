@@ -1,5 +1,23 @@
 {
   "name": { "message": "テキストリンク" },
   "description": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html" },
+
+  "contextItem.menu.label": { "message": "URIの自動認識" },
+  "contextItem.current.single": { "message": "開く: \"$1\"" },
+  "contextItem.current.multiple": { "message": "すべて開く: \"$1\"～\"$2\"" },
+  "contextItem.current.processing": { "message": "開く: URIを探索中..." },
+  "contextItem.current.disabled": { "message": "開く: URIがありません" },
+  "contextItem.tab.single": { "message": "新しいタブで開く: \"$1\"" },
+  "contextItem.tab.multiple": { "message": "すべて新しいタブで開く: \"$1\"～\"$2\"" },
+  "contextItem.tab.processing": { "message": "新しいタブで開く: URIを探索中..." },
+  "contextItem.tab.disabled": { "message": "新しいタブで開く: URIがありません" },
+  "contextItem.window.single": { "message": "新しいウィンドウで開く: \"$1\"" },
+  "contextItem.window.multiple": { "message": "すべて新しいウィンドウで開く: \"$1\"～\"$2\"" },
+  "contextItem.window.processing": { "message": "新しいウィンドウで開く: URIを探索中..." },
+  "contextItem.window.disabled": { "message": "新しいウィンドウで開く: URIがありません" },
+  "contextItem.copy.single": { "message": "URIをコピー: \"$1\"" },
+  "contextItem.copy.multiple": { "message": "すべてのURIをコピー: \"$1\"～\"$2\"" },
+  "contextItem.copy.processing": { "message": "URIをコピー: URIを探索中..." },
+  "contextItem.copy.disabled": { "message": "URIをコピー: URIがありません" }
 }

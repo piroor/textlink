@@ -1,5 +1,23 @@
 {
   "name": { "message": "Text Link" },
   "description": { "message": "Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással." },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
+
+  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.current.single": { "message": "Megnyitás \"$1\"" },
+  "contextItem.current.multiple": { "message": "Mindegyik megnyitása: \"$1\" ~ \"$2\"" },
+  "contextItem.current.processing": { "message": "Mindegyik megnyitása: finding URIs…" },
+  "contextItem.current.disabled": { "message": "Mindegyik megnyitása: no URI found" },
+  "contextItem.tab.single": { "message": "Megnyitás új lapon: \"$1\"" },
+  "contextItem.tab.multiple": { "message": "Mindegyik megnyitása külön lapon: \"$1\" ~ \"$2\"" },
+  "contextItem.tab.processing": { "message": "Megnyitás új lapon: finding URIs…" },
+  "contextItem.tab.disabled": { "message": "Megnyitás új lapon: no URI found" },
+  "contextItem.window.single": { "message": "Megnyitás új ablakban: \"$1\"" },
+  "contextItem.window.multiple": { "message": "Mindegyik megnyitása külön ablakban: \"$1\" ~ \"$2\"" },
+  "contextItem.window.processing": { "message": "Megnyitás új ablakban: finding URIs…" },
+  "contextItem.window.disabled": { "message": "Megnyitás új ablakban: no URI found" },
+  "contextItem.copy.single": { "message": "Webcím másolása: \"$1\"" },
+  "contextItem.copy.multiple": { "message": "Mindegyik webcím másolása: \"$1\" ~ \"$2\"" },
+  "contextItem.copy.processing": { "message": "Webcím másolása: finding URIs…" },
+  "contextItem.copy.disabled": { "message": "Webcím másolása: no URI found" }
 }

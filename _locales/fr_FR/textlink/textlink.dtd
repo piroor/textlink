@@ -35,27 +35,6 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Autodetected URIs">
-<!ENTITY textlink.openTextLink.current.single    "Ouvrir &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "Ouvrir tout : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Ouvrir tout: finding URIs…">
-<!ENTITY textlink.openTextLink.current.disabled   "Ouvrir tout: no URI found">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Ouvrir dans un nouvel onglet : &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Ouvrir tout dans de nouveaux onglets : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "Ouvrir dans un nouvel onglet: finding URIs…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Ouvrir dans un nouvel onglet: no URI found">
-<!ENTITY textlink.openTextLink.tab.accesskey     "N">
-<!ENTITY textlink.openTextLink.window.single     "Ouvrir dans une nouvelle fenêtre : &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Ouvrir tout dans de nouvelles fenêtres : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "Ouvrir dans une nouvelle fenêtre: finding URIs…">
-<!ENTITY textlink.openTextLink.window.disabled   "Ouvrir dans une nouvelle fenêtre: no URI found">
-<!ENTITY textlink.openTextLink.window.accesskey  "F">
-<!ENTITY textlink.openTextLink.copy.single     "Copier le lien : &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copier tous les liens : &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "Copier le lien: finding URIs…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Copier le lien: no URI found">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Ouvrir le &lt;lien sélectionné&gt;">

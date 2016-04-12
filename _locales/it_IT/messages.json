@@ -1,5 +1,23 @@
 {
   "name": { "message": "Text Link" },
   "description": { "message": "Carica gli URI testuali con un doppio clic." },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
+
+  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.current.single": { "message": "Apri \"$1\"" },
+  "contextItem.current.multiple": { "message": "Apri tutti: \"$1\" ~ \"$2\"" },
+  "contextItem.current.processing": { "message": "Apri tutti: finding URIs…" },
+  "contextItem.current.disabled": { "message": "Apri tutti: no URI found" },
+  "contextItem.tab.single": { "message": "Apri in una nuova scheda: \"$1\"" },
+  "contextItem.tab.multiple": { "message": "Apri tutti in nuove schede: \"$1\" ~ \"$2\"" },
+  "contextItem.tab.processing": { "message": "Apri in una nuova scheda: finding URIs…" },
+  "contextItem.tab.disabled": { "message": "Apri in una nuova scheda: no URI found" },
+  "contextItem.window.single": { "message": "Apri in una nuova finestra: \"$1\"" },
+  "contextItem.window.multiple": { "message": "Apri tutti in nuove finestre: \"$1\" ~ \"$2\"" },
+  "contextItem.window.processing": { "message": "Apri in una nuova finestra: finding URIs…" },
+  "contextItem.window.disabled": { "message": "Apri in una nuova finestra: no URI found" },
+  "contextItem.copy.single": { "message": "Copy URI: \"$1\"" },
+  "contextItem.copy.multiple": { "message": "Copy All URIs: \"$1\" ~ \"$2\"" },
+  "contextItem.copy.processing": { "message": "Copy URI: finding URIs…" },
+  "contextItem.copy.disabled": { "message": "Copy URI: no URI found" }
 }

@@ -1,5 +1,27 @@
 {
   "name": { "message": "Text Link" },
   "description": { "message": "讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。" },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
+
+  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.current.single": { "message": "開啟 \"$1\"" },
+  "contextItem.current.multiple": { "message": "全部開啟: \"$1\" ~ \"$2\"" },
+  "contextItem.current.processing": { "message": "開啟: finding URIs…" },
+  "contextItem.current.disabled": { "message": "開啟: no URI found" },
+  "contextItem.current.accesskey": { "message": "O" },
+  "contextItem.tab.single": { "message": "在新分頁開啟: \"$1\"" },
+  "contextItem.tab.multiple": { "message": "全部都在新分頁開啟: \"$1\" ~ \"$2\"" },
+  "contextItem.tab.processing": { "message": "在新分頁開啟: finding URIs…" },
+  "contextItem.tab.disabled": { "message": "在新分頁開啟: no URI found" },
+  "contextItem.tab.accesskey": { "message": "T" },
+  "contextItem.window.single": { "message": "在新視窗開啟: \"$1\"" },
+  "contextItem.window.multiple": { "message": "全部都在新視窗開啟: \"$1\" ~ \"$2\"" },
+  "contextItem.window.processing": { "message": "在新視窗開啟: finding URIs…" },
+  "contextItem.window.disabled": { "message": "在新視窗開啟: no URI found" },
+  "contextItem.window.accesskey": { "message": "W" },
+  "contextItem.copy.single": { "message": "複製 URI: \"$1\"" },
+  "contextItem.copy.multiple": { "message": "複製全部的 URIs: \"$1\" ~ \"$2\"" },
+  "contextItem.copy.processing": { "message": "複製 URI: finding URIs…" },
+  "contextItem.copy.disabled": { "message": "複製 URI: no URI found" },
+  "contextItem.copy.accesskey": { "message": "C" },
 }

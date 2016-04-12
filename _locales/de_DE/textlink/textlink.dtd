@@ -35,27 +35,6 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Autodetected URIs">
-<!ENTITY textlink.openTextLink.current.single    "&quot;&#37;s&quot; öffnen">
-<!ENTITY textlink.openTextLink.current.multiple  "Alle öffnen: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Alle öffnen: finding URIs…">
-<!ENTITY textlink.openTextLink.current.disabled   "Alle öffnen: no URI found">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "In Neuem Tab öffnen: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Alle in Neuen Tabs öffnen: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "In Neuem Tab öffnen: finding URIs…">
-<!ENTITY textlink.openTextLink.tab.disabled      "In Neuem Tab öffnen: no URI found">
-<!ENTITY textlink.openTextLink.tab.accesskey     "T">
-<!ENTITY textlink.openTextLink.window.single     "In Neuem Fenster öffnen: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Alle in Neuen Fenstern öffnen: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "In Neuem Fenster öffnen: finding URIs…">
-<!ENTITY textlink.openTextLink.window.disabled   "In Neuem Fenster öffnen: no URI found">
-<!ENTITY textlink.openTextLink.window.accesskey  "F">
-<!ENTITY textlink.openTextLink.copy.single     "URI kopieren: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Alle URIs kopieren: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "URI kopieren: finding URIs…">
-<!ENTITY textlink.openTextLink.copy.disabled   "URI kopieren: no URI found">
-<!ENTITY textlink.openTextLink.copy.accesskey  "K">
 
 <!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Öffne &lt;selected URI string&gt;">

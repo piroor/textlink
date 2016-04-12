@@ -34,28 +34,6 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Automatycznie wykryte adresy">
-<!ENTITY textlink.openTextLink.current.single     "Otwórz „&#37;s”">
-<!ENTITY textlink.openTextLink.current.multiple   "Otwórz wszystkie: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.current.processing "Otwórz: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.current.disabled   "Otwórz: nie odnaleziono adresu">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Otwórz w nowej karcie: „&#37;s”">
-<!ENTITY textlink.openTextLink.tab.multiple      "Otwórz wszystkie w nowych kartach: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.tab.processing    "Otwórz w nowej karcie: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Otwórz w nowej karcie: nie odnaleziono adresu">
-<!ENTITY textlink.openTextLink.tab.accesskey     "k">
-<!ENTITY textlink.openTextLink.window.single     "Otwórz w nowym oknie: „&#37;s”">
-<!ENTITY textlink.openTextLink.window.multiple   "Otwórz wszystkie w nowych oknach: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.window.processing "Otwórz w nowym oknie: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.window.disabled   "Otwórz w nowym oknie: nie odnaleziono adresu">
-<!ENTITY textlink.openTextLink.window.accesskey  "n">
-<!ENTITY textlink.openTextLink.copy.single     "Kopiuj adres: „&#37;s”">
-<!ENTITY textlink.openTextLink.copy.multiple   "Kopiuj wszystkie adresy: „&#37;s1” — „&#37;s2”">
-<!ENTITY textlink.openTextLink.copy.processing "Kopiuj adres: wyszukiwanie adresów…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Kopiuj adres: nie odnaleziono adresu">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
-
 <!ENTITY textlink.context.submenu.pref "Automatycznie wykryte adresy">
 <!ENTITY textlink.context.current.pref "Otwórz &lt;zaznaczony adres&gt;">
 <!ENTITY textlink.context.tab.pref     "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach">

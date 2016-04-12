@@ -34,27 +34,6 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Autodetected URIs">
-<!ENTITY textlink.openTextLink.current.single    "Apri &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "Apri tutti: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Apri tutti: finding URIs…">
-<!ENTITY textlink.openTextLink.current.disabled   "Apri tutti: no URI found">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Apri in una nuova scheda: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Apri tutti in nuove schede: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "Apri in una nuova scheda: finding URIs…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Apri in una nuova scheda: no URI found">
-<!ENTITY textlink.openTextLink.tab.accesskey     "T">
-<!ENTITY textlink.openTextLink.window.single     "Apri in una nuova finestra: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Apri tutti in nuove finestre: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "Apri in una nuova finestra: finding URIs…">
-<!ENTITY textlink.openTextLink.window.disabled   "Apri in una nuova finestra: no URI found">
-<!ENTITY textlink.openTextLink.window.accesskey  "W">
-<!ENTITY textlink.openTextLink.copy.single     "Copy URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Copy All URIs: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "Copy URI: finding URIs…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Copy URI: no URI found">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
 
 <!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Apri &lt;URI selezionati&gt;">

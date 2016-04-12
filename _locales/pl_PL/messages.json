@@ -1,5 +1,23 @@
 {
   "name": { "message": "Text Link" },
   "description": { "message": "Umożliwia otwieranie nieklikalnych (tekstowych) odnośników za pomocą podwójnego kliknięcia." },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
+
+  "contextItem.menu.label": { "message": "Automatycznie wykryte adresy" },
+  "contextItem.current.single": { "message": "Otwórz „$1”" },
+  "contextItem.current.multiple": { "message": "Otwórz wszystkie: „$1” — „$2”" },
+  "contextItem.current.processing": { "message": "Otwórz: wyszukiwanie adresów…" },
+  "contextItem.current.disabled": { "message": "Otwórz: nie odnaleziono adresu" },
+  "contextItem.tab.single": { "message": "Otwórz w nowej karcie: „$1”" },
+  "contextItem.tab.multiple": { "message": "Otwórz wszystkie w nowych kartach: „$1” — „$2”" },
+  "contextItem.tab.processing": { "message": "Otwórz w nowej karcie: wyszukiwanie adresów…" },
+  "contextItem.tab.disabled": { "message": "Otwórz w nowej karcie: nie odnaleziono adresu" },
+  "contextItem.window.single": { "message": "Otwórz w nowym oknie: „$1”" },
+  "contextItem.window.multiple": { "message": "Otwórz wszystkie w nowych oknach: „$1” — „$2”" },
+  "contextItem.window.processing": { "message": "Otwórz w nowym oknie: wyszukiwanie adresów…" },
+  "contextItem.window.disabled": { "message": "Otwórz w nowym oknie: nie odnaleziono adresu" },
+  "contextItem.copy.single": { "message": "Kopiuj adres: „$1”" },
+  "contextItem.copy.multiple": { "message": "Kopiuj wszystkie adresy: „$1” — „$2”" },
+  "contextItem.copy.processing": { "message": "Kopiuj adres: wyszukiwanie adresów…" },
+  "contextItem.copy.disabled": { "message": "Kopiuj adres: nie odnaleziono adresu" }
 }

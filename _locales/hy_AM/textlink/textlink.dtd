@@ -34,28 +34,6 @@
    - ***** END LICENSE BLOCK ***** -->
 
 
-<!ENTITY textlink.menu.label "Autodetected URIs">
-<!ENTITY textlink.openTextLink.current.single     "Բացել &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple   "Բացել բոլորը. &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Բացել. փնտրում է URI-ները…">
-<!ENTITY textlink.openTextLink.current.disabled   "Բացել. URI-ն չի գտնվել">
-<!ENTITY textlink.openTextLink.current.accesskey "O">
-<!ENTITY textlink.openTextLink.tab.single        "Բացել նոր էջում. &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Բացել բոլորը նոր էջերում. &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "Բացել նոր էջում. փնտրում է URI-ները…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Բացել նոր էջում. URI-ն չի գտնվել">
-<!ENTITY textlink.openTextLink.tab.accesskey     "T">
-<!ENTITY textlink.openTextLink.window.single     "Բացել նոր պատուհանում. &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Բացել բոլորը նոր պատուհաններում. &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "Բացել նոր պատուհանում. փնտրում է URI-ները…">
-<!ENTITY textlink.openTextLink.window.disabled   "Բացել նոր պատուհանում. URI-ն չի գտնվել">
-<!ENTITY textlink.openTextLink.window.accesskey  "W">
-<!ENTITY textlink.openTextLink.copy.single     "Պատճենել URI-ն. &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Պատճենել բոլոր URI-ները. &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "Պատճենել URI-ն. փնտրում է URI-ները…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Պատճենել URI-ն. URI-ն չի գտնվել">
-<!ENTITY textlink.openTextLink.copy.accesskey  "C">
-
 <!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Բացել &lt;ընտրված URI-ները&gt;">
 <!ENTITY textlink.context.tab.pref     "Բացել &lt;ընտրված URI-ները&gt; նոր էջերում">

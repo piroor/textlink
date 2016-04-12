@@ -33,29 +33,6 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 
-
-<!ENTITY textlink.menu.label "Autodetected URIs">
-<!ENTITY textlink.openTextLink.current.single    "Atverti &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.current.multiple  "Atverti visus: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.current.processing "Atverti visus: finding URIs…">
-<!ENTITY textlink.openTextLink.current.disabled   "Atverti visus: no URI found">
-<!ENTITY textlink.openTextLink.current.accesskey "A">
-<!ENTITY textlink.openTextLink.tab.single        "Atverti naujoje kortelėje: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.tab.multiple      "Visus atverti naujose kortelėse: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.tab.processing    "Atverti naujoje kortelėje: finding URIs…">
-<!ENTITY textlink.openTextLink.tab.disabled      "Atverti naujoje kortelėje: no URI found">
-<!ENTITY textlink.openTextLink.tab.accesskey     "K">
-<!ENTITY textlink.openTextLink.window.single     "Atverti naujame lange: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.window.multiple   "Visus atverti naujuose languose: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.window.processing "Atverti naujame lange: finding URIs…">
-<!ENTITY textlink.openTextLink.window.disabled   "Atverti naujame lange: no URI found">
-<!ENTITY textlink.openTextLink.window.accesskey  "L">
-<!ENTITY textlink.openTextLink.copy.single     "Kopijuoti URI: &quot;&#37;s&quot;">
-<!ENTITY textlink.openTextLink.copy.multiple   "Kopijuoti visus URI: &quot;&#37;s1&quot; ~ &quot;&#37;s2&quot;">
-<!ENTITY textlink.openTextLink.copy.processing "Kopijuoti URI: finding URIs…">
-<!ENTITY textlink.openTextLink.copy.disabled   "Kopijuoti URI: no URI found">
-<!ENTITY textlink.openTextLink.copy.accesskey  "K">
-
 <!ENTITY textlink.context.submenu.pref "Autodetected URIs">
 <!ENTITY textlink.context.current.pref "Atverti &lt;pažymėtą URI eilutę&gt;">
 <!ENTITY textlink.context.tab.pref     "Atverti &lt;pažymėtus URI&gt; naujose kortelėse">

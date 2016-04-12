@@ -1,5 +1,27 @@
 {
   "name": { "message": "Text Link" },
   "description": { "message": "Web sayfalarındaki link özelliği olmayan URL metinlerinin çift tıklanarak açılmasını sağlar." },
-  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" }
+  "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
+
+  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.current.single": { "message": "Aç \"$1\"" },
+  "contextItem.current.multiple": { "message": "Tümünü Aç: \"$1\" ~ \"$2\"" },
+  "contextItem.current.processing": { "message": "Tümünü Aç: finding URIs…" },
+  "contextItem.current.disabled": { "message": "Tümünü Aç: no URI found" },
+  "contextItem.current.accesskey": { "message": "A" },
+  "contextItem.tab.single": { "message": "Yeni Sekmede Aç: \"$1\"" },
+  "contextItem.tab.multiple": { "message": "Tümünü Yeni Sekmede Aç: \"$1\" ~ \"$2\"" },
+  "contextItem.tab.processing": { "message": "Yeni Sekmede Aç: finding URIs…" },
+  "contextItem.tab.disabled": { "message": "Yeni Sekmede Aç: no URI found" },
+  "contextItem.tab.accesskey": { "message": "S" },
+  "contextItem.window.single": { "message": "Yeni Pencerede Aç: \"$1\"" },
+  "contextItem.window.multiple": { "message": "Tümünü Yeni Pencerede Aç: \"$1\" ~ \"$2\"" },
+  "contextItem.window.processing": { "message": "Yeni Pencerede Aç: finding URIs…" },
+  "contextItem.window.disabled": { "message": "Yeni Pencerede Aç: no URI found" },
+  "contextItem.window.accesskey": { "message": "Y" },
+  "contextItem.copy.single": { "message": "URL'yi Kopyala: \"$1\"" },
+  "contextItem.copy.multiple": { "message": "Tüm URL'leri Kopyala: \"$1\" ~ \"$2\"" },
+  "contextItem.copy.processing": { "message": "URL'yi Kopyala: finding URIs…" },
+  "contextItem.copy.disabled": { "message": "URL'yi Kopyala: no URI found" },
+  "contextItem.copy.accesskey": { "message": "K" },
 }
