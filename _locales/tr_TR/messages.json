@@ -24,4 +24,91 @@
   "contextItem.copy.processing": { "message": "URL'yi Kopyala: finding URIs…" },
   "contextItem.copy.disabled": { "message": "URL'yi Kopyala: no URI found" },
   "contextItem.copy.accesskey": { "message": "K" },
+
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "&lt;Seçili URL metnini&gt; Aç" },
+  "config.context.tab.pref": { "message": "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç" },
+  "config.context.window.pref": { "message": "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç" },
+  "config.context.copy.pref": { "message": "&lt;Seçili URL metnini&gt; Kopyala" },
+
+
+  "config.group.general": { "message": "Genel" },
+
+  "config.actions.tab0": { "message": "Eylem 1" },
+  "config.actions.tab1": { "message": "Eylem 2" },
+  "config.actions.tab2": { "message": "Eylem 3" },
+  "config.actions.tab3": { "message": "Eylem 4" },
+  "config.actions.tab4": { "message": "Eylem 5" },
+
+  "config.trigger.mouse_before": { "message": "Bir URL metni" },
+  "config.trigger.mouse.ignore": { "message": "(fare hareketlerini yoksay)" },
+  "config.trigger.mouse.dblclick": { "message": "Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + Çift tıklandığında" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + Çift tıklandığında" },
+  "config.trigger.mouse_after": { "message": "" },
+
+  "config.trigger.key_before": { "message": "ya da" },
+  "config.trigger.key.ignore": { "message": "(tuş hareketlerini yoksay)" },
+  "config.trigger.key.enter": { "message": "Metin seçiliyken Enter'a basılırsa" },
+  "config.trigger.key.enter.accel": { "message": "Metin seçiliyken Ctrl + Enter'a basılırsa" },
+  "config.trigger.key.enter.accel.mac": { "message": "Metin seçiliyken ⌘ + Enter'a basılırsa" },
+  "config.trigger.key.enter.accel.shift": { "message": "Metin seçiliyken Ctrl + Shift + Enter'a basılırsa" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "Metin seçiliyken ⌘ + Shift + Enter'a basılırsa" },
+  "config.trigger.key.enter.alt": { "message": "Metin seçiliyken Alt + Enter'a basılırsa" },
+  "config.trigger.key.enter.alt.shift": { "message": "Metin seçiliyken Alt + Shift + Enter'a basılırsa" },
+  "config.trigger.key.enter.shift": { "message": "Metin seçiliyken Shift + Enter'a basılırsa" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "hiçbir şey yapma." },
+  "config.action.select": { "message": "onu seç." },
+  "config.action.current": { "message": "seçili sekmede aç." },
+  "config.action.window": { "message": "yeni pencerede aç." },
+  "config.action.tab": { "message": "yeni ön plan sekmede aç." },
+  "config.action.tabBackground": { "message": "yeni arka plan sekmede aç." },
+  "config.action.current.stealth": { "message": "seçili sekmede aç (HTTP_REFERER olmadan)." },
+  "config.action.window.stealth": { "message": "yeni pencerede aç (HTTP_REFERER olmadan)." },
+  "config.action.tab.stealth": { "message": "yeni ön plan sekmede aç (HTTP_REFERER olmadan)." },
+  "config.action.tabBackground.stealth": { "message": "yeni arka plan sekmede aç (HTTP_REFERER olmadan)." },
+  "config.action.copy": { "message": "onu panoya kopyala." },
+  "config.action.openByBrowser": { "message": "onu tarayıcıda aç." },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Sıfırla" },
+
+
+
+  "config.group.contextmenu": { "message": "Seçili URL Metinleri İçin Ekstra Sağ Tık Menüsü Öğeleri" },
+
+
+  "config.messenger.linkify": { "message": "Düz metin postalardaki URL metinlerini linkleştir." },
+
+
+
+  "config.group.advanced": { "message": "Gelişmiş" },
+
+  "config.group.find": { "message": "URL Algılanması" },
+
+  "config.scheme": { "message": "Bunlarla başlayan metinleri URL olarak tanı: (örn. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Sıfırla" },
+  "config.scheme.fixup.table": { "message": "Kırık URL'leri bu kurallara göre düzelt: (örn. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Sıfırla" },
+
+  "config.relative.enabled": { "message": "Bağlantılı yolları ayrıştır (unrecommended)" },
+  "config.multibyte.enabled": { "message": "Çoklu-bayt karakterleri ayrıştır" },
+  "config.multiline.enabled": { "message": "Birden çok satıra bölünmüş URL'leri ayrıştır (Önerilmez)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "Tıklanan Noktaların Algılanma İlkesi" },
+  "config.find_click_point.strict.strict": { "message": "Sıkı (bazen URL'leri açmakta başarısız olur)" },
+  "config.find_click_point.strict.loose": { "message": "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)" }
 }

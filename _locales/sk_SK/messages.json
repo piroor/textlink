@@ -19,5 +19,92 @@
   "contextItem.copy.single": { "message": "Copy URI: \"$1\"" },
   "contextItem.copy.multiple": { "message": "Copy All URIs: \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "Copy URI: finding URIs…" },
-  "contextItem.copy.disabled": { "message": "Copy URI: no URI found" }
+  "contextItem.copy.disabled": { "message": "Copy URI: no URI found" },
+
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Otvoriť &lt;vybraný reťazec s internetovou adresou&gt;" },
+  "config.context.tab.pref": { "message": "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; na nových kartách" },
+  "config.context.window.pref": { "message": "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; v nových oknách" },
+  "config.context.copy.pref": { "message": "Copy &lt;selected URI strings&gt;" },
+
+
+  "config.group.general": { "message": "Všeobecné" },
+
+  "config.actions.tab0": { "message": "Action 1" },
+  "config.actions.tab1": { "message": "Action 2" },
+  "config.actions.tab2": { "message": "Action 3" },
+  "config.actions.tab3": { "message": "Action 4" },
+  "config.actions.tab4": { "message": "Action 5" },
+
+  "config.trigger.mouse_before": { "message": "Ak na texte s internetovou adresou" },
+  "config.trigger.mouse.ignore": { "message": "(ignore mouse events)" },
+  "config.trigger.mouse.dblclick": { "message": "dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.accel": { "message": "stlačíte Ctrl + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "stlačíte Ctrl + Shift + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "stlačíte ⌘ + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "stlačíte ⌘ + Shift + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.alt": { "message": "stlačíte Alt + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "stlačíte Alt + Shift + dvakrát kliknete" },
+  "config.trigger.mouse.dblclick.shift": { "message": "stlačíte Shift + dvakrát kliknete" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "alebo" },
+  "config.trigger.key.ignore": { "message": "(žiadny kláves nie je stlačený)" },
+  "config.trigger.key.enter": { "message": "stlačíte Enter na vybranom texte" },
+  "config.trigger.key.enter.accel": { "message": "stlačíte Ctrl + Enter na vybranom texte" },
+  "config.trigger.key.enter.accel.shift": { "message": "stlačíte Ctrl + Shift + Enter počas označenia textu" },
+  "config.trigger.key.enter.accel.mac": { "message": "stlačíte ⌘ + Enter na vybranom texte" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "stlačíte ⌘ + Shift + Enter počas označenie textu" },
+  "config.trigger.key.enter.alt": { "message": "Alt + Enter sú stlačené počas označenia textu" },
+  "config.trigger.key.enter.alt.shift": { "message": "Alt + Shift + Enter sú stlačené počas označenia textu" },
+  "config.trigger.key.enter.shift": { "message": "Shift + Enter sú stlačené počas označenia textu" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "do nothing." },
+  "config.action.select": { "message": "označí ho." },
+  "config.action.current": { "message": "načítať na/v súčasnej karte." },
+  "config.action.window": { "message": "načítať na/v novom okne." },
+  "config.action.tab": { "message": "načítať na/v novej karte v popredí." },
+  "config.action.tabBackground": { "message": "načítať na/v novej karte v pozadí." },
+  "config.action.current.stealth": { "message": "načítať na/v súčasnej karte (without HTTP_REFERER)." },
+  "config.action.window.stealth": { "message": "načítať na/v novom okne (without HTTP_REFERER)." },
+  "config.action.tab.stealth": { "message": "načítať na/v novej karte v popredí (without HTTP_REFERER)." },
+  "config.action.tabBackground.stealth": { "message": "načítať na/v novej karte v pozadí (without HTTP_REFERER)." },
+  "config.action.copy": { "message": "copy it to the clipboard" },
+  "config.action.openByBrowser": { "message": "open by browser" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Vymazať" },
+
+
+
+  "config.group.contextmenu": { "message": "Špeciálne položky kontextovej ponuky pri označení textu s internetovou adresou" },
+
+
+  "config.messenger.linkify": { "message": "Linkify URI strings in plain text messages" },
+
+
+
+  "config.group.advanced": { "message": "Pokročilé" },
+
+  "config.group.find": { "message": "Detekcia internetových adries" },
+
+  "config.scheme": { "message": "Rozpoznať text ako internetovú adresu, ak začína nasledovnými reťazcami: (napr. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Vymazať" },
+  "config.scheme.fixup.table": { "message": "Opraviť poškodené internetové adresy pomocou nasledovných pravidiel: (napr. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Vymazať" },
+
+  "config.relative.enabled": { "message": "Rozložiť relatívne cesty (unrecommended)" },
+  "config.multibyte.enabled": { "message": "Rozložiť viacnásobné slabiky" },
+  "config.multiline.enabled": { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "Politika detekcie" },
+  "config.find_click_point.strict.strict": { "message": "Prísna (niekedy nemusí načítať internetovú adresu)" },
+  "config.find_click_point.strict.loose": { "message": "Mierna (niekedy nesprávne načíta adresu)" }
 }

@@ -19,5 +19,92 @@
   "contextItem.copy.single": { "message": "Webcím másolása: \"$1\"" },
   "contextItem.copy.multiple": { "message": "Mindegyik webcím másolása: \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "Webcím másolása: finding URIs…" },
-  "contextItem.copy.disabled": { "message": "Webcím másolása: no URI found" }
+  "contextItem.copy.disabled": { "message": "Webcím másolása: no URI found" },
+
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;" },
+  "config.context.tab.pref": { "message": "Megnyitás új lapon &lt;webcímet tartalmazó szövegrész&gt;" },
+  "config.context.window.pref": { "message": "Megnyitás új ablakban &lt;webcímet tartalmazó szövegrész&gt;" },
+  "config.context.copy.pref": { "message": "Másolás &lt;webcímet tartalmazó szövegrész&gt;" },
+
+
+  "config.group.general": { "message": "Általános" },
+
+  "config.actions.tab0": { "message": "Művelet 1" },
+  "config.actions.tab1": { "message": "Művelet 2" },
+  "config.actions.tab2": { "message": "Művelet 3" },
+  "config.actions.tab3": { "message": "Művelet 4" },
+  "config.actions.tab4": { "message": "Művelet 5" },
+
+  "config.trigger.mouse_before": { "message": "Ha webcímet tartalmazó szövegen" },
+  "config.trigger.mouse.ignore": { "message": "(nem veszi figyelembe az egér funkcióit)" },
+  "config.trigger.mouse.dblclick": { "message": "duplán kattint" },
+  "config.trigger.mouse.dblclick.accel": { "message": "lenyomja a Ctrl billentyűt és duplán kattint" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "lenyomja a Ctrl, Shift billentyűket és duplán kattint" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "lenyomja a ⌘ billentyűt és duplán kattint" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "lenyomja a ⌘, Shift billentyűket és duplán kattint" },
+  "config.trigger.mouse.dblclick.alt": { "message": "lenyomja az Alt billentyűt és duplán kattint" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "lenyomja az Alt, Shift billentyűket és duplán kattint" },
+  "config.trigger.mouse.dblclick.shift": { "message": "lenyomja a Shift billentyűt és duplán kattint" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "vagy" },
+  "config.trigger.key.ignore": { "message": "(nincs lenyomott billentyű)" },
+  "config.trigger.key.enter": { "message": "lenyomja az Enter billentyűt a megfelelő szövegrészen" },
+  "config.trigger.key.enter.accel": { "message": "lenyomja a Ctrl, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.accel.shift": { "message": "lenyomja a Ctrl, Shift, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.accel.mac": { "message": "lenyomja a ⌘, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "lenyomja a ⌘, Shift, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.alt": { "message": "lenyomja az Alt, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.alt.shift": { "message": "lenyomja az Alt, Shift, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key.enter.shift": { "message": "lenyomja a Shift, Enter billentyűket a megfelelő szövegrészen" },
+  "config.trigger.key_after": { "message": ", akkor" },
+
+  "config.action_before": { "message": "a végrehajtandó művelet:" },
+  "config.action.blank": { "message": "nincs művelet" },
+  "config.action.select": { "message": "szöveg kijelölése" },
+  "config.action.current": { "message": "beolvasás a jelenlegi lapon" },
+  "config.action.window": { "message": "beolvasás új ablakban" },
+  "config.action.tab": { "message": "beolvasás új lapon, előtérben" },
+  "config.action.tabBackground": { "message": "beolvasás új lapon, háttérben" },
+  "config.action.current.stealth": { "message": "beolvasás a jelenlegi lapon (HTTP_REFERER nélkül)" },
+  "config.action.window.stealth": { "message": "beolvasás új ablakban (HTTP_REFERER nálkül)" },
+  "config.action.tab.stealth": { "message": "beolvasás új lapon, előtérben (HTTP_REFERER nélkül)" },
+  "config.action.tabBackground.stealth": { "message": "beolvasás új lapon, háttérben (HTTP_REFERER nélkül)" },
+  "config.action.copy": { "message": "másolás a vágólapra" },
+  "config.action.openByBrowser": { "message": "megnyitás böngészővel" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Törlés" },
+
+
+
+  "config.group.contextmenu": { "message": "A helyi menü kibővítése webcímet tartalmazó szöveg kezelésére" },
+
+
+  "config.messenger.linkify": { "message": "Webcímet tartalmazó nem formázott szöveges üzenet átalakítása linkre" },
+
+
+
+  "config.group.advanced": { "message": "Haladó" },
+
+  "config.group.find": { "message": "Webcímek keresése a szövegben" },
+
+  "config.scheme": { "message": "Szöveg felismerése webcímként, ha a következőkkel kezdődik: (pl. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Törlés" },
+  "config.scheme.fixup.table": { "message": "Hiányos webcímek javítása a következő szabályok segítségével: (pl. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Törlés" },
+
+  "config.relative.enabled": { "message": "Relatív útvonalak szétválasztása (nem ajánlott)" },
+  "config.multibyte.enabled": { "message": "Összetett karakterek szétválasztása" },
+  "config.multiline.enabled": { "message": "Webcím szétválasztása több sorba (nem ajánlott)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "A felismerés módja" },
+  "config.find_click_point.strict.strict": { "message": "Szigorú (néha nem sikerül beolvasni a weboldalt)" },
+  "config.find_click_point.strict.loose": { "message": "Mérsékelt (néha a webcím helytelenül lesz beolvasva)" }
 }

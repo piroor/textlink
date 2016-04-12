@@ -19,5 +19,93 @@
   "contextItem.copy.single": { "message": "URIをコピー: \"$1\"" },
   "contextItem.copy.multiple": { "message": "すべてのURIをコピー: \"$1\"～\"$2\"" },
   "contextItem.copy.processing": { "message": "URIをコピー: URIを探索中..." },
-  "contextItem.copy.disabled": { "message": "URIをコピー: URIがありません" }
+  "contextItem.copy.disabled": { "message": "URIをコピー: URIがありません" },
+
+
+
+  "config.context.submenu.pref": { "message": "URIの自動認識" },
+  "config.context.current.pref": { "message": "開く: &lt;選択範囲のURI&gt;" },
+  "config.context.tab.pref": { "message": "新しいタブで開く: &lt;選択範囲のURI&gt;" },
+  "config.context.window.pref": { "message": "新しいウィンドウで開く: &lt;選択範囲のURI&gt;" },
+  "config.context.copy.pref": { "message": "&lt;選択範囲のURI&gt;をコピー" },
+
+
+  "config.group.general": { "message": "全般" },
+
+  "config.actions.tab0": { "message": "アクション1" },
+  "config.actions.tab1": { "message": "アクション2" },
+  "config.actions.tab2": { "message": "アクション3" },
+  "config.actions.tab3": { "message": "アクション4" },
+  "config.actions.tab4": { "message": "アクション5" },
+
+  "config.trigger.mouse_before": { "message": "ページ中に書かれたURI文字列を" },
+  "config.trigger.mouse.ignore": { "message": "（マウスからの入力を検知しない）" },
+  "config.trigger.mouse.dblclick": { "message": "ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + ダブルクリック" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + ダブルクリック" },
+  "config.trigger.mouse_after": { "message": "した時か" },
+
+  "config.trigger.key_before": { "message": "" },
+  "config.trigger.key.ignore": { "message": "（キーボードからの入力を検知しない）" },
+  "config.trigger.key.enter": { "message": "テキストを選択して Enter キーを押した時" },
+  "config.trigger.key.enter.accel": { "message": "テキストを選択して Ctrl + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.mac": { "message": "テキストを選択して ⌘ + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.shift": { "message": "テキストを選択して Ctrl + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "テキストを選択して ⌘ + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.alt": { "message": "テキストを選択して Alt + Enter キーを押した時" },
+  "config.trigger.key.enter.alt.shift": { "message": "テキストを選択して Alt + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.shift": { "message": "テキストを選択して Shift + Enter キーを押した時" },
+  "config.trigger.key_after": { "message": "" },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "何もしない" },
+  "config.action.select": { "message": "URI文字列を選択する" },
+  "config.action.current": { "message": "現在のタブに読み込む" },
+  "config.action.window": { "message": "新しいウィンドウで開く" },
+  "config.action.tab": { "message": "新しい最前面のタブで開く" },
+  "config.action.tabBackground": { "message": "新しい背後のタブで開く" },
+  "config.action.current.stealth": { "message": "現在のタブに読み込む（リファラを通知しない）" },
+  "config.action.window.stealth": { "message": "新しいウィンドウで開く（リファラを通知しない）" },
+  "config.action.tab.stealth": { "message": "新しい最前面のタブで開く（リファラを通知しない）" },
+  "config.action.tabBackground.stealth": { "message": "新しい背後のタブで開く（リファラを通知しない）" },
+  "config.action.copy": { "message": "クリップボードにコピーする" },
+  "config.action.openByBrowser": { "message": "ブラウザで開く" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "初期値に戻す" },
+
+
+
+
+  "config.group.contextmenu": { "message": "URI文字列を選択したときのコンテキストメニューに以下の項目を加える" },
+
+
+  "config.messenger.linkify": { "message": "プレーンテキストのメッセージ中のURI文字列をリンクにする" },
+
+
+
+  "config.group.advanced": { "message": "詳細" },
+
+  "config.group.find": { "message": "URIの検出方法" },
+
+  "config.scheme": { "message": "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: " },
+  "config.scheme.default": { "message": "初期値に戻す" },
+  "config.scheme.fixup.table": { "message": "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）" },
+  "config.scheme.fixup.table.default": { "message": "初期値に戻す" },
+
+  "config.relative.enabled": { "message": "相対パスも認識する（非推奨）" },
+  "config.multibyte.enabled": { "message": "全角英数文字も認識する" },
+  "config.multiline.enabled": { "message": "改行されたURIも認識する（非推奨）" },
+  "config.idn.enabled": { "message": "以下で始まるURIでは国際化ドメイン（IDN）も認識する" },
+  "config.idn.scheme.default": { "message": "初期値に戻す" },
+  "config.i18nPath.enabled": { "message": "非ASCII文字のパスも認識する" },
+
+  "config.find_click_point.strict": { "message": "クリック位置の認識方法" },
+  "config.find_click_point.strict.strict": { "message": "厳密に認識する（URIを開けない場合があります）" },
+  "config.find_click_point.strict.loose": { "message": "ゆるく認識する（クリックされていないURIを開く場合があります）" }
 }

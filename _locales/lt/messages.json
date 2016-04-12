@@ -19,5 +19,89 @@
   "contextItem.copy.single": { "message": "Kopijuoti URI: \"$1\"" },
   "contextItem.copy.multiple": { "message": "Kopijuoti visus URI: \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "Kopijuoti URI: finding URIs…" },
-  "contextItem.copy.disabled": { "message": "Kopijuoti URI: no URI found" }
+  "contextItem.copy.disabled": { "message": "Kopijuoti URI: no URI found" },
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Atverti &lt;pažymėtą URI eilutę&gt;" },
+  "config.context.tab.pref": { "message": "Atverti &lt;pažymėtus URI&gt; naujose kortelėse" },
+  "config.context.window.pref": { "message": "Atverti &lt;pažymėtus URI&gt; naujuose languose" },
+  "config.context.copy.pref": { "message": "Kopijuoti &lt;pažymėtą URI eilutę&gt;" },
+
+  "config.group.general": { "message": "Bendra" },
+
+  "config.actions.tab0": { "message": "Veiksmas 1" },
+  "config.actions.tab1": { "message": "Veiksmas 2" },
+  "config.actions.tab2": { "message": "Veiksmas 3" },
+  "config.actions.tab3": { "message": "Veiksmas 4" },
+  "config.actions.tab4": { "message": "Veiksmas 5" },
+
+  "config.trigger.mouse_before": { "message": "Kai tekstas yra URI" },
+  "config.trigger.mouse.ignore": { "message": "(nepaisyti pelės įvykių)" },
+  "config.trigger.mouse.dblclick": { "message": "Dukart spragtelėjus" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "Command + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "Command + Shift + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + Dvigubas spragtelėjimas" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "arba" },
+  "config.trigger.key.ignore": { "message": "(nepaisyti klavišų įvykių)" },
+  "config.trigger.key.enter": { "message": "pažymėjus tekstą paspaudžiamas „Enter“" },
+  "config.trigger.key.enter.accel": { "message": "pažymėjus tekstą paspaudžiama Ctrl + Enter" },
+  "config.trigger.key.enter.accel.mac": { "message": "pažymėjus tekstą paspaudžiama Command + Enter" },
+  "config.trigger.key.enter.accel.shift": { "message": "pažymėjus tekstą paspaudžiama Ctrl + Shift + Enter" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "pažymėjus tekstą paspaudžiama Command + Shift + Enter" },
+  "config.trigger.key.enter.alt": { "message": "pažymėjus tekstą paspaudžiama Alt + Enter" },
+  "config.trigger.key.enter.alt.shift": { "message": "pažymėjus tekstą paspaudžiama Alt + Shift + Enter" },
+  "config.trigger.key.enter.shift": { "message": "pažymėjus tekstą paspaudžiama Shift + Enter" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "nieko nedaryti." },
+  "config.action.select": { "message": "pasirinkti." },
+  "config.action.current": { "message": "įkelti dabartinėje kortelėje." },
+  "config.action.window": { "message": "įkelti naujame lange." },
+  "config.action.tab": { "message": "įkelti priekinėje kortelėje." },
+  "config.action.tabBackground": { "message": "įkelti fono kortelėje." },
+  "config.action.current.stealth": { "message": "įkelti dabartinėje kortelėje (be HTTP_REFERRER)." },
+  "config.action.window.stealth": { "message": "įkelti naujame lange (be HTTP_REFERRER)." },
+  "config.action.tab.stealth": { "message": "įkelti priekinėje kortelėje (be HTTP_REFERRER)." },
+  "config.action.tabBackground.stealth": { "message": "įkelti fono kortelėje (be HTTP_REFERRER)." },
+  "config.action.copy": { "message": "nukopijuoti į iškarpinę" },
+  "config.action.openByBrowser": { "message": "atverti su naršykle" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Atstatyti" },
+
+
+
+  "config.group.contextmenu": { "message": "Pasirinkus URI tekstą rodyti papildomus kontekstinio meniu įrašus" },
+
+
+  "config.messenger.linkify": { "message": "Paversti gryno teksto URI eilutes į nuorodas" },
+
+
+
+  "config.group.advanced": { "message": "Papildomi" },
+
+  "config.group.find": { "message": "URI aptikimas" },
+
+  "config.scheme": { "message": "Laikyti tekstą URI, jei prasideda: (pvz. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Atstatyti" },
+  "config.scheme.fixup.table": { "message": "Pataisyti sugadintus URI, pagal šias taisykles: (pvz. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Atstatyti" },
+
+  "config.relative.enabled": { "message": "Apdoroti reliatyvius kelius (nerekomenduotina)" },
+  "config.multibyte.enabled": { "message": "Apdoroti multi bitinius simbolius" },
+  "config.multiline.enabled": { "message": "Apdoroti URI besitęsiančius keliose eilutėse (nerekomenduojama)" },
+  "config.idn.enabled": { "message": "Apdoroti IDN(Internationalized Domain Names) jei URI prasideda" },
+  "config.idn.scheme.default": { "message": "Atstatyti" },
+  "config.i18nPath.enabled": { "message": "Apdoroti ne ASCII kelius" },
+
+  "config.find_click_point.strict": { "message": "Paspausto taško aptikimo politika" },
+  "config.find_click_point.strict.strict": { "message": "Griežta (nevisada pavyksta įkelti URI)" },
+  "config.find_click_point.strict.loose": { "message": "Laisva (kartais įkelia nepaspaustus URI)" }
 }

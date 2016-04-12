@@ -24,4 +24,89 @@
   "contextItem.copy.processing": { "message": "Copy URI: finding URIs…" },
   "contextItem.copy.disabled": { "message": "Copy URI: no URI found" },
   "contextItem.copy.accesskey": { "message": "C" },
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "打开&lt;选定的 URI 串&gt;" },
+  "config.context.tab.pref": { "message": "在新标签中打开&lt;选定的 URI 串&gt; " },
+  "config.context.window.pref": { "message": "在新窗口中打开&lt;选定的 URI 串&gt;" },
+  "config.context.copy.pref": { "message": "Copy &lt;selected URI strings&gt;" },
+
+
+  "config.group.general": { "message": "常规" },
+
+  "config.actions.tab0": { "message": "Action 1" },
+  "config.actions.tab1": { "message": "Action 2" },
+  "config.actions.tab2": { "message": "Action 3" },
+  "config.actions.tab3": { "message": "Action 4" },
+  "config.actions.tab4": { "message": "Action 5" },
+
+  "config.trigger.mouse_before": { "message": "当" },
+  "config.trigger.mouse.ignore": { "message": "(ignore mouse events)" },
+  "config.trigger.mouse.dblclick": { "message": "双击" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + 双击" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + 双击" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + 双击" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + 双击" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + 双击" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + 双击" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + 双击" },
+  "config.trigger.mouse_after": { "message": "一个 URI 文本，" },
+
+  "config.trigger.key_before": { "message": "或" },
+  "config.trigger.key.ignore": { "message": "（不执行任何键盘操作）" },
+  "config.trigger.key.enter": { "message": "选定文本并按下 Enter 键" },
+  "config.trigger.key.enter.accel": { "message": "选定文本并按下 Ctrl + Enter 键" },
+  "config.trigger.key.enter.accel.shift": { "message": "选定文本并按下 Ctrl + Shift + 键" },
+  "config.trigger.key.enter.accel.mac": { "message": "选定文本并按下 ⌘ + Enter 键" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "选定文本并按下 ⌘ + Shift + Enter 键" },
+  "config.trigger.key.enter.alt": { "message": "选定文本并按下 Alt + Enter 键" },
+  "config.trigger.key.enter.alt.shift": { "message": "选定文本并按下 Alt + Shift + Enter 键" },
+  "config.trigger.key.enter.shift": { "message": "选定文本并按下 Shift + Enter 键" },
+  "config.trigger.key_after": { "message": "，" },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "do nothing." },
+  "config.action.select": { "message": "选定该文本。" },
+  "config.action.current": { "message": "在当前标签中载入该 URI" },
+  "config.action.window": { "message": "在新窗口中载入该 URI" },
+  "config.action.tab": { "message": "在前台的新标签中载入该 URI" },
+  "config.action.tabBackground": { "message": "在后台的新标签中载入该 URI" },
+  "config.action.current.stealth": { "message": "在当前标签中载入该 URI (without HTTP_REFERER)" },
+  "config.action.window.stealth": { "message": "在新窗口中载入该 URI (without HTTP_REFERER)" },
+  "config.action.tab.stealth": { "message": "在前台的新标签中载入该 URI (without HTTP_REFERER)" },
+  "config.action.tabBackground.stealth": { "message": "在后台的新标签中载入该 URI (without HTTP_REFERER)" },
+  "config.action.copy": { "message": "copy it to the clipboard" },
+  "config.action.openByBrowser": { "message": "open by browser" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "重置" },
+
+
+  "config.group.contextmenu": { "message": "选定 URI 文本时的其他上下文菜单" },
+
+
+  "config.messenger.linkify": { "message": "Linkify URI strings in plain text messages" },
+
+
+
+  "config.group.advanced": { "message": "高级" },
+
+  "config.group.find": { "message": "URI 检测" },
+
+  "config.scheme": { "message": "将以下部分开头的文本视作 URI：（例如 \"http、ftp、mailto\"）" },
+  "config.scheme.default": { "message": "重置" },
+  "config.scheme.fixup.table": { "message": "使用以下规则修复拼写错误的 URI：（例如 \"ttp=>http、ttps=>https\"）" },
+  "config.scheme.fixup.table.default": { "message": "重置" },
+
+  "config.relative.enabled": { "message": "解析相关的路径 (unrecommended)" },
+  "config.multibyte.enabled": { "message": "解析多字节的字符" },
+  "config.multiline.enabled": { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "检测双击点的方式" },
+  "config.find_click_point.strict.strict": { "message": "严格的（某些时候可能导致 URI 载入失败）" },
+  "config.find_click_point.strict.loose": { "message": "宽松的（某些时候可能错误地载入未点击的 URI）" }
 }

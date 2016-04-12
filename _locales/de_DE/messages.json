@@ -20,5 +20,93 @@
   "contextItem.copy.single": { "message": "URI kopieren: \"$1\"" },
   "contextItem.copy.multiple": { "message": "Alle URIs kopieren: \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "URI kopieren: finding URIs…" },
-  "contextItem.copy.disabled": { "message": "URI kopieren: no URI found" }
+  "contextItem.copy.disabled": { "message": "URI kopieren: no URI found" },
+
+
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Öffne &lt;selected URI string&gt;" },
+  "config.context.tab.pref": { "message": "Öffne &lt;selected URI strings&gt; in Neuen Tabs" },
+  "config.context.window.pref": { "message": "Öffne &lt;selected URI strings&gt; in Neuen Fenstern" },
+  "config.context.copy.pref": { "message": "Kopiere &lt;selected URI strings&gt;" },
+
+
+  "config.group.general": { "message": "Allgemein" },
+
+  "config.actions.tab0": { "message": "Aktion 1" },
+  "config.actions.tab1": { "message": "Aktion 2" },
+  "config.actions.tab2": { "message": "Aktion 3" },
+  "config.actions.tab3": { "message": "Aktion 4" },
+  "config.actions.tab4": { "message": "Aktion 5" },
+
+  "config.trigger.mouse_before": { "message": "Wenn man auf ein URI" },
+  "config.trigger.mouse.ignore": { "message": "(Maus-Ereignisse ignorieren)" },
+  "config.trigger.mouse.dblclick": { "message": "Doppel-klickt" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Strg + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "Kommando + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Strg + Shift + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "Kommando + Shift + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + Doppel-klickt" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + Doppel-klickt" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "oder bei ausgewähltem Text" },
+  "config.trigger.key.ignore": { "message": "(Tasten-Ereignisse ignorieren)" },
+  "config.trigger.key.enter": { "message": "Enter drückt" },
+  "config.trigger.key.enter.accel": { "message": "Strg + Enter drückt" },
+  "config.trigger.key.enter.accel.mac": { "message": "Kommando + Enter drückt" },
+  "config.trigger.key.enter.accel.shift": { "message": "Strg + Shift + Enter drückt" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "Kommando + Shift + Enter drückt" },
+  "config.trigger.key.enter.alt": { "message": "Alt + Enter drückt" },
+  "config.trigger.key.enter.alt.shift": { "message": "Alt + Shift + Enter drückt" },
+  "config.trigger.key.enter.shift": { "message": "Shift + Enter drückt" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "tu nichts." },
+  "config.action.select": { "message": "wähle es aus." },
+  "config.action.current": { "message": "lade es im Aktuellen Tab." },
+  "config.action.window": { "message": "lade es in einem Neuen Fenster." },
+  "config.action.tab": { "message": "lade es in einem Neuen Vordergrund-Tab." },
+  "config.action.tabBackground": { "message": "lade es in einem Neuen Hintergrund-Tab." },
+  "config.action.current.stealth": { "message": "lade es im Aktuellen Tab (ohne HTTP_REFERER)." },
+  "config.action.window.stealth": { "message": "lade es in einem Neueen Fenster (ohne HTTP_REFERER)." },
+  "config.action.tab.stealth": { "message": "lade es in einem Neuen Vordergrund-Tab (ohne HTTP_REFERER)." },
+  "config.action.tabBackground.stealth": { "message": "lade es in einem Neuen Hintergrund-Tab (ohne HTTP_REFERER)." },
+  "config.action.copy": { "message": "kopiere es in die Zwischenablage." },
+  "config.action.openByBrowser": { "message": "öffne es mit Browser" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Zurücksetzen" },
+
+
+
+  "config.group.contextmenu": { "message": "Zusätzliche Kontextmenü-Einträge wenn Text mit URIs ausgewählt ist" },
+
+
+  "config.messenger.linkify": { "message": "Klartext-URIs verlinken" },
+
+
+
+  "config.group.advanced": { "message": "Erweitert" },
+
+  "config.group.find": { "message": "URI-Erkennung" },
+
+  "config.scheme": { "message": "Text, der mit folgenden Teilen beginnt, als URI erkennen: (ex. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Zurücksetzen" },
+  "config.scheme.fixup.table": { "message": "Repariere defekte URIs mit folgenden Regeln: (ex. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Zurücksetzen" },
+
+  "config.relative.enabled": { "message": "Parse relative Pfadangaben (nicht empfohlen)" },
+  "config.multibyte.enabled": { "message": "Parse Multi-Byte-Zeichen" },
+  "config.multiline.enabled": { "message": "Parse durch Zeilenumbrüche getrennte URIs (nicht empfohlen)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "Erkennungverfahren für Klickpunkte" },
+  "config.find_click_point.strict.strict": { "message": "Streng (scheitert manchmal beim Laden der URIs)" },
+  "config.find_click_point.strict.loose": { "message": "Locker (lädt manchmal ungewollt URIs )" }
 }

@@ -24,4 +24,90 @@
   "contextItem.copy.processing": { "message": "複製 URI: finding URIs…" },
   "contextItem.copy.disabled": { "message": "複製 URI: no URI found" },
   "contextItem.copy.accesskey": { "message": "C" },
+
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "開啟 &lt;選取的 URI 字串&gt;" },
+  "config.context.tab.pref": { "message": "在新分頁開啟 &lt;選取的 URI 字串&gt;" },
+  "config.context.window.pref": { "message": "在新視窗開啟 &lt;選取的 URI 字串&gt;" },
+  "config.context.copy.pref": { "message": "複製 &lt;選取的 URI 字串&gt;" },
+
+
+  "config.group.general": { "message": "一般" },
+
+  "config.actions.tab0": { "message": "動作 1" },
+  "config.actions.tab1": { "message": "動作 2" },
+  "config.actions.tab2": { "message": "動作 3" },
+  "config.actions.tab3": { "message": "動作 4" },
+  "config.actions.tab4": { "message": "動作 5" },
+
+  "config.trigger.mouse_before": { "message": "對 URI 文字" },
+  "config.trigger.mouse.ignore": { "message": "(忽略滑鼠事件)" },
+  "config.trigger.mouse.dblclick": { "message": "雙擊" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + 雙擊" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + 雙擊" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + 雙擊" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + 雙擊" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + 雙擊" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + 雙擊" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + 雙擊" },
+  "config.trigger.mouse_after": { "message": "，" },
+
+  "config.trigger.key_before": { "message": "或" },
+  "config.trigger.key.ignore": { "message": "(忽略鍵盤事件)" },
+  "config.trigger.key.enter": { "message": "有文字被選取時，按下 Enter 鍵" },
+  "config.trigger.key.enter.accel": { "message": "有文字被選取時，按下 Ctrl + Enter 鍵" },
+  "config.trigger.key.enter.accel.shift": { "message": "有文字被選取時，按下 Ctrl + Shift + Enter 鍵" },
+  "config.trigger.key.enter.accel.mac": { "message": "有文字被選取時，按下 ⌘ + Enter 鍵" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "有文字被選取時，按下 ⌘ + Shift + Enter 鍵" },
+  "config.trigger.key.enter.alt": { "message": "有文字被選取時，按下 Alt + Enter 鍵" },
+  "config.trigger.key.enter.alt.shift": { "message": "有文字被選取時，按下 Alt + Shift + Enter 鍵" },
+  "config.trigger.key.enter.shift": { "message": "有文字被選取時，按下 Shift + Enter 鍵" },
+  "config.trigger.key_after": { "message": "，" },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "什麼都不做。" },
+  "config.action.select": { "message": "選取它。" },
+  "config.action.current": { "message": "便將它載入到目前分頁。" },
+  "config.action.window": { "message": "便將它載入到新視窗。" },
+  "config.action.tab": { "message": "便將它載入到新前景分頁。" },
+  "config.action.tabBackground": { "message": "便將它載入到新背景分頁。" },
+  "config.action.current.stealth": { "message": "便將它載入到目前分頁。 (without HTTP_REFERER)" },
+  "config.action.window.stealth": { "message": "便將它載入到新視窗。 (without HTTP_REFERER)" },
+  "config.action.tab.stealth": { "message": "便將它載入到新前景分頁。 (without HTTP_REFERER)" },
+  "config.action.tabBackground.stealth": { "message": "便將它載入到新背景分頁。 (without HTTP_REFERER)" },
+  "config.action.copy": { "message": "便將它複製到剪貼簿。" },
+  "config.action.openByBrowser": { "message": "open by browser" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "重設" },
+
+
+  "config.group.contextmenu": { "message": "有 URI 文字被選取時，額外的右鍵選單項目" },
+
+
+  "config.messenger.linkify": { "message": "Linkify URI strings in plain text messages" },
+
+
+
+  "config.group.advanced": { "message": "進階" },
+
+  "config.group.find": { "message": "URI 偵測" },
+
+  "config.scheme": { "message": "將開頭為下列指定字串的文字辨認成 URI: (例如: &quot;http, ftp, mailto&quot;)" },
+  "config.scheme.default": { "message": "重設" },
+  "config.scheme.fixup.table": { "message": "依下列規則修復損毀的 URI: (例如: &quot;ttp=>http, ttps=>https&quot;)" },
+  "config.scheme.fixup.table.default": { "message": "重設" },
+
+  "config.relative.enabled": { "message": "剖析相對路徑 (unrecommended)" },
+  "config.multibyte.enabled": { "message": "剖析多位元組字元 (multi-byte characters)" },
+  "config.multiline.enabled": { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "滑鼠點擊偵測方式" },
+  "config.find_click_point.strict.strict": { "message": "嚴格 (有時無法載入 URI)" },
+  "config.find_click_point.strict.loose": { "message": "寬鬆 (有時錯誤地載入沒有點擊的 URI)" }
 }

@@ -19,5 +19,92 @@
   "contextItem.copy.single": { "message": "Kopiuj adres: „$1”" },
   "contextItem.copy.multiple": { "message": "Kopiuj wszystkie adresy: „$1” — „$2”" },
   "contextItem.copy.processing": { "message": "Kopiuj adres: wyszukiwanie adresów…" },
-  "contextItem.copy.disabled": { "message": "Kopiuj adres: nie odnaleziono adresu" }
+  "contextItem.copy.disabled": { "message": "Kopiuj adres: nie odnaleziono adresu" },
+
+
+
+  "config.context.submenu.pref": { "message": "Automatycznie wykryte adresy" },
+  "config.context.current.pref": { "message": "Otwórz &lt;zaznaczony adres&gt;" },
+  "config.context.tab.pref": { "message": "Otwórz &lt;zaznaczone adresy&gt; w nowych kartach" },
+  "config.context.window.pref": { "message": "Otwórz &lt;zaznaczone adresy&gt; w nowych oknach" },
+  "config.context.copy.pref": { "message": "Kopiuj &lt;zaznaczone adresy&gt;" },
+
+
+  "config.group.general": { "message": "Ogólne" },
+
+  "config.actions.tab0": { "message": "1. działanie" },
+  "config.actions.tab1": { "message": "2. działanie" },
+  "config.actions.tab2": { "message": "3. działanie" },
+  "config.actions.tab3": { "message": "4. działanie" },
+  "config.actions.tab4": { "message": "5. działanie" },
+
+  "config.trigger.mouse_before": { "message": "Kiedy zostanie wciśnięta kombinacja" },
+  "config.trigger.mouse.ignore": { "message": "(ignorowanie zachowań myszy)" },
+  "config.trigger.mouse.dblclick": { "message": "podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + podwójne kliknięcie" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + podwójne kliknięcie" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "lub" },
+  "config.trigger.key.ignore": { "message": "(ignorowanie naciśniętych klawiszy)" },
+  "config.trigger.key.enter": { "message": "naciśnięto klawisz Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.accel": { "message": "naciśnięto klawisze Ctrl + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.accel.mac": { "message": "naciśnięto klawisze ⌘ + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.accel.shift": { "message": "naciśnięto klawisze Ctrl + Shift + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "naciśnięto klawisze ⌘ + Shift + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.alt": { "message": "naciśnięto klawisze Alt + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.alt.shift": { "message": "naciśnięto klawisze Alt + Shift + Enter przy zaznaczonym tekście" },
+  "config.trigger.key.enter.shift": { "message": "naciśnięto klawisze Shift + Enter przy zaznaczonym tekście" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "nic nie rób." },
+  "config.action.select": { "message": "zaznacz adres." },
+  "config.action.current": { "message": "otwórz adres w bieżącej karcie." },
+  "config.action.window": { "message": "otwórz adres w nowym oknie." },
+  "config.action.tab": { "message": "otwórz adres w nowej karcie (i przejdź do niej)." },
+  "config.action.tabBackground": { "message": "otwórz adres w nowej karcie (w tle)." },
+  "config.action.current.stealth": { "message": "otwórz adres w bieżącej karcie (usuwając „HTTP_REFERER”)." },
+  "config.action.window.stealth": { "message": "otwórz adres w nowym oknie (usuwając „HTTP_REFERER”)." },
+  "config.action.tab.stealth": { "message": "otwórz adres w nowej karcie (i przejdź do niej, usuwając „HTTP_REFERER”)." },
+  "config.action.tabBackground.stealth": { "message": "otwórz adres w nowej karcie (w tle, usuwając „HTTP_REFERER”)." },
+  "config.action.copy": { "message": "kopiuj adres do schowka." },
+  "config.action.openByBrowser": { "message": "otwórz przez przeglądarkę." },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Przywróć domyślne" },
+
+
+
+  "config.group.contextmenu": { "message": "Dodatkowe elementy menu kontekstowego, kiedy zaznaczono adres" },
+
+
+  "config.messenger.linkify": { "message": "Zmienianie tekstowych adresów na odnośniki w zwykłym tekście" },
+
+
+
+  "config.group.advanced": { "message": "Zaawansowane" },
+
+  "config.group.find": { "message": "Wykrywanie adresów URI" },
+
+  "config.scheme": { "message": "Rozpoznawanie tekstu jako adres, jeśli zaczyna się od słów (np. „http,ftp,mailto”):" },
+  "config.scheme.default": { "message": "Przywróć domyślne" },
+  "config.scheme.fixup.table": { "message": "Poprawianie błędnych adresów za pomocą tych reguł (np. „ttp=>http,ttps=>https”):" },
+  "config.scheme.fixup.table.default": { "message": "Przywróć domyślne" },
+
+  "config.relative.enabled": { "message": "Przetwarzanie względnych ścieżek (niezalecane)" },
+  "config.multibyte.enabled": { "message": "Przetwarzanie znaków wielobajtowych" },
+  "config.multiline.enabled": { "message": "Przetwarzanie adresów podzielonych na wiele wierszy (niezalecane)" },
+  "config.idn.enabled": { "message": "Przetwarzanie wielojęzycznych adresów IDN zaczynających się od słów:" },
+  "config.idn.scheme.default": { "message": "Przywróć domyślne" },
+  "config.i18nPath.enabled": { "message": "Przetwarzanie ścieżek ze znakami spoza zestawu ASCII" },
+
+  "config.find_click_point.strict": { "message": "Rozpoznawanie punktów kliknięcia" },
+  "config.find_click_point.strict.strict": { "message": "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)" },
+  "config.find_click_point.strict.loose": { "message": "Swobodne (czasami otwiera adresy, które nie zostały kliknięte)" }
 }

@@ -19,5 +19,90 @@
   "contextItem.copy.single": { "message": "Պատճենել URI-ն. \"$1\"" },
   "contextItem.copy.multiple": { "message": "Պատճենել բոլոր URI-ները. \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "Պատճենել URI-ն. փնտրում է URI-ները…" },
-  "contextItem.copy.disabled": { "message": "Պատճենել URI-ն. URI-ն չի գտնվել" }
+  "contextItem.copy.disabled": { "message": "Պատճենել URI-ն. URI-ն չի գտնվել" },
+
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt;" },
+  "config.context.tab.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt; նոր էջերում" },
+  "config.context.window.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt; նոր պատուհաններում" },
+  "config.context.copy.pref": { "message": "Պատճենել &lt;ընտրված URI-ները&gt;" },
+
+  "config.group.general": { "message": "Հիմնականը" },
+
+  "config.actions.tab0": { "message": "Գործողություն 1" },
+  "config.actions.tab1": { "message": "Գործողություն 2" },
+  "config.actions.tab2": { "message": "Գործողություն 3" },
+  "config.actions.tab3": { "message": "Գործողություն 4" },
+  "config.actions.tab4": { "message": "Գործողություն 5" },
+
+  "config.trigger.mouse_before": { "message": "Երբ URI տեքստը՝" },
+  "config.trigger.mouse.ignore": { "message": "(անտեսել մկնիկի սեղմումները)" },
+  "config.trigger.mouse.dblclick": { "message": "Կրկնակի սեղմամբ" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + Կրկնակի սեղմում" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + Կրկնակի սեղմում" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "կամ" },
+  "config.trigger.key.ignore": { "message": "(անտեսել ստեղների սեղմումը)" },
+  "config.trigger.key.enter": { "message": "Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.accel": { "message": "Ctrl + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.accel.mac": { "message": "⌘ + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.accel.shift": { "message": "Ctrl + Shift + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "⌘ + Shift + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.alt": { "message": "Alt + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.alt.shift": { "message": "Alt + Shift + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key.enter.shift": { "message": "Shift + Enter-ի սեղմում ընտրված տեքստի վրա" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "ոչինչ չանել:" },
+  "config.action.select": { "message": "ընտրել դա:" },
+  "config.action.current": { "message": "բացել այն ընթացիկ էջում:" },
+  "config.action.window": { "message": "բացել այն նոր պատուհանում:" },
+  "config.action.tab": { "message": "բացել այն նոր հետին էջում:" },
+  "config.action.tabBackground": { "message": "բացել այն խորապատկերում:" },
+  "config.action.current.stealth": { "message": "բացել այն ընթացիկ էջում (առանց HTTP_REFERER):" },
+  "config.action.window.stealth": { "message": "բացել այն նոր պատուհանում (առանց HTTP_REFERER):" },
+  "config.action.tab.stealth": { "message": "բացել այն նոր հետին էջում (առանց HTTP_REFERER):" },
+  "config.action.tabBackground.stealth": { "message": "բացել այն նոր խորապտկերում (առանց HTTP_REFERER):" },
+  "config.action.copy": { "message": "պատճենել մեկուսաշրջույթում" },
+  "config.action.openByBrowser": { "message": "բացել դիտարկիչում" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Ետարկել" },
+
+
+
+  "config.group.contextmenu": { "message": "Լրացուցիչ ընտրություն Համատեքստային Ցանկում՝ URI տեքստ ընտրելիս" },
+
+
+  "config.messenger.linkify": { "message": "Հղելի դարձնել URI տողերը սովորական տեքստային նամակներում" },
+
+
+
+  "config.group.advanced": { "message": "Ընդլայնված" },
+
+  "config.group.find": { "message": "URI-ի որոշում" },
+
+  "config.scheme": { "message": "Վերակազմել տեքստը, որը սկսվում է հետևյալ ճ-ներով, որպես URI՝ (օր.՝ \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Ետարկել" },
+  "config.scheme.fixup.table": { "message": "Ուղղել վնասված URI-ները հետևյալ կանոններով՝ (օր.՝ \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Ետարկել" },
+
+  "config.relative.enabled": { "message": "Վերլուծել հարաբերական ճ-ները (խորհորդ չի տրվում)" },
+  "config.multibyte.enabled": { "message": "Վերլուծել մուլթի-բայց նշանները" },
+  "config.multiline.enabled": { "message": "Վերլուծել URI-ները մասնատել մի քանի տողերի (խորհորդ չի տրվում)" },
+  "config.idn.enabled": { "message": "Վերլուծել IDN(Internationalized Domain Names)-ն՝ URI-երի համար, որոնք սկսվում են՝" },
+  "config.idn.scheme.default": { "message": "Ետարկել" },
+  "config.i18nPath.enabled": { "message": "Վերլուծել ոչ ASCII ճ-ները" },
+
+  "config.find_click_point.strict": { "message": "Սեղմումների որոշման քաղաքականությունը" },
+  "config.find_click_point.strict.strict": { "message": "Խիստ (երբեմն հնարավոր չի լինում բացել URI-ները)" },
+  "config.find_click_point.strict.loose": { "message": "Արձակ (երբեմն սխալ է բացում չսեղմված URI-ները)" }
 }

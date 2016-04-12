@@ -19,5 +19,90 @@
   "contextItem.copy.single": { "message": "Copy URI: \"$1\"" },
   "contextItem.copy.multiple": { "message": "Copy All URIs: \"$1\" ~ \"$2\"" },
   "contextItem.copy.processing": { "message": "Copy URI: finding URIs…" },
-  "contextItem.copy.disabled": { "message": "Copy URI: no URI found" }
+  "contextItem.copy.disabled": { "message": "Copy URI: no URI found" },
+
+  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.current.pref": { "message": "Open &lt;selected URI string&gt;" },
+  "config.context.tab.pref": { "message": "Open &lt;selected URI strings&gt; in New Tabs" },
+  "config.context.window.pref": { "message": "Open &lt;selected URI strings&gt; in New Windows" },
+  "config.context.copy.pref": { "message": "Copy &lt;selected URI strings&gt;" },
+
+
+  "config.group.general": { "message": "General" },
+
+  "config.actions.tab0": { "message": "Action 1" },
+  "config.actions.tab1": { "message": "Action 2" },
+  "config.actions.tab2": { "message": "Action 3" },
+  "config.actions.tab3": { "message": "Action 4" },
+  "config.actions.tab4": { "message": "Action 5" },
+
+  "config.trigger.mouse_before": { "message": "When an URI text is" },
+  "config.trigger.mouse.ignore": { "message": "(ignore mouse events)" },
+  "config.trigger.mouse.dblclick": { "message": "Double-clicked" },
+  "config.trigger.mouse.dblclick.accel": { "message": "Ctrl + Double-clicked" },
+  "config.trigger.mouse.dblclick.accel.mac": { "message": "⌘ + Double-clicked" },
+  "config.trigger.mouse.dblclick.accel.shift": { "message": "Ctrl + Shift + Double-clicked" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + Double-clicked" },
+  "config.trigger.mouse.dblclick.alt": { "message": "Alt + Double-clicked" },
+  "config.trigger.mouse.dblclick.alt.shift": { "message": "Alt + Shift + Double-clicked" },
+  "config.trigger.mouse.dblclick.shift": { "message": "Shift + Double-clicked" },
+  "config.trigger.mouse_after": { "message": "," },
+
+  "config.trigger.key_before": { "message": "or" },
+  "config.trigger.key.ignore": { "message": "(ignore key events)" },
+  "config.trigger.key.enter": { "message": "Enter is pressed with text selecting" },
+  "config.trigger.key.enter.accel": { "message": "Ctrl + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.accel.mac": { "message": "⌘ + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.accel.shift": { "message": "Ctrl + Shift + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "⌘ + Shift + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.alt": { "message": "Alt + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.alt.shift": { "message": "Alt + Shift + Enter is pressed with text selecting" },
+  "config.trigger.key.enter.shift": { "message": "Shift + Enter is pressed with text selecting" },
+  "config.trigger.key_after": { "message": "," },
+
+  "config.action_before": { "message": "" },
+  "config.action.blank": { "message": "do nothing." },
+  "config.action.select": { "message": "select it." },
+  "config.action.current": { "message": "load it in the Current Tab." },
+  "config.action.window": { "message": "load it in a New Window." },
+  "config.action.tab": { "message": "load it in a New Foreground Tab." },
+  "config.action.tabBackground": { "message": "load it in a New Background Tab." },
+  "config.action.current.stealth": { "message": "load it in the Current Tab (without HTTP_REFERER)." },
+  "config.action.window.stealth": { "message": "load it in a New Window (without HTTP_REFERER)." },
+  "config.action.tab.stealth": { "message": "load it in a New Foreground Tab (without HTTP_REFERER)." },
+  "config.action.tabBackground.stealth": { "message": "load it in a New Background Tab (without HTTP_REFERER)." },
+  "config.action.copy": { "message": "copy it to the clipboard" },
+  "config.action.openByBrowser": { "message": "open by browser" },
+  "config.action_after": { "message": "" },
+
+  "config.actions.default": { "message": "Reset" },
+
+
+
+  "config.group.contextmenu": { "message": "Extra ContextMenu Items when URI texts are selected" },
+
+
+  "config.messenger.linkify": { "message": "Linkify URI strings in plain text messages" },
+
+
+
+  "config.group.advanced": { "message": "Advanced" },
+
+  "config.group.find": { "message": "URI Detection" },
+
+  "config.scheme": { "message": "Recognize text which starts with following parts, as URI: (ex. \"http,ftp,mailto\")" },
+  "config.scheme.default": { "message": "Reset" },
+  "config.scheme.fixup.table": { "message": "Fix up broken URI, with following rules: (ex. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Reset" },
+
+  "config.relative.enabled": { "message": "Parse relative paths (unrecommended)" },
+  "config.multibyte.enabled": { "message": "Parse multi-byte characters" },
+  "config.multiline.enabled": { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config.idn.enabled": { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default": { "message": "Reset" },
+  "config.i18nPath.enabled": { "message": "Parse non-ASCII paths" },
+
+  "config.find_click_point.strict": { "message": "Policy of detecting clicked points" },
+  "config.find_click_point.strict.strict": { "message": "Strict (sometimes fails to load URIs)" },
+  "config.find_click_point.strict.loose": { "message": "Loose (sometimes wrongly loads non clicked URIs)" }
 }
