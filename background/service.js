@@ -38,11 +38,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 	
 	buildTooltip : function() 
 	{
-		if (this.selectionHandler)
-			this.selectionHandler.urisCancelled = true;
-		else
-			this.browser.selectedTab.__textlink__contentBridge
-				.cancelSelectionURIs({ select : false });
+		this.cancelSelectionURIs({ select : false });
 
 		this.destroyTooltip();
 
@@ -75,12 +71,76 @@ var TextLinkService = inherit(TextLinkConstants, {
 			});
 	},
 	getSelectionURIs : function(aOptions) {
-		if (this.selectionHandler)
-			return this.selectionHandler.getURIs(aOptions);
-		else
-			return this.browser.selectedTab.__textlink__contentBridge
-					.getSelectionURIs(aOptions)
+		this.cancelSelectionURIs(aOptions);
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				chrome.tabs.sendMessage(
+					aCurrentTabId,
+					{
+						type   : TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS,
+						id     : aCurrentTabId,
+						select : aOptions.select || false
+					},
+					function(aURIs) {
+						aResolve(aURIs);
+					}
+				);
+			});
+		});
 	},
+	cancelSelectionURIs : function(aOptions) {
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				chrome.tabs.sendMessage(
+					aCurrentTabId,
+					{
+						type   : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS,
+						select : aOptions.select || false
+					},
+					function() {
+						aResolve();
+					}
+				);
+			});
+		});
+	},
+	getSelectionSummary : function()
+	{
+		this.cancelSelectionSummary();
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				chrome.tabs.sendMessage(
+					aCurrentTabId,
+					{
+						type : TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY,
+						id   : aCurrentTabId
+					},
+					function(aURIs) {
+						aResolve(aURIs);
+					}
+				);
+			});
+		});
+	},
+	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
+	{
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				chrome.tabs.sendMessage(
+					aCurrentTabId,
+					{
+						type : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY,
+						id   : aCurrentTabId
+					},
+					function() {
+						aResolve();
+					}
+				);
+			});
+		});
+	},
+
+
 	destroyTooltip : function()
 	{
 		var range = document.createRange();
@@ -117,25 +177,25 @@ var TextLinkService = inherit(TextLinkConstants, {
 		}
 	},
  
-	openTextLinkIn : function(aAction, aTarget) 
+	openTextLinkIn : function(aAction) 
 	{
-		log('openTextLinkIn', { action: aAction, target: aTarget });
+		log('openTextLinkIn', { action: aAction });
 		return this.getSelectionURIs({
 				select : true
 			})
 			.then((function(aURIs) {
 				log('openTextLinkIn:step2', { uris: aURIs });
 				if (aURIs.length > 0)
-					this.openTextLinkInPostProcess(aAction, aTarget, aURIs);
+					this.openTextLinkInPostProcess(aAction, aURIs);
 			}).bind(this))
 			.catch(function(aError) {
 				log('openTextLinkIn:error', aError);
 				Components.utils.reportError(aError);
 			});
 	},
-	openTextLinkInPostProcess : function(aAction, aTarget, aURIs)
+	openTextLinkInPostProcess : function(aAction, aURIs)
 	{
-		log('openTextLinkInPostProcess', { action: aAction, target: aTarget, uris: aURIs });
+		log('openTextLinkInPostProcess', { action: aAction, uris: aURIs });
 		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (aURIs.length > 1)
 				aURIs.push('');
@@ -350,101 +410,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 });
 
 
-function TextLinkContentBridge(aTab, aTabBrowser) 
-{
-	this.init(aTab, aTabBrowser);
-}
-TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
-	handleMessage : function TLCB_handleMessage(aMessage)
-	{
-		log('TextLinkContentBridge#handlemessage', {
-			target : aMessage.target,
-			json   : aMessage.json
-		});
-
-		if (aMessage.target != this.mTab.linkedBrowser)
-		  return;
-
-		switch (aMessage.json.command)
-		{
-			case this.COMMAND_REPORT_SELECTION_SUMMARY:
-				var id = aMessage.json.id;
-				if (id in this.resolvers) {
-					let resolver = this.resolvers[id];
-					delete this.resolvers[id];
-					resolver(aMessage.json.summary);
-				}
-				return;
-
-			case this.COMMAND_REPORT_SELECTION_URIS:
-				var id = aMessage.json.id;
-				if (id in this.resolvers) {
-					let resolver = this.resolvers[id];
-					delete this.resolvers[id];
-					resolver(aMessage.json.uris);
-				}
-				return;
-
-			case this.COMMAND_REPORT_SELECTION_URIS_PROGRESS:
-				if (typeof this.onSelectionURIProgress == 'function')
-					this.onSelectionURIProgress(aMessage.json.uris);
-				return;
-		}
-	},
-	getSelectionSummary : function TLCB_getSelectionSummary()
-	{
-		log('TextLinkContentBridge#getSelectionSummary');
-		this.cancelSelectionSummary();
-		return new Promise((function(aResolve, aReject) {
-			var id = this.getSelectionSummaryIDPrefix + Date.now() + '-' + Math.floor(Math.random() * 65000);
-			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_SUMMARY, {
-				id : id
-			});
-			return this.resolvers[id] = aResolve;
-		}).bind(this));
-	},
-	getSelectionSummaryIDPrefix : 'selectionSummary-',
-	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
-	{
-		log('TextLinkContentBridge#cancelSelectionSummary');
-		Object.keys(this.resolvers).forEach(function(aKey) {
-			if (aKey.indexOf(this.getSelectionSummaryIDPrefix) == 0)
-				delete this.resolvers[aKey];
-		}, this);
-		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY);
-	},
-	getSelectionURIs : function TLCB_getSelectionURIs(aOptions)
-	{
-		log('TextLinkContentBridge#getSelectionURIs', aOptions);
-		this.cancelSelectionURIs(aOptions);
-		aOptions = aOptions || {};
-		this.onSelectionURIProgress = aOptions.onProgress;
-		return new Promise((function(aResolve, aReject) {
-			var id = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '') +
-						Date.now() + '-' + Math.floor(Math.random() * 65000);
-			this.sendAsyncCommand(this.COMMAND_REQUEST_SELECTION_URIS, {
-				id     : id,
-				select : aOptions.select || false
-			});
-			return this.resolvers[id] = aResolve;
-		}).bind(this));
-	},
-	getSelectionURIsIDPrefix : 'selectionURIs-',
-	cancelSelectionURIs : function TLCB_cancelSelectionURIs(aOptions)
-	{
-		log('TextLinkContentBridge#cancelSelectionURIs', aOptions);
-		aOptions = aOptions || {};
-		this.onSelectionURIProgress = null;
-		var prefix = this.getSelectionURIsIDPrefix + (aOptions.select ? 'select-' : '');
-		Object.keys(this.resolvers).forEach(function(aKey) {
-			if (aKey.indexOf(prefix) == 0)
-				delete this.resolvers[aKey];
-		}, this);
-		this.sendAsyncCommand(this.COMMAND_REQUEST_CANCEL_SELECTION_URIS);
-	}
-});
-
-
 //chrome.runtime.onStartup.addListener(function() {
 chrome.contextMenus.create({
 	type     : 'normal',
@@ -542,6 +507,10 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 	{
 		case TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION:
 			TextLinkService.openURI(aMessage.uri, aMessage.referrer, aMessage.action, aSender.tab.id);
+			break;
+
+		case TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS:
+			TextLinkService.onSelectionURIProgress(aMessage.uris);
 			break;
 	}
 });

@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 		case TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS:
 			log('getting uris...');
 			selectionHandler.getURIs({
-					select     : aMessage.json.params.select,
+					select     : aMessage.select,
 					onProgress : function(aURIs) {
 						chrome.runtime.sendMessage({
 							type : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS,
