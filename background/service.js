@@ -445,6 +445,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 });
 
 
+//chrome.runtime.onStartup.addListener(function() {
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-menu',
@@ -530,6 +531,11 @@ chrome.contextMenus.create({
 	}
 });
 */
+//});
+
+//chrome.runtime.onSuspend.addListener(function() {
+//	chrome.contextMenus.removeAll();
+//});
 
 chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 	switch (aMessage.type)
