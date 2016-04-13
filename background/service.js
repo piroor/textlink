@@ -605,17 +605,81 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 
 chrome.contextMenus.create({
 	type     : 'normal',
-	id       : 'context-item-test',
-	title    : 'test',
+	id       : 'context-menu',
+	title    : chrome.i18n.getMessage('contextItem.menu.label'),
 	contexts : ['selection']
 });
 chrome.contextMenus.create({
 	type     : 'normal',
-	id       : 'context-item-test-child',
-	parentId : 'context-item-test',
-	title    : 'test child',
+	id       : 'submenu-context-current',
+	parentId : 'context-textLink-menu',
+	title    : chrome.i18n.getMessage('contextItem.current.processing'),
 	onclick  : function() {
-		log('child');
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'submenu-context-tab',
+	parentId : 'context-textLink-menu',
+	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'submenu-context-window',
+	parentId : 'context-textLink-menu',
+	title    : chrome.i18n.getMessage('contextItem.window.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_WINDOW);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'submenu-context-copy',
+	parentId : 'context-textLink-menu',
+	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
+	}
+});
+
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-current',
+	title    : chrome.i18n.getMessage('contextItem.current.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-tab',
+	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-window',
+	title    : chrome.i18n.getMessage('contextItem.window.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_WINDOW);
+	}
+});
+chrome.contextMenus.create({
+	type     : 'normal',
+	id       : 'context-copy',
+	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
+	onclick  : function() {
+		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
 	}
 });
 
