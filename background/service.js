@@ -81,6 +81,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 						id     : aCurrentTabId,
 						select : aOptions.select || false
 					},
+					null,
 					function(aURIs) {
 						aResolve(aURIs);
 					}
@@ -91,12 +92,14 @@ var TextLinkService = inherit(TextLinkConstants, {
 	cancelSelectionURIs : function(aOptions) {
 		return new Promise(function(aResolve, aReject) {
 			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				log('cancelSelectionURIs, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
 					aCurrentTabId,
 					{
 						type   : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS,
 						select : aOptions.select || false
 					},
+					null,
 					function() {
 						aResolve();
 					}
@@ -109,12 +112,14 @@ var TextLinkService = inherit(TextLinkConstants, {
 		this.cancelSelectionSummary();
 		return new Promise(function(aResolve, aReject) {
 			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				log('getSelectionSummary, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
 					aCurrentTabId,
 					{
 						type : TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY,
 						id   : aCurrentTabId
 					},
+					null,
 					function(aURIs) {
 						aResolve(aURIs);
 					}
@@ -126,12 +131,14 @@ var TextLinkService = inherit(TextLinkConstants, {
 	{
 		return new Promise(function(aResolve, aReject) {
 			chrome.tabs.getCurrent(function(aCurrentTabId) {
+				log('cancelSelectionSummary, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
 					aCurrentTabId,
 					{
 						type : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY,
 						id   : aCurrentTabId
 					},
+					null,
 					function() {
 						aResolve();
 					}
