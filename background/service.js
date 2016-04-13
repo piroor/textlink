@@ -494,6 +494,7 @@ chrome.contextMenus.create({
 	}
 });
 
+/*
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-current',
@@ -528,6 +529,7 @@ chrome.contextMenus.create({
 		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
 	}
 });
+*/
 
 chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 	switch (aMessage.type)
