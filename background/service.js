@@ -35,71 +35,6 @@
 
 
 var TextLinkService = inherit(TextLinkConstants, { 	
-/*
-	get tooltip() 
-	{
-		return document.getElementById('textLinkTooltip-selectedURI');
-	},
-	get tooltipBox()
-	{
-		return document.getElementById('textLinkTooltip-selectedURI-box');
-	},
- 
-	get contextMenu() 
-	{
-		return document.getElementById('contentAreaContextMenu');
-	},
- 
-	get subMenu() 
-	{
-		return document.getElementById('context-textLink-menu').firstChild;
-	},
- 
-	get popupNode() 
-	{
-		var popup = this.contextMenu;
-		return (gContextMenuContentData && gContextMenuContentData.popupNode) ||
-				(popup && popup.triggerNode) ||
-				document.popupNode ;
-	},
-*/
- 
-	handleEvent : function(aEvent) 
-	{
-		switch (aEvent.type)
-		{
-			case 'load':
-				this.init();
-				return;
-
-			case 'unload':
-				this.destroy();
-				return;
-
-/*
-			case 'popupshowing':
-				if (aEvent.currentTarget == this.tooltip)
-					this.buildTooltip();
-				else if (aEvent.target != aEvent.currentTarget)
-					return;
-				if (aEvent.target == this.contextMenu)
-					this.initContextMenu();
-				else if (aEvent.target == this.subMenu)
-					this.initSubMenu();
-				return;
-
-			case 'popuphiding':
-				if (aEvent.currentTarget == this.tooltip)
-					this.destroyTooltip();
-				else if (aEvent.target != aEvent.currentTarget)
-					return;
-				if (aEvent.target == this.contextMenu ||
-					aEvent.target == this.subMenu)
-					this.destroyContextMenu();
-				return;
-*/
-		}
-	},
 	
 	buildTooltip : function() 
 	{
@@ -275,32 +210,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 		return tabs;
 	},
  
-	init : function() 
-	{
-		prefs.addPrefListener(this);
-		this.migratePrefs();
-		this.initPrefs();
-
-		window.removeEventListener('load', this, false);
-		window.addEventListener('unload', this, false);
-
-		this.contextMenu.addEventListener('popupshowing', this, false);
-		this.contextMenu.addEventListener('popuphiding', this, false);
-		this.subMenu.addEventListener('popupshowing', this, false);
-		this.subMenu.addEventListener('popuphiding', this, false);
-
-		window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
-
-		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
-			this.initTab(aTab, this.browser);
-		}, this);
-		this.browser.tabContainer.addEventListener('TabOpen',  this, true);
-		this.browser.tabContainer.addEventListener('TabClose', this, true);
-
-		// hacks.js
-		this.overrideExtensions();
-	},
-
 	initContextMenu : function() 
 	{
 		log('initContextMenu');
@@ -437,39 +346,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 		item.setAttribute('label', base);
 
 		return item;
-	},
-
-	destroyContextMenu : function()
-	{
-		if (this.selectionHandler)
-			this.selectionHandler.summaryCancelled = true;
-		else
-			this.browser.selectedTab.__textlink__contentBridge
-				.cancelSelectionSummary();
-	},
-  
-	destroy : function() 
-	{
-		prefs.removePrefListener(this);
-
-		window.removeEventListener('unload', this, false);
-
-		this.contextMenu.removeEventListener('popupshowing', this, false);
-		this.contextMenu.removeEventListener('popuphiding', this, false);
-		this.subMenu.removeEventListener('popupshowing', this, false);
-		this.subMenu.removeEventListener('popuphiding', this, false);
-
-		this.browser.tabContainer.removeEventListener('TabOpen',  this, true);
-		this.browser.tabContainer.removeEventListener('TabClose', this, true);
-
-		window.messageManager.broadcastAsyncMessage(this.MESSAGE_TYPE, {
-			command : this.COMMAND_SHUTDOWN,
-			params  : {}
-		});
-
-		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
-			this.destroyTab(aTab);
-		}, this);
 	}
 });
 
@@ -479,41 +355,6 @@ function TextLinkContentBridge(aTab, aTabBrowser)
 	this.init(aTab, aTabBrowser);
 }
 TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
-	mTab : null,
-	mTabBrowser : null,
-	init : function TLCB_init(aTab, aTabBrowser)
-	{
-		this.mTab = aTab;
-		this.mTabBrowser = aTabBrowser;
-		this.handleMessage = this.handleMessage.bind(this);
-		this.resolvers = {};
-
-		var manager = window.messageManager;
-		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
-
-		this.mTab.addEventListener('TabRemotenessChange', this, false);
-
-		this.notifyConfigUpdatedMessage();
-	},
-	destroy : function TLCB_destroy()
-	{
-		this.mTab.removeEventListener('TabRemotenessChange', this, false);
-
-		var manager = window.messageManager;
-		manager.removeMessageListener(this.MESSAGE_TYPE, this.handleMessage);
-
-		delete this.mTab;
-		delete this.mTabBrowser;
-		delete this.resolvers;
-	},
-	sendAsyncCommand : function TLCB_sendAsyncCommand(aCommandType, aCommandParams)
-	{
-		var manager = this.mTab.linkedBrowser.messageManager;
-		manager.sendAsyncMessage(this.MESSAGE_TYPE, {
-			command : aCommandType,
-			params  : aCommandParams || {}
-		});
-	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
 		log('TextLinkContentBridge#handlemessage', {
