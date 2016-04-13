@@ -444,6 +444,7 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	}
 });
 
+
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-menu',
@@ -453,8 +454,9 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-current',
-	parentId : 'context-textLink-menu',
+	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.current.processing'),
+	contexts : ['selection'],
 	onclick  : function() {
 		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
 		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
@@ -463,8 +465,9 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-tab',
-	parentId : 'context-textLink-menu',
+	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
+	contexts : ['selection'],
 	onclick  : function() {
 		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
 		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
@@ -473,8 +476,9 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-window',
-	parentId : 'context-textLink-menu',
+	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.window.processing'),
+	contexts : ['selection'],
 	onclick  : function() {
 		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_WINDOW);
 	}
@@ -482,8 +486,9 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-copy',
-	parentId : 'context-textLink-menu',
+	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
+	contexts : ['selection'],
 	onclick  : function() {
 		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
 	}
