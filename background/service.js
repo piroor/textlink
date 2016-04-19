@@ -70,6 +70,20 @@ var TextLinkService = inherit(TextLinkConstants, {
 				log('error: ' + aError);
 			});
 	},
+	getCurrentURI : function(aTab) {
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.sendMessage(
+				aTab.id,
+				{
+					type   : TextLinkConstants.COMMAND_REQUEST_CURRENT_URI
+				},
+				{},
+				function(aURI) {
+					aResolve(aURI);
+				}
+			);
+		});
+	},
 	getSelectionURIs : function(aParams) {
 		this.cancelSelectionURIs(aParams);
 		return new Promise(function(aResolve, aReject) {

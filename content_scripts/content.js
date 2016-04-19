@@ -51,5 +51,9 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 		case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS:
 			selectionHandler.urisCancelled = true;
 			break;
+
+		case TextLinkConstants.COMMAND_REQUEST_CURRENT_URI:
+			aResponder(window.location.href);
+			break;
 	}
 });
