@@ -161,29 +161,33 @@ var TextLinkService = inherit(TextLinkConstants, {
 		range.detach();
 	},
   
-	openURI : function(aURI, aReferrer, aAction, aOpenerTabId)
+	openURI : function(aParams)
 	{
-		log('loadURI', { action: aAction, uri: aURI });
+		var aURI       = aParams.uri;
+		var aReferrer  = aParams.referrer;
+		var aAction    = aParams.action;
+		var aOpenerTab = aParams.openerTab;
+		log('openURI', aParams);
 		var active = !(aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB);
 		if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT ||
 			aURI.match(/^mailto:/)) {
-			chrome.tabs.sendMessage(aOpenerTabId, {
+			return chrome.tabs.sendMessage(aOpenerTab.id, {
 				type     : TextLinkConstants.COMMAND_LOAD_URI,
 				uri      : aURI,
 				referrer : aReferrer
 			});
 		}
 		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
-			chrome.windows.create({
+			return chrome.windows.create({
 				url     : aURI,
 				focused : active
 			});
 		}
 		else {
-			chrome.tabs.create({
+			return chrome.tabs.create({
 				url         : aURI,
 				// this parameter does not supported yet and raises an error...
-				// openerTabId : aOpenerTabId,
+				// openerTabId : aOpenerTab.id,
 				active      : active
 			});
 		}
@@ -544,7 +548,12 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 	switch (aMessage.type)
 	{
 		case TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION:
-			TextLinkService.openURI(aMessage.uri, aMessage.referrer, aMessage.action, aSender.tab.id);
+			TextLinkService.openURI({
+				uri       : aMessage.uri,
+				referrer  : aMessage.referrer,
+				action    : aMessage.action,
+				openerTab : aSender.tab
+			});
 			break;
 
 		case TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS:
