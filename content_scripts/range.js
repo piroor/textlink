@@ -125,6 +125,7 @@ TextLinkRangeUtils.prototype = {
 
 		var ranges = [];
 		var selection = this.getSelection(aFrameOrEditable);
+		log('getURIRangesIterator for selection: "' + selection + '"');
 		if (!selection || !selection.rangeCount)
 			throw new Error(this.ERRROR_NO_URI_RANGE);
 

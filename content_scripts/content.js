@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 					return null;
 				})
 				.then(function(aURIs) {
-					log('uris: ', aURIs);
+					log('responding uris: ', aURIs);
 					aResponder(aURIs);
 				});
 			break;

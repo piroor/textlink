@@ -82,6 +82,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				},
 				{},
 				function(aURIs) {
+					log('respond uris: ', aURIs);
 					aResolve(aURIs);
 				}
 			);
@@ -114,6 +115,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				},
 				{},
 				function(aURIs) {
+					log('respond summaries: ', aURIs);
 					aResolve(aURIs);
 				}
 			);
@@ -188,7 +190,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				}
 			}).bind(this))
 			.catch(function(aError) {
-				log('openTextLinkIn:error', aError);
+				log('openTextLinkIn:error' + aError);
 			});
 	},
 	openTextLinkInPostProcess : function(aParams)

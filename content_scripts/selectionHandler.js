@@ -197,7 +197,7 @@ TextLinkSelectionHandler.prototype = {
 						aResolve(this.lastRanges);
 					}
 					else {
-						log('getRanges:error ', aError);
+						log('getRanges:error ' + aError);
 						aReject(aError);
 					}
 				}
@@ -234,7 +234,7 @@ TextLinkSelectionHandler.prototype = {
 				return uris;
 			})
 			.catch(function(aError) {
-				log('getURIs: error ', aError);
+				log('getURIs: error ' + aError);
 				return [];
 			});
 	}
