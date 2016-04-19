@@ -220,7 +220,9 @@ TextLinkSelectionHandler.prototype = {
 			.then(function(aRanges) {
 				var selections = [];
 				var uris = aRanges.map(function(aRange) {
-					if (aOptions.select) {
+					if (aOptions.select &&
+						aRange.range &&
+						aRange.range instanceof Range) {
 						if (selections.indexOf(aRange.selection) < 0) {
 							selections.push(aRange.selection);
 							aRange.selection.removeAllRanges();
