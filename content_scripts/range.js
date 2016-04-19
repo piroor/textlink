@@ -237,6 +237,7 @@ TextLinkRangeUtils.prototype = {
 	{
 		var terms = [];
 		var mayBeURIs = TextLinkUtils.matchURIRegExp(this.getTextContentFromRange(aRange));
+		log('getFindTermsFromRange:mayBeURIs: ', mayBeURIs);
 		if (!mayBeURIs) {
 			return terms;
 		}
