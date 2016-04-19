@@ -212,7 +212,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 			aURIs.length > 1 &&
 			(aAction == TextLinkConstants.ACTION_OPEN_IN_TAB ||
 			aAction == TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) &&
-			!PlacesUIUtils._confirmOpenInTabs(aURIs.length)
+			false // !PlacesUIUtils._confirmOpenInTabs(aURIs.length)
 			) {
 			return;
 		}
