@@ -247,47 +247,70 @@ var TextLinkService = inherit(TextLinkConstants, {
 			this.browser.loadURI(aURIs[0]);
 			return;
 		}
-		this.openTextLinkInTabs(aParams);
+		this.getCurrentURI(aParams.tab)
+			.then((function(aURI) {
+				aParams.currentURI = aURI;
+				this.openTextLinkInTabs(aParams);
+			}).bind(this));
 	},
 	openTextLinkInTabs : function(aParams)
 	{
 		var aAction = aParams.action;
 		var aURIs = aParams.uris;
+		var aOpenerTab = aParams.tab;
+		var aCurrentURI = aParams.currentURI;
 		log('openTextLinkInTabs', aParams);
 		var selectTab;
 		var tabs = [];
-		var b = this.browser;
 		aURIs.forEach(function(aURI, aIndex) {
 			if (
 				aIndex == 0 &&
 				(
 					(aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT) ||
-					(b.currentURI && (window.isBlankPageURL ? window.isBlankPageURL(b.currentURI.spec) : (b.currentURI.spec == 'about:blank')))
+					(
+						aCurrentURI &&
+						(window.isBlankPageURL ?
+							window.isBlankPageURL(aCurrentURI) :
+							(aCurrentURI == 'about:blank')
+						)
+					)
 				)
 				) {
-				if ('TreeStyleTabService' in window) // Tree Style Tab
-					TreeStyleTabService.readyToOpenChildTab(b, true);
-				b.loadURI(aURI);
-				if (!selectTab) selectTab = b.selectedTab;
-				tabs.push(b.selectedTabs);
+//				if ('TreeStyleTabService' in window) // Tree Style Tab
+//					TreeStyleTabService.readyToOpenChildTab(b, true);
+				this.openURI({
+					uri       : aURI,
+					referrer  : aCurrentURI,
+					action    : TextLinkConstants.ACTION_OPEN_IN_CURRENT
+				});
+				if (!selectTab) selectTab = aOpenerTab;
+				tabs.push(aOpenerTab);
 			}
 			else {
-				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
-					TreeStyleTabService.readyToOpenChildTab(b, true);
-				let tab = b.addTab(aURI, {relatedToCurrent: true});
+//				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
+//					TreeStyleTabService.readyToOpenChildTab(b, true);
+				let tab = this.openURI({
+					uri       : aURI,
+					referrer  : aCurrentURI,
+					action    : aAction,
+					openerTab : aOpenerTab
+				});
 				if (!selectTab) selectTab = tab;
 				tabs.push(tab);
 			}
 		}, this);
 
-		if ('TreeStyleTabService' in window) // Tree Style Tab
-			TreeStyleTabService.stopToOpenChildTab(b);
+//		if ('TreeStyleTabService' in window) // Tree Style Tab
+//			TreeStyleTabService.stopToOpenChildTab(b);
 
 		if (selectTab &&
 			aAction != TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
 			b.selectedTab = selectTab;
-			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
-			if ('setFocusInternal' in b) b.setFocusInternal();
+			chrome.tabs.update(selectTab.id, {
+				active : true
+			});
+//			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
+//			if ('setFocusInternal' in b) b.setFocusInternal();
 		}
 
 		return tabs;
