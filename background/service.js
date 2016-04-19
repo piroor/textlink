@@ -534,7 +534,7 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 			break;
 
 		case TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS:
-			TextLinkService.onSelectionURIProgress(aMessage.uris);
+//			TextLinkService.onSelectionURIProgress(aMessage.uris);
 			break;
 	}
 });
