@@ -260,8 +260,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 		var aOpenerTab = aParams.tab;
 		var aCurrentURI = aParams.currentURI;
 		log('openTextLinkInTabs', aParams);
-		var selectTab;
-		var tabs = [];
+		var tabActivated = false;
+		var promisedTabs = [];
 		aURIs.forEach(function(aURI, aIndex) {
 			if (
 				aIndex == 0 &&
@@ -283,37 +283,41 @@ var TextLinkService = inherit(TextLinkConstants, {
 					referrer  : aCurrentURI,
 					action    : TextLinkConstants.ACTION_OPEN_IN_CURRENT
 				});
-				if (!selectTab) selectTab = aOpenerTab;
-				tabs.push(aOpenerTab);
+				tabActivated = true;
+				promisedTabs.push(Promise.resolve(aOpenerTab));
 			}
 			else {
 //				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
 //					TreeStyleTabService.readyToOpenChildTab(b, true);
-				let tab = this.openURI({
+				let action = aAction;
+				if (tabActivated)
+					action |= TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB; // second and later tabs must stay background!
+log('tab '+aIndex+' : action=' + action);
+				promisedTabs.push(this.openURI({
 					uri       : aURI,
 					referrer  : aCurrentURI,
-					action    : aAction,
+					action    : action,
 					openerTab : aOpenerTab
-				});
-				if (!selectTab) selectTab = tab;
-				tabs.push(tab);
+				}));
+				if (!tabActivated) tabActivated = true;
 			}
 		}, this);
 
 //		if ('TreeStyleTabService' in window) // Tree Style Tab
 //			TreeStyleTabService.stopToOpenChildTab(b);
 
-		if (selectTab &&
-			aAction != TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
-			b.selectedTab = selectTab;
-			chrome.tabs.update(selectTab.id, {
-				active : true
-			});
-//			if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
-//			if ('setFocusInternal' in b) b.setFocusInternal();
-		}
-
-		return tabs;
+		return Promise.all(promisedTabs).then(function(aTabs) {
+			log('opened tabs: ', aTabs);
+			if (aTabs.length > 0 &&
+				!(aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB)) {
+				chrome.tabs.update(aTabs[0].id, {
+					active : true
+				});
+//				if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
+//				if ('setFocusInternal' in b) b.setFocusInternal();
+			}
+			return aTabs;
+		});
 	},
  
 	initContextMenu : function() 

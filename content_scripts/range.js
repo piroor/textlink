@@ -266,7 +266,8 @@ TextLinkRangeUtils.prototype = {
 
 			if (terms.indexOf(aTerm) < 0) terms.push(aTerm);
 		}, this);
-		if (aMode & this.FIND_ALL) {
+		if (aMode & this.FIND_ALL &&
+			this.Find) {
 			// 文字列長が長いものから先にサーチするために並べ替える（部分一致を除外するため）
 			terms.sort(function(aA, aB) { return (aB.length - aA.length) || (aB - aA); });
 		}
