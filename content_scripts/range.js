@@ -58,7 +58,7 @@ TextLinkRangeUtils.prototype = {
 				aFrameOrEditable instanceof aFrameOrEditable.Window
 			)
 			) {
-			let frame = aFrameOrEditable;
+			let frame = aFrameOrEditable || window;
 			return frame && frame.getSelection();
 		}
 		else if (aFrameOrEditable instanceof Element) {
