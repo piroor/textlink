@@ -67,7 +67,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 				buildLinesForURIs(aURIs);
 			}).bind(this))
 			.catch(function(aError) {
-				Components.utils.reportError(aError);
+				log('error: ' + aError);
 			});
 	},
 	getSelectionURIs : function(aOptions) {
@@ -197,7 +197,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 			}).bind(this))
 			.catch(function(aError) {
 				log('openTextLinkIn:error', aError);
-				Components.utils.reportError(aError);
 			});
 	},
 	openTextLinkInPostProcess : function(aAction, aURIs)
@@ -387,7 +386,6 @@ var TextLinkService = inherit(TextLinkConstants, {
 			}).bind(this))
 			.catch(function(aError) {
 				log('updateMenuItems:error', aError);
-				Components.utils.reportError(aError);
 			});
 	},
 	getSelectionSummary : function()
