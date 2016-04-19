@@ -19,6 +19,7 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 					log('summary: ', aSummary);
 					aResponder(aSummary);
 				});
+			return true; // this is required to respond with delay
 			break;
 
 		case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY:
@@ -44,6 +45,7 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 					log('responding uris: ', aURIs);
 					aResponder(aURIs);
 				});
+			return true; // this is required to respond with delay
 			break;
 
 		case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS:
