@@ -70,80 +70,69 @@ var TextLinkService = inherit(TextLinkConstants, {
 				log('error: ' + aError);
 			});
 	},
-	getSelectionURIs : function(aOptions) {
-		this.cancelSelectionURIs(aOptions);
+	getSelectionURIs : function(aParams) {
+		this.cancelSelectionURIs(aParams);
 		return new Promise(function(aResolve, aReject) {
-			chrome.tabs.getCurrent(function(aCurrentTabId) {
 				chrome.tabs.sendMessage(
-					aCurrentTabId,
+					aParams.tab.id,
 					{
 						type   : TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS,
-						id     : aCurrentTabId,
-						select : aOptions.select || false
+						id     : aParams.tab.id,
+						select : aParams.select || false
 					},
-					null,
+					{},
 					function(aURIs) {
 						aResolve(aURIs);
 					}
 				);
-			});
 		});
 	},
-	cancelSelectionURIs : function(aOptions) {
+	cancelSelectionURIs : function(aParams) {
 		return new Promise(function(aResolve, aReject) {
-			chrome.tabs.getCurrent(function(aCurrentTabId) {
-				log('cancelSelectionURIs, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
-					aCurrentTabId,
+					aParams.tab.id,
 					{
 						type   : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS,
-						select : aOptions.select || false
+						select : aParams.select || false
 					},
-					null,
+					{},
 					function() {
 						aResolve();
 					}
 				);
-			});
 		});
 	},
-	getSelectionSummary : function()
+	getSelectionSummary : function(aParams)
 	{
-		this.cancelSelectionSummary();
+		this.cancelSelectionSummary(aParams);
 		return new Promise(function(aResolve, aReject) {
-			chrome.tabs.getCurrent(function(aCurrentTabId) {
-				log('getSelectionSummary, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
-					aCurrentTabId,
+					aParams.tab.id,
 					{
 						type : TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY,
-						id   : aCurrentTabId
+						id   : aParams.tab.id
 					},
-					null,
+					{},
 					function(aURIs) {
 						aResolve(aURIs);
 					}
 				);
-			});
 		});
 	},
-	cancelSelectionSummary : function TLCB_cancelSelectionSummary()
+	cancelSelectionSummary : function TLCB_cancelSelectionSummary(aParams)
 	{
 		return new Promise(function(aResolve, aReject) {
-			chrome.tabs.getCurrent(function(aCurrentTabId) {
-				log('cancelSelectionSummary, current = ' + aCurrentTabId);
 				chrome.tabs.sendMessage(
-					aCurrentTabId,
+					aParams.tab.id,
 					{
 						type : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY,
-						id   : aCurrentTabId
+						id   : aParams.tab.id
 					},
-					null,
+					{},
 					function() {
 						aResolve();
 					}
 				);
-			});
 		});
 	},
 
@@ -184,24 +173,29 @@ var TextLinkService = inherit(TextLinkConstants, {
 		}
 	},
  
-	openTextLinkIn : function(aAction) 
+	openTextLinkIn : function(aParams) 
 	{
-		log('openTextLinkIn', { action: aAction });
+		log('openTextLinkIn', aParams);
 		return this.getSelectionURIs({
-				select : true
+				select : true,
+				tab    : aParams.tab
 			})
 			.then((function(aURIs) {
 				log('openTextLinkIn:step2', { uris: aURIs });
-				if (aURIs.length > 0)
-					this.openTextLinkInPostProcess(aAction, aURIs);
+				if (aURIs.length > 0) {
+					aParams.uris = aURIs;
+					this.openTextLinkInPostProcess(aParams);
+				}
 			}).bind(this))
 			.catch(function(aError) {
 				log('openTextLinkIn:error', aError);
 			});
 	},
-	openTextLinkInPostProcess : function(aAction, aURIs)
+	openTextLinkInPostProcess : function(aParams)
 	{
-		log('openTextLinkInPostProcess', { action: aAction, uris: aURIs });
+		var aAction = aParams.action;
+		var aURIs = aParams.uris;
+		log('openTextLinkInPostProcess', aParams);
 		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (aURIs.length > 1)
 				aURIs.push('');
@@ -232,11 +226,13 @@ var TextLinkService = inherit(TextLinkConstants, {
 			this.browser.loadURI(aURIs[0]);
 			return;
 		}
-		this.openTextLinkInTabs(aURIs, aAction);
+		this.openTextLinkInTabs(aParams);
 	},
-	openTextLinkInTabs : function(aURIs, aAction)
+	openTextLinkInTabs : function(aParams)
 	{
-		log('openTextLinkInTabs', { uris: aURIs, action: aAction });
+		var aAction = aParams.action;
+		var aURIs = aParams.uris;
+		log('openTextLinkInTabs', aParams);
 		var selectTab;
 		var tabs = [];
 		var b = this.browser;
@@ -428,9 +424,11 @@ chrome.contextMenus.create({
 	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.current.processing'),
 	contexts : ['selection'],
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
-		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_CURRENT, // TextLinkConstants.ACTION_OPEN_IN_TAB,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
@@ -439,9 +437,11 @@ chrome.contextMenus.create({
 	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
 	contexts : ['selection'],
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
-		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_TAB, // TextLinkConstants.ACTION_OPEN_IN_CURRENT,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
@@ -450,8 +450,11 @@ chrome.contextMenus.create({
 	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.window.processing'),
 	contexts : ['selection'],
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_WINDOW);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_WINDOW,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
@@ -460,8 +463,11 @@ chrome.contextMenus.create({
 	parentId : 'context-menu',
 	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
 	contexts : ['selection'],
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_COPY,
+			tab    : aTab
+		});
 	}
 });
 
@@ -470,34 +476,44 @@ chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-current',
 	title    : chrome.i18n.getMessage('contextItem.current.processing'),
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
-		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_CURRENT, // TextLinkConstants.ACTION_OPEN_IN_TAB,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-tab',
 	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_TAB);
-		// TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_CURRENT);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_TAB, // TextLinkConstants.ACTION_OPEN_IN_CURRENT,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-window',
 	title    : chrome.i18n.getMessage('contextItem.window.processing'),
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_OPEN_IN_WINDOW);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_OPEN_IN_WINDOW,
+			tab    : aTab
+		});
 	}
 });
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-copy',
 	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
-	onclick  : function() {
-		TextLinkService.openTextLinkIn(TextLinkConstants.ACTION_COPY);
+	onclick  : function(aInfo, aTab) {
+		TextLinkService.openTextLinkIn({
+			action : TextLinkConstants.ACTION_COPY,
+			tab    : aTab
+		});
 	}
 });
 */
