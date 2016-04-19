@@ -73,66 +73,66 @@ var TextLinkService = inherit(TextLinkConstants, {
 	getSelectionURIs : function(aParams) {
 		this.cancelSelectionURIs(aParams);
 		return new Promise(function(aResolve, aReject) {
-				chrome.tabs.sendMessage(
-					aParams.tab.id,
-					{
-						type   : TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS,
-						id     : aParams.tab.id,
-						select : aParams.select || false
-					},
-					{},
-					function(aURIs) {
-						aResolve(aURIs);
-					}
-				);
+			chrome.tabs.sendMessage(
+				aParams.tab.id,
+				{
+					type   : TextLinkConstants.COMMAND_REQUEST_SELECTION_URIS,
+					id     : aParams.tab.id,
+					select : aParams.select || false
+				},
+				{},
+				function(aURIs) {
+					aResolve(aURIs);
+				}
+			);
 		});
 	},
 	cancelSelectionURIs : function(aParams) {
 		return new Promise(function(aResolve, aReject) {
-				chrome.tabs.sendMessage(
-					aParams.tab.id,
-					{
-						type   : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS,
-						select : aParams.select || false
-					},
-					{},
-					function() {
-						aResolve();
-					}
-				);
+			chrome.tabs.sendMessage(
+				aParams.tab.id,
+				{
+					type   : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS,
+					select : aParams.select || false
+				},
+				{},
+				function() {
+					aResolve();
+				}
+			);
 		});
 	},
 	getSelectionSummary : function(aParams)
 	{
 		this.cancelSelectionSummary(aParams);
 		return new Promise(function(aResolve, aReject) {
-				chrome.tabs.sendMessage(
-					aParams.tab.id,
-					{
-						type : TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY,
-						id   : aParams.tab.id
-					},
-					{},
-					function(aURIs) {
-						aResolve(aURIs);
-					}
-				);
+			chrome.tabs.sendMessage(
+				aParams.tab.id,
+				{
+					type : TextLinkConstants.COMMAND_REQUEST_SELECTION_SUMMARY,
+					id   : aParams.tab.id
+				},
+				{},
+				function(aURIs) {
+					aResolve(aURIs);
+				}
+			);
 		});
 	},
 	cancelSelectionSummary : function TLCB_cancelSelectionSummary(aParams)
 	{
 		return new Promise(function(aResolve, aReject) {
-				chrome.tabs.sendMessage(
-					aParams.tab.id,
-					{
-						type : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY,
-						id   : aParams.tab.id
-					},
-					{},
-					function() {
-						aResolve();
-					}
-				);
+			chrome.tabs.sendMessage(
+				aParams.tab.id,
+				{
+					type : TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY,
+					id   : aParams.tab.id
+				},
+				{},
+				function() {
+					aResolve();
+				}
+			);
 		});
 	},
 
