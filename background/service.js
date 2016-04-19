@@ -224,7 +224,8 @@ var TextLinkService = inherit(TextLinkConstants, {
 			return;
 		}
 
-		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT && aURIs.length == 1) {
+		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT &&
+			aURIs.length == 1) {
 			this.browser.loadURI(aURIs[0]);
 			return;
 		}
