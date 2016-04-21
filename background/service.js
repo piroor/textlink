@@ -219,7 +219,7 @@ var TextLinkService = inherit(TextLinkConstants, {
 		if (aAction == TextLinkConstants.ACTION_COPY) {
 			if (aURIs.length > 1)
 				aURIs.push('');
-			TextLinkUtils.setClipBoard(aURIs.join('\r\n'));
+			this.setClipBoard(aURIs.join('\r\n'));
 			return;
 		}
 
@@ -455,6 +455,18 @@ log('tab '+aIndex+' : action=' + action);
 		item.setAttribute('label', base);
 
 		return item;
+	},
+
+	setClipBoard : function(aString) 
+	{
+		var container = document.createElement('textarea');
+		document.documentElement.appendChild(container);
+
+		container.value = aString;
+		container.select();
+		document.execCommand('copy');
+
+		container.parentNode.removeChild(container);
 	}
 });
 

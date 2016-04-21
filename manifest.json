@@ -47,6 +47,7 @@
   ],
   "permissions": [
     "contextMenus",
-    "storage"
+    "storage",
+    "clipboardWrite"
   ]
 }
