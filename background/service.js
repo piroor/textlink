@@ -482,7 +482,7 @@ chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-current',
 	parentId : 'context-menu',
-	title    : chrome.i18n.getMessage('contextItem.current.processing'),
+	title    : chrome.i18n.getMessage('contextItem.current.multiple'),
 	contexts : ['selection'],
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
@@ -495,7 +495,7 @@ chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-tab',
 	parentId : 'context-menu',
-	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
+	title    : chrome.i18n.getMessage('contextItem.tab.multiple'),
 	contexts : ['selection'],
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
@@ -508,7 +508,7 @@ chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-window',
 	parentId : 'context-menu',
-	title    : chrome.i18n.getMessage('contextItem.window.processing'),
+	title    : chrome.i18n.getMessage('contextItem.window.multiple'),
 	contexts : ['selection'],
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
@@ -521,7 +521,7 @@ chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'submenu-context-copy',
 	parentId : 'context-menu',
-	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
+	title    : chrome.i18n.getMessage('contextItem.copy.multiple'),
 	contexts : ['selection'],
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
@@ -535,7 +535,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-current',
-	title    : chrome.i18n.getMessage('contextItem.current.processing'),
+	title    : chrome.i18n.getMessage('contextItem.current.multiple'),
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
 			action : TextLinkConstants.ACTION_OPEN_IN_CURRENT, // TextLinkConstants.ACTION_OPEN_IN_TAB,
@@ -546,7 +546,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-tab',
-	title    : chrome.i18n.getMessage('contextItem.tab.processing'),
+	title    : chrome.i18n.getMessage('contextItem.tab.multiple'),
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
 			action : TextLinkConstants.ACTION_OPEN_IN_TAB, // TextLinkConstants.ACTION_OPEN_IN_CURRENT,
@@ -557,7 +557,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-window',
-	title    : chrome.i18n.getMessage('contextItem.window.processing'),
+	title    : chrome.i18n.getMessage('contextItem.window.multiple'),
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
 			action : TextLinkConstants.ACTION_OPEN_IN_WINDOW,
@@ -568,7 +568,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
 	type     : 'normal',
 	id       : 'context-copy',
-	title    : chrome.i18n.getMessage('contextItem.copy.processing'),
+	title    : chrome.i18n.getMessage('contextItem.copy.multiple'),
 	onclick  : function(aInfo, aTab) {
 		TextLinkService.openTextLinkIn({
 			action : TextLinkConstants.ACTION_COPY,
