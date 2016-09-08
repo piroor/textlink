@@ -16,7 +16,6 @@
   "background": {
     "scripts": [
       "common/inherit.jsm",
-      "common/log.js",
       "common/Configs.js",
       "common/constants.js",
       "common/common.js",
@@ -31,7 +30,6 @@
       ],
       "js": [
         "common/inherit.jsm",
-        "common/log.js",
         "common/Configs.js",
         "common/FakeRange.js",
         "common/constants.js",
