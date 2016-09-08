@@ -3,7 +3,7 @@
   "description": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html" },
 
-  "contextItem.menu.label": { "message": "URIの自動認識" },
+  "contextItem.menu.label": { "message": "選択されているURI" },
   "contextItem.current.single": { "message": "開く: \"%s\"" },
   "contextItem.current.multiple": { "message": "すべて開く: \"%s\"" },
   "contextItem.current.processing": { "message": "開く: URIを探索中..." },
@@ -23,7 +23,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "URIの自動認識" },
+  "config.context.submenu.pref": { "message": "選択されているURI" },
   "config.context.current.pref": { "message": "開く: &lt;選択範囲のURI&gt;" },
   "config.context.tab.pref": { "message": "新しいタブで開く: &lt;選択範囲のURI&gt;" },
   "config.context.window.pref": { "message": "新しいウィンドウで開く: &lt;選択範囲のURI&gt;" },

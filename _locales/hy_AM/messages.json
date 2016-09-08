@@ -3,7 +3,7 @@
   "description": { "message": "Հնարավորություն է տալիս կրկնակի սեղմամբ բացել վեբ էջերում գրված URI տեքստերը:" },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Բացել \"%s\"" },
   "contextItem.current.multiple": { "message": "Բացել բոլորը. \"%s\"" },
   "contextItem.current.processing": { "message": "Բացել. փնտրում է URI-ները…" },
@@ -22,7 +22,7 @@
   "contextItem.copy.disabled": { "message": "Պատճենել URI-ն. URI-ն չի գտնվել" },
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt;" },
   "config.context.tab.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt; նոր էջերում" },
   "config.context.window.pref": { "message": "Բացել &lt;ընտրված URI-ները&gt; նոր պատուհաններում" },

@@ -3,7 +3,7 @@
   "description": { "message": "Permet de charger une page WEB seulement grâce à un double-clic sur le texte du lien URL." },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Ouvrir \"%s\"" },
   "contextItem.current.multiple": { "message": "Ouvrir tout : \"%s\"" },
   "contextItem.current.processing": { "message": "Ouvrir tout: finding URIs…" },
@@ -23,7 +23,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Ouvrir le &lt;lien sélectionné&gt;" },
   "config.context.tab.pref": { "message": "Ouvrir les &lt;liens sélectionnés&gt; dans de nouveaux onglets" },
   "config.context.window.pref": { "message": "Ouvrir les &lt;liens sélectionnés&gt; dans de nouvelles fenêtres" },

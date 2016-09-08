@@ -3,7 +3,7 @@
   "description": { "message": "Umožňuje texty s internetovými adresami otvárať ako odkazy dvojitým kliknutím." },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Otvoriť \"%s\"" },
   "contextItem.current.multiple": { "message": "Otvoriť všetko: \"%s\"" },
   "contextItem.current.processing": { "message": "Otvoriť všetko: finding URIs…" },
@@ -23,7 +23,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Otvoriť &lt;vybraný reťazec s internetovou adresou&gt;" },
   "config.context.tab.pref": { "message": "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; na nových kartách" },
   "config.context.window.pref": { "message": "Otvoriť &lt;vybrané reťazce s internetovými adresami&gt; v nových oknách" },

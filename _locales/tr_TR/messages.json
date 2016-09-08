@@ -3,7 +3,7 @@
   "description": { "message": "Web sayfalarındaki link özelliği olmayan URL metinlerinin çift tıklanarak açılmasını sağlar." },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Aç \"%s\"" },
   "contextItem.current.multiple": { "message": "Tümünü Aç: \"%s\"" },
   "contextItem.current.processing": { "message": "Tümünü Aç: finding URIs…" },
@@ -27,7 +27,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "&lt;Seçili URL metnini&gt; Aç" },
   "config.context.tab.pref": { "message": "&lt;Seçili URL metnini&gt; Yeni Sekmede Aç" },
   "config.context.window.pref": { "message": "&lt;Seçili URL metnini&gt; Yeni Pencerede Aç" },

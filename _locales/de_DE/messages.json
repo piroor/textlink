@@ -4,7 +4,7 @@
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "\"%s\" öffnen" },
   "contextItem.current.multiple": { "message": "Alle öffnen: \"%s\"" },
   "contextItem.current.processing": { "message": "Alle öffnen: finding URIs…" },
@@ -25,7 +25,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Öffne &lt;selected URI string&gt;" },
   "config.context.tab.pref": { "message": "Öffne &lt;selected URI strings&gt; in Neuen Tabs" },
   "config.context.window.pref": { "message": "Öffne &lt;selected URI strings&gt; in Neuen Fenstern" },

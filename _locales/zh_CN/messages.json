@@ -3,7 +3,7 @@
   "description": { "message": "允许通过双击载入网页中的 URI 文本。" },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "打开 \"%s\"" },
   "contextItem.current.multiple": { "message": "全部打开：\"%s\"" },
   "contextItem.current.processing": { "message": "打开: finding URIs…" },
@@ -26,7 +26,7 @@
   "contextItem.copy.accesskey": { "message": "C" },
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "打开&lt;选定的 URI 串&gt;" },
   "config.context.tab.pref": { "message": "在新标签中打开&lt;选定的 URI 串&gt; " },
   "config.context.window.pref": { "message": "在新窗口中打开&lt;选定的 URI 串&gt;" },

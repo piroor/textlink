@@ -3,7 +3,7 @@
   "description": { "message": "Webcímet tartalmazó szöveg megnyitása hivatkozásként dupla kattintással." },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Megnyitás \"%s\"" },
   "contextItem.current.multiple": { "message": "Mindegyik megnyitása: \"%s\"" },
   "contextItem.current.processing": { "message": "Mindegyik megnyitása: finding URIs…" },
@@ -23,7 +23,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Megnyitás &lt;webcímet tartalmazó szövegrész&gt;" },
   "config.context.tab.pref": { "message": "Megnyitás új lapon &lt;webcímet tartalmazó szövegrész&gt;" },
   "config.context.window.pref": { "message": "Megnyitás új ablakban &lt;webcímet tartalmazó szövegrész&gt;" },

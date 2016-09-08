@@ -3,7 +3,7 @@
   "description": { "message": "Allows URI texts written in webpages to be loaded by double clicks." },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "Atverti \"%s\"" },
   "contextItem.current.multiple": { "message": "Atverti visus: \"%s\"" },
   "contextItem.current.processing": { "message": "Atverti visus: finding URIs…" },
@@ -21,7 +21,7 @@
   "contextItem.copy.processing": { "message": "Kopijuoti URI: finding URIs…" },
   "contextItem.copy.disabled": { "message": "Kopijuoti URI: no URI found" },
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "Atverti &lt;pažymėtą URI eilutę&gt;" },
   "config.context.tab.pref": { "message": "Atverti &lt;pažymėtus URI&gt; naujose kortelėse" },
   "config.context.window.pref": { "message": "Atverti &lt;pažymėtus URI&gt; naujuose languose" },

@@ -3,7 +3,7 @@
   "description": { "message": "讓我們可以用滑鼠雙擊的方式來載入網頁上的純文字 URI。" },
   "homepageURL": { "message": "http://piro.sakura.ne.jp/xul/_textlink.html.en" },
 
-  "contextItem.menu.label": { "message": "Autodetected URIs" },
+  "contextItem.menu.label": { "message": "Selection URIs" },
   "contextItem.current.single": { "message": "開啟 \"%s\"" },
   "contextItem.current.multiple": { "message": "全部開啟: \"%s\"" },
   "contextItem.current.processing": { "message": "開啟: finding URIs…" },
@@ -27,7 +27,7 @@
 
 
 
-  "config.context.submenu.pref": { "message": "Autodetected URIs" },
+  "config.context.submenu.pref": { "message": "Selection URIs" },
   "config.context.current.pref": { "message": "開啟 &lt;選取的 URI 字串&gt;" },
   "config.context.tab.pref": { "message": "在新分頁開啟 &lt;選取的 URI 字串&gt;" },
   "config.context.window.pref": { "message": "在新視窗開啟 &lt;選取的 URI 字串&gt;" },
