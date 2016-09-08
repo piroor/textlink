@@ -108,5 +108,8 @@
 
   "config.find_click_point.strict": { "message": "Erkennungverfahren für Klickpunkte" },
   "config.find_click_point.strict.strict": { "message": "Streng (scheitert manchmal beim Laden der URIs)" },
-  "config.find_click_point.strict.loose": { "message": "Locker (lädt manchmal ungewollt URIs )" }
+  "config.find_click_point.strict.loose": { "message": "Locker (lädt manchmal ungewollt URIs )" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

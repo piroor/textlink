@@ -107,5 +107,8 @@
 
   "config.find_click_point.strict": { "message": "クリック位置の認識方法" },
   "config.find_click_point.strict.strict": { "message": "厳密に認識する（URIを開けない場合があります）" },
-  "config.find_click_point.strict.loose": { "message": "ゆるく認識する（クリックされていないURIを開く場合があります）" }
+  "config.find_click_point.strict.loose": { "message": "ゆるく認識する（クリックされていないURIを開く場合があります）" },
+
+  "config.debug.label": { "message": "デバッグログを出力する" },
+  "config.debug.tooltip": { "message": "コンソール上にデバッグログを出力するようになります。" }
 }

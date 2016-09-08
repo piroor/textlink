@@ -106,5 +106,8 @@
 
   "config.find_click_point.strict": { "message": "Rozpoznawanie punktów kliknięcia" },
   "config.find_click_point.strict.strict": { "message": "Rygorystyczne (czasami nie rozpoznaje klikniętych adresów)" },
-  "config.find_click_point.strict.loose": { "message": "Swobodne (czasami otwiera adresy, które nie zostały kliknięte)" }
+  "config.find_click_point.strict.loose": { "message": "Swobodne (czasami otwiera adresy, które nie zostały kliknięte)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

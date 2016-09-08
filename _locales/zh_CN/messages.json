@@ -108,5 +108,8 @@
 
   "config.find_click_point.strict": { "message": "检测双击点的方式" },
   "config.find_click_point.strict.strict": { "message": "严格的（某些时候可能导致 URI 载入失败）" },
-  "config.find_click_point.strict.loose": { "message": "宽松的（某些时候可能错误地载入未点击的 URI）" }
+  "config.find_click_point.strict.loose": { "message": "宽松的（某些时候可能错误地载入未点击的 URI）" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

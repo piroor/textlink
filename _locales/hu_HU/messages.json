@@ -106,5 +106,8 @@
 
   "config.find_click_point.strict": { "message": "A felismerés módja" },
   "config.find_click_point.strict.strict": { "message": "Szigorú (néha nem sikerül beolvasni a weboldalt)" },
-  "config.find_click_point.strict.loose": { "message": "Mérsékelt (néha a webcím helytelenül lesz beolvasva)" }
+  "config.find_click_point.strict.loose": { "message": "Mérsékelt (néha a webcím helytelenül lesz beolvasva)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

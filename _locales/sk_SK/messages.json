@@ -106,5 +106,8 @@
 
   "config.find_click_point.strict": { "message": "Politika detekcie" },
   "config.find_click_point.strict.strict": { "message": "Prísna (niekedy nemusí načítať internetovú adresu)" },
-  "config.find_click_point.strict.loose": { "message": "Mierna (niekedy nesprávne načíta adresu)" }
+  "config.find_click_point.strict.loose": { "message": "Mierna (niekedy nesprávne načíta adresu)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

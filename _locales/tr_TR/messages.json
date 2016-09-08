@@ -110,5 +110,8 @@
 
   "config.find_click_point.strict": { "message": "Tıklanan Noktaların Algılanma İlkesi" },
   "config.find_click_point.strict.strict": { "message": "Sıkı (bazen URL'leri açmakta başarısız olur)" },
-  "config.find_click_point.strict.loose": { "message": "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)" }
+  "config.find_click_point.strict.loose": { "message": "Serbest (bazen yanlışlıkla tıklanmamış URL'leri açar)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

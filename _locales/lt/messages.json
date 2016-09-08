@@ -103,5 +103,8 @@
 
   "config.find_click_point.strict": { "message": "Paspausto taško aptikimo politika" },
   "config.find_click_point.strict.strict": { "message": "Griežta (nevisada pavyksta įkelti URI)" },
-  "config.find_click_point.strict.loose": { "message": "Laisva (kartais įkelia nepaspaustus URI)" }
+  "config.find_click_point.strict.loose": { "message": "Laisva (kartais įkelia nepaspaustus URI)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

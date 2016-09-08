@@ -108,5 +108,8 @@
 
   "config.find_click_point.strict": { "message": "Criterio di rilevamento dei punti cliccati" },
   "config.find_click_point.strict.strict": { "message": "Rigido (a volte non carica gli URI)" },
-  "config.find_click_point.strict.loose": { "message": "Flessibile (a volte carica erroneamente URI non cliccati)" }
+  "config.find_click_point.strict.loose": { "message": "Flessibile (a volte carica erroneamente URI non cliccati)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

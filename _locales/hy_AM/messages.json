@@ -104,5 +104,8 @@
 
   "config.find_click_point.strict": { "message": "Սեղմումների որոշման քաղաքականությունը" },
   "config.find_click_point.strict.strict": { "message": "Խիստ (երբեմն հնարավոր չի լինում բացել URI-ները)" },
-  "config.find_click_point.strict.loose": { "message": "Արձակ (երբեմն սխալ է բացում չսեղմված URI-ները)" }
+  "config.find_click_point.strict.loose": { "message": "Արձակ (երբեմն սխալ է բացում չսեղմված URI-ները)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

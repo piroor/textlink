@@ -104,5 +104,8 @@
 
   "config.find_click_point.strict": { "message": "Policy of detecting clicked points" },
   "config.find_click_point.strict.strict": { "message": "Strict (sometimes fails to load URIs)" },
-  "config.find_click_point.strict.loose": { "message": "Loose (sometimes wrongly loads non clicked URIs)" }
+  "config.find_click_point.strict.loose": { "message": "Loose (sometimes wrongly loads non clicked URIs)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

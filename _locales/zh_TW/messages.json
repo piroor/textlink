@@ -109,5 +109,8 @@
 
   "config.find_click_point.strict": { "message": "滑鼠點擊偵測方式" },
   "config.find_click_point.strict.strict": { "message": "嚴格 (有時無法載入 URI)" },
-  "config.find_click_point.strict.loose": { "message": "寬鬆 (有時錯誤地載入沒有點擊的 URI)" }
+  "config.find_click_point.strict.loose": { "message": "寬鬆 (有時錯誤地載入沒有點擊的 URI)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }

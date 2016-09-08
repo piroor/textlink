@@ -106,5 +106,8 @@
 
   "config.find_click_point.strict": { "message": "Règle pour la détection des clics" },
   "config.find_click_point.strict.strict": { "message": "Stricte (quelquefois les URLs ne sont pas chargées)" },
-  "config.find_click_point.strict.loose": { "message": "Large (quelquefois des URLs non cliquées sont chargées à tord)" }
+  "config.find_click_point.strict.loose": { "message": "Large (quelquefois des URLs non cliquées sont chargées à tord)" },
+
+  "config.debug.label": { "message": "Activate debug log" },
+  "config.debug.tooltip": { "message": "If you check this, debug logs will appear in the console." }
 }
