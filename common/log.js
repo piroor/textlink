@@ -1,8 +1,8 @@
 function log(...aArgs)
 {
-/*		if (!configs.debug)
+	if (!configs.debug)
 		return;
-*/
+
 	var logString = '[textlink] '+ aArgs.map(objectToLogString).join('');
 	console.log(logString);
 }
