@@ -5,6 +5,7 @@ PACKAGE_NAME = textlink
 all: xpi
 
 xpi: makexpi/makexpi.sh extlib/fxaddonlib-inherit/inherit.jsm extlib/webextensions-lib-configs/Configs.js
+	git submodule update
 	cp extlib/fxaddonlib-inherit/inherit.jsm common/
 	sed -e '/EXPORTED_SYMBOLS/d' -i common/inherit.jsm
 	cp extlib/webextensions-lib-configs/Configs.js common/
