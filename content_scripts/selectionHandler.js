@@ -205,21 +205,20 @@ TextLinkSelectionHandler.prototype = {
 		}).bind(this));
 	},
 
-	getURIs : function(aOptions)
+	getURIRanges : function(aOptions)
 	{
-		log('getURIs ', aOptions);
+		log('getURIRanges ', aOptions);
 		aOptions = aOptions || {};
 		return this.getRanges(function(aRanges) {
 				var uris = aRanges.map(function(aRange) {
 					return aRange.uri;
 				});
-				log('getURIs: uris ', uris);
+				log('getURIRanges: uris ', uris);
 				if (typeof aOptions.onProgress == 'function')
 					aOptions.onProgress(uris);
 			})
 			.then(function(aRanges) {
-				var selections = [];
-				var uris = aRanges.map(function(aRange) {
+				aRanges.forEach(function(aRange) {
 					if (aOptions.select &&
 						aRange.range &&
 						aRange.range instanceof Range) {
@@ -229,15 +228,23 @@ TextLinkSelectionHandler.prototype = {
 						}
 						aRange.selection.addRange(aRange.range);
 					}
-					return aRange.uri;
 				});
-				selections = undefined;
-				log('getURIs: final uris ', uris);
-				return uris;
+				return aRanges;
 			})
 			.catch(function(aError) {
-				log('getURIs: error ' + aError);
+				log('getURIRanges: error ' + aError);
 				return [];
 			});
+	},
+
+	getURIs : function(aOptions)
+	{
+		log('getURIs ', aOptions);
+		aOptions = aOptions || {};
+		return this.getURIRanges().then(function(aURIRanges) {
+			return aURIRanges.map(function(aRange) {
+				return aRange.uri;
+			});
+		});
 	}
 };
