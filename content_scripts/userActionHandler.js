@@ -220,9 +220,12 @@ TextLinkUserActionHandler.prototype = {
 		var aRanges = aParams.ranges;
 		var aFrame  = aParams.frame;
 
-		var range = aRanges[0];
+		if (aRanges.length == 0)
+			return;
 
-		if (range && range.range instanceof Range) {
+		if (aRanges.length == 1 &&
+			aRanges[0].range instanceof Range) {
+			let range = aRanges[0];
 			range.selection.removeAllRanges();
 			range.selection.addRange(range.range);
 		}
@@ -231,12 +234,16 @@ TextLinkUserActionHandler.prototype = {
 			return;
 
 		if (aAction & TextLinkConstants.ACTION_COPY) {
-			TextLinkUtils.setClipBoard(range.uri);
+			TextLinkUtils.setClipBoard(aRanges.map(function(aRange) {
+				return aRange.uri;
+			}).join('\n'));
 			return;
 		}
 
-		var uri = range.uri;
-		var referrer = (aAction & TextLinkConstants.ACTION_STEALTH) ?
+		for (let i = 0, maxi = aRanges.length; i < maxi; i++)
+		{
+			let uri = aRanges[i].uri;
+			let referrer = (aAction & TextLinkConstants.ACTION_STEALTH) ?
 					null :
 					aFrame.location.href ;
 
@@ -259,6 +266,9 @@ TextLinkUserActionHandler.prototype = {
 		}
 		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT) {
 			aFrame.location.href = uri;
+			aAction ^= TextLinkConstants.ACTION_OPEN_IN_CURRENT;
+			aAction |= TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB;
+		}
 		}
 	}
 };
