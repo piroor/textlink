@@ -244,31 +244,31 @@ TextLinkUserActionHandler.prototype = {
 		{
 			let uri = aRanges[i].uri;
 			let referrer = (aAction & TextLinkConstants.ACTION_STEALTH) ?
-					null :
-					aFrame.location.href ;
+						null :
+						aFrame.location.href ;
 
-		if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW ||
-			aAction & TextLinkConstants.ACTION_STEALTH) {
-			chrome.runtime.sendMessage({
-				type     : TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION,
-				uri      : uri,
-				referrer : referrer,
-				action   : aAction
-			});
-		}
-		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_TAB) {
-			let opened = aFrame.open(uri);
-			opened.focus();
-		}
-		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
-			aFrame.open(uri);
-			aFrame.focus();
-		}
-		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT) {
-			aFrame.location.href = uri;
-			aAction ^= TextLinkConstants.ACTION_OPEN_IN_CURRENT;
-			aAction |= TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB;
-		}
+			if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW ||
+				aAction & TextLinkConstants.ACTION_STEALTH) {
+				chrome.runtime.sendMessage({
+					type     : TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION,
+					uri      : uri,
+					referrer : referrer,
+					action   : aAction
+				});
+			}
+			else if (aAction & TextLinkConstants.ACTION_OPEN_IN_TAB) {
+				let opened = aFrame.open(uri);
+				opened.focus();
+			}
+			else if (aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
+				aFrame.open(uri);
+				aFrame.focus();
+			}
+			else if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT) {
+				aFrame.location.href = uri;
+				aAction ^= TextLinkConstants.ACTION_OPEN_IN_CURRENT;
+				aAction |= TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB;
+			}
 		}
 	}
 };
