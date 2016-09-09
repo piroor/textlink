@@ -204,14 +204,22 @@ TextLinkUserActionHandler.prototype = {
 			.then(function(aRanges) {
 				log('aRanges:', aRanges);
 				if (aRanges.length > 0)
-					self.openClickedURIPostProcess(aEvent, aAction, frame, aRanges);
+					self.openURIRanges({
+						action : aAction,
+						frame  : frame,
+						ranges : aRanges
+					});
 			})
 			.catch(function(aError) {
 				log('error: '+aError);
 			});
 	},
-	openClickedURIPostProcess : function(aEvent, aAction, aFrame, aRanges)
+	openURIRanges : function(aParams)
 	{
+		var aAction = aParams.action;
+		var aRanges = aParams.ranges;
+		var aFrame  = aParams.frame;
+
 		var range = aRanges[0];
 
 		if (range && range.range instanceof Range) {
