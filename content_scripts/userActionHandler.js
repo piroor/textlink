@@ -232,11 +232,25 @@ TextLinkUserActionHandler.prototype = {
 					null :
 					aFrame.location.href ;
 
-		chrome.runtime.sendMessage({
-			type     : TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION,
-			uri      : uri,
-			referrer : referrer,
-			action   : aAction
-		});
+		if (aAction & TextLinkConstants.ACTION_OPEN_IN_WINDOW ||
+			aAction & TextLinkConstants.ACTION_STEALTH) {
+			chrome.runtime.sendMessage({
+				type     : TextLinkConstants.COMMAND_OPEN_URI_WITH_ACTION,
+				uri      : uri,
+				referrer : referrer,
+				action   : aAction
+			});
+		}
+		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_TAB) {
+			let opened = aFrame.open(uri);
+			opened.focus();
+		}
+		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) {
+			aFrame.open(uri);
+			aFrame.focus();
+		}
+		else if (aAction & TextLinkConstants.ACTION_OPEN_IN_CURRENT) {
+			aFrame.location.href = uri;
+		}
 	}
 };

@@ -48,6 +48,7 @@
     "chrome_style": true
   },
   "permissions": [
+    "activeTab",
     "contextMenus",
     "storage",
     "clipboardWrite"
