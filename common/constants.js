@@ -35,13 +35,13 @@
 
 var TextLinkConstants = {
 	ACTION_DISABLED               : 0, 
-	ACTION_STEALTH                : 1,
-	ACTION_SELECT                 : 2,
-	ACTION_OPEN_IN_CURRENT        : 4,
-	ACTION_OPEN_IN_WINDOW         : 8,
-	ACTION_OPEN_IN_TAB            : 16,
-	ACTION_OPEN_IN_BACKGROUND_TAB : 32,
-	ACTION_COPY                   : 1024,
+	ACTION_STEALTH                : (1 << 0),
+	ACTION_SELECT                 : (1 << 1),
+	ACTION_OPEN_IN_CURRENT        : (1 << 2),
+	ACTION_OPEN_IN_WINDOW         : (1 << 3),
+	ACTION_OPEN_IN_TAB            : (1 << 4),
+	ACTION_OPEN_IN_BACKGROUND_TAB : (1 << 5),
+	ACTION_COPY                   : (1 << 10),
 
 	kDOMAIN_MULTIBYTE : (1 << 0),
 	kDOMAIN_LAZY      : (1 << 1),
