@@ -134,7 +134,7 @@ TextLinkUserActionHandler.prototype = {
 			return actions;
 		}
 
-		return configs.actions.map(function(aAction) {
+		return configs.actions.filter(function(aAction) {
 			return this.actionShouldHandleEvent(aAction, aEvent);
 		}, this);
 	},
