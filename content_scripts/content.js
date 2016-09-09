@@ -46,7 +46,34 @@ chrome.runtime.onMessage.addListener(function(aMessage, aSender, aResponder) {
 					aResponder(aURIs);
 				});
 			return true; // this is required to respond with delay
-			break;
+
+		case TextLinkConstants.COMMAND_REQUEST_PROCESS_SELECTION_URIS:
+			log('getting uris...');
+			selectionHandler.getURIRanges({
+					select     : aMessage.select,
+					onProgress : function(aURIs) {
+						chrome.runtime.sendMessage({
+							type : TextLinkConstants.COMMAND_REPORT_SELECTION_URIS_PROGRESS,
+							uris : aURIs
+						});
+					}
+				})
+				.catch(function(aError) {
+					log('Error: ' + aError);
+					return [];
+				})
+				.then(function(aURIRanges) {
+					log('processing uri ranges: ', aURIRanges);
+					userActionHandler.openURIRanges({
+						action : aMessage.action,
+						frame  : window,
+						ranges : aURIRanges
+					});
+					aResponder(aURIRanges.map(function(aRange) {
+						return aRange.uri;
+					}));
+				});
+			return true; // this is required to respond with delay
 
 		case TextLinkConstants.COMMAND_REQUEST_CANCEL_SELECTION_URIS:
 			selectionHandler.urisCancelled = true;

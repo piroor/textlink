@@ -36,12 +36,16 @@
 var TextLinkConstants = {
 	ACTION_DISABLED               : 0, 
 	ACTION_STEALTH                : (1 << 0),
+
 	ACTION_SELECT                 : (1 << 1),
 	ACTION_OPEN_IN_CURRENT        : (1 << 2),
 	ACTION_OPEN_IN_WINDOW         : (1 << 3),
 	ACTION_OPEN_IN_TAB            : (1 << 4),
 	ACTION_OPEN_IN_BACKGROUND_TAB : (1 << 5),
 	ACTION_COPY                   : (1 << 10),
+
+	ACTIONS_ON_CONTENT : (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5),
+	ACTIONS_ON_CHROME  : (1 << 10),
 
 	kDOMAIN_MULTIBYTE : (1 << 0),
 	kDOMAIN_LAZY      : (1 << 1),
@@ -114,6 +118,7 @@ var TextLinkConstants = {
 	COMMAND_REQUEST_CANCEL_SELECTION_SUMMARY : 'request-cancel-selection-summary',
 
 	COMMAND_REQUEST_SELECTION_URIS           : 'request-selection-uris',
+	COMMAND_REQUEST_PROCESS_SELECTION_URIS   : 'request-process-selection-uris',
 	COMMAND_REPORT_SELECTION_URIS            : 'report-selection-uris',
 	COMMAND_REPORT_SELECTION_URIS_PROGRESS   : 'report-selection-uris-progress',
 	COMMAND_REQUEST_CANCEL_SELECTION_URIS    : 'request-cancel-selection-uris',

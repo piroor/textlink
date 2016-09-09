@@ -102,6 +102,25 @@ var TextLinkService = inherit(TextLinkConstants, {
 			);
 		});
 	},
+	processSelectionURIs : function(aParams) {
+		this.cancelSelectionURIs(aParams);
+		return new Promise(function(aResolve, aReject) {
+			chrome.tabs.sendMessage(
+				aParams.tab.id,
+				{
+					type   : TextLinkConstants.COMMAND_REQUEST_PROCESS_SELECTION_URIS,
+					id     : aParams.tab.id,
+					select : aParams.select || false,
+					action : aParams.action
+				},
+				{},
+				function(aURIs) {
+					log('processed uris: ', aURIs);
+					aResolve(aURIs);
+				}
+			);
+		});
+	},
 	cancelSelectionURIs : function(aParams) {
 		return new Promise(function(aResolve, aReject) {
 			chrome.tabs.sendMessage(
@@ -196,6 +215,28 @@ var TextLinkService = inherit(TextLinkConstants, {
 	openTextLinkIn : function(aParams) 
 	{
 		log('openTextLinkIn', aParams);
+
+		if (aParams.action === void(0))
+			aParams.action = TextLinkConstants.ACTION_OPEN_IN_CURRENT;
+
+		if (aParams.action & TextLinkConstants.ACTIONS_ON_CONTENT) {
+			return this.processSelectionURIs({
+					select : true,
+					tab    : aParams.tab,
+					action : aParams.action
+				}).then((function(aURIs) {
+					if (
+						aURIs.length > 1 &&
+						false // !PlacesUIUtils._confirmOpenInTabs(aURIs.length)
+						) {
+						// TODO: do something to cancel this process!
+					}
+				}).bind(this))
+				.catch(function(aError) {
+					log('openTextLinkIn:error' + aError);
+				});
+		}
+
 		return this.getSelectionURIs({
 				select : true,
 				tab    : aParams.tab
@@ -203,121 +244,17 @@ var TextLinkService = inherit(TextLinkConstants, {
 			.then((function(aURIs) {
 				log('openTextLinkIn:step2', { uris: aURIs });
 				if (aURIs.length > 0) {
-					aParams.uris = aURIs;
-					this.openTextLinkInPostProcess(aParams);
+					if (aAction & TextLinkConstants.ACTION_COPY) {
+						if (aURIs.length > 1)
+							aURIs.push('');
+						this.setClipBoard(aURIs.join('\r\n'));
+						return;
+					}
 				}
 			}).bind(this))
 			.catch(function(aError) {
 				log('openTextLinkIn:error' + aError);
 			});
-	},
-	openTextLinkInPostProcess : function(aParams)
-	{
-		var aAction = aParams.action;
-		var aURIs = aParams.uris;
-		log('openTextLinkInPostProcess', aParams);
-		if (aAction == TextLinkConstants.ACTION_COPY) {
-			if (aURIs.length > 1)
-				aURIs.push('');
-			this.setClipBoard(aURIs.join('\r\n'));
-			return;
-		}
-
-		if (aAction === void(0))
-			aAction = TextLinkConstants.ACTION_OPEN_IN_CURRENT;
-
-		if (
-			aURIs.length > 1 &&
-			(aAction == TextLinkConstants.ACTION_OPEN_IN_TAB ||
-			aAction == TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB) &&
-			false // !PlacesUIUtils._confirmOpenInTabs(aURIs.length)
-			) {
-			return;
-		}
-
-		if (aAction == TextLinkConstants.ACTION_OPEN_IN_WINDOW) {
-			aURIs.forEach(function(aURI) {
-				window.open(aURI);
-			});
-			return;
-		}
-
-		if (aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT &&
-			aURIs.length == 1) {
-			this.browser.loadURI(aURIs[0]);
-			return;
-		}
-		this.getCurrentURI(aParams.tab)
-			.then((function(aURI) {
-				aParams.currentURI = aURI;
-				this.openTextLinkInTabs(aParams);
-			}).bind(this));
-	},
-	openTextLinkInTabs : function(aParams)
-	{
-		var aAction = aParams.action;
-		var aURIs = aParams.uris;
-		var aOpenerTab = aParams.tab;
-		var aCurrentURI = aParams.currentURI;
-		log('openTextLinkInTabs', aParams);
-		var tabActivated = false;
-		var promisedTabs = [];
-		aURIs.forEach(function(aURI, aIndex) {
-			if (
-				aIndex == 0 &&
-				(
-					(aAction == TextLinkConstants.ACTION_OPEN_IN_CURRENT) ||
-					(
-						aCurrentURI &&
-						(window.isBlankPageURL ?
-							window.isBlankPageURL(aCurrentURI) :
-							(aCurrentURI == 'about:blank')
-						)
-					)
-				)
-				) {
-//				if ('TreeStyleTabService' in window) // Tree Style Tab
-//					TreeStyleTabService.readyToOpenChildTab(b, true);
-				this.openURI({
-					uri       : aURI,
-					referrer  : aCurrentURI,
-					action    : TextLinkConstants.ACTION_OPEN_IN_CURRENT
-				});
-				tabActivated = true;
-				promisedTabs.push(Promise.resolve(aOpenerTab));
-			}
-			else {
-//				if ('TreeStyleTabService' in window && !TreeStyleTabService.checkToOpenChildTab(b)) // Tree Style Tab
-//					TreeStyleTabService.readyToOpenChildTab(b, true);
-				let action = aAction;
-				if (tabActivated)
-					action |= TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB; // second and later tabs must stay background!
-log('tab '+aIndex+' : action=' + action);
-				promisedTabs.push(this.openURI({
-					uri       : aURI,
-					referrer  : aCurrentURI,
-					action    : action,
-					openerTab : aOpenerTab
-				}));
-				if (!tabActivated) tabActivated = true;
-			}
-		}, this);
-
-//		if ('TreeStyleTabService' in window) // Tree Style Tab
-//			TreeStyleTabService.stopToOpenChildTab(b);
-
-		return Promise.all(promisedTabs).then(function(aTabs) {
-			log('opened tabs: ', aTabs);
-			if (aTabs.length > 0 &&
-				!(aAction & TextLinkConstants.ACTION_OPEN_IN_BACKGROUND_TAB)) {
-				chrome.tabs.update(aTabs[0].id, {
-					active : true
-				});
-//				if ('scrollTabbarToTab' in b) b.scrollTabbarToTab(selectTab);
-//				if ('setFocusInternal' in b) b.setFocusInternal();
-			}
-			return aTabs;
-		});
 	},
  
 	initContextMenu : function() 
