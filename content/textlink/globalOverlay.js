@@ -310,9 +310,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 
 		window.messageManager.loadFrameScript(TextLinkConstants.CONTENT_SCRIPT, true);
 
-		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
+		for (let aTab of this.browser.tabContainer.childNodes)
+		{
 			this.initTab(aTab, this.browser);
-		}, this);
+		}
 		this.browser.tabContainer.addEventListener('TabOpen',  this, true);
 		this.browser.tabContainer.addEventListener('TabClose', this, true);
 
@@ -491,9 +492,10 @@ var TextLinkService = inherit(TextLinkConstants, {
 			params  : {}
 		});
 
-		Array.forEach(this.browser.tabContainer.childNodes, function(aTab) {
+		for (let aTab of this.browser.tabContainer.childNodes)
+		{
 			this.destroyTab(aTab);
-		}, this);
+		}
 	},
 	
 	destroyTab : function(aTab) 

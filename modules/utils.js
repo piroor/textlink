@@ -707,7 +707,7 @@ var TextLinkUtils = inherit(TextLinkConstants, {
 		var match = aString.match(this._URIMatchingRegExp);
 		if (!match)
 			return null;
-		match = Array.slice(match)
+		match = [...match]
 					.filter(function(aMaybeURI) {
 						return (
 							(

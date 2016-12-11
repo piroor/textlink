@@ -204,7 +204,7 @@ function test_matchURIRegExp_multiline(aFlags)
 	{
 		var match = sv.matchURIRegExp(aInput);
 		assert.isNotNull(match);
-		assert.equals(aExpected, Array.slice(match));
+		assert.equals(aExpected, [...match]);
 	}
 
 	assertMatchURIs(
