@@ -48,7 +48,7 @@ function clearTimeout(aId)
 	Timer.cancel(aId);
 }
 
-function setInterval(aCallbackaCallback, aInterval, ...aArgs)
+function setInterval(aCallback, aInterval, ...aArgs)
 {
 	if (typeof aCallback != 'function' && !('call' in aCallback))
 		throw new Error('String type callback is obsolete.');
