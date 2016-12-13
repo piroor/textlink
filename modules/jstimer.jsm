@@ -35,11 +35,17 @@ function setTimeout(aCallback, aTimeout, ...aArgs)
 	var source = aCallback;
 	aCallback = function() { source.apply(getGlobal(), aArgs); };
 	aCallback.source = source;
+	var owner;
+	try {
+		owner = getOwnerWindowFromCaller(arguments.callee.caller);
+	}
+	catch(e) {
+	}
 	return (new Timer(
 		aCallback,
 		aTimeout,
 		Ci.nsITimer.TYPE_ONE_SHOT,
-		getOwnerWindowFromCaller(arguments.callee.caller)
+		owner
 	)).id;
 }
 
@@ -56,11 +62,17 @@ function setInterval(aCallback, aInterval, ...aArgs)
 	var source = aCallback;
 	aCallback = function() { source.apply(getGlobal(), aArgs); };
 	aCallback.source = source;
+	var owner;
+	try {
+		owner = getOwnerWindowFromCaller(arguments.callee.caller);
+	}
+	catch(e) {
+	}
 	return (new Timer(
 		aCallback,
 		aInterval,
 		Ci.nsITimer.TYPE_REPEATING_SLACK,
-		getOwnerWindowFromCaller(arguments.callee.caller)
+		owner
 	)).id;
 }
 
