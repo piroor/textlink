@@ -39,8 +39,8 @@
 
 			case TextLinkConstants.COMMAND_NOTIFY_CONFIG_UPDATED:
 				log('updating config...');
-				Object.keys(aMessage.json.config).forEach(function(aKey) {
-					var value = aMessage.json.config[aKey];
+				Object.keys(aMessage.json.params).forEach(function(aKey) {
+					var value = aMessage.json.params[aKey];
 					TextLinkUtils.onPrefValueChanged(aKey, value);
 				});
 				return;

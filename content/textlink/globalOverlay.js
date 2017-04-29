@@ -624,17 +624,20 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 		this.mTab = aTab;
 		this.mTabBrowser = aTabBrowser;
 		this.handleMessage = this.handleMessage.bind(this);
+		this.commandQueue = [];
 		this.resolvers = {};
 
 		var manager = window.messageManager;
 		manager.addMessageListener(this.MESSAGE_TYPE, this.handleMessage);
 
+		this.mTab.addEventListener('TabBrowserInserted', this, false);
 		this.mTab.addEventListener('TabRemotenessChange', this, false);
 
 		this.notifyConfigUpdatedMessage();
 	},
 	destroy : function TLCB_destroy()
 	{
+		this.mTab.removeEventListener('TabBrowserInserted', this, false);
 		this.mTab.removeEventListener('TabRemotenessChange', this, false);
 
 		var manager = window.messageManager;
@@ -646,11 +649,24 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	},
 	sendAsyncCommand : function TLCB_sendAsyncCommand(aCommandType, aCommandParams)
 	{
-		var manager = this.mTab.linkedBrowser.messageManager;
-		manager.sendAsyncMessage(this.MESSAGE_TYPE, {
-			command : aCommandType,
-			params  : aCommandParams || {}
+		this.commandQueue.push({
+			type   : aCommandType,
+			params : aCommandParams
 		});
+		if (this.mTab.linkedPanel) // already  initialized
+			this.processQueuedAsyncCommands();
+	},
+	processQueuedAsyncCommands : function TLCB_processQueuedAsyncCommands()
+	{
+		var manager = this.mTab.linkedBrowser.messageManager;
+		for (let command of this.commandQueue)
+		{
+			manager.sendAsyncMessage(this.MESSAGE_TYPE, {
+				command : command.type,
+				params  : command.params || {}
+			});
+		}
+		this.commandQueue = [];
 	},
 	handleMessage : function TLCB_handleMessage(aMessage)
 	{
@@ -698,20 +714,25 @@ TextLinkContentBridge.prototype = inherit(TextLinkConstants, {
 	{
 		switch (aEvent.type)
 		{
+			case 'TabBrowserInserted':
+				this.processQueuedAsyncCommands();
+				this.notifyConfigUpdatedMessage();
+				return;
+
 			case 'TabRemotenessChange':
 				return this.notifyConfigUpdatedMessage();
 		}
 	},
 	notifyConfigUpdatedMessage : function TLCB_notifyConfigUpdatedMessage()
 	{
+		if (!this.mTab.linkedPanel) // don't notify to lazy browser tabs
+			return;
+
 		var configs = {};
 		TextLinkService.prefKeys.forEach(function(aKey) {
 			configs[aKey] = prefs.getPref(aKey);
 		});
-		this.mTab.linkedBrowser.messageManager.sendAsyncMessage(this.MESSAGE_TYPE, {
-			command : this.COMMAND_NOTIFY_CONFIG_UPDATED,
-			config  : configs
-		});
+		this.sendAsyncCommand(this.COMMAND_NOTIFY_CONFIG_UPDATED, configs);
 	},
 	getSelectionSummary : function TLCB_getSelectionSummary()
 	{
