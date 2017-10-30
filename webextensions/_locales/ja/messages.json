@@ -1,0 +1,4 @@
+{
+  "extensionName": { "message": "テキストリンク(WE)" },
+  "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" }
+}

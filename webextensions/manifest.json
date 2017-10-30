@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+  "version": "2.0.0a",
+  "author": "YUKI \"Piro\" Hiroshi",
+  "description": "__MSG_extensionDescription__",
+  "permissions": [
+    "contextMenus"
+  ],
+  "icons": {
+    "32": "resources/icon.png"
+  },
+  "background": {
+    "page": "background/background.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "browser_style": true
+  },
+  "default_locale": "en",
+  "applications": {
+    "gecko": {
+      "id": "textlink@piro.sakura.ne.jp",
+      "strict_min_version": "57.0a1"
+    }
+  }
+}
