@@ -13,6 +13,18 @@
   "background": {
     "page": "background/background.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "all_frames": true,
+      "run_at": "document_end",
+      "js": [
+        "common/Configs.js",
+        "common/common.js",
+        "content_scripts/handler.js"
+      ]
+    }
+  ],
   "options_ui": {
     "page": "options/options.html",
     "browser_style": true

@@ -20,7 +20,7 @@ xpi: lint ../extlib/webextensions-lib-configs/Configs.js ../extlib/webextensions
 	cp ../extlib/webextensions-lib-options/Options.js options/
 	cp ../extlib/webextensions-lib-l10n/l10n.js common/
 	rm -f ./*.xpi
-	zip -r -0 textlink-we.xpi manifest.json _locales common options background resources >/dev/null 2>/dev/null
+	zip -r -0 textlink-we.xpi manifest.json _locales common content_scripts options background resources >/dev/null 2>/dev/null
 
 ../extlib/webextensions-lib-configs/Configs.js:
 	cd .. && git submodule update --init
