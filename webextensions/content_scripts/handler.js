@@ -8,7 +8,21 @@
 gLogContext = 'content';
 
 function onDblClick(aEvent) {
-  log('dblclick', aEvent);
+  if (aEvent.target.ownerDocument != document)
+    return;
+
+  var selection = window.getSelection();
+  if (selection.rangeCount != 1)
+    return;
+
+  var range = selection.getRangeAt(0);
+  var precedingPart = getPrecedingTextFromRange(range);
+  var followingPart = getFollowingTextFromRange(range);
+  log('dblclick: ', JSON.stringify({
+    preceding: precedingPart,
+    selection: rangeToText(range),
+    following: followingPart
+  }));
 };
 
 window.addEventListener('dblclick', onDblClick, { capture: true });

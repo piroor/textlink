@@ -18,7 +18,7 @@ function log(aMessage, ...aArgs)
   for (let i = 0; i < nest; i++) {
     indent += ' ';
   }
-  console.log(`tst<${gLogContext}>: ${indent}${aMessage}`, ...aArgs);
+  console.log(`TextLink<${gLogContext}>: ${indent}${aMessage}`, ...aArgs);
 }
 
 async function wait(aTask = 0, aTimeout = 0) {
