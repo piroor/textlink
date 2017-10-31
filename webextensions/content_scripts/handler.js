@@ -7,7 +7,9 @@
 
 gLogContext = 'content';
 
-function onDblClick(aEvent) {
+var gLastDetectedRange = null;
+
+async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
 
@@ -16,13 +18,33 @@ function onDblClick(aEvent) {
     return;
 
   var range = selection.getRangeAt(0);
-  var precedingRange = getPrecedingRange(range);
-  var followingRange = getFollowingRange(range);
+  var selection = {
+    range,
+    text: rangeToText(range)
+  };
+  var preceding = getPrecedingRange(range);
+  var following = getFollowingRange(range);
+  var id = Date.now() + '-' + Maht.floor(Math.random() * 65000);
+  gLastDetectedRange = { id, preceding, selection, following };
+
   log('dblclick: ', JSON.stringify({
-    preceding: { text: precedingRange.text, range: precedingRange.range.toString() },
-    selection: rangeToText(range),
-    following: { text: followingRange.text, range: followingRange.range.toString() }
+    preceding: { text: preceding.text, range: preceding.range.toString() },
+    selection: { text: selection.text, range: selection.range.toString() },
+    following: { text: following.text, range: following.range.toString() }
   }));
+
+  await browser.runtime.sendMessage({
+    type:      kCOMMAND_DOUBLE_CLICK,
+    id,
+    preceding: preceding.text,
+    selection: selection.text,
+    following: following.text,
+    button:    aEvent.button,
+    altKey:    aEvent.altKey,
+    ctrlKey:   aEvent.ctrlKey,
+    metaKey:   aEvent.metaKey,
+    shiftKey:  aEvent.shiftKey
+  });
 };
 
 window.addEventListener('dblclick', onDblClick, { capture: true });

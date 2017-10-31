@@ -22,6 +22,7 @@
         "common/Configs.js",
         "common/common.js",
         "common/xpath.js",
+        "common/constants.js",
         "content_scripts/range.js",
         "content_scripts/handler.js"
       ]
