@@ -34,7 +34,7 @@ var URIMatcher = {
       aParts.following
     ].join(separator);
     for (let maybeURI of match) {
-      let matcher = new RegExp(`${separator}${maybeURI.replace(/(.)/g, (aChar) => {
+      let matcher = new RegExp(`${separator}?${maybeURI.replace(/(.)/g, (aChar) => {
         if (/[\\\.\[\]\(\)\{\}\+\*\?]/.test(aChar))
           aChar = `\\${aChar}`;
         return `${aChar}${separator}?`;
