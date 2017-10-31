@@ -6,8 +6,58 @@
 'use strict';
 
 var URIMatcher = { 
+  matchSingle(aParts, aBaseURI) {
+    log('matchSingle: ', aParts, aBaseURI);
+    this._updateURIRegExp();
+    var findRangeText = [
+      aParts.preceding,
+      aParts.selection,
+      aParts.following
+    ].join('');
+    var match = findRangeText.match(this._URIMatchingRegExp);
+    log('String.match: ', match);
+    if (!match)
+      return null;
+    match = [...match].filter(aMaybeURI => (
+      (!this.hasLoadableScheme(aMaybeURI) &&
+       !this.URIExceptionPattern_all.test(aMaybeURI)) ||
+      this.isHeadOfNewURI(aMaybeURI)
+    ));
+    if (match.length <= 0)
+      return null;
+
+    var separator = '\u200b'; // zero width space
+    var separatorMatcher = new RegExp(separator, 'g');
+    var findRangeTextWithSeparator = [
+      aParts.preceding,
+      aParts.selection,
+      aParts.following
+    ].join(separator);
+    for (let maybeURI of match) {
+      let matcher = new RegExp(maybeURI.replace(/(.)/g, (aChar) => {
+        if (/[\\\.\[\]\(\)\{\}\+\*\?]/.test(aChar))
+          aChar = `\\${aChar}`;
+        return `${aChar}${separator}?`;
+      }));
+      log('matcher ', matcher);
+      let match = findRangeTextWithSeparator.match(matcher);
+      if (!match)
+        continue;
+      let separators = match[0].match(separatorMatcher);
+      if (!separators || separators.length > 2)
+        continue;
+      maybeURI = this.sanitizeURIString(maybeURI);
+      return {
+        text: maybeURI,
+        uri:  this.fixupURI(maybeURI, aBaseURI)
+      };
+    }
+    log(' => no match');
+    return null;
+  },
+
   matchAll(aString, aBaseURI) {
-    log('match: ', aString);
+    log('matchAll: ', aString);
     this._updateURIRegExp();
     var match = aString.match(this._URIMatchingRegExp);
     log('String.match: ', match);
@@ -18,7 +68,7 @@ var URIMatcher = {
        !this.URIExceptionPattern_all.test(aMaybeURI)) ||
       this.isHeadOfNewURI(aMaybeURI)
     ));
-    var result = match.length ? match : null ;
+    var result = match.length > 0 ? match : null ;
     if (result) {
       result = result.map(aMaybeURI => {
         aMaybeURI = this.sanitizeURIString(aMaybeURI);

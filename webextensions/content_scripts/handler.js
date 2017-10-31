@@ -7,8 +7,6 @@
 
 gLogContext = 'content';
 
-var gLastDetectedRange = null;
-
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
@@ -24,8 +22,6 @@ async function onDblClick(aEvent) {
   };
   var preceding = getPrecedingRange(range);
   var following = getFollowingRange(range);
-  var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
-  gLastDetectedRange = { id, preceding, selection, following };
 
   log('dblclick: ', JSON.stringify({
     preceding: { text: preceding.text, range: preceding.range.toString() },
@@ -33,9 +29,8 @@ async function onDblClick(aEvent) {
     following: { text: following.text, range: following.range.toString() }
   }));
 
-  await browser.runtime.sendMessage({
+  let result = await browser.runtime.sendMessage({
     type:      kCOMMAND_DOUBLE_CLICK,
-    id,
     base:      location.href,
     preceding: preceding.text,
     selection: selection.text,
@@ -46,6 +41,8 @@ async function onDblClick(aEvent) {
     metaKey:   aEvent.metaKey,
     shiftKey:  aEvent.shiftKey
   });
+  log('result: ', JSON.stringify(result));
+  // TODO: we need to select the matched text!
 };
 
 window.addEventListener('dblclick', onDblClick, { capture: true });

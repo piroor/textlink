@@ -14,10 +14,19 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
     return;
 
   switch (aMessage.type) {
-    case kCOMMAND_DOUBLE_CLICK:
-      log(kCOMMAND_DOUBLE_CLICK, aMessage);
-      let text = `${aMessage.preceding}${aMessage.selection}${aMessage.following}`;
-      log('matchAll result: ', URIMatcher.matchAll(text, aMessage.base));
-      return Promise.resolve(true);
+    case kCOMMAND_DOUBLE_CLICK: {
+      let result = URIMatcher.matchSingle(aMessage, aMessage.base);
+      log('matchSingle result: ', result);
+      if (result.uri)
+        browser.tabs.create({
+          active:      true,
+          url:         result.uri,
+          windowId:    aSender.tab.windowId,
+          openerTabId: aSender.tab.id
+        });
+      //let text = `${aMessage.preceding}${aMessage.selection}${aMessage.following}`;
+      //log('matchAll result: ', URIMatcher.matchAll(text, aMessage.base));
+      return Promise.resolve(result);
+    }
   }
 });

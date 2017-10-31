@@ -39,7 +39,7 @@ function rangeToText(aRange) {
 function nodeToText(aNode) {
   if (aNode.nodeType == Node.ELEMENT_NODE) {
     if (/^br$/i.test(String(aNode.localName)) ||
-        /^inline/.test(window.getComputedStyle(aNode, null).display))
+        !/^inline/.test(window.getComputedStyle(aNode, null).display))
       return '\n';
     return '';
   }
