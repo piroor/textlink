@@ -36,6 +36,7 @@ async function onDblClick(aEvent) {
   await browser.runtime.sendMessage({
     type:      kCOMMAND_DOUBLE_CLICK,
     id,
+    base:      location.href,
     preceding: preceding.text,
     selection: selection.text,
     following: following.text,

@@ -7,3 +7,16 @@
 
 const kCOMMAND_DOUBLE_CLICK = 'textlink:double-click';
 
+const kACTION_DISABLED               = 0;
+const kACTION_STEALTH                = 1 << 0;
+const kACTION_SELECT                 = 1 << 2;
+const kACTION_OPEN_IN_CURRENT        = 1 << 3;
+const kACTION_OPEN_IN_WINDOW         = 1 << 4;
+const kACTION_OPEN_IN_TAB            = 1 << 5;
+const kACTION_OPEN_IN_BACKGROUND_TAB = 1 << 6;
+const kACTION_COPY                   = 1 << 10;
+
+const kDOMAIN_MULTIBYTE = 1 << 0;
+const kDOMAIN_LAZY      = 1 << 1;
+const kDOMAIN_IDN       = 1 << 2;
+

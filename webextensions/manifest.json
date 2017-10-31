@@ -5,7 +5,8 @@
   "author": "YUKI \"Piro\" Hiroshi",
   "description": "__MSG_extensionDescription__",
   "permissions": [
-    "contextMenus"
+    "contextMenus",
+    "storage"
   ],
   "icons": {
     "32": "resources/icon.png"
@@ -15,6 +16,7 @@
       "common/Configs.js",
       "common/constants.js",
       "common/common.js",
+      "background/uriMatcher.js",
       "background/background.js"
     ]
   },

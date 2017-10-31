@@ -91,9 +91,9 @@ function createVisibleTextNodeWalker() {
     document,
     NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
     { acceptNode: (aNode) =>
-        isNodeVisible(aNode) ?
-          NodeFilter.FILTER_ACCEPT :
-          NodeFilter.FILTER_REJECT },
+      isNodeVisible(aNode) ?
+        NodeFilter.FILTER_ACCEPT :
+        NodeFilter.FILTER_REJECT },
     false
   );
 }
@@ -107,7 +107,7 @@ function isNodeVisible(aNode) {
     let style = window.getComputedStyle(aNode, null);
     if (style.display == 'none' ||
         /^(collapse|hidden)$/.test(style.visibility))
-       return false;
+      return false;
   } while (aNode = aNode.parentNode);
   return true;
 }

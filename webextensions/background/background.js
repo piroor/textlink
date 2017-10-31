@@ -15,7 +15,9 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 
   switch (aMessage.type) {
     case kCOMMAND_DOUBLE_CLICK:
-      log(aMessage);
+      log(kCOMMAND_DOUBLE_CLICK, aMessage);
+      let text = `${aMessage.preceding}${aMessage.selection}${aMessage.following}`;
+      log('matchAll result: ', URIMatcher.matchAll(text, aMessage.base));
       return Promise.resolve(true);
   }
 });
