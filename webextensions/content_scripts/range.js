@@ -46,34 +46,43 @@ function nodeToText(aNode) {
   return aNode.nodeValue;
 }
 
-function getPrecedingTextFromRange(aRange) {
+function getPrecedingRange(aRange) {
+  var range = document.createRange();
+  range.setStart(aRange.startContainer, aRange.startOffset);
+  range.setEnd(aRange.startContainer, aRange.startOffset);
   var walker = createVisibleTextNodeWalker();
   walker.currentNode = aRange.startContainer;
-  var result = '';
+  var text = '';
   if (walker.currentNode.nodeType == Node.TEXT_NODE)
-    result += walker.currentNode.nodeValue.substring(0, aRange.startOffset);
+    text += walker.currentNode.nodeValue.substring(0, aRange.startOffset);
   while (walker.previousNode()) {
-    let text = nodeToText(walker.currentNode);
-    if (text.indexOf('\n') > -1)
+    range.setStartBefore(walker.currentNode);
+    let partialText = nodeToText(walker.currentNode);
+    if (partialText.indexOf('\n') > -1) {
       break;
-    result += text;
+    }
+    text += partialText;
   }
-  return result;
+  return { range, text };
 }
 
-function getFollowingTextFromRange(aRange) {
+function getFollowingRange(aRange) {
+  var range = document.createRange();
+  range.setStart(aRange.endContainer, aRange.endOffset);
+  range.setEnd(aRange.endContainer, aRange.endOffset);
   var walker = createVisibleTextNodeWalker();
   walker.currentNode = aRange.endContainer;
-  var result = '';
+  var text = '';
   if (walker.currentNode.nodeType == Node.TEXT_NODE)
-    result += walker.currentNode.nodeValue.substring(aRange.endOffset);
+    text += walker.currentNode.nodeValue.substring(aRange.endOffset);
   while (walker.nextNode()) {
-    let text = nodeToText(walker.currentNode);
-    if (text.indexOf('\n') > -1)
+    range.setEndAfter(walker.currentNode);
+    let partialText = nodeToText(walker.currentNode);
+    if (partialText.indexOf('\n') > -1)
       break;
-    result += text;
+    text += partialText;
   }
-  return result;
+  return { range, text };
 }
 
 

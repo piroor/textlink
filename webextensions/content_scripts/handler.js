@@ -16,12 +16,12 @@ function onDblClick(aEvent) {
     return;
 
   var range = selection.getRangeAt(0);
-  var precedingPart = getPrecedingTextFromRange(range);
-  var followingPart = getFollowingTextFromRange(range);
+  var precedingRange = getPrecedingRange(range);
+  var followingRange = getFollowingRange(range);
   log('dblclick: ', JSON.stringify({
-    preceding: precedingPart,
+    preceding: { text: precedingRange.text, range: precedingRange.range.toString() },
     selection: rangeToText(range),
-    following: followingPart
+    following: { text: followingRange.text, range: followingRange.range.toString() }
   }));
 };
 
