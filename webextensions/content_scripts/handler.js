@@ -24,7 +24,7 @@ async function onDblClick(aEvent) {
   };
   var preceding = getPrecedingRange(range);
   var following = getFollowingRange(range);
-  var id = Date.now() + '-' + Maht.floor(Math.random() * 65000);
+  var id = Date.now() + '-' + Math.floor(Math.random() * 65000);
   gLastDetectedRange = { id, preceding, selection, following };
 
   log('dblclick: ', JSON.stringify({
