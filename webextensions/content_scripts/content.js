@@ -8,6 +8,7 @@
 gLogContext = 'content';
 
 var gTryingAction = false;
+var gLastActionResult = null;
 
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
@@ -16,10 +17,12 @@ async function onDblClick(aEvent) {
   if (!data)
     return;
   gTryingAction = true;
-  var result = await browser.runtime.sendMessage(clone(data, {
+  gLastActionResult = null;
+  gLastActionResult = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
-  postAction(result);
+  postAction(gLastActionResult);
+  await wait(500);
   gTryingAction = false;
 }
 
@@ -30,10 +33,11 @@ async function onKeyPress(aEvent) {
   if (!data)
     return;
   gTryingAction = true;
-  var result = await browser.runtime.sendMessage(clone(data, {
+  gLastActionResult = null;
+  gLastActionResult = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
-  postAction(result);
+  postAction(gLastActionResult);
   gTryingAction = false;
 }
 
@@ -69,8 +73,16 @@ async function onSelectionChange(aEvent) {
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
 
-  while (gTryingAction) {
-    await wait(500);
+  await wait(200);
+
+  if (gTryingAction) {
+    while (gTryingAction) {
+      await wait(500);
+    }
+    if (gLastActionResult) {
+      gLastURIRanges = Promise.resolve([gLastActionResult]);
+      return;
+    }
   }
 
   var selection = window.getSelection();
