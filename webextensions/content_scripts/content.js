@@ -156,6 +156,9 @@ function onMessage(aMessage, aSender) {
         selection.addRange(createRangeFromRangeData(range.range));
       }
     })();
+
+    case kCOMMAND_FETCH_URI_RANGES:
+      return gLastURIRanges;
   }
 }
 

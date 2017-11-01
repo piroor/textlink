@@ -68,7 +68,8 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
         baseURI: aMessage.base
       });
       log('matchAll results: ', results);
-      if (aSender.tab.active)
+      if (aSender.tab.active &&
+          (await browser.windows.get(aSender.tab.windowId)).focused)
         initContextMenuForURIs(results.map(aResult => aResult.uri));
       return results;
     })();
@@ -155,4 +156,24 @@ browser.contextMenus.onClicked.addListener((aInfo, aTab) => {
       });
       break;
   }
+});
+
+
+browser.tabs.onActivated.addListener(async (aActiveInfo) => {
+  var ranges = await browser.tabs.sendMessage(aActiveInfo.tabId, {
+    type: kCOMMAND_FETCH_URI_RANGES
+  });
+  initContextMenuForURIs(ranges.map(aResult => aResult.uri));
+});
+
+browser.windows.onFocusChanged.addListener(async (aWindowId) => {
+  var window = await browser.windows.get(aWindowId, { populate: true });
+  if (!window.focused)
+    return;
+
+  var activeTab = window.tabs.filter(aTab => aTab.active)[0];
+  var ranges = await browser.tabs.sendMessage(activeTab.id, {
+    type: kCOMMAND_FETCH_URI_RANGES
+  });
+  initContextMenuForURIs(ranges.map(aResult => aResult.uri));
 });
