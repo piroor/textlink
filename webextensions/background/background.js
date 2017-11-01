@@ -15,34 +15,15 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 
   switch (aMessage.type) {
     case kCOMMAND_DOUBLE_CLICK: return (async () => {
-      let result = URIMatcher.matchSingle({
-        preceding: aMessage.preceding.text,
-        selection: aMessage.selection.text,
-        following: aMessage.following.text
-      }, aMessage.base);
+      aMessage.cursor.framePos = aSender.frameId;
+      let result = await URIMatcher.matchSingle({
+        text:    aMessage.text,
+        tabId:   aSender.tab.id,
+        cursor:  aMessage.cursor,
+        baseURI: aMessage.base
+      });
       log('matchSingle result: ', result);
       if (result.uri) {
-        let match = await browser.find.find(result.text, {
-          tabId:            aSender.tab.id,
-          caseSensitive:    true,
-          includeRangeData: true
-        });
-        let selectionRange = aMessage.selection.range;
-        log('selectionRange: ', selectionRange, aSender.frameId);
-        for (let rangeData of match.rangeData) {
-          log('range: ', rangeData);
-          if (rangeData.framePos != aSender.frameId ||
-              rangeData.startTextNodePos > selectionRange.startTextNodePos ||
-              (rangeData.startTextNodePos == selectionRange.startTextNodePos &&
-               rangeData.startOffset > selectionRange.startOffset) ||
-              rangeData.endTextNodePos < selectionRange.endTextNodePos ||
-              (rangeData.endTextNodePos == selectionRange.endTextNodePos &&
-               rangeData.endOffset < selectionRange.endOffset))
-            continue;
-          log('found!');
-          result.range = rangeData;
-          break;
-        }
         await browser.tabs.create({
           active:      true,
           url:         result.uri,

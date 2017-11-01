@@ -6,15 +6,10 @@
 'use strict';
 
 var URIMatcher = { 
-  matchSingle(aParts, aBaseURI) {
-    log('matchSingle: ', aParts, aBaseURI);
+  matchSingle: async function(aParams) {
+    log('matchSingle: ', aParams);
     this._updateURIRegExp();
-    var findRangeText = [
-      aParts.preceding,
-      aParts.selection,
-      aParts.following
-    ].join('');
-    var match = findRangeText.match(this._URIMatchingRegExp);
+    var match = aParams.text.match(this._URIMatchingRegExp);
     log('String.match: ', match);
     if (!match)
       return null;
@@ -26,37 +21,26 @@ var URIMatcher = {
     if (match.length <= 0)
       return null;
 
-    var separator = '\u200b'; // zero width space
-    var separatorMatcher = new RegExp(separator, 'g');
-    var findRangeTextWithSeparator = [
-      aParts.preceding,
-      aParts.selection,
-      aParts.following
-    ].join(separator);
     for (let maybeURI of match) {
-      let matcher = new RegExp(`${separator}?${maybeURI.replace(/(.)/g, (aChar) => {
-        if (/[\\\.\[\]\(\)\{\}\+\*\?]/.test(aChar))
-          aChar = `\\${aChar}`;
-        return `${aChar}${separator}?`;
-      })}`);
-      log('matcher ', matcher);
-      let match = findRangeTextWithSeparator.match(matcher);
-      if (!match)
-        continue;
-      let separators = match[0].match(separatorMatcher);
-      if (!separators || separators.length > 2)
+      let range = await this.findTextRange({
+        text:   maybeURI,
+        cursor: aParams.cursor,
+        tabId:  aParams.tabId
+      });
+      if (!range)
         continue;
       maybeURI = this.sanitizeURIString(maybeURI);
       return {
-        text: maybeURI,
-        uri:  this.fixupURI(maybeURI, aBaseURI)
+        text:  maybeURI,
+        range: range,
+        uri:   this.fixupURI(maybeURI, aParams.baseURI)
       };
     }
     log(' => no match');
     return null;
   },
 
-  matchAll(aString, aBaseURI) {
+  matchAll: async function(aString, aBaseURI) {
     log('matchAll: ', aString);
     this._updateURIRegExp();
     var match = aString.match(this._URIMatchingRegExp);
@@ -80,6 +64,26 @@ var URIMatcher = {
     }
     log(' => ', result);
     return result;
+  },
+
+  findTextRange: async function(aParams) {
+    var match = await browser.find.find(aParams.text, {
+      tabId:            aParams.tabId,
+      caseSensitive:    true,
+      includeRangeData: true
+    });
+    for (let rangeData of match.rangeData) {
+      if (rangeData.framePos != aParams.cursor.framePos ||
+          rangeData.startTextNodePos > aParams.cursor.startTextNodePos ||
+          (rangeData.startTextNodePos == aParams.cursor.startTextNodePos &&
+           rangeData.startOffset > aParams.cursor.startOffset) ||
+          rangeData.endTextNodePos < aParams.cursor.endTextNodePos ||
+          (rangeData.endTextNodePos == aParams.cursor.endTextNodePos &&
+           rangeData.endOffset < aParams.cursor.endOffset))
+        continue;
+      return rangeData;
+    }
+    return null;
   },
 
   kDomainSeparators          : '\\.', 
