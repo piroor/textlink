@@ -2,7 +2,10 @@
   "extensionName": { "message": "Text Link (WE)" },
   "extensionDescription": { "message": "Allows URI texts written in webpages to be loaded by double clicks." },
 
-  "menu.waiting.label": { "message": "Finding URIs in Selection…" },
+  "menu.waiting.label": { "message": "Finding URIs in Selection… ($PROGRESS$%)",
+    "placeholders": {
+      "progress": { "content": "$1", "example": "100" }
+    }},
   "menu.group.single": { "message": "URI in Selection: \"$URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },

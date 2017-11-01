@@ -2,7 +2,10 @@
   "extensionName": { "message": "テキストリンク(WE)" },
   "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
 
-  "menu.waiting.label": { "message": "選択範囲内のURIを検出中..." },
+  "menu.waiting.label": { "message": "選択範囲内のURIを検出中... ($PROGRESS$%)",
+    "placeholders": {
+      "progress": { "content": "$1", "example": "100" }
+    }},
   "menu.group.single": { "message": "選択範囲中のURI: \"$URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },

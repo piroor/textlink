@@ -9,15 +9,8 @@ var URIMatcher = {
   matchSingle: async function(aParams) {
     log('matchSingle: ', aParams);
     this._updateURIRegExp();
-    var match = aParams.text.match(this._URIMatchingRegExp);
-    if (!match)
-      return null;
-    match = [...match].filter(aMaybeURI => (
-      (!this.hasLoadableScheme(aMaybeURI) &&
-       !this.URIExceptionPattern_all.test(aMaybeURI)) ||
-      this.isHeadOfNewURI(aMaybeURI)
-    ));
-    if (match.length <= 0)
+    var match = this.matchMaybeURIs(aParams.text);
+    if (match.length == 0)
       return null;
 
     for (let maybeURI of match) {
@@ -41,24 +34,25 @@ var URIMatcher = {
 
   matchAll: async function(aParams) {
     log('matchAll: ', aParams);
+    aParams.onProgress && aParams.onProgress(0);
     this._updateURIRegExp();
     var results = [];
 
+    var maxCount = 0;
+    for (let range of aParams.ranges) {
+      let match = this.matchMaybeURIs(range.text);
+      if (match.length == 0) {
+        range.maybeURIs = [];
+        continue;
+      }
+
+      range.maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      maxCount += range.maybeURIs.length;
+    }
+
     var count = 0;
     for (let range of aParams.ranges) {
-      let match = range.text.match(this._URIMatchingRegExp);
-      if (!match)
-        continue;
-      match = [...match].filter(aMaybeURI => (
-        (!this.hasLoadableScheme(aMaybeURI) &&
-         !this.URIExceptionPattern_all.test(aMaybeURI)) ||
-        this.isHeadOfNewURI(aMaybeURI)
-      ));
-      if (match.length == 0)
-        continue;
-
-      let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
-      for (let maybeURI of maybeURIs) {
+      for (let maybeURI of range.maybeURIs) {
         let ranges = await this.findAllTextRanges({
           text:  maybeURI,
           range: range,
@@ -75,13 +69,12 @@ var URIMatcher = {
           }));
         }
         count++;
+        aParams.onProgress && aParams.onProgress(count / maxCount);
         if (count % 100 == 0)
           await wait(0);
       }
-      count++;
-      if (count % 100 == 0)
-        await wait(0);
     }
+    aParams.onProgress && aParams.onProgress(1);
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||
       aA.range.startOffset - aB.range.startOffset);
@@ -94,6 +87,20 @@ var URIMatcher = {
     });
     log(' => ', results);
     return results;
+  },
+
+  matchMaybeURIs(aText) {
+    let match = aText.match(this._URIMatchingRegExp);
+    if (!match)
+      return [];
+    match = [...match].filter(aMaybeURI => (
+      (!this.hasLoadableScheme(aMaybeURI) &&
+       !this.URIExceptionPattern_all.test(aMaybeURI)) ||
+      this.isHeadOfNewURI(aMaybeURI)
+    ));
+    if (match.length == 0)
+      return [];
+    return match;
   },
 
   findAllTextRanges: async function(aParams) {

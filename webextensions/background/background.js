@@ -88,20 +88,38 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       break;
 
     case kNOTIFY_READY_TO_FIND_URI_RANGES:
-      initContextMenuForWaiting();
+      initContextMenuForWaiting(aSender.tab.id);
       break;
 
     case kCOMMAND_FIND_URI_RANGES: return (async () => {
-      initContextMenuForWaiting();
+      browser.tabs.sendMessage(aSender.tab.id, {
+        type:     kNOTIFY_MATCH_ALL_PROGRESS,
+        progress: 0
+      });
+      initContextMenuForWaiting(aSender.tab.id);
       log('selection-changed', aMessage);
       for (let range of aMessage.ranges) {
         range.framePos = aSender.frameId;
       }
       let results = await URIMatcher.matchAll({
-        text:    aMessage.text,
         tabId:   aSender.tab.id,
         ranges:  aMessage.ranges,
-        baseURI: aMessage.base
+        baseURI: aMessage.base,
+        onProgress: (aProgress) => {
+          try {
+            var progress = Math.round(aProgress * 100);
+            browser.tabs.sendMessage(aSender.tab.id, {
+              type:     kNOTIFY_MATCH_ALL_PROGRESS,
+              progress: progress
+            });
+            if (gLastContextTab == aSender.tab.id)
+              browser.contextMenus.update('waiting', {
+                title: browser.i18n.getMessage(`menu.waiting.label`, [progress])
+              });
+          }
+          catch(e) {
+          }
+        }
       });
       log('matchAll results: ', results);
       if (aSender.tab.active &&
@@ -169,7 +187,9 @@ function getMenuItemVisibility() {
   return visibility;
 }
 
-function initContextMenuForWaiting() {
+var gLastContextTab = 0;
+
+async function initContextMenuForWaiting(aTabId) {
   browser.contextMenus.removeAll();
 
   var count = 0;
@@ -181,9 +201,13 @@ function initContextMenuForWaiting() {
   if (count == 0)
     return;
 
+  gLastContextTab = aTabId;
+  var progress = await browser.tabs.sendMessage(aTabId, {
+    type: kCOMMAND_FETCH_MATCH_ALL_PROGRESS
+  });
   browser.contextMenus.create({
     id:       'waiting',
-    title:    browser.i18n.getMessage(`menu.waiting.label`),
+    title:    browser.i18n.getMessage(`menu.waiting.label`, [progress || 0]),
     enabled:  false,
     contexts: ['selection']
   });

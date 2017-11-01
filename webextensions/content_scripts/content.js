@@ -9,6 +9,7 @@ gLogContext = 'content';
 
 var gTryingAction = false;
 var gLastActionResult = null;
+var gMatchAllProgress = 0;
 
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
@@ -189,6 +190,13 @@ function onMessage(aMessage, aSender) {
 
     case kCOMMAND_FETCH_URI_RANGES:
       return gLastURIRanges;
+
+    case kNOTIFY_MATCH_ALL_PROGRESS:
+      gMatchAllProgress = aMessage.progress;
+      break;
+
+    case kCOMMAND_FETCH_MATCH_ALL_PROGRESS:
+      return Promise.resolve(gMatchAllProgress);
   }
 }
 
