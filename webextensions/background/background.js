@@ -14,8 +14,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
     return;
 
   switch (aMessage.type) {
-    case kCOMMAND_DOUBLE_CLICK:
-    case kCOMMAND_KEYPRESS_ENTER: return (async () => {
+    case kCOMMAND_TRY_ACTION: return (async () => {
       let action = detectActionFromEvent(aMessage.event);
       log('action: ', action);
       if (action == kACTION_DISABLED)

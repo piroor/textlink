@@ -14,10 +14,10 @@ async function onDblClick(aEvent) {
   if (!data)
     return;
   var result = await browser.runtime.sendMessage(clone(data, {
-    type: kCOMMAND_DOUBLE_CLICK
+    type: kCOMMAND_TRY_ACTION
   }));
   postAction(result);
-};
+}
 
 async function onKeyPress(aEvent) {
   if (aEvent.target.ownerDocument != document)
@@ -26,10 +26,21 @@ async function onKeyPress(aEvent) {
   if (!data)
     return;
   var result = await browser.runtime.sendMessage(clone(data, {
-    type: kCOMMAND_KEYPRESS_ENTER
+    type: kCOMMAND_TRY_ACTION
   }));
   postAction(result);
-};
+}
+
+var gLastSelection = '';
+
+function onSelectionChange(aEvent) {
+  var selection = String(window.getSelection() || '');
+  if (selection != gLastSelection)
+    browser.runtime.sendMessage({
+      type: kNOTIFY_SELECTION_CHANGED
+    });
+  gLastSelection = selection;
+}
 
 function getSelectionEventData(aEvent) {
   var selection = window.getSelection();
@@ -94,7 +105,12 @@ function doCopy(aText) {
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
 window.addEventListener('keypress', onKeyPress, { capture: true });
+window.addEventListener('keyup', onSelectionChange, { capture: true });
+window.addEventListener('mouseup', onSelectionChange, { capture: true });
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
+  window.removeEventListener('keypress', onKeyPress, { capture: true });
+  window.removeEventListener('keyup', onSelectionChange, { capture: true });
+  window.removeEventListener('mouseup', onSelectionChange, { capture: true });
 }, { once: true });
 

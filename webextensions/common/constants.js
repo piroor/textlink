@@ -5,8 +5,8 @@
 */
 'use strict';
 
-const kCOMMAND_DOUBLE_CLICK   = 'textlink:double-click';
-const kCOMMAND_KEYPRESS_ENTER = 'textlink:keypress-enter';
+const kCOMMAND_TRY_ACTION       = 'textlink:try-action';
+const kNOTIFY_SELECTION_CHANGED = 'textlink:selection-changed';
 
 const kACTION_DISABLED               = 0;
 const kACTION_STEALTH                = 1 << 0;
