@@ -35,11 +35,8 @@ function postAction(aResult) {
   if (!aResult)
     return;
 
-  if (aResult.range) {
-    let selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(createRangeFromRangeData(aResult.range));
-  }
+  if (aResult.range)
+    selectRanges(aResult.range);
   if (aResult.action & kACTION_COPY)
     doCopy(aResult.uri);
 }

@@ -138,10 +138,14 @@ function getRangeData(aRange) {
 }
 
 function selectRanges(aRanges) {
+  if (!Array.isArray(aRanges))
+    aRanges = [aRanges];
   var selection = window.getSelection();
   selection.removeAllRanges();
   for (let range of aRanges) {
-    selection.addRange(createRangeFromRangeData(range));
+    if ('startTextNodePos' in range)
+      range = createRangeFromRangeData(range);
+    selection.addRange(range);
   }
 }
 
