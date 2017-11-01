@@ -16,6 +16,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
   switch (aMessage.type) {
     case kCOMMAND_DOUBLE_CLICK: return (async () => {
       let action = detectActionFromEvent(clone(aMessage, { type: 'dblclick' }));
+      log('action: ', action);
       if (action == kACTION_DISABLED)
         return null;
 
@@ -56,31 +57,33 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
-  var modifiers = [];
+  var elements = [];
   if (aEvent.altKey)
-    modifiers.push('alt');
+    elements.push('alt');
   if (aEvent.ctrlKey)
-    modifiers.push('ctrl');
+    elements.push('ctrl');
   if (aEvent.metaKey)
-    modifiers.push('meta');
+    elements.push('meta');
   if (aEvent.shiftKey)
-    modifiers.push('shift');
-  modifiers.sort();
+    elements.push('shift');
+  elements.sort();
+  elements.push(aEvent.type);
 
-  var triggers = [`${modifiers.join('-')}-${aEvent.type}`];
+  var triggers = [elements.join('-')];
   if (/^Mac/i.test(navigator.platform)) {
     if (aEvent.metaKey)
-      triggers.push(`accel-${modifiers.filter(aModifier => aModifier != 'meta').join('-')}-${aEvent.type}`);
+      triggers.push(`accel-${elements.filter(aModifier => aModifier != 'meta').join('-')}`);
   }
   else {
     if (aEvent.ctrlKey)
-      triggers.push(`accel-${modifiers.filter(aModifier => aModifier != 'ctrl').join('-')}-${aEvent.type}`);
+      triggers.push(`accel-${elements.filter(aModifier => aModifier != 'ctrl').join('-')}`);
   }
+  console.log(triggers);
 
   for (let action of configs.actions) {
     let trigger = aEvent.type == 'dblclick' ? action.triggerMouse: action.triggerKey ;
     if (triggers.some(aTrigger => aTrigger == trigger))
       return action.action;
-  ]
+  }
   return kACTION_DISABLED;
 }

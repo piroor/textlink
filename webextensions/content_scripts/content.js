@@ -33,7 +33,7 @@ async function onDblClick(aEvent) {
     shiftKey:  aEvent.shiftKey
   });
 
-  if (result)
+  if (!result)
     return;
 
   if (result.range) {
