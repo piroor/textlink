@@ -31,6 +31,30 @@ async function onKeyPress(aEvent) {
   postAction(result);
 }
 
+function postAction(aResult) {
+  if (!aResult)
+    return;
+
+  if (aResult.range) {
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(createRangeFromRangeData(aResult.range));
+  }
+  if (aResult.action & kACTION_COPY)
+    doCopy(aResult.uri);
+}
+
+function doCopy(aText) {
+  var field = document.createElement('textarea');
+  field.value = plainText;
+  document.body.appendChild(field);
+  field.focus();
+  field.select();
+  document.execCommand('copy');
+  field.parentNode.removeChild(field);
+}
+
+
 var gLastSelection = '';
 var gFindingURIRanges = false;
 var gLastURIRanges = Promise.resolve([]);
@@ -117,29 +141,6 @@ function getSelectionEventData(aEvent) {
     data.event.keyCode = aEvent.keyCode;
   }
   return data;
-}
-
-function postAction(aResult) {
-  if (!aResult)
-    return;
-
-  if (aResult.range) {
-    let selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(createRangeFromRangeData(aResult.range));
-  }
-  if (aResult.action & kACTION_COPY)
-    doCopy(aResult.uri);
-}
-
-function doCopy(aText) {
-  var field = document.createElement('textarea');
-  field.value = plainText;
-  document.body.appendChild(field);
-  field.focus();
-  field.select();
-  document.execCommand('copy');
-  field.parentNode.removeChild(field);
 }
 
 function onMessage(aMessage, aSender) {
