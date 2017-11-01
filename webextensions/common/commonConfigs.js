@@ -5,32 +5,28 @@
 */
 'use strict';
 
-var configs = new Configs({
-  // load to...
-  //   0           = do nothing
-  //   1 << 1 (2)  = only select
-  //   1 << 2 (4)  = load in current tab
-  //   1 << 3 (8)  = open in window
-  //   1 << 4 (16) = new tab
-  //   1 << 5 (32) = new background tab
-  // referrer
-  //   0          = send
-  //   1 << 0 (1) = don't send (stealth)
-  // example:
-  //   (1 << 2) | (1 << 0) = 5  : load in current tab without referrer
-  //   (1 << 4) + 0 = 16 : open new foreground tab with referrer
-  actions: [
-    { action:       kACTION_OPEN_IN_CURRENT,
-      triggerMouse: 'accel-dblclick',
-      triggerKey:   'accel-VK_ENTER' },
-    { action:       kACTION_OPEN_IN_TAB,
-      triggerMouse: 'dblclick',
-      triggerKey:   'VK_ENTER' },
-    { action:       kACTION_OPEN_IN_BACKGROUND_TAB,
-      triggerMouse: 'shift-dblclick',
-      triggerKey:   'shift-VK_ENTER' }
-  ],
+var defaultActions = [
+  { action:       'select',
+    triggerMouse: '',
+    triggerKey:   '' },
+  { action:       'current',
+    triggerMouse: 'accel,dblclick',
+    triggerKey:   'accel,enter' },
+  { action:       'tab',
+    triggerMouse: 'dblclick',
+    triggerKey:   'enter' },
+  { action:       'tabBackground',
+    triggerMouse: 'shift,dblclick',
+    triggerKey:   'shift,enter' },
+  { action:       'window',
+    triggerMouse: '',
+    triggerKey:   '' },
+  { action:       'copy',
+    triggerMouse: '',
+    triggerKey:   '' }
+];
 
+var defaultConfigs = {
   menu_openCurrent_single:   true,
   menu_openCurrent_multiple: false,
   menu_openTab_single:       true,
@@ -359,4 +355,22 @@ zw
   IDNBlacklistChars: '', // need to filled from network.IDN.blacklist_chars
 
   debug: true
-});
+};
+
+{
+  let isMac = /^Mac/i.test(navigator.platform);
+  for (let action of defaultActions) {
+    defaultConfigs[`action_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_meta`]  = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_shift`] = /shift/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_enter`]       = /enter/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_alt`]   = /alt/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_ctrl`]  = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
+  }
+}
+
+var configs = new Configs(defaultConfigs);

@@ -131,39 +131,29 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
-  var isMouseEvent = aEvent.type == 'dblclick';
-  var elements = [];
-  if (aEvent.altKey)
-    elements.push('alt');
-  if (aEvent.ctrlKey)
-    elements.push('ctrl');
-  if (aEvent.metaKey)
-    elements.push('meta');
-  if (aEvent.shiftKey)
-    elements.push('shift');
-  elements.sort();
-
-  if (isMouseEvent)
-    elements.push(aEvent.type);
-  else  if (aEvent.keyCode == KeyEvent.DOM_VK_ENTER ||
-            aEvent.keyCode == KeyEvent.DOM_VK_RETURN)
-    elements.push('VK_ENTER');
-
-  var triggers = [elements.join('-')];
-  if (/^Mac/i.test(navigator.platform)) {
-    if (aEvent.metaKey)
-      triggers.push(`accel-${elements.filter(aModifier => aModifier != 'meta').join('-')}`);
+  var type;
+  switch (aEvent.type) {
+    case 'dblclick':
+      type = 'dblclick';
+      break;
+    case 'keypress':
+      if (aEvent.keyCode == KeyEvent.DOM_VK_ENTER ||
+          aEvent.keyCode == KeyEvent.DOM_VK_RETURN)
+        type = 'enter';
+      break;
   }
-  else {
-    if (aEvent.ctrlKey)
-      triggers.push(`accel-${elements.filter(aModifier => aModifier != 'ctrl').join('-')}`);
-  }
-  console.log(triggers);
+  if (!type)
+    return;
 
-  for (let action of configs.actions) {
-    let trigger = isMouseEvent ? action.triggerMouse: action.triggerKey ;
-    if (triggers.some(aTrigger => aTrigger == trigger))
-      return action.action;
+  for (let name of Object.keys(kACTION_NAME_TO_ID)) {
+    let base = `action_${name}_${type}`;
+    if (!configs[base] ||
+        configs[`${base}_alt`] != aEvent.altKey ||
+        configs[`${base}_ctrl`] != aEvent.ctrlKey ||
+        configs[`${base}_meta`] != aEvent.metaKey ||
+        configs[`${base}_shift`] != aEvent.shiftKey)
+      continue;
+    return kACTION_NAME_TO_ID[name];
   }
   return kACTION_DISABLED;
 }
