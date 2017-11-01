@@ -30,7 +30,7 @@
       "js": [
         "common/constants.js",
         "common/common.js",
-        "common/xpath.js",
+        "content_scripts/xpath.js",
         "content_scripts/range.js",
         "content_scripts/content.js"
       ]
