@@ -33,11 +33,26 @@ async function onDblClick(aEvent) {
     shiftKey:  aEvent.shiftKey
   });
 
+  if (result)
+    return;
+
   if (result.range) {
     selection.removeAllRanges();
     selection.addRange(createRangeFromRangeData(result.range));
   }
+  if (result.action & kACTION_COPY)
+    doCopy(result.uri);
 };
+
+function doCopy(aText) {
+  var field = document.createElement('textarea');
+  field.value = plainText;
+  document.body.appendChild(field);
+  field.focus();
+  field.select();
+  document.execCommand('copy');
+  field.parentNode.removeChild(field);
+}
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
 window.addEventListener('unload', () => {

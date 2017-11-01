@@ -68,16 +68,16 @@ configs = new Configs({
   //   0          = send
   //   1 << 0 (1) = don't send (stealth)
   // example:
-  //   (1 << 2)  | (1 << 0) = 5  : load in current tab without referrer
+  //   (1 << 2) | (1 << 0) = 5  : load in current tab without referrer
   //   (1 << 4) + 0 = 16 : open new foreground tab with referrer
   actions: [
-    { action:       1 << 2,
+    { action:       kACTION_OPEN_IN_CURRENT,
       triggerMouse: 'accel-dblclick',
       triggerKey:   'accel-VK_ENTER' },
-    { action:       1 << 4,
+    { action:       kACTION_OPEN_IN_TAB,
       triggerMouse: 'dblclick',
       triggerKey:   'VK_ENTER' },
-    { action:       1 << 5,
+    { action:       kACTION_OPEN_IN_BACKGROUND_TAB,
       triggerMouse: 'shift-dblclick',
       triggerKey:   'shift-VK_ENTER' }
   ],
