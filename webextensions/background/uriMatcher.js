@@ -57,30 +57,30 @@ var URIMatcher = {
       if (match.length == 0)
         continue;
 
-        let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
-        for (let maybeURI of maybeURIs) {
-          let ranges = await this.findAllTextRanges({
-            text:  maybeURI,
-            range: range,
-            tabId: aParams.tabId
-          });
-          if (ranges.length > 0) {
-            let uri = this.fixupURI(maybeURI, aParams.baseURI);
-            results = results.concat(ranges.map(aRange => {
-              return {
-                text:  maybeURI,
-                range: aRange,
-                uri:   uri
-              };
-            }));
-          }
-          count++;
-          if (count % 100 == 0)
-            await wait(0);
+      let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      for (let maybeURI of maybeURIs) {
+        let ranges = await this.findAllTextRanges({
+          text:  maybeURI,
+          range: range,
+          tabId: aParams.tabId
+        });
+        if (ranges.length > 0) {
+          let uri = this.fixupURI(maybeURI, aParams.baseURI);
+          results = results.concat(ranges.map(aRange => {
+            return {
+              text:  maybeURI,
+              range: aRange,
+              uri:   uri
+            };
+          }));
         }
         count++;
         if (count % 100 == 0)
           await wait(0);
+      }
+      count++;
+      if (count % 100 == 0)
+        await wait(0);
     }
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||
