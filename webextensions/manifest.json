@@ -17,6 +17,7 @@
       "common/Configs.js",
       "common/constants.js",
       "common/common.js",
+      "common/commonConfigs.js",
       "background/uriMatcher.js",
       "background/background.js"
     ]
@@ -27,7 +28,6 @@
       "all_frames": true,
       "run_at": "document_end",
       "js": [
-        "common/Configs.js",
         "common/constants.js",
         "common/common.js",
         "common/xpath.js",
