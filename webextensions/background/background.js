@@ -55,6 +55,38 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       return result;
     })();
 
+    case kCOMMAND_ACTION_FOR_URIS:
+      if (aMessage.action & kACTION_OPEN_IN_CURRENT) {
+        browser.tabs.update(aSender.tab.id, {
+          url: aMessage.uris[0]
+        });
+        aMessage.uris.slice(1).forEach((aURI, aIndex) => {
+          browser.tabs.create({
+            url:         aURI,
+            windowId:    aSender.tab.windowId,
+            openerTabId: aSender.tab.id
+          });
+        });
+      }
+      else if (aMessage.action & kACTION_OPEN_IN_WINDOW) {
+        aMessage.uris.forEach((aURI, aIndex) => {
+          browser.windows.create({
+            url: aURI
+          });
+        });
+      }
+      else if (aMessage.action & kACTION_OPEN_IN_TAB) {
+        aMessage.uris.forEach((aURI, aIndex) => {
+          browser.tabs.create({
+            active:      aIndex == 0,
+            url:         aURI,
+            windowId:    aSender.tab.windowId,
+            openerTabId: aSender.tab.id
+          });
+        });
+      }
+      break;
+
     case kCOMMAND_FIND_URI_RANGES: return (async () => {
       initContextMenuForWaiting();
       log('selection-changed', aMessage);
@@ -73,17 +105,6 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
         initContextMenuForURIs(results.map(aResult => aResult.uri));
       return results;
     })();
-
-    case kCOMMAND_OPEN_URIS:
-      aMessage.uris.forEach((aURI, aIndex) => {
-        browser.tabs.create({
-          active:      aIndex == 0,
-          url:         aURI,
-          windowId:    aSender.tab.windowId,
-          openerTabId: aSender.tab.id
-        });
-      });
-      break;
   }
 });
 
@@ -130,7 +151,7 @@ function initContextMenuForWaiting() {
   browser.contextMenus.removeAll();
   browser.contextMenus.create({
     id:       'waiting',
-    title:    'Wait for a while...',
+    title:    browser.i18n.getMessage(`menu.waiting.label`),
     enabled:  false,
     contexts: ['selection']
   });
@@ -141,18 +162,82 @@ function initContextMenuForURIs(aURIs) {
   if (aURIs.length == 0)
     return;
 
-  browser.contextMenus.create({
-    id:       'open',
-    title:    `Open ${aURIs.length} URI(s)`,
-    contexts: ['selection']
-  });
+  var first = getShortURIString(aURIs[0]);
+  var last  = getShortURIString(aURIs[aURIs.length - 1]);
+  var type  = aURIs.length == 1 ? 'single' : 'multiple';
+
+  var ids = [
+    'openCurrent',
+    'openTab',
+    'openWindow',
+    'copy'
+  ];
+  var visibleCount = 0;
+  var visibility = {};
+  for (let id of ids) {
+    visibility[id] = configs[`menu_${id}_${type}`];
+    if (visibility[id])
+      visibleCount++;
+  }
+  if (visibleCount == 0)
+    return;
+
+  var parentId = null;
+  if (visibleCount > 1) {
+    browser.contextMenus.create({
+      id:       'group',
+      title:    browser.i18n.getMessage(`menu.group.${type}`, [aURIs.length, first, last]),
+      contexts: ['selection']
+    });
+    parentId = 'group';
+  }
+
+  for (let id of ids) {
+    if (!visibility[id])
+      continue;
+    let title = browser.i18n.getMessage(`menu.${id}.${type}`);
+    if (visibleCount == 1)
+      title = browser.i18n.getMessage(`menu.direct.${type}`, [title, first, last]);
+    browser.contextMenus.create({
+      id, title, parentId,
+      contexts: ['selection']
+    });
+  }
+}
+
+function getShortURIString(aURI) {
+  if (aURI.length > 20)
+    return browser.i18n.getMessage('shortURI', [aURI.substring(0, 15).replace(/\.+$/, '')]);
+  return aURI;
 }
 
 browser.contextMenus.onClicked.addListener((aInfo, aTab) => {
   switch (aInfo.menuItemId) {
-    case 'open':
+    case 'openCurrent':
       browser.tabs.sendMessage(aTab.id, {
-        type: kCOMMAND_OPEN_URIS
+        type:   kCOMMAND_ACTION_FOR_URIS,
+        action: kACTION_OPEN_IN_CURRENT
+      });
+      break;
+
+    case 'openTab':
+      browser.tabs.sendMessage(aTab.id, {
+        type:   kCOMMAND_ACTION_FOR_URIS,
+        action: kACTION_OPEN_IN_TAB
+      });
+      break;
+
+    case 'openWindow':
+      browser.tabs.sendMessage(aTab.id, {
+        type:   kCOMMAND_ACTION_FOR_URIS,
+        action: kACTION_OPEN_IN_WINDOW
+      });
+      break;
+
+    case 'copy':
+      browser.tabs.sendMessage(aTab.id, {
+        type:   kCOMMAND_ACTION_FOR_URIS,
+        action: kACTION_COPY
       });
       break;
   }

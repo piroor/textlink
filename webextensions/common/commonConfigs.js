@@ -33,11 +33,14 @@ var configs = new Configs({
       triggerKey:   'shift-VK_ENTER' }
   ],
 
-  contextMenuSubmenu: true,
-  contextMenu_openTextLinkInCurrent: false,
-  contextMenu_openTextLinkInWindow:  false,
-  contextMenu_openTextLinkInTab:     false,
-  contextMenu_openTextLinkInCopy:    false,
+  menu_openCurrent_single:   true,
+  menu_openCurrent_multiple: false,
+  menu_openTab_single:       true,
+  menu_openTab_multiple:     true,
+  menu_openWindow_single:    true,
+  menu_openWindow_multiple:  false,
+  menu_copy_single:          true,
+  menu_copy_multiple:        true,
 
   scheme:                     'http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data',
   schemeFixupTable:           'www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https',

@@ -46,8 +46,11 @@ function postAction(aResult) {
 
 function doCopy(aText) {
   var field = document.createElement('textarea');
-  field.value = plainText;
+  field.value = aText;
   document.body.appendChild(field);
+  field.style.position = 'fixed';
+  field.style.opacity = 0;
+  field.style.pointerEvents = 'none';
   field.focus();
   field.select();
   document.execCommand('copy');
@@ -145,15 +148,20 @@ function getSelectionEventData(aEvent) {
 
 function onMessage(aMessage, aSender) {
   switch (aMessage.type) {
-    case kCOMMAND_OPEN_URIS: return (async () => {
+    case kCOMMAND_ACTION_FOR_URIS: return (async () => {
       var ranges = await gLastURIRanges;
-      await browser.runtime.sendMessage(clone(aMessage, {
-        uris: ranges.map(aRange => aRange.uri)
-      }));
-      var selection = window.getSelection();
-      selection.removeAllRanges();
-      for (let range of ranges) {
-        selection.addRange(createRangeFromRangeData(range.range));
+      if (aMessage.action & kACTION_COPY) {
+        let uris = ranges.map(aRange => aRange.uri).join('\n');
+        if (ranges.length > 1)
+          uris += '\n';
+        doCopy(uris);
+        selectRanges(ranges.map(aRange => aRange.range));
+      }
+      else {
+        selectRanges(ranges.map(aRange => aRange.range));
+        browser.runtime.sendMessage(clone(aMessage, {
+          uris: ranges.map(aRange => aRange.uri)
+        }));
       }
     })();
 

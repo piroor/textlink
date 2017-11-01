@@ -137,6 +137,14 @@ function getRangeData(aRange) {
   };
 }
 
+function selectRanges(aRanges) {
+  var selection = window.getSelection();
+  selection.removeAllRanges();
+  for (let range of aRanges) {
+    selection.addRange(createRangeFromRangeData(range));
+  }
+}
+
 function getTextNodePosition(aNode) {
   return evaluateXPath(
     'count(preceding::text())',

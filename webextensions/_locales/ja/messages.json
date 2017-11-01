@@ -1,4 +1,40 @@
 {
   "extensionName": { "message": "テキストリンク(WE)" },
-  "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" }
+  "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
+
+  "menu.waiting.label": { "message": "選択範囲内のURIを検出中..." },
+  "menu.group.single": { "message": "選択範囲中のURI: \"$URI$\"",
+    "placeholders": {
+      "count": { "content": "$1", "example": "1" },
+      "uri": { "content": "$2", "example": "http://example.net/" }
+    }},
+  "menu.group.multiple": { "message": "選択範囲中の $COUNT$ 個のURI: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+    "placeholders": {
+      "count": { "content": "$1", "example": "1" },
+      "first_uri": { "content": "$2", "example": "http://example.com/" },
+      "last_uri": { "content": "$3", "example": "http://example.net/" }
+    }},
+  "menu.direct.single": { "message": "$TITLE$: \"$URI$\"",
+    "placeholders": {
+      "title": { "content": "$1", "example": "Open" },
+      "uri": { "content": "$2", "example": "http://example.net/" }
+    }},
+  "menu.direct.multiple": { "message": "$TITLE$: \"$FIRST_URI$\"～\"$LAST_URI$\"",
+    "placeholders": {
+      "title": { "content": "$1", "example": "Open" },
+      "first_uri": { "content": "$2", "example": "http://example.com/" },
+      "last_uri": { "content": "$3", "example": "http://example.net/" }
+    }},
+  "menu.openCurrent.single":   { "message": "開く" },
+  "menu.openCurrent.multiple": { "message": "すべて開く" },
+  "menu.openTab.single":       { "message": "新しいタブで開く" },
+  "menu.openTab.multiple":     { "message": "すべて新しいタブで開く" },
+  "menu.openWindow.single":    { "message": "新しいウィンドウで開く" },
+  "menu.openWindow.multiple":  { "message": "すべて新しいウィンドウで開く" },
+  "menu.copy.single":          { "message": "コピー" },
+  "menu.copy.multiple":        { "message": "すべてコピー" },
+  "shortURI": { "message": "$URI$...",
+    "placeholders": {
+      "uri": { "content": "$1", "example": "http://example.com/" }
+    }}
 }

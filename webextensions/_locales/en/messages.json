@@ -1,4 +1,40 @@
 {
   "extensionName": { "message": "Text Link (WE)" },
-  "extensionDescription": { "message": "Allows URI texts written in webpages to be loaded by double clicks." }
+  "extensionDescription": { "message": "Allows URI texts written in webpages to be loaded by double clicks." },
+
+  "menu.waiting.label": { "message": "Finding URIs in Selection…" },
+  "menu.group.single": { "message": "URI in Selection: \"$URI$\"",
+    "placeholders": {
+      "count": { "content": "$1", "example": "1" },
+      "uri": { "content": "$2", "example": "http://example.net/" }
+    }},
+  "menu.group.multiple": { "message": "$COUNT$ URIs in Selection: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+    "placeholders": {
+      "count": { "content": "$1", "example": "1" },
+      "first_uri": { "content": "$2", "example": "http://example.com/" },
+      "last_uri": { "content": "$3", "example": "http://example.net/" }
+    }},
+  "menu.direct.single": { "message": "$TITLE$: \"$URI$\"",
+    "placeholders": {
+      "title": { "content": "$1", "example": "Open" },
+      "uri": { "content": "$3", "example": "http://example.net/" }
+    }},
+  "menu.direct.multiple": { "message": "$TITLE$: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+    "placeholders": {
+      "title": { "content": "$1", "example": "Open" },
+      "first_uri": { "content": "$2", "example": "http://example.com/" },
+      "last_uri": { "content": "$3", "example": "http://example.net/" }
+    }},
+  "menu.openCurrent.single":   { "message": "Open" },
+  "menu.openCurrent.multiple": { "message": "Open All" },
+  "menu.openTab.single":       { "message": "Open in New Tab" },
+  "menu.openTab.multiple":     { "message": "Open All in New Tabs" },
+  "menu.openWindow.single":    { "message": "Open in New Window" },
+  "menu.openWindow.multiple":  { "message": "Open All in New Windows" },
+  "menu.copy.single":          { "message": "Copy" },
+  "menu.copy.multiple":        { "message": "Copy All" },
+  "shortURI": { "message": "$URI$…",
+    "placeholders": {
+      "uri": { "content": "$1", "example": "http://example.com/" }
+    }}
 }
