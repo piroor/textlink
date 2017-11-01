@@ -24,5 +24,20 @@ window.addEventListener('DOMContentLoaded', () => {
   configs.$loaded.then(() => {
     options.buildUIForAllConfigs(document.querySelector('#debug-configs'));
     onConfigChanged('debug');
+
+    for (let resetButton of document.querySelectorAll('[data-reset-target]')) {
+      let id = resetButton.getAttribute('data-reset-target');
+      let field = document.querySelector(`#${id}`);
+      if (!field)
+        continue;
+      resetButton.addEventListener('click', () => {
+        field.$reset();
+      });
+      resetButton.addEventListener('keypress', (aEvent) => {
+        if (aEvent.keyCode == aEvent.DOM_VK_ENTER ||
+            aEvent.keyCode == aEvent.DOM_VK_RETURN)
+          field.$reset();
+      });
+    }
   });
 }, { once: true });
