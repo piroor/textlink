@@ -352,7 +352,7 @@ zw
   `,
   extraTLD: '',
 
-  IDNBlacklistChars: '', // need to filled from network.IDN.blacklist_chars
+  IDNBlacklistChars: '  ¼½¾ǃː̷̸։֊׃״؉؊٪۔܁܂܃܄ᅟᅠ᜵           ​‎‏‐’․‧  ‪‫‬‭‮ ‹›⁁⁄⁒ ⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟∕∶⎮╱⧶⧸⫻⫽⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻　。〔〕〳゠ㅤ㈝㈞㎮㎯㏆㏟꞉︔︕︿﹝﹞﻿．／｡ﾠ￹￺￻￼�', // from network.IDN.blacklist_chars
 
   debug: true
 };
