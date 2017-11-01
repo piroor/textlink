@@ -22,11 +22,9 @@ async function onDblClick(aEvent) {
   var result = await browser.runtime.sendMessage({
     type:      kCOMMAND_DOUBLE_CLICK,
     base:      location.href,
-    text:      [
-      preceding.text,
-      rangeToText(selectionRange),
-      following.text
-    ].join(''),
+    text:      `${preceding.text
+                }${rangeToText(selectionRange)
+                }${following.text}`,
     cursor:    getRangeData(selectionRange),
     button:    aEvent.button,
     altKey:    aEvent.altKey,
