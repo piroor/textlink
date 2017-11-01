@@ -23,6 +23,10 @@ ul p.sub {
   margin-bottom: 0;
 }
 
+br + input[type="text"] {
+  max-width: 90%;
+}
+
 :root:not(.debugging) #debug-configs {
   max-height: 0;
   overflow: hidden;

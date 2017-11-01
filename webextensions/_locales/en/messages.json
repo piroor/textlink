@@ -46,10 +46,23 @@
 
 
   "config.menu.caption": { "message": "Context Menu Items" },
+  "menu.single.description":   { "message": " (for single URI)" },
+  "menu.multiple.description": { "message": " (for multiple URIs)" },
 
 
-  "config.advanced.caption": { "message": "Advanced" },
-
+  "config.advanced.caption":           { "message": "Advanced" },
+  "config.detection.group":            { "message": "URI Detection" },
+  "config.scheme":                     { "message": "Recognize text which starts with following parts, as URI: (ex. \"http,ftp,mailto\")" },
+  "config.scheme.default":             { "message": "Reset" },
+  "config.scheme.fixup.table":         { "message": "Fix up broken URI, with following rules: (ex. \"ttp=>http,ttps=>https\")" },
+  "config.scheme.fixup.table.default": { "message": "Reset" },
+  "config.relative.enabled":           { "message": "Parse relative paths (unrecommended)" },
+  "config.multibyte.enabled":          { "message": "Parse multi-byte characters" },
+  "config.multiline.enabled":          { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config.idn.enabled":                { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config.idn.scheme.default":         { "message": "Reset" },
+  "config.i18nPath.enabled":           { "message": "Parse non-ASCII paths" },
+  
 
   "config.debug.caption": { "message": "Development" },
   "config.debug.label": { "message": "Debug mode" }

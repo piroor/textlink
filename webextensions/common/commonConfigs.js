@@ -6,8 +6,6 @@
 'use strict';
 
 var configs = new Configs({
-  strict:           true,
-
   // load to...
   //   0           = do nothing
   //   1 << 1 (2)  = only select
@@ -55,7 +53,6 @@ var configs = new Configs({
   partExceptionStart:         '-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?|[\\.\u3002\uff0e]+[^\\.\u3002\uff0e\/\uff0f]',
   partExceptionEnd:           '-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?',
   IDNLazyDetectionSeparators: '\u3001\u3002',
-  findClickPointStrictly:     true,
 
   // http://www4.plala.or.jp/nomrax/TLD/ 
   // http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7

@@ -46,9 +46,22 @@
 
 
   "config.menu.caption": { "message": "コンテキストメニューの項目" },
+  "menu.single.description":   { "message": "（URIが1つだけの場合）" },
+  "menu.multiple.description": { "message": "（URIが複数ある場合）" },
 
 
-  "config.advanced.caption": { "message": "詳細" },
+  "config.advanced.caption":           { "message": "詳細" },
+  "config.detection.group":            { "message": "URIの検出方法" },
+  "config.scheme":                     { "message": "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: " },
+  "config.scheme.default":             { "message": "初期値に戻す" },
+  "config.scheme.fixup.table":         { "message": "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）" },
+  "config.scheme.fixup.table.default": { "message": "初期値に戻す" },
+  "config.relative.enabled":           { "message": "相対パスも認識する（非推奨）" },
+  "config.multibyte.enabled":          { "message": "全角英数文字も認識する" },
+  "config.multiline.enabled":          { "message": "改行されたURIも認識する（非推奨）" },
+  "config.idn.enabled":                { "message": "以下で始まるURIでは国際化ドメイン（IDN）も認識する" },
+  "config.idn.scheme.default":         { "message": "初期値に戻す" },
+  "config.i18nPath.enabled":           { "message": "非ASCII文字のパスも認識する" },
 
 
   "config.debug.caption": { "message": "開発用" },
