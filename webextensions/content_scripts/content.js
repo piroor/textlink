@@ -196,15 +196,13 @@ function onMessage(aMessage, aSender) {
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
 window.addEventListener('keypress', onKeyPress, { capture: true });
-window.addEventListener('keyup', onSelectionChange, { capture: true });
-window.addEventListener('mouseup', onSelectionChange, { capture: true });
+window.addEventListener('selectionchange', onSelectionChange, { capture: true });
 browser.runtime.onMessage.addListener(onMessage);
 
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
   window.removeEventListener('keypress', onKeyPress, { capture: true });
-  window.removeEventListener('keyup', onSelectionChange, { capture: true });
-  window.removeEventListener('mouseup', onSelectionChange, { capture: true });
+  window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
   browser.runtime.onMessage.removeListener(onMessage);
 }, { once: true });
 
