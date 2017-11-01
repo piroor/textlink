@@ -39,5 +39,18 @@
   "shortURI": { "message": "$URI$…",
     "placeholders": {
       "uri": { "content": "$1", "example": "http://example.com/" }
-    }}
+    }},
+
+
+  "config.action.caption": { "message": "Actions" },
+
+
+  "config.menu.caption": { "message": "Context Menu Items" },
+
+
+  "config.advanced.caption": { "message": "Advanced" },
+
+
+  "config.debug.caption": { "message": "Development" },
+  "config.debug.label": { "message": "Debug mode" }
 }
