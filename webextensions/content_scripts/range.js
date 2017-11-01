@@ -89,7 +89,6 @@ function getFollowingRange(aRange) {
   return { range, text };
 }
 
-
 function createVisibleTextNodeWalker() {
   return document.createTreeWalker(
     document,
@@ -114,4 +113,39 @@ function isNodeVisible(aNode) {
       return false;
   } while (aNode = aNode.parentNode);
   return true;
+}
+
+
+// returns rangeData compatible object
+// See also: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/find/find
+function getRangeData(aRange) {
+  return {
+    startTextNodePos: getTextNodePosition(aRange.startContainer),
+    startOffset:      aRange.startOffset,
+    endTextNodePos:   getTextNodePosition(aRange.endContainer),
+    endOffset:        aRange.endOffset
+  };
+}
+
+function getTextNodePosition(aNode) {
+  return evaluateXPath(
+    'count(preceding::text())',
+    aNode,
+    XPathResult.NUMBER_TYPE
+  ).numberValue;
+}
+
+function createRangeFromRangeData(aData) {
+  var range = document.createRange();
+  range.setStart(getTextNodeAt(aData.startTextNodePos), aData.startOffset);
+  range.setEnd(getTextNodeAt(aData.endTextNodePos), aData.endOffset);
+  return range;
+}
+
+function getTextNodeAt(aPosition) {
+  return evaluateXPath(
+    `descendant::text()[count(preceding::text())=${aPosition}]`,
+    document,
+    XPathResult.FIRST_ORDERED_NODE_TYPE
+  ).singleNodeValue;
 }
