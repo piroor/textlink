@@ -42,35 +42,38 @@ var URIMatcher = {
   matchAll: async function(aParams) {
     log('matchAll: ', aParams);
     this._updateURIRegExp();
-    var match = aParams.text.match(this._URIMatchingRegExp);
-    if (!match)
-      return [];
-    match = [...match].filter(aMaybeURI => (
-      (!this.hasLoadableScheme(aMaybeURI) &&
-       !this.URIExceptionPattern_all.test(aMaybeURI)) ||
-      this.isHeadOfNewURI(aMaybeURI)
-    ));
     var results = [];
-    if (match.length > 0) {
-      let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
-      let count = 0;
-      for (let range of aParams.ranges) {
+
+    var count = 0;
+    for (let range of aParams.ranges) {
+      let match = range.text.match(this._URIMatchingRegExp);
+      if (!match)
+        continue;
+      match = [...match].filter(aMaybeURI => (
+        (!this.hasLoadableScheme(aMaybeURI) &&
+         !this.URIExceptionPattern_all.test(aMaybeURI)) ||
+        this.isHeadOfNewURI(aMaybeURI)
+      ));
+      if (match.length == 0)
+        continue;
+
+        let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
         for (let maybeURI of maybeURIs) {
           let ranges = await this.findAllTextRanges({
             text:  maybeURI,
             range: range,
             tabId: aParams.tabId
           });
-          if (ranges.length == 0)
-            continue;
-          let uri = this.fixupURI(maybeURI, aParams.baseURI);
-          results = results.concat(ranges.map(aRange => {
-            return {
-              text:  maybeURI,
-              range: aRange,
-              uri:   uri
-            };
-          }));
+          if (ranges.length > 0) {
+            let uri = this.fixupURI(maybeURI, aParams.baseURI);
+            results = results.concat(ranges.map(aRange => {
+              return {
+                text:  maybeURI,
+                range: aRange,
+                uri:   uri
+              };
+            }));
+          }
           count++;
           if (count % 100 == 0)
             await wait(0);
@@ -78,7 +81,6 @@ var URIMatcher = {
         count++;
         if (count % 100 == 0)
           await wait(0);
-      }
     }
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||

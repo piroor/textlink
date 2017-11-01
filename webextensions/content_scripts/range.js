@@ -53,10 +53,14 @@ function getPrecedingRange(aRange) {
   var walker = createVisibleTextNodeWalker();
   walker.currentNode = aRange.startContainer;
   var text = '';
-  if (walker.currentNode.nodeType == Node.TEXT_NODE)
+  if (walker.currentNode.nodeType == Node.TEXT_NODE) {
     text += walker.currentNode.nodeValue.substring(0, aRange.startOffset);
-  else
-    walker.currentNode = walker.currentNode.childNodes[aRange.startOffset];
+  }
+  else {
+    let previousNode = walker.currentNode.childNodes[aRange.startOffset];
+    if (previousNode)
+      walker.currentNode = previousNode;
+  }
   while (walker.previousNode()) {
     if (walker.currentNode.nodeType == Node.TEXT_NODE) {
       range.setStart(walker.currentNode, 0);
@@ -80,10 +84,14 @@ function getFollowingRange(aRange) {
   var walker = createVisibleTextNodeWalker();
   walker.currentNode = aRange.endContainer;
   var text = '';
-  if (walker.currentNode.nodeType == Node.TEXT_NODE)
+  if (walker.currentNode.nodeType == Node.TEXT_NODE) {
     text += walker.currentNode.nodeValue.substring(aRange.endOffset);
-  else
-    walker.currentNode = walker.currentNode.childNodes[aRange.endOffset];
+  }
+  else {
+    let nextNode = walker.currentNode.childNodes[aRange.endOffset];
+    if (nextNode)
+      walker.currentNode = nextNode;
+  }
   while (walker.nextNode()) {
     if (walker.currentNode.nodeType == Node.TEXT_NODE) {
       range.setEnd(walker.currentNode, walker.currentNode.nodeValue.length);
@@ -129,11 +137,23 @@ function isNodeVisible(aNode) {
 // returns rangeData compatible object
 // See also: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/find/find
 function getRangeData(aRange) {
+  var startContainer = aRange.startContainer;
+  var startOffset    = aRange.startOffset;
+  var endContainer   = aRange.endContainer;
+  var endOffset      = aRange.endOffset;
+  if (startContainer.nodeType != Node.TEXT_NODE) {
+    startContainer = startContainer.childNodes[startOffset];
+    startOffset    = 0;
+  }
+  if (endContainer.nodeType != Node.TEXT_NODE) {
+    endContainer = endContainer.childNodes[endOffset - 1];
+    endOffset    = endContainer.nodeValue.length;
+  }
   return {
-    startTextNodePos: getTextNodePosition(aRange.startContainer),
-    startOffset:      aRange.startOffset,
-    endTextNodePos:   getTextNodePosition(aRange.endContainer),
-    endOffset:        aRange.endOffset
+    startTextNodePos: getTextNodePosition(startContainer),
+    startOffset:      startOffset,
+    endTextNodePos:   getTextNodePosition(endContainer),
+    endOffset:        endOffset
   };
 }
 

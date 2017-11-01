@@ -109,25 +109,23 @@ async function findURIRanges() {
     browser.runtime.sendMessage({
       type:   kCOMMAND_FIND_URI_RANGES,
       base:   location.href,
-      text:   '',
       ranges: []
     });
     return [];
   }
 
   var selectionRanges = [];
-  var selectionText   = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     let selectionRange = selection.getRangeAt(i);
     let preceding      = getPrecedingRange(selectionRange);
     let following      = getFollowingRange(selectionRange);
-    selectionRanges.push(getRangeData(selectionRange));
-    selectionText.push(`${preceding.text}${rangeToText(selectionRange)}${following.text}`);
+    let rangeData = getRangeData(selectionRange);
+    rangeData.text = `${preceding.text}${rangeToText(selectionRange)}${following.text}`;
+    selectionRanges.push(rangeData);
   }
   var ranges = await browser.runtime.sendMessage({
     type:   kCOMMAND_FIND_URI_RANGES,
     base:   location.href,
-    text:   selectionText.join('\n\n\n'),
     ranges: selectionRanges
   });
   gFindingURIRanges = false;
