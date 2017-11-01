@@ -77,6 +77,16 @@ var URIMatcher = {
         await wait(0);
       }
     }
+    results.sort((aA, aB) =>
+                   aA.range.startTextNodePos - aB.range.startTextNodePos ||
+                   aA.range.startOffset - aB.range.startOffset);
+    var uris = {};
+    results = results.filter(aRange => {
+      if (aRange.uri in uris)
+        return false;
+      uris[aRange.uri] = true;
+      return true;
+    });
     log(' => ', results);
     return results;
   },
