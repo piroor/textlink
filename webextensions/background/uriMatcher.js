@@ -10,7 +10,6 @@ var URIMatcher = {
     log('matchSingle: ', aParams);
     this._updateURIRegExp();
     var match = aParams.text.match(this._URIMatchingRegExp);
-    log('String.match: ', match);
     if (!match)
       return null;
     match = [...match].filter(aMaybeURI => (
@@ -44,7 +43,6 @@ var URIMatcher = {
     log('matchAll: ', aParams);
     this._updateURIRegExp();
     var match = aParams.text.match(this._URIMatchingRegExp);
-    log('String.match: ', match);
     if (!match)
       return [];
     match = [...match].filter(aMaybeURI => (
@@ -740,7 +738,7 @@ var URIMatcher = {
   __firstSchemeRegExp : null,
  
   fixupURI(aURIComponent, aBaseURI) {
-    log('fixupURI: ', aURIComponent, aBaseURI);
+    var originalURIComponent = aURIComponent;
     if (configs.multibyteEnabled)
       aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 
@@ -756,12 +754,13 @@ var URIMatcher = {
       aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 
     var result = this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
-    log(' => ', result);
+    if (result != originalURIComponent)
+      log(`fixupURI: ${originalURIComponent} => ${result}`);
     return result;
   },
   
   sanitizeURIString(aURIComponent) {
-    log('sanitizeURIString ', aURIComponent);
+    var originalURIComponent = aURIComponent;
     // escape patterns like program codes like JavaScript etc.
     if (!this._topLevelDomainsRegExp) {
       this._topLevelDomainsRegExp = new RegExp(`^(${this.topLevelDomains.join('|')})$`);
@@ -795,13 +794,14 @@ var URIMatcher = {
     if (configs.IDNEnabled || configs.i18nPathEnabled)
       aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
-    log(' => ', aURIComponent);
+    if (aURIComponent != originalURIComponent)
+      log(`sanitizeURIString: ${originalURIComponent} => ${aURIComponent}`);
     return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
   },
   _topLevelDomainsRegExp : null,
  
   removeParen(aInput) {
-    log('removeParen: ', aInput);
+    var originalInput = aInput;
     var doRemoveParen = (aRegExp) => {
       let match = aInput.match(aRegExp);
       if (!match)
@@ -810,12 +810,13 @@ var URIMatcher = {
       return true;
     };
     while (this._parenPatterns.some(doRemoveParen)) {}
-    log(' => ', aInput);
+    if (aInput != originalInput)
+      log(`removeParen: ${originalInput} => ${aInput}`);
     return aInput;
   },
  
   fixupScheme(aURI) {
-    log('fixupScheme: ', aURI);
+    var originalURI = aURI;
     var match = aURI.match(this._fixupTargetsRegExp);
     if (match) {
       let target = match[1];
@@ -840,7 +841,8 @@ var URIMatcher = {
         aURI = `${scheme}://${aURI}`;
     }
 
-    log(' => ', aURI);
+    if (aURI != originalURI)
+      log(`fixupScheme: ${originalURI} => ${aURI}`);
     return aURI;
   },
   _fixupTable : '',
