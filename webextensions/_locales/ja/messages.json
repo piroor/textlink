@@ -44,11 +44,47 @@
 
   "config.action.caption": { "message": "アクション" },
 
+  "config.trigger.mouse_before":                   { "message": "ページ中に書かれたURI文字列を" },
+  "config.trigger.mouse.ignore":                   { "message": "（マウスからの入力を検知しない）" },
+  "config.trigger.mouse.dblclick":                 { "message": "ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel":           { "message": "Ctrl + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.mac":       { "message": "⌘ + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.shift":     { "message": "Ctrl + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.accel.shift.mac": { "message": "⌘ + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.alt":             { "message": "Alt + ダブルクリック" },
+  "config.trigger.mouse.dblclick.alt.shift":       { "message": "Alt + Shift + ダブルクリック" },
+  "config.trigger.mouse.dblclick.shift":           { "message": "Shift + ダブルクリック" },
+  "config.trigger.mouse_after":                    { "message": "した時か" },
 
-  "config.menu.caption": { "message": "コンテキストメニューの項目" },
+  "config.trigger.key_before":                { "message": "" },
+  "config.trigger.key.ignore":                { "message": "（キーボードからの入力を検知しない）" },
+  "config.trigger.key.enter":                 { "message": "テキストを選択して Enter キーを押した時" },
+  "config.trigger.key.enter.accel":           { "message": "テキストを選択して Ctrl + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.mac":       { "message": "テキストを選択して ⌘ + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.shift":     { "message": "テキストを選択して Ctrl + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.accel.shift.mac": { "message": "テキストを選択して ⌘ + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.alt":             { "message": "テキストを選択して Alt + Enter キーを押した時" },
+  "config.trigger.key.enter.alt.shift":       { "message": "テキストを選択して Alt + Shift + Enter キーを押した時" },
+  "config.trigger.key.enter.shift":           { "message": "テキストを選択して Shift + Enter キーを押した時" },
+  "config.trigger.key_after":                 { "message": "" },
+
+  "config.action_before":        { "message": "" },
+  "config.action.blank":         { "message": "何もしない" },
+  "config.action.select":        { "message": "URI文字列を選択する" },
+  "config.action.current":       { "message": "現在のタブに読み込む" },
+  "config.action.window":        { "message": "新しいウィンドウで開く" },
+  "config.action.tab":           { "message": "新しい最前面のタブで開く" },
+  "config.action.tabBackground": { "message": "新しい背後のタブで開く" },
+  "config.action.copy":          { "message": "クリップボードにコピーする" },
+  "config.action.openByBrowser": { "message": "ブラウザで開く" },
+  "config.action_after":         { "message": "" },
+
+  "config.actions.default":       { "message": "初期値に戻す" },
+
+
+  "config.menu.caption":       { "message": "コンテキストメニューの項目" },
   "menu.single.description":   { "message": "（URIが1つだけの場合）" },
   "menu.multiple.description": { "message": "（URIが複数ある場合）" },
-
 
   "config.advanced.caption":           { "message": "詳細" },
   "config.detection.group":            { "message": "URIの検出方法" },
