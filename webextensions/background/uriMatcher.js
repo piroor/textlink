@@ -22,6 +22,7 @@ var URIMatcher = {
       return null;
 
     for (let maybeURI of match) {
+      maybeURI = this.sanitizeURIString(maybeURI);
       let range = await this.findTextRange({
         text:   maybeURI,
         cursor: aParams.cursor,
@@ -29,7 +30,6 @@ var URIMatcher = {
       });
       if (!range)
         continue;
-      maybeURI = this.sanitizeURIString(maybeURI);
       return {
         text:  maybeURI,
         range: range,
