@@ -147,9 +147,14 @@ function onMessage(aMessage, aSender) {
   switch (aMessage.type) {
     case kCOMMAND_OPEN_URIS: return (async () => {
       var ranges = await gLastURIRanges;
-      browser.runtime.sendMessage(clone(aMessage, {
+      await browser.runtime.sendMessage(clone(aMessage, {
         uris: ranges.map(aRange => aRange.uri)
       }));
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      for (let range of ranges) {
+        selection.addRange(createRangeFromRangeData(range.range));
+      }
     })();
   }
 }
