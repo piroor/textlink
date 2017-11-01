@@ -354,7 +354,7 @@ zw
 
   IDNBlacklistChars: '  ¼½¾ǃː̷̸։֊׃״؉؊٪۔܁܂܃܄ᅟᅠ᜵           ​‎‏‐’․‧  ‪‫‬‭‮ ‹›⁁⁄⁒ ⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞⅟∕∶⎮╱⧶⧸⫻⫽⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻　。〔〕〳゠ㅤ㈝㈞㎮㎯㏆㏟꞉︔︕︿﹝﹞﻿．／｡ﾠ￹￺￻￼�', // from network.IDN.blacklist_chars
 
-  debug: true
+  debug: false
 };
 
 {
