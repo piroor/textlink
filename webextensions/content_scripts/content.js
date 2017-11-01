@@ -32,14 +32,57 @@ async function onKeyPress(aEvent) {
 }
 
 var gLastSelection = '';
+var gFindingURIRanges = false;
+var gLastURIRanges = Promise.resolve([]);
 
 function onSelectionChange(aEvent) {
-  var selection = String(window.getSelection() || '');
-  if (selection != gLastSelection)
+  var selection = window.getSelection();
+  var selectionText = selection.toString()
+  if (selectionText == gLastSelection)
+    return;
+
+  gLastSelection = selectionText;
+  gFindingURIRanges = true;
+
+  if (findURIRanges.delayed)
+    clearTimeout(findURIRanges.delayed);
+  findURIRanges.delayed = setTimeout(() => {
+    delete findURIRanges.delayed;
+    gLastURIRanges = findURIRanges();
+  }, 100);
+}
+
+async function findURIRanges() {
+  var selection = window.getSelection();
+  if (!selection.toString().trim()) {
     browser.runtime.sendMessage({
-      type: kNOTIFY_SELECTION_CHANGED
+      type:   kCOMMAND_FIND_URI_RANGES,
+      base:   location.href,
+      text:   '',
+      ranges: []
     });
-  gLastSelection = selection;
+    return [];
+  }
+
+  var selectionRanges = [];
+  var selectionText   = [];
+  for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
+    let selectionRange = selection.getRangeAt(i);
+    let preceding      = getPrecedingRange(selectionRange);
+    let following      = getFollowingRange(selectionRange);
+    selectionRanges.push(getRangeData(selectionRange));
+    selectionText.push(`${preceding.text
+                        }${rangeToText(selectionRange)
+                        }${following.text}`);
+  }
+  var ranges = await browser.runtime.sendMessage({
+    type:   kCOMMAND_FIND_URI_RANGES,
+    base:   location.href,
+    text:   selectionText.join('\n\n\n'),
+    ranges: selectionRanges
+  });
+  gFindingURIRanges = false;
+  return ranges;
 }
 
 function getSelectionEventData(aEvent) {
@@ -103,14 +146,28 @@ function doCopy(aText) {
   field.parentNode.removeChild(field);
 }
 
+function onMessage(aMessage, aSender) {
+  switch (aMessage.type) {
+    case kCOMMAND_OPEN_URIS: return (async () => {
+      var ranges = await gLastURIRanges;
+      browser.runtime.sendMessage(clone(aMessage, {
+        uris: ranges.map(aRange => aRange.uri)
+      }));
+    })();
+  }
+}
+
 window.addEventListener('dblclick', onDblClick, { capture: true });
 window.addEventListener('keypress', onKeyPress, { capture: true });
 window.addEventListener('keyup', onSelectionChange, { capture: true });
 window.addEventListener('mouseup', onSelectionChange, { capture: true });
+browser.runtime.onMessage.addListener(onMessage);
+
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
   window.removeEventListener('keypress', onKeyPress, { capture: true });
   window.removeEventListener('keyup', onSelectionChange, { capture: true });
   window.removeEventListener('mouseup', onSelectionChange, { capture: true });
+  browser.runtime.onMessage.removeListener(onMessage);
 }, { once: true });
 

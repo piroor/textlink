@@ -40,30 +40,45 @@ var URIMatcher = {
     return null;
   },
 
-  matchAll: async function(aString, aBaseURI) {
-    log('matchAll: ', aString);
+  matchAll: async function(aParams) {
+    log('matchAll: ', aParams);
     this._updateURIRegExp();
-    var match = aString.match(this._URIMatchingRegExp);
+    var match = aParams.text.match(this._URIMatchingRegExp);
     log('String.match: ', match);
     if (!match)
-      return null;
+      return [];
     match = [...match].filter(aMaybeURI => (
       (!this.hasLoadableScheme(aMaybeURI) &&
        !this.URIExceptionPattern_all.test(aMaybeURI)) ||
       this.isHeadOfNewURI(aMaybeURI)
     ));
-    var result = match.length > 0 ? match : null ;
-    if (result) {
-      result = result.map(aMaybeURI => {
-        aMaybeURI = this.sanitizeURIString(aMaybeURI);
-        return {
-          text: aMaybeURI,
-          uri:  this.fixupURI(aMaybeURI, aBaseURI)
-        };
-      });
+    var results = [];
+    if (match.length > 0) {
+      let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      for (let range of aParams.ranges) {
+        for (let maybeURI of maybeURIs) {
+          let ranges = await this.findAllTextRanges({
+            text:  maybeURI,
+            range: range,
+            tabId: aParams.tabId
+          });
+          if (ranges.length == 0)
+            continue;
+          let uri = this.fixupURI(maybeURI, aParams.baseURI);
+          results = results.concat(ranges.map(aRange => {
+            return {
+              text:  maybeURI,
+              range: aRange,
+              uri:   uri
+            };
+          }));
+          await wait(0);
+        }
+        await wait(0);
+      }
     }
-    log(' => ', result);
-    return result;
+    log(' => ', results);
+    return results;
   },
 
   findTextRange: async function(aParams) {
@@ -84,6 +99,23 @@ var URIMatcher = {
       return rangeData;
     }
     return null;
+  },
+
+  findAllTextRanges: async function(aParams) {
+    var match = await browser.find.find(aParams.text, {
+      tabId:            aParams.tabId,
+      caseSensitive:    true,
+      includeRangeData: true
+    });
+    return match.rangeData.filter(aRangeData => !(
+      aRangeData.framePos != aParams.range.framePos ||
+      aRangeData.startTextNodePos > aParams.range.endTextNodePos ||
+      (aRangeData.startTextNodePos == aParams.range.endTextNodePos &&
+       aRangeData.startOffset > aParams.range.endOffset) ||
+      aRangeData.endTextNodePos < aParams.range.startTextNodePos ||
+      (aRangeData.endTextNodePos == aParams.range.startTextNodePos &&
+       aRangeData.endOffset < aParams.range.startOffset)
+    ));
   },
 
   kDomainSeparators          : '\\.', 

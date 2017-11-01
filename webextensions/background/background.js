@@ -27,8 +27,11 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
         cursor:  aMessage.cursor,
         baseURI: aMessage.base
       });
-      result.action = action;
       log('matchSingle result: ', result);
+      if (!result)
+        return null;
+
+      result.action = action;
       if (result.uri) {
         if (action & kACTION_OPEN_IN_CURRENT) {
           browser.tabs.update(aSender.tab.id, {
@@ -49,10 +52,36 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
           });
         }
       }
-      //let text = `${aMessage.preceding}${aMessage.selection}${aMessage.following}`;
-      //log('matchAll result: ', URIMatcher.matchAll(text, aMessage.base));
       return result;
     })();
+
+    case kCOMMAND_FIND_URI_RANGES: return (async () => {
+      log('selection-changed', aMessage);
+      for (let range of aMessage.ranges) {
+        range.framePos = aSender.frameId;
+      }
+      let results = await URIMatcher.matchAll({
+        text:    aMessage.text,
+        tabId:   aSender.tab.id,
+        ranges:  aMessage.ranges,
+        baseURI: aMessage.base
+      });
+      log('matchAll results: ', results);
+      if (aSender.tab.active)
+        updateContextMenuFor(results.map(aResult => aResult.uri));
+      return results;
+    })();
+
+    case kCOMMAND_OPEN_URIS:
+      aMessage.uris.forEach((aURI, aIndex) => {
+        browser.tabs.create({
+          active:      aIndex == 0,
+          url:         aURI,
+          windowId:    aSender.tab.windowId,
+          openerTabId: aSender.tab.id
+        });
+      });
+      break;
   }
 });
 
@@ -93,3 +122,26 @@ function detectActionFromEvent(aEvent) {
   }
   return kACTION_DISABLED;
 }
+
+
+function updateContextMenuFor(aURIs) {
+  browser.contextMenus.removeAll();
+  if (aURIs.length == 0)
+    return;
+
+  browser.contextMenus.create({
+    id:       'open',
+    title:    'Open URIs',
+    contexts: ['selection']
+  });
+}
+
+browser.contextMenus.onClicked.addListener((aInfo, aTab) => {
+  switch (aInfo.menuItemId) {
+    case 'open':
+      browser.tabs.sendMessage(aTab.id, {
+        type: kCOMMAND_OPEN_URIS
+      });
+      break;
+  }
+});

@@ -58,7 +58,12 @@ function getPrecedingRange(aRange) {
   else
     walker.currentNode = walker.currentNode.childNodes[aRange.startOffset];
   while (walker.previousNode()) {
-    range.setStartBefore(walker.currentNode);
+    if (walker.currentNode.nodeType == Node.TEXT_NODE) {
+      range.setStart(walker.currentNode, 0);
+    }
+    else {
+      range.setStartBefore(walker.currentNode);
+    }
     let partialText = nodeToText(walker.currentNode);
     if (partialText.indexOf('\n') > -1) {
       break;
@@ -80,7 +85,12 @@ function getFollowingRange(aRange) {
   else
     walker.currentNode = walker.currentNode.childNodes[aRange.endOffset];
   while (walker.nextNode()) {
-    range.setEndAfter(walker.currentNode);
+    if (walker.currentNode.nodeType == Node.TEXT_NODE) {
+      range.setEnd(walker.currentNode, walker.currentNode.nodeValue.length);
+    }
+    else {
+      range.setEndAfter(walker.currentNode);
+    }
     let partialText = nodeToText(walker.currentNode);
     if (partialText.indexOf('\n') > -1)
       break;

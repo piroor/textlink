@@ -5,8 +5,9 @@
 */
 'use strict';
 
-const kCOMMAND_TRY_ACTION       = 'textlink:try-action';
-const kNOTIFY_SELECTION_CHANGED = 'textlink:selection-changed';
+const kCOMMAND_TRY_ACTION      = 'textlink:try-action';
+const kCOMMAND_FIND_URI_RANGES = 'textlink:find-uri-ranges';
+const kCOMMAND_OPEN_URIS       = 'textlink:open-uris';
 
 const kACTION_DISABLED               = 0;
 const kACTION_STEALTH                = 1 << 0;
