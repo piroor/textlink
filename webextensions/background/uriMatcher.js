@@ -55,6 +55,7 @@ var URIMatcher = {
     var results = [];
     if (match.length > 0) {
       let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      let count = 0;
       for (let range of aParams.ranges) {
         for (let maybeURI of maybeURIs) {
           let ranges = await this.findAllTextRanges({
@@ -72,9 +73,13 @@ var URIMatcher = {
               uri:   uri
             };
           }));
-          await wait(0);
+          count++;
+          if (count % 100 == 0)
+            await wait(0);
         }
-        await wait(0);
+        count++;
+        if (count % 100 == 0)
+          await wait(0);
       }
     }
     results.sort((aA, aB) =>
