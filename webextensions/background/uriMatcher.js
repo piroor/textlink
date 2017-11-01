@@ -22,16 +22,16 @@ var URIMatcher = {
 
     for (let maybeURI of match) {
       maybeURI = this.sanitizeURIString(maybeURI);
-      let range = await this.findTextRange({
-        text:   maybeURI,
-        cursor: aParams.cursor,
-        tabId:  aParams.tabId
+      let ranges = await this.findAllTextRanges({
+        text:  maybeURI,
+        range: aParams.cursor,
+        tabId: aParams.tabId
       });
-      if (!range)
+      if (ranges.length == 0)
         continue;
       return {
         text:  maybeURI,
-        range: range,
+        range: ranges[0],
         uri:   this.fixupURI(maybeURI, aParams.baseURI)
       };
     }
@@ -92,26 +92,6 @@ var URIMatcher = {
     });
     log(' => ', results);
     return results;
-  },
-
-  findTextRange: async function(aParams) {
-    var match = await browser.find.find(aParams.text, {
-      tabId:            aParams.tabId,
-      caseSensitive:    true,
-      includeRangeData: true
-    });
-    for (let rangeData of match.rangeData) {
-      if (rangeData.framePos != aParams.cursor.framePos ||
-          rangeData.startTextNodePos > aParams.cursor.startTextNodePos ||
-          (rangeData.startTextNodePos == aParams.cursor.startTextNodePos &&
-           rangeData.startOffset > aParams.cursor.startOffset) ||
-          rangeData.endTextNodePos < aParams.cursor.endTextNodePos ||
-          (rangeData.endTextNodePos == aParams.cursor.endTextNodePos &&
-           rangeData.endOffset < aParams.cursor.endOffset))
-        continue;
-      return rangeData;
-    }
-    return null;
   },
 
   findAllTextRanges: async function(aParams) {
