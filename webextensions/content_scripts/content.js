@@ -10,39 +10,77 @@ gLogContext = 'content';
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
+  var data = getSelectionEventData(aEvent);
+  if (!data)
+    return;
+  var result = await browser.runtime.sendMessage(clone(data, {
+    type: kCOMMAND_DOUBLE_CLICK
+  }));
+  postAction(result);
+};
+
+async function onKeyPress(aEvent) {
+  if (aEvent.target.ownerDocument != document)
+    return;
+  var data = getSelectionEventData(aEvent);
+  if (!data)
+    return;
+  var result = await browser.runtime.sendMessage(clone(data, {
+    type: kCOMMAND_KEYPRESS_ENTER
+  }));
+  postAction(result);
+};
+
+function getSelectionEventData(aEvent) {
+  var selection = window.getSelection();
+  if (selection.rangeCount != 1)
+    return null;
 
   var selection = window.getSelection();
   if (selection.rangeCount != 1)
-    return;
+    return null;
 
   var selectionRange = selection.getRangeAt(0);
   var preceding      = getPrecedingRange(selectionRange);
   var following      = getFollowingRange(selectionRange);
 
-  var result = await browser.runtime.sendMessage({
-    type:      kCOMMAND_DOUBLE_CLICK,
+  var data = {
     base:      location.href,
     text:      `${preceding.text
                 }${rangeToText(selectionRange)
                 }${following.text}`,
     cursor:    getRangeData(selectionRange),
-    button:    aEvent.button,
-    altKey:    aEvent.altKey,
-    ctrlKey:   aEvent.ctrlKey,
-    metaKey:   aEvent.metaKey,
-    shiftKey:  aEvent.shiftKey
-  });
+    event: {
+      type:      aEvent.type,
+      altKey:    aEvent.altKey,
+      ctrlKey:   aEvent.ctrlKey,
+      metaKey:   aEvent.metaKey,
+      shiftKey:  aEvent.shiftKey
+    }
+  };
 
-  if (!result)
+  if (aEvent.type == 'dblclick') {
+    data.event.button = aEvent.button;
+  }
+  else {
+    data.event.key = aEvent.key;
+    data.event.keyCode = aEvent.keyCode;
+  }
+  return data;
+}
+
+function postAction(aResult) {
+  if (!aResult)
     return;
 
-  if (result.range) {
+  if (aResult.range) {
+    let selection = window.getSelection();
     selection.removeAllRanges();
-    selection.addRange(createRangeFromRangeData(result.range));
+    selection.addRange(createRangeFromRangeData(aResult.range));
   }
-  if (result.action & kACTION_COPY)
-    doCopy(result.uri);
-};
+  if (aResult.action & kACTION_COPY)
+    doCopy(aResult.uri);
+}
 
 function doCopy(aText) {
   var field = document.createElement('textarea');
@@ -55,6 +93,7 @@ function doCopy(aText) {
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
+window.addEventListener('keypress', onKeyPress, { capture: true });
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
 }, { once: true });

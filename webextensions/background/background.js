@@ -14,8 +14,9 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
     return;
 
   switch (aMessage.type) {
-    case kCOMMAND_DOUBLE_CLICK: return (async () => {
-      let action = detectActionFromEvent(clone(aMessage, { type: 'dblclick' }));
+    case kCOMMAND_DOUBLE_CLICK:
+    case kCOMMAND_KEYPRESS_ENTER: return (async () => {
+      let action = detectActionFromEvent(aMessage.event);
       log('action: ', action);
       if (action == kACTION_DISABLED)
         return null;
