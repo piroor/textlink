@@ -7,16 +7,20 @@
 
 gLogContext = 'content';
 
+var gTryingAction = false;
+
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
   var data = getSelectionEventData(aEvent);
   if (!data)
     return;
+  gTryingAction = true;
   var result = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
   postAction(result);
+  gTryingAction = false;
 }
 
 async function onKeyPress(aEvent) {
@@ -25,10 +29,12 @@ async function onKeyPress(aEvent) {
   var data = getSelectionEventData(aEvent);
   if (!data)
     return;
+  gTryingAction = true;
   var result = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
   postAction(result);
+  gTryingAction = false;
 }
 
 function postAction(aResult) {
@@ -59,7 +65,14 @@ var gLastSelection = '';
 var gFindingURIRanges = false;
 var gLastURIRanges = Promise.resolve([]);
 
-function onSelectionChange(aEvent) {
+async function onSelectionChange(aEvent) {
+  if (findURIRanges.delayed)
+    clearTimeout(findURIRanges.delayed);
+
+  while (gTryingAction) {
+    await wait(500);
+  }
+
   var selection = window.getSelection();
   var selectionText = selection.toString()
   if (selectionText == gLastSelection)
@@ -68,9 +81,6 @@ function onSelectionChange(aEvent) {
   gLastSelection = selectionText;
   gFindingURIRanges = true;
 
-  if (findURIRanges.delayed)
-    clearTimeout(findURIRanges.delayed);
-
   browser.runtime.sendMessage({
     type: kNOTIFY_READY_TO_FIND_URI_RANGES
   });
@@ -78,7 +88,7 @@ function onSelectionChange(aEvent) {
   findURIRanges.delayed = setTimeout(() => {
     delete findURIRanges.delayed;
     gLastURIRanges = findURIRanges();
-  }, 1000);
+  }, 100);
 }
 
 async function findURIRanges() {
