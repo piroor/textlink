@@ -71,9 +71,7 @@ async function findURIRanges() {
     let preceding      = getPrecedingRange(selectionRange);
     let following      = getFollowingRange(selectionRange);
     selectionRanges.push(getRangeData(selectionRange));
-    selectionText.push(`${preceding.text
-                        }${rangeToText(selectionRange)
-                        }${following.text}`);
+    selectionText.push(`${preceding.text}${rangeToText(selectionRange)}${following.text}`);
   }
   var ranges = await browser.runtime.sendMessage({
     type:   kCOMMAND_FIND_URI_RANGES,
@@ -100,9 +98,7 @@ function getSelectionEventData(aEvent) {
 
   var data = {
     base:      location.href,
-    text:      `${preceding.text
-                }${rangeToText(selectionRange)
-                }${following.text}`,
+    text:      `${preceding.text}${rangeToText(selectionRange)}${following.text}`,
     cursor:    getRangeData(selectionRange),
     event: {
       type:      aEvent.type,
