@@ -57,6 +57,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
+  var isMouseEvent = aEvent.type == 'dblclick';
   var elements = [];
   if (aEvent.altKey)
     elements.push('alt');
@@ -67,7 +68,12 @@ function detectActionFromEvent(aEvent) {
   if (aEvent.shiftKey)
     elements.push('shift');
   elements.sort();
-  elements.push(aEvent.type);
+
+  if (isMouseEvent)
+    elements.push(aEvent.type);
+  else  if (aEvent.keyCode == KeyEvent.DOM_VK_ENTER ||
+            aEvent.keyCode == KeyEvent.DOM_VK_RETURN)
+    elements.push('VK_ENTER');
 
   var triggers = [elements.join('-')];
   if (/^Mac/i.test(navigator.platform)) {
@@ -81,7 +87,7 @@ function detectActionFromEvent(aEvent) {
   console.log(triggers);
 
   for (let action of configs.actions) {
-    let trigger = aEvent.type == 'dblclick' ? action.triggerMouse: action.triggerKey ;
+    let trigger = isMouseEvent ? action.triggerMouse: action.triggerKey ;
     if (triggers.some(aTrigger => aTrigger == trigger))
       return action.action;
   }
