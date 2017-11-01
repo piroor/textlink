@@ -56,6 +56,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
     })();
 
     case kCOMMAND_FIND_URI_RANGES: return (async () => {
+      initContextMenuForWaiting();
       log('selection-changed', aMessage);
       for (let range of aMessage.ranges) {
         range.framePos = aSender.frameId;
@@ -68,7 +69,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       });
       log('matchAll results: ', results);
       if (aSender.tab.active)
-        updateContextMenuFor(results.map(aResult => aResult.uri));
+        initContextMenuForURIs(results.map(aResult => aResult.uri));
       return results;
     })();
 
@@ -124,14 +125,24 @@ function detectActionFromEvent(aEvent) {
 }
 
 
-function updateContextMenuFor(aURIs) {
+function initContextMenuForWaiting() {
+  browser.contextMenus.removeAll();
+  browser.contextMenus.create({
+    id:       'waiting',
+    title:    'Wait for a while...',
+    enabled:  false,
+    contexts: ['selection']
+  });
+}
+
+function initContextMenuForURIs(aURIs) {
   browser.contextMenus.removeAll();
   if (aURIs.length == 0)
     return;
 
   browser.contextMenus.create({
     id:       'open',
-    title:    'Open URIs',
+    title:    `Open ${aURIs.length} URI(s)`,
     contexts: ['selection']
   });
 }
