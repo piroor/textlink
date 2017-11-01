@@ -9,6 +9,7 @@ const kCOMMAND_TRY_ACTION       = 'textlink:try-action';
 const kCOMMAND_FIND_URI_RANGES  = 'textlink:find-uri-ranges';
 const kCOMMAND_ACTION_FOR_URIS  = 'textlink:action-for-uris';
 const kCOMMAND_FETCH_URI_RANGES = 'textlink:fetch-uri-ranges';
+const kNOTIFY_READY_TO_FIND_URI_RANGES = 'textlink:ready-to-find-uri-ranges';
 
 const kACTION_DISABLED               = 0;
 const kACTION_STEALTH                = 1 << 0;

@@ -73,10 +73,15 @@ function onSelectionChange(aEvent) {
 
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
+
+  browser.runtime.sendMessage({
+    type: kNOTIFY_READY_TO_FIND_URI_RANGES
+  });
+
   findURIRanges.delayed = setTimeout(() => {
     delete findURIRanges.delayed;
     gLastURIRanges = findURIRanges();
-  }, 100);
+  }, 1000);
 }
 
 async function findURIRanges() {

@@ -87,6 +87,10 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       }
       break;
 
+    case kNOTIFY_READY_TO_FIND_URI_RANGES:
+      initContextMenuForWaiting();
+      break;
+
     case kCOMMAND_FIND_URI_RANGES: return (async () => {
       initContextMenuForWaiting();
       log('selection-changed', aMessage);
@@ -146,9 +150,37 @@ function detectActionFromEvent(aEvent) {
   return kACTION_DISABLED;
 }
 
+const MENU_ITEMS = [
+  'openCurrent',
+  'openTab',
+  'openWindow',
+  'copy'
+];
+
+function getMenuItemVisibility() {
+  var count      = 0;
+  var visibility = {};
+  for (let id of MENU_ITEMS) {
+    visibility[id] = configs[`menu_${id}_${type}`];
+    if (visibility[id])
+      count++;
+  }
+  visibility.$count = count;
+  return visibility;
+}
 
 function initContextMenuForWaiting() {
   browser.contextMenus.removeAll();
+
+  var count = 0;
+  for (let id of MENU_ITEMS) {
+    if (configs[`menu_${id}_single`] ||
+        configs[`menu_${id}_multiple`])
+      count++;
+  }
+  if (count == 0)
+    return;
+
   browser.contextMenus.create({
     id:       'waiting',
     title:    browser.i18n.getMessage(`menu.waiting.label`),
@@ -166,15 +198,9 @@ function initContextMenuForURIs(aURIs) {
   var last  = getShortURIString(aURIs[aURIs.length - 1]);
   var type  = aURIs.length == 1 ? 'single' : 'multiple';
 
-  var ids = [
-    'openCurrent',
-    'openTab',
-    'openWindow',
-    'copy'
-  ];
   var visibleCount = 0;
   var visibility = {};
-  for (let id of ids) {
+  for (let id of MENU_ITEMS) {
     visibility[id] = configs[`menu_${id}_${type}`];
     if (visibility[id])
       visibleCount++;
@@ -192,7 +218,7 @@ function initContextMenuForURIs(aURIs) {
     parentId = 'group';
   }
 
-  for (let id of ids) {
+  for (let id of MENU_ITEMS) {
     if (!visibility[id])
       continue;
     let title = browser.i18n.getMessage(`menu.${id}.${type}`);
