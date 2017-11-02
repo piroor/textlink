@@ -23,6 +23,35 @@ ul p.sub {
   margin-bottom: 0;
 }
 
+.action-definition p,
+.action-definition p label {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.action-definition label:not(:first-child) {
+/*
+  border: 1px solid ThreeDShadow;
+  border-radius: 2px;
+  padding: 0.2em;
+*/
+  -moz-appearance: button;
+}
+
+.action-definition label:first-child:not(.checked) ~ label {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.action-definition label:first-child:not(.checked) ~ label input {
+  -moz-user-focus: ignore;
+}
+
+.action-definition .delimiter {
+  margin: 0.2em;
+}
+
 br + input[type="text"] {
   max-width: 90%;
 }

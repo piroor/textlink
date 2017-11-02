@@ -17,6 +17,14 @@ function onConfigChanged(aKey) {
         document.documentElement.classList.remove('debugging');
       break;
   }
+
+  var checkbox = document.querySelector(`label > input[type="checkbox"]#${aKey}`);
+  if (checkbox) {
+    if (checkbox.checked)
+      checkbox.parentNode.classList.add('checked');
+    else
+      checkbox.parentNode.classList.remove('checked');
+  }
 }
 
 configs.$addObserver(onConfigChanged);
@@ -24,6 +32,15 @@ window.addEventListener('DOMContentLoaded', () => {
   configs.$loaded.then(() => {
     options.buildUIForAllConfigs(document.querySelector('#debug-configs'));
     onConfigChanged('debug');
+
+    setTimeout(() => {
+      for (let checkbox of document.querySelectorAll('label > input[type="checkbox"]')) {
+        if (checkbox.checked)
+          checkbox.parentNode.classList.add('checked');
+        else
+          checkbox.parentNode.classList.remove('checked');
+      }
+    }, 0);
 
     for (let resetButton of document.querySelectorAll('[data-reset-target]')) {
       let id = resetButton.getAttribute('data-reset-target');
