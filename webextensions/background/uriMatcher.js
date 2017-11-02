@@ -887,7 +887,12 @@ var URIMatcher = {
     }
   },
 
-  init(aConfigs) {
+  init: async function(aConfigs) {
+    log('URIMatcher init with configs ', aConfigs);
+    if (aConfigs.$loaded)
+      await aConfigs.$loaded;
+
+    log('URIMatcher init: ready to init');
     this.configs = aConfigs;
 
     this.scheme           = aConfigs.scheme;
@@ -896,6 +901,4 @@ var URIMatcher = {
     aConfigs.$addObserver(this);
   }
 };
-configs.$loaded.then(() => {
-  URIMatcher.init(configs)
-});
+window.configs && URIMatcher.init(configs);
