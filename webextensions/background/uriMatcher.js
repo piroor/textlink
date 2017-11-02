@@ -15,16 +15,16 @@ var URIMatcher = {
 
     for (let maybeURI of match) {
       maybeURI = this.sanitizeURIString(maybeURI);
-      let ranges = await this.findAllTextRanges({
+      let uriRange = await this.findTextRange({
         text:  maybeURI,
         range: aParams.cursor,
         tabId: aParams.tabId
       });
-      if (ranges.length == 0)
+      if (!uriRange)
         continue;
       return {
         text:  maybeURI,
-        range: ranges[0],
+        range: uriRange,
         uri:   this.fixupURI(maybeURI, aParams.baseURI)
       };
     }
@@ -65,15 +65,15 @@ var URIMatcher = {
     var count = 0;
     for (let range of aParams.ranges) {
       for (let maybeURI of range.maybeURIs) {
-        let ranges = await this.findAllTextRanges({
+        let uriRange = await this.findTextRange({
           text:  maybeURI.original,
           range: range,
           tabId: aParams.tabId
         });
-        if (ranges.length > 0) {
+        if (uriRange) {
           results.push({
             text:  maybeURI.original,
-            range: ranges[0],
+            range: uriRange,
             uri:   maybeURI.uri
           });
         }
@@ -105,21 +105,24 @@ var URIMatcher = {
     return match;
   },
 
-  findAllTextRanges: async function(aParams) {
+  findTextRange: async function(aParams) {
     var match = await browser.find.find(aParams.text, {
       tabId:            aParams.tabId,
       caseSensitive:    true,
       includeRangeData: true
     });
-    return match.rangeData.filter(aRangeData => !(
-      aRangeData.framePos != aParams.range.framePos ||
-      aRangeData.startTextNodePos > aParams.range.endTextNodePos ||
-      (aRangeData.startTextNodePos == aParams.range.endTextNodePos &&
-       aRangeData.startOffset > aParams.range.endOffset) ||
-      aRangeData.endTextNodePos < aParams.range.startTextNodePos ||
-      (aRangeData.endTextNodePos == aParams.range.startTextNodePos &&
-       aRangeData.endOffset < aParams.range.startOffset)
-    ));
+    for (let rangeData of match.rangeData) {
+      if (rangeData.framePos != aParams.range.framePos ||
+          rangeData.startTextNodePos > aParams.range.endTextNodePos ||
+          (rangeData.startTextNodePos == aParams.range.endTextNodePos &&
+           rangeData.startOffset > aParams.range.endOffset) ||
+          rangeData.endTextNodePos < aParams.range.startTextNodePos ||
+          (rangeData.endTextNodePos == aParams.range.startTextNodePos &&
+           rangeData.endOffset < aParams.range.startOffset))
+        continue;
+      return rangeData;
+    }
+    return null;
   },
 
   kDomainSeparators          : '\\.', 
