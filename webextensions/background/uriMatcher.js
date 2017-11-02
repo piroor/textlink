@@ -39,6 +39,7 @@ var URIMatcher = {
     var results = [];
 
     var maxCount = 0;
+    var uniqueURIs = {};
     for (let range of aParams.ranges) {
       let match = this.matchMaybeURIs(range.text);
       if (match.length == 0) {
@@ -46,7 +47,18 @@ var URIMatcher = {
         continue;
       }
 
-      range.maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      let maybeURIs = Array.slice(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      range.maybeURIs = [];
+      for (let maybeURI of maybeURIs) {
+        let uri = this.fixupURI(maybeURI, aParams.baseURI);
+        if (uri in uniqueURIs)
+          continue;
+        uniqueURIs[uri] = true;
+        range.maybeURIs.push({
+          original: maybeURI,
+          uri:      uri
+        });
+      }
       maxCount += range.maybeURIs.length;
     }
 
@@ -54,17 +66,16 @@ var URIMatcher = {
     for (let range of aParams.ranges) {
       for (let maybeURI of range.maybeURIs) {
         let ranges = await this.findAllTextRanges({
-          text:  maybeURI,
+          text:  maybeURI.original,
           range: range,
           tabId: aParams.tabId
         });
         if (ranges.length > 0) {
-          let uri = this.fixupURI(maybeURI, aParams.baseURI);
           results = results.concat(ranges.map(aRange => {
             return {
-              text:  maybeURI,
+              text:  maybeURI.original,
               range: aRange,
-              uri:   uri
+              uri:   maybeURI.uri
             };
           }));
         }
@@ -78,13 +89,6 @@ var URIMatcher = {
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||
       aA.range.startOffset - aB.range.startOffset);
-    var uris = {};
-    results = results.filter(aRange => {
-      if (aRange.uri in uris)
-        return false;
-      uris[aRange.uri] = true;
-      return true;
-    });
     log(' => ', results);
     return results;
   },
