@@ -68,18 +68,24 @@ function doCopy(aText) {
 
 var gLastSelection = '';
 var gFindingURIRanges = false;
+var gLastSelectionChangeAt = 0;
 var gLastURIRanges = Promise.resolve([]);
 
 async function onSelectionChange(aEvent) {
+  var changedAt = gLastSelectionChangeAt = Date.now();
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
 
   await wait(200);
+  if (changedAt != gLastSelectionChangeAt)
+    return;
 
   if (gTryingAction) {
     while (gTryingAction) {
       await wait(500);
     }
+    if (changedAt != gLastSelectionChangeAt)
+      return;
     if (gLastActionResult) {
       gLastURIRanges = Promise.resolve([gLastActionResult]);
       return;
