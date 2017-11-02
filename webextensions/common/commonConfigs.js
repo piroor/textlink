@@ -27,7 +27,7 @@ var defaultActions = [
 ];
 
 var defaultConfigs = {
-  menu_openCurrent_single:   true,
+  menu_openCurrent_single:   false,
   menu_openCurrent_multiple: false,
   menu_openTab_single:       true,
   menu_openTab_multiple:     true,
