@@ -151,7 +151,7 @@ function getRangeData(aRange) {
     startOffset = 0;
   }
   if (endContainer.nodeType != Node.TEXT_NODE) {
-    let possibleEndContainer = endContainer.childNodes[endOffset - 1];
+    let possibleEndContainer = endContainer.childNodes[Math.max(0, endOffset - 1)];
     if (possibleEndContainer.nodeType != Node.TEXT_NODE) {
       let walker = document.createTreeWalker(document, NodeFilter.SHOW_TEXT, null, false);
       walker.currentNode = possibleEndContainer;
