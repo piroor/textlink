@@ -142,11 +142,22 @@ function getRangeData(aRange) {
   var endContainer   = aRange.endContainer;
   var endOffset      = aRange.endOffset;
   if (startContainer.nodeType != Node.TEXT_NODE) {
-    startContainer = startContainer.childNodes[startOffset];
-    startOffset    = 0;
+    let possibleStartContainer = startContainer.childNodes[startOffset];
+    startContainer = evaluateXPath(
+      `self::text() || following::text()[1]`,
+      possibleStartContainer,
+      XPathResult.FIRST_ORDERED_NODE_TYPE
+    ).singleNodeValue || possibleStartContainer;
+    startOffset = 0;
   }
   if (endContainer.nodeType != Node.TEXT_NODE) {
-    endContainer = endContainer.childNodes[endOffset - 1];
+    let possibleEndContainer = endContainer.childNodes[endOffset - 1];
+    if (possibleEndContainer.nodeType != Node.TEXT_NODE) {
+      let walker = document.createTreeWalker(document, NodeFilter.SHOW_TEXT, null, false);
+      walker.currentNode = possibleEndContainer;
+      possibleEndContainer = walker.previousNode();
+    }
+    endContainer = possibleEndContainer;
     endOffset    = endContainer.nodeValue.length;
   }
   return {
