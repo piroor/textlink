@@ -138,33 +138,33 @@ function getSelectionEventData(aEvent) {
   if (selection.rangeCount != 1)
     return null;
 
-  var selection = window.getSelection();
-  if (selection.rangeCount != 1)
-    return null;
-
   var selectionRange = selection.getRangeAt(0);
   var preceding      = getPrecedingRange(selectionRange);
   var following      = getFollowingRange(selectionRange);
 
   var data = {
-    base:      location.href,
-    text:      `${preceding.text}${rangeToText(selectionRange)}${following.text}`,
-    cursor:    getRangeData(selectionRange),
-    event: {
-      type:      aEvent.type,
-      altKey:    aEvent.altKey,
-      ctrlKey:   aEvent.ctrlKey,
-      metaKey:   aEvent.metaKey,
-      shiftKey:  aEvent.shiftKey
+    base:   location.href,
+    text:   `${preceding.text}${rangeToText(selectionRange)}${following.text}`,
+    cursor: getRangeData(selectionRange),
+    event:  {
+      altKey:   aEvent.altKey,
+      ctrlKey:  aEvent.ctrlKey,
+      metaKey:  aEvent.metaKey,
+      shiftKey: aEvent.shiftKey
     }
   };
 
-  if (aEvent.type == 'dblclick') {
-    data.event.button = aEvent.button;
+  if (aEvent.type == 'dblclick' &&
+      aEvent.button == 0) {
+    data.event.type = 'dblclick';
+  }
+  else if (aEvent.type == 'keypress' &&
+           (aEvent.keyCode == KeyEvent.DOM_VK_ENTER ||
+            aEvent.keyCode == KeyEvent.DOM_VK_RETURN)) {
+    data.event.type = 'enter';
   }
   else {
-    data.event.key = aEvent.key;
-    data.event.keyCode = aEvent.keyCode;
+    return null;
   }
   return data;
 }

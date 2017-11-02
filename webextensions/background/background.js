@@ -131,22 +131,8 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
-  var type;
-  switch (aEvent.type) {
-    case 'dblclick':
-      type = 'dblclick';
-      break;
-    case 'keypress':
-      if (aEvent.keyCode == KeyEvent.DOM_VK_ENTER ||
-          aEvent.keyCode == KeyEvent.DOM_VK_RETURN)
-        type = 'enter';
-      break;
-  }
-  if (!type)
-    return;
-
   for (let name of Object.keys(kACTION_NAME_TO_ID)) {
-    let base = `action_${name}_${type}`;
+    let base = `action_${name}_${aEvent.type}`;
     if (!configs[base] ||
         configs[`${base}_alt`] != aEvent.altKey ||
         configs[`${base}_ctrl`] != aEvent.ctrlKey ||
@@ -164,18 +150,6 @@ const MENU_ITEMS = [
   'openWindow',
   'copy'
 ];
-
-function getMenuItemVisibility() {
-  var count      = 0;
-  var visibility = {};
-  for (let id of MENU_ITEMS) {
-    visibility[id] = configs[`menu_${id}_${type}`];
-    if (visibility[id])
-      count++;
-  }
-  visibility.$count = count;
-  return visibility;
-}
 
 var gLastContextTab = 0;
 
