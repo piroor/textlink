@@ -71,13 +71,11 @@ var URIMatcher = {
           tabId: aParams.tabId
         });
         if (ranges.length > 0) {
-          results = results.concat(ranges.map(aRange => {
-            return {
-              text:  maybeURI.original,
-              range: aRange,
-              uri:   maybeURI.uri
-            };
-          }));
+          results.push({
+            text:  maybeURI.original,
+            range: ranges[0],
+            uri:   maybeURI.uri
+          });
         }
         count++;
         aParams.onProgress && aParams.onProgress(count / maxCount);
