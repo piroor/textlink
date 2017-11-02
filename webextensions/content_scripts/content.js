@@ -70,8 +70,12 @@ var gLastSelection = '';
 var gFindingURIRanges = false;
 var gLastSelectionChangeAt = 0;
 var gLastURIRanges = Promise.resolve([]);
+var gSelectionURIRanges = false;
 
 async function onSelectionChange(aEvent) {
+  if (gSelectionURIRanges)
+    return;
+
   var changedAt = gLastSelectionChangeAt = Date.now();
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
@@ -92,12 +96,47 @@ async function onSelectionChange(aEvent) {
     }
   }
 
-  var selection = window.getSelection();
+  if (isInputField(aEvent.target))
+    onTextFieldSelectionChanged(aEvent.target);
+  else
+    onSelectionRangeChanged();
+}
+
+function onTextFieldSelectionChanged(aField) {
+  var selectionRange = {
+    text:        aField.value,
+    startOffset: aField.selectionStart,
+    endOffset:   aField.selectionEnd
+  };
+
+  gLastSelection    = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
+  gFindingURIRanges = true;
+
+  browser.runtime.sendMessage({
+    type: kNOTIFY_READY_TO_FIND_URI_RANGES
+  });
+  gLastURIRanges = new Promise(async (aResolve, aReject) => {
+    var ranges = await browser.runtime.sendMessage({
+      type:   kCOMMAND_FIND_URI_RANGES,
+      base:   location.href,
+      ranges: [selectionRange]
+    });
+    var position = getFieldNodePosition(aField);
+    for (let range of ranges) {
+      range.range.fieldNodePos = position;
+    }
+    gFindingURIRanges = false;
+    aResolve(ranges);
+  });
+}
+
+function onSelectionRangeChanged() {
+  var selection     = window.getSelection();
   var selectionText = selection.toString()
   if (selectionText == gLastSelection)
     return;
 
-  gLastSelection = selectionText;
+  gLastSelection    = selectionText;
   gFindingURIRanges = true;
 
   browser.runtime.sendMessage({
@@ -175,6 +214,25 @@ function getSelectionEventData(aEvent) {
   return data;
 }
 
+
+function onFocused(aEvent) {
+  var node = aEvent.target;
+  if (!isInputField(node))
+    return;
+  node.addEventListener('selectionchange', onSelectionChange, { capture: true });
+  window.addEventListener('unload', () => {
+    node.removeEventListener('selectionchange', onSelectionChange, { capture: true });
+  }, { once: true });
+}
+
+function isInputField(aNode) {
+  return (
+    aNode.nodeType == Node.ELEMENT_NODE &&
+    evaluateXPath(`self::*[${kFIELD_CONDITION}]`, aNode, XPathResult.BOOLEAN_TYPE).booleanValue
+  );
+}
+
+
 function onMessage(aMessage, aSender) {
   switch (aMessage.type) {
     case kCOMMAND_ACTION_FOR_URIS: return (async () => {
@@ -209,12 +267,14 @@ function onMessage(aMessage, aSender) {
 window.addEventListener('dblclick', onDblClick, { capture: true });
 window.addEventListener('keypress', onKeyPress, { capture: true });
 window.addEventListener('selectionchange', onSelectionChange, { capture: true });
+window.addEventListener('focus', onFocused, { capture: true });
 browser.runtime.onMessage.addListener(onMessage);
 
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
   window.removeEventListener('keypress', onKeyPress, { capture: true });
   window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
+  window.removeEventListener('focus', onFocused, { capture: true });
   browser.runtime.onMessage.removeListener(onMessage);
 }, { once: true });
 

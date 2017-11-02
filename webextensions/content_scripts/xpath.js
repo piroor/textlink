@@ -11,6 +11,10 @@ function hasClass(aClassName) {
   return `contains(concat(" ", normalize-space(@class), " "), " ${aClassName} ")`;
 }
 
+function toLowerCase(aTarget) {
+  return `translate(${aTarget}, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')`;
+}
+
 const NSResolver = {
   lookupNamespaceURI : function(aPrefix) {
     switch (aPrefix)

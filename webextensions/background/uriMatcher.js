@@ -106,6 +106,29 @@ var URIMatcher = {
   },
 
   findTextRange: async function(aParams) {
+    if (!('startTextNodePos' in aParams.range) ||
+        !('endTextNodePos' in aParams.range)) {
+      // text, fake range
+      let wholeText = aParams.range.text;
+      let length    = aParams.text.length;
+      let startAt   = 0;
+      while (true) {
+        let index = wholeText.indexOf(aParams.text, startAt);
+        startAt = index + length;
+        if (index < 0)
+          return null;
+        if (index > aParams.range.endOffset ||
+            index + length < aParams.range.startOffset)
+          continue;
+        return {
+          startOffset: index,
+          endOffset:   index + length
+        };
+      }
+      return null;
+    }
+
+    // real range
     var match = await browser.find.find(aParams.text, {
       tabId:            aParams.tabId,
       caseSensitive:    true,

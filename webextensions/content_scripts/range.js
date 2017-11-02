@@ -171,11 +171,33 @@ function getRangeData(aRange) {
 function selectRanges(aRanges) {
   if (!Array.isArray(aRanges))
     aRanges = [aRanges];
+
+  if (aRanges.length == 0)
+    return;
+
+  gSelectionURIRanges = true;
+  setTimeout(() => {
+    gSelectionURIRanges = false;
+  }, 100);
+
+  if ('fieldNodePos' in aRanges[0]) {
+    // fake, text ranges
+    let field = getFieldNodeAt(aRanges[0].fieldNodePos);
+    if (!field)
+      return;
+    field.setSelectionRange(
+      aRanges[0].startOffset,
+      aRanges[aRanges.length - 1].endOffset
+    );
+    field.focus();
+    return;
+  }
+
+  // ranges
   var selection = window.getSelection();
   selection.removeAllRanges();
   for (let range of aRanges) {
-    if ('startTextNodePos' in range)
-      range = createRangeFromRangeData(range);
+    range = createRangeFromRangeData(range);
     selection.addRange(range);
   }
 }
@@ -183,6 +205,18 @@ function selectRanges(aRanges) {
 function getTextNodePosition(aNode) {
   return evaluateXPath(
     'count(preceding::text())',
+    aNode,
+    XPathResult.NUMBER_TYPE
+  ).numberValue;
+}
+
+const kINPUT_TEXT_CONDITION = `${toLowerCase('local-name()')} = "input" and ${toLowerCase('@type')} = "text"`;
+const kTEXT_AREA_CONDITION  = `${toLowerCase('local-name()')} = "textarea"`;
+const kFIELD_CONDITION      = `(${kINPUT_TEXT_CONDITION}) or (${kTEXT_AREA_CONDITION})`;
+
+function getFieldNodePosition(aNode) {
+  return evaluateXPath(
+    `count(preceding::*[${kFIELD_CONDITION}])`,
     aNode,
     XPathResult.NUMBER_TYPE
   ).numberValue;
@@ -198,6 +232,14 @@ function createRangeFromRangeData(aData) {
 function getTextNodeAt(aPosition) {
   return evaluateXPath(
     `descendant::text()[count(preceding::text())=${aPosition}]`,
+    document,
+    XPathResult.FIRST_ORDERED_NODE_TYPE
+  ).singleNodeValue;
+}
+
+function getFieldNodeAt(aPosition) {
+  return evaluateXPath(
+    `descendant::*[${kFIELD_CONDITION}][count(preceding::*[${kFIELD_CONDITION}])=${aPosition}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
