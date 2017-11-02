@@ -44,6 +44,9 @@
 
   "config.action.caption": { "message": "Actions for URI text" },
 
+  "config.action.group.action":           { "message": "in Regular Context" },
+  "config.action.group.actionInEditable": { "message": "in Input Field" },
+
   "config.action.select":        { "message": "Just Select" },
   "config.action.current":       { "message": "Load in the Current Tab" },
   "config.action.window":        { "message": "Open in a New Window" },

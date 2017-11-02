@@ -44,6 +44,9 @@
 
   "config.action.caption": { "message": "URI文字列上での操作" },
 
+  "config.action.group.action":           { "message": "通常の場面" },
+  "config.action.group.actionInEditable": { "message": "入力フィールド内" },
+
   "config.action.select":        { "message": "URI文字列を選択する" },
   "config.action.current":       { "message": "現在のタブに読み込む" },
   "config.action.window":        { "message": "新しいウィンドウで開く" },
