@@ -211,7 +211,7 @@ var URIMatcher = {
   },
   _IDNScheme : '',
   get IDNSchemes() {
-    if (configs.IDNEnabled) {
+    if (this.configs.IDNEnabled) {
       if (this._fixupIDNSchemes === null) {
         this._fixupIDNSchemes = [];
         for (let i in this._fixupTargetsHash) {
@@ -235,7 +235,7 @@ var URIMatcher = {
   _fixupIDNSchemes : null,
 
   get nonIDNSchemes() {
-    if (configs.IDNEnabled) {
+    if (this.configs.IDNEnabled) {
       if (this._nonIDNSchemes === null) {
         let IDNSchemes = this.IDNSchemes;
         this._nonIDNSchemes = this.schemes
@@ -314,7 +314,7 @@ var URIMatcher = {
           /%DOMAIN_PATTERN%/g,
           this.getDomainPattern()
         ));
-      if (configs.IDNEnabled)
+      if (this.configs.IDNEnabled)
         patterns.push(base
           .replace(
             /%SCHEME_PATTERN%/g,
@@ -377,7 +377,7 @@ var URIMatcher = {
           /%DOMAIN_PATTERN%/g,
           this.getDomainPattern(kDOMAIN_MULTIBYTE)
         ));
-      if (configs.IDNEnabled)
+      if (this.configs.IDNEnabled)
         patterns.push(base
           .replace(
             /%SCHEME_PATTERN%/g,
@@ -424,10 +424,10 @@ var URIMatcher = {
                       this.kIDNDomainSeparators+
                       ':/@\uff1a\uff0f\uff20';
         if (!(aOptionsFlag & kDOMAIN_LAZY))
-          forbiddenCharacters += configs.IDNLazyDetectionSeparators;
+          forbiddenCharacters += this.configs.IDNLazyDetectionSeparators;
         let part = '[^'+
               forbiddenCharacters+
-              (configs.IDNBlacklistChars || '')
+              (this.configs.IDNBlacklistChars || '')
                 .replace(new RegExp(`[${forbiddenCharacters}]`, 'g'), '')
                 .replace(/(.)\1+/g, '$1')
                 .replace(/./g, function(aChar) {
@@ -484,7 +484,7 @@ var URIMatcher = {
  
   get URIPattern_part() {
     if (!this._URIPattern_part) {
-      this._URIPattern_part = configs.i18nPathEnabled ?
+      this._URIPattern_part = this.configs.i18nPathEnabled ?
         `[^${this.kStringprepForbiddenCharacters}]+` :
         this.kURIPattern_part ;
     }
@@ -493,7 +493,7 @@ var URIMatcher = {
   _URIPattern_part : null,
   get URIPatternMultibyte_part() {
     if (!this._URIPatternMultibyte_part) {
-      this._URIPatternMultibyte_part = configs.i18nPathEnabled ?
+      this._URIPatternMultibyte_part = this.configs.i18nPathEnabled ?
         `[^${this.kStringprepForbiddenCharacters}]+` :
         this.kURIPatternMultibyte_part ;
     }
@@ -503,7 +503,7 @@ var URIMatcher = {
  
   get findURIPatternPart() {
     if (!this._findURIPatternPart) {
-      this._findURIPatternPart = configs.i18nPathEnabled || configs.IDNEnabled ?
+      this._findURIPatternPart = this.configs.i18nPathEnabled || this.configs.IDNEnabled ?
         `[^${this.kStringprepForbiddenCharacters}]+` :
         this.kURIPattern_part ;
     }
@@ -512,7 +512,7 @@ var URIMatcher = {
   _findURIPatternPart : null,
   get findURIPatternMultibytePart() {
     if (!this._findURIPatternMultibytePart) {
-      this._findURIPatternMultibytePart = configs.i18nPathEnabled || configs.IDNEnabled ?
+      this._findURIPatternMultibytePart = this.configs.i18nPathEnabled || this.configs.IDNEnabled ?
         `[^${this.kStringprepForbiddenCharacters}]+` :
         this.kURIPatternMultibyte_part ;
     }
@@ -523,12 +523,12 @@ var URIMatcher = {
   get topLevelDomains() {
     if (!this._topLevelDomains) {
       let TLD = [
-        configs.gTLD,
-        configs.ccTLD,
-        configs.extraTLD
+        this.configs.gTLD,
+        this.configs.ccTLD,
+        this.configs.extraTLD
       ];
-      if (configs.IDNEnabled)
-        TLD.push(configs.IDN_TLD);
+      if (this.configs.IDNEnabled)
+        TLD.push(this.configs.IDN_TLD);
       this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
         .reverse(); // this is required to match "com" instead of "co".
     }
@@ -558,9 +558,9 @@ var URIMatcher = {
   },
   _updateURIExceptionPattern() {
     try {
-      var whole = `^(?:${configs.partExceptionWhole})$`;
-      var start = `^(?:${configs.partExceptionStart})`;
-      var end = `(?:${configs.partExceptionEnd})$`;
+      var whole = `^(?:${this.configs.partExceptionWhole})$`;
+      var start = `^(?:${this.configs.partExceptionStart})`;
+      var end = `(?:${this.configs.partExceptionEnd})$`;
       this._URIExceptionPattern = new RegExp(whole, 'i');
       this._URIExceptionPattern_start = new RegExp(start, 'i');
       this._URIExceptionPattern_end = new RegExp(end, 'i');
@@ -667,16 +667,16 @@ var URIMatcher = {
     if (this._URIMatchingRegExp)
       return;
     var regexp = [];
-    if (configs.multibyteEnabled) {
+    if (this.configs.multibyteEnabled) {
       this._URIMatchingRegExp_fromHead = new RegExp(this.URIPatternMultibyte, 'i');
       regexp.push(this.URIPatternMultibyte);
-      if (configs.relativeEnabled)
+      if (this.configs.relativeEnabled)
         regexp.push(this.URIPatternMultibyteRelative);
     }
     else {
       this._URIMatchingRegExp_fromHead = new RegExp(this.URIPattern, 'i');
       regexp.push(this.URIPattern);
-      if (configs.relativeEnabled)
+      if (this.configs.relativeEnabled)
         regexp.push(this.URIPatternRelative);
     }
     this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
@@ -699,7 +699,7 @@ var URIMatcher = {
     if (this._URIPartFinderRegExp_start && this._URIPartFinderRegExp_end)
       return;
 
-    var base = configs.multibyteEnabled ?
+    var base = this.configs.multibyteEnabled ?
       this.findURIPatternMultibytePart :
       this.findURIPatternPart ;
     this._URIPartFinderRegExp_start = new RegExp(`^(${base})`, 'i');
@@ -772,7 +772,7 @@ var URIMatcher = {
       aURIComponent.match(/^(.+)\s*\([^\)]+$/) ||
       aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
       aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
-      (!configs.relativeEnabled &&
+      (!this.configs.relativeEnabled &&
        aURIComponent.match(/^[\.\/:](.+)$/))
     ) {
       aURIComponent = RegExp.$1;
@@ -780,7 +780,7 @@ var URIMatcher = {
 
     aURIComponent = this.removeParen(aURIComponent);
 
-    if (configs.IDNEnabled || configs.i18nPathEnabled)
+    if (this.configs.IDNEnabled || this.configs.i18nPathEnabled)
       aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
     if (aURIComponent != originalURIComponent)
@@ -825,7 +825,7 @@ var URIMatcher = {
         aURI = aURI.replace(target, match[1]);
     }
     else if (!this._firstSchemeRegExp.test(aURI)) {
-      let scheme = configs.schemeFixupDefault;
+      let scheme = this.configs.schemeFixupDefault;
       if (scheme)
         aURI = `${scheme}://${aURI}`;
     }
@@ -847,7 +847,7 @@ var URIMatcher = {
 
     if (aURI.match(/^([^\/\.]+\.)+([^\/\.]+)/) &&
         RegExp.$2.match(new RegExp(`^(${this.topLevelDomains.join('|')})$`))) {
-      return `${configs.schemeFixupDefault}://${aURI}`;
+      return `${this.configs.schemeFixupDefault}://${aURI}`;
     }
     var base = aSourceURI.split('#')[0].split('?')[0].replace(/[^\/]+$/, '');
     return `${base}${aURI}`;
@@ -856,15 +856,15 @@ var URIMatcher = {
   onChangeConfig(aKey) {
     switch (aKey) {
       case 'scheme':
-        this.scheme = configs[aKey];
+        this.scheme = this.configs[aKey];
         return;
 
       case 'schemeFixupTable':
-        this.schemeFixupTable = configs[aKey];
+        this.schemeFixupTable = this.configs[aKey];
         return;
 
       case 'IDNScheme':
-        this.IDNScheme = configs[aKey];
+        this.IDNScheme = this.configs[aKey];
         return;
 
       case 'relativeEnabled':
@@ -885,12 +885,17 @@ var URIMatcher = {
         this.invalidateExceptionPatterns();
         return;
     }
+  },
+
+  init(aConfigs) {
+    this.configs = aConfigs;
+
+    this.scheme           = aConfigs.scheme;
+    this.schemeFixupTable = aConfigs.schemeFixupTable;
+    this.IDNScheme        = aConfigs.IDNScheme;
+    aConfigs.$addObserver(this);
   }
- 
 };
 configs.$loaded.then(() => {
-  URIMatcher.scheme           = configs.scheme;
-  URIMatcher.schemeFixupTable = configs.schemeFixupTable;
-  URIMatcher.IDNScheme        = configs.IDNScheme;
-  configs.$addObserver(URIMatcher);
+  URIMatcher.init(configs)
 });
