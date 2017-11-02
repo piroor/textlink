@@ -3,6 +3,7 @@
  - master/HEAD
  - 6.0.0 (2017.11.3)
    * WebExtensionsベースで作り直した
+   * Thunderbirdへの対応を終了
  - 5.0.2016031501
    * Nightly 48.0a1対応
    * 設定を専用の名前空間の下で管理するようにした

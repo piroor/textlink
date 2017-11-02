@@ -3,6 +3,7 @@
  - master/HEAD
  - 6.0.0 (2017.11.3)
    * Rebuilt on WebExtensions.
+   * Drop support for Thunderbird.
  - 5.0.2016031501
    * Works on Nightly 48.0a1.
    * Manages custom preferences under its own namespace.
