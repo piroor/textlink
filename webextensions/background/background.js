@@ -96,7 +96,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
         type:     kNOTIFY_MATCH_ALL_PROGRESS,
         progress: 0
       });
-      initContextMenuForWaiting(aSender.tab.id);
+      await initContextMenuForWaiting(aSender.tab.id);
       log('selection-changed', aMessage);
       for (let range of aMessage.ranges) {
         range.framePos = aSender.frameId;
