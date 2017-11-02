@@ -1,5 +1,5 @@
 {
-  "extensionName": { "message": "Text Link (WE)" },
+  "extensionName": { "message": "Text Link" },
   "extensionDescription": { "message": "Allows URI texts written in webpages to be loaded by double clicks." },
 
   "menu.waiting.label": { "message": "Finding URIs in Selection… ($PROGRESS$%)",

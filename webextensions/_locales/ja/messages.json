@@ -1,5 +1,5 @@
 {
-  "extensionName": { "message": "テキストリンク(WE)" },
+  "extensionName": { "message": "テキストリンク" },
   "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
 
   "menu.waiting.label": { "message": "選択範囲内のURIを検出中... ($PROGRESS$%)",
