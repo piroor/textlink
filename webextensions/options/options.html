@@ -298,25 +298,22 @@
               __MSG_menu.multiple.description__</label></p>
 
     <h1>__MSG_config.advanced.caption__</h1>
-    <fieldset>
-      <legend>__MSG_config.advanced.caption__</legend>
-      <p><label>__MSG_config.scheme__
-         <br><input id="scheme"
-                    type="textbox"
-                    size="60"></label>
-         <button data-reset-target="scheme">__MSG_config.scheme.default__</button></p>
+    <fieldset class="uri-detection">
+      <legend>__MSG_config.detection.group__</legend>
+      <p><label for="scheme">__MSG_config.scheme__</label>
+         <span><input id="scheme"
+                      type="textbox"></label>
+               <button data-reset-target="scheme">__MSG_config.scheme.default__</button></span></p>
       <p><label><input id="IDNEnabled"
                        type="checkbox">
                 __MSG_config.idn.enabled__</label>
-         <br><input id="IDNScheme"
-                    type="textbox"
-                    size="60">
-         <button data-reset-target="IDNScheme">__MSG_config.idn.scheme.default__</button></p>
-      <p><label>__MSG_config.scheme.fixup.table__
-         <br><input id="schemeFixupTable"
-                    type="textbox"
-                    size="60"></label>
-         <button data-reset-target="schemeFixupTable">__MSG_config.scheme.fixup.table.default__</button></p>
+         <span><input id="IDNScheme"
+                      type="textbox">
+               <button data-reset-target="IDNScheme">__MSG_config.idn.scheme.default__</button></span></p>
+      <p><label for="schemeFixupTable">__MSG_config.scheme.fixup.table__</label>
+         <span><input id="schemeFixupTable"
+                      type="textbox">
+               <button data-reset-target="schemeFixupTable">__MSG_config.scheme.fixup.table.default__</button></span></p>
       <p><label><input id="relativeEnabled"
                        type="checkbox">
                 __MSG_config.relative.enabled__</label></p>
