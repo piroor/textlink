@@ -310,22 +310,32 @@ function updateProgress() {
     range.selectNodeContents(document.body || document.documentElement);
     range.collapse(false);
     let fragment = range.createContextualFragment(`<span style="
-      background: gray;
-      border: 1px solid;
-      color: white;
-      font-size: small;
-      line-height: 1.5;
-      opacity: 0.75;
-      padding: 0.5em;
+      bottom: 0.5em;
+      box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.5),
+                  0 0 0.2em rgba(0, 0, 0, 0.5);
+      display: block;
+      font-size: medium;
+      height: 0.2em;
+      max-height: 0.2em;
+      max-width: 5em;
+      opacity: 1;
+      padding: 0;
       position: fixed;
-      right: 0.2em;
-      top: 0.2em;
+      right: 0.5em;
+      width: 5em;
     "></span>`);
     gProgressIndicator = fragment.firstChild;
     range.insertNode(fragment);
     range.detach();
   }
-  gProgressIndicator.textContent = browser.i18n.getMessage('menu.waiting.label', [gMatchAllProgress]);
+  gProgressIndicator.style.background = `
+    linear-gradient(to right,
+                    #24b7b7 0%,
+                    #85f2e1 ${gMatchAllProgress}%,
+                    #000000 ${gMatchAllProgress}%,
+                    #000000 100%)
+  `;
+  gProgressIndicator.setAttribute('title', browser.i18n.getMessage('menu.waiting.label', [gMatchAllProgress]));
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
