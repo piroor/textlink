@@ -184,7 +184,7 @@ var URIMatcher = {
     return this._scheme;
   },
   set scheme(aValue) {
-    this._scheme = aValue || configs.scheme;
+    this._scheme = aValue;
     this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
     this.IDNScheme = this.IDNScheme; // reset IDN-enabled schemes list
     this.invalidatePatterns();
@@ -198,7 +198,7 @@ var URIMatcher = {
   _fixupSchemes : [],
 
   set IDNScheme(aValue) {
-    this._IDNScheme = aValue || configs.IDNScheme;
+    this._IDNScheme = aValue;
     this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme))
       .filter(function(aScheme) {
         return this.schemes.indexOf(aScheme) > -1;
@@ -253,7 +253,7 @@ var URIMatcher = {
     return this._schemeFixupTable;
   },
   set schemeFixupTable(aValue) {
-    this._schemeFixupTable = aValue || configs.schemeFixupTable;
+    this._schemeFixupTable = aValue;
 
     this._fixupTable = this._schemeFixupTable
       .replace(/(\s*[^:,\s]+)\s*=>\s*([^:,\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
@@ -853,18 +853,18 @@ var URIMatcher = {
     return `${base}${aURI}`;
   },
    
-  onConfigChanged(aKey) {
+  onChangeConfig(aKey) {
     switch (aKey) {
       case 'scheme':
-        this.scheme = null;
+        this.scheme = configs[aKey];
         return;
 
       case 'schemeFixupTable':
-        this.schemeFixupTable = null;
+        this.schemeFixupTable = configs[aKey];
         return;
 
       case 'IDNScheme':
-        this.IDNScheme = null;
+        this.IDNScheme = configs[aKey];
         return;
 
       case 'relativeEnabled':
@@ -889,7 +889,8 @@ var URIMatcher = {
  
 };
 configs.$loaded.then(() => {
-  URIMatcher.scheme =
-    URIMatcher.schemeFixupTable =
-      URIMatcher.IDNScheme = null;
+  URIMatcher.scheme           = configs.scheme;
+  URIMatcher.schemeFixupTable = configs.schemeFixupTable;
+  URIMatcher.IDNScheme        = configs.IDNScheme;
+  configs.$addObserver(URIMatcher);
 });
