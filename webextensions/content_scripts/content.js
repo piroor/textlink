@@ -19,9 +19,14 @@ async function onDblClick(aEvent) {
     return;
   gTryingAction = true;
   gLastActionResult = null;
+  var textFieldSelection = isInputField(aEvent.target);
   gLastActionResult = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
+  if (textFieldSelection &&
+      gLastActionResult &&
+      gLastActionResult.range)
+    gLastActionResult.range.fieldNodePos = getFieldNodePosition(aEvent.target);
   postAction(gLastActionResult);
   await wait(500);
   gTryingAction = false;
@@ -35,9 +40,14 @@ async function onKeyPress(aEvent) {
     return;
   gTryingAction = true;
   gLastActionResult = null;
+  var textFieldSelection = isInputField(aEvent.target);
   gLastActionResult = await browser.runtime.sendMessage(clone(data, {
     type: kCOMMAND_TRY_ACTION
   }));
+  if (textFieldSelection &&
+      gLastActionResult &&
+      gLastActionResult.range)
+    gLastActionResult.range.fieldNodePos = getFieldNodePosition(aEvent.target);
   postAction(gLastActionResult);
   gTryingAction = false;
 }
@@ -46,10 +56,10 @@ function postAction(aResult) {
   if (!aResult)
     return;
 
-  if (aResult.range)
-    selectRanges(aResult.range);
   if (aResult.action & kACTION_COPY)
     doCopy(aResult.uri);
+  if (aResult.range)
+    selectRanges(aResult.range);
 }
 
 function doCopy(aText) {
@@ -103,11 +113,7 @@ async function onSelectionChange(aEvent) {
 }
 
 function onTextFieldSelectionChanged(aField) {
-  var selectionRange = {
-    text:        aField.value,
-    startOffset: aField.selectionStart,
-    endOffset:   aField.selectionEnd
-  };
+  var selectionRange = getFieldRangeData(aField);
 
   gLastSelection    = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
   gFindingURIRanges = true;
@@ -179,19 +185,29 @@ async function findURIRanges() {
 }
 
 function getSelectionEventData(aEvent) {
+  var textFieldSelection = isInputField(aEvent.target);
+
   var selection = window.getSelection();
-  if (selection.rangeCount != 1)
+  if (!textFieldSelection && selection.rangeCount != 1)
     return null;
 
-  var selectionRange = selection.getRangeAt(0);
-  var preceding      = getPrecedingRange(selectionRange);
-  var following      = getFollowingRange(selectionRange);
+  var text, cursor;
+  if (textFieldSelection) {
+    cursor = getFieldRangeData(aEvent.target);
+    text   = cursor.text;
+  }
+  else {
+    let selectionRange = selection.getRangeAt(0);
+    let preceding      = getPrecedingRange(selectionRange);
+    let following      = getFollowingRange(selectionRange);
+    text   = `${preceding.text}${rangeToText(selectionRange)}${following.text}`;
+    cursor = getRangeData(selectionRange);
+  }
 
   var data = {
-    base:   location.href,
-    text:   `${preceding.text}${rangeToText(selectionRange)}${following.text}`,
-    cursor: getRangeData(selectionRange),
-    event:  {
+    text, cursor,
+    base:  location.href,
+    event: {
       altKey:   aEvent.altKey,
       ctrlKey:  aEvent.ctrlKey,
       metaKey:  aEvent.metaKey,

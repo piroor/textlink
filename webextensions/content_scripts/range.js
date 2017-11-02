@@ -168,6 +168,14 @@ function getRangeData(aRange) {
   };
 }
 
+function getFieldRangeData(aField) {
+  return {
+    text:        aField.value,
+    startOffset: aField.selectionStart,
+    endOffset:   aField.selectionEnd
+  };
+}
+
 function selectRanges(aRanges) {
   if (!Array.isArray(aRanges))
     aRanges = [aRanges];
