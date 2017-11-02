@@ -285,11 +285,47 @@ function onMessage(aMessage, aSender) {
 
     case kNOTIFY_MATCH_ALL_PROGRESS:
       gMatchAllProgress = aMessage.progress;
+      if (aMessage.showInContent)
+        updateProgress();
       break;
 
     case kCOMMAND_FETCH_MATCH_ALL_PROGRESS:
       return Promise.resolve(gMatchAllProgress);
   }
+}
+
+var gProgressIndicator;
+
+function updateProgress() {
+  if (gMatchAllProgress >= 100 || gMatchAllProgress <= 0) {
+    if (gProgressIndicator) {
+      gProgressIndicator.parentNode.removeChild(gProgressIndicator);
+      gProgressIndicator = null;
+    }
+    return;
+  }
+
+  if (!gProgressIndicator) {
+    let range = document.createRange();
+    range.selectNodeContents(document.body || document.documentElement);
+    range.collapse(false);
+    let fragment = range.createContextualFragment(`<span style="
+      background: gray;
+      border: 1px solid;
+      color: white;
+      font-size: small;
+      line-height: 1.5;
+      opacity: 0.75;
+      padding: 0.5em;
+      position: fixed;
+      right: 0.2em;
+      top: 0.2em;
+    "></span>`);
+    gProgressIndicator = fragment.firstChild;
+    range.insertNode(fragment);
+    range.detach();
+  }
+  gProgressIndicator.textContent = browser.i18n.getMessage('menu.waiting.label', [gMatchAllProgress]);
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });

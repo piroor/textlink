@@ -67,6 +67,7 @@
   "menu.multiple.description": { "message": " (for multiple URIs)" },
 
   "config.advanced.caption":           { "message": "Advanced" },
+  "config.showProgress":               { "message": "Show progress of finding URIs in selection" },
   "config.detection.group":            { "message": "URI Detection" },
   "config.scheme":                     { "message": "Recognize text which starts with following parts, as URI: (ex. \"http,ftp,mailto\")" },
   "config.scheme.default":             { "message": "Reset" },

@@ -67,6 +67,7 @@
   "menu.multiple.description": { "message": "（URIが複数ある場合）" },
 
   "config.advanced.caption":           { "message": "詳細" },
+  "config.showProgress":               { "message": "選択範囲中のURIの検出処理の進行状況を表示する" },
   "config.detection.group":            { "message": "URIの検出方法" },
   "config.scheme":                     { "message": "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: " },
   "config.scheme.default":             { "message": "初期値に戻す" },

@@ -110,7 +110,8 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
             var progress = Math.round(aProgress * 100);
             browser.tabs.sendMessage(aSender.tab.id, {
               type:     kNOTIFY_MATCH_ALL_PROGRESS,
-              progress: progress
+              progress: progress,
+              showInContent: configs.showProgress
             });
             if (gLastContextTab == aSender.tab.id)
               browser.contextMenus.update('waiting', {

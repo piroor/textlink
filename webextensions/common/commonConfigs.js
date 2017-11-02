@@ -56,6 +56,7 @@ var defaultConfigs = {
   menu_copy_single:          true,
   menu_copy_multiple:        true,
 
+  showProgress:               true,
   scheme:                     'http https ftp news nntp telnet irc mms ed2k about file urn chrome resource data',
   schemeFixupTable:           'www=>http://www ftp.=>ftp://ftp. irc.=>irc:irc. h??p=>http h???s=>https ttp=>http tp=>http p=>http ttps=>https tps=>https ps=>https',
   schemeFixupDefault:         'http',
