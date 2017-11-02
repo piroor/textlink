@@ -211,7 +211,8 @@ function getSelectionEventData(aEvent) {
       altKey:   aEvent.altKey,
       ctrlKey:  aEvent.ctrlKey,
       metaKey:  aEvent.metaKey,
-      shiftKey: aEvent.shiftKey
+      shiftKey: aEvent.shiftKey,
+      inEditable: textFieldSelection || isEditableNode(aEvent.target)
     }
   };
 
@@ -246,6 +247,17 @@ function isInputField(aNode) {
     aNode.nodeType == Node.ELEMENT_NODE &&
     evaluateXPath(`self::*[${kFIELD_CONDITION}]`, aNode, XPathResult.BOOLEAN_TYPE).booleanValue
   );
+}
+
+function isEditableNode(aNode) {
+  if ((aNode.ownerDocument || aNode).designMode == 'on')
+    return true;
+  while (aNode) {
+    if (aNode.contentEditable == 'true')
+      return true;
+    aNode = aNode.parentNode;
+  }
+  return false;
 }
 
 

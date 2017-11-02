@@ -131,8 +131,9 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
+  var baseType = aEvent.inEditable ? 'actionInEditable' : 'action';
   for (let name of Object.keys(kACTION_NAME_TO_ID)) {
-    let base = `action_${name}_${aEvent.type}`;
+    let base = `${baseType}_${name}_${aEvent.type}`;
     if (!configs[base] ||
         configs[`${base}_alt`] != aEvent.altKey ||
         configs[`${base}_ctrl`] != aEvent.ctrlKey ||

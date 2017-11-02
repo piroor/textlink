@@ -25,6 +25,26 @@ var defaultActions = [
     triggerMouse: '',
     triggerKey:   '' }
 ];
+var defaultActionsInEditable = [
+  { action:       'select',
+    triggerMouse: 'dblclick',
+    triggerKey:   '' },
+  { action:       'current',
+    triggerMouse: '',
+    triggerKey:   '' },
+  { action:       'tab',
+    triggerMouse: 'accel,dblclick',
+    triggerKey:   'accel,enter' },
+  { action:       'tabBackground',
+    triggerMouse: '',
+    triggerKey:   '' },
+  { action:       'window',
+    triggerMouse: '',
+    triggerKey:   '' },
+  { action:       'copy',
+    triggerMouse: '',
+    triggerKey:   '' }
+];
 
 var defaultConfigs = {
   menu_openCurrent_single:   false,
@@ -371,6 +391,18 @@ zw
     defaultConfigs[`action_${action.action}_enter_ctrl`]  = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
     defaultConfigs[`action_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
     defaultConfigs[`action_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
+  }
+  for (let action of defaultActionsInEditable) {
+    defaultConfigs[`actionInEditable_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_meta`]  = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_shift`] = /shift/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_enter`]       = /enter/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_alt`]   = /alt/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_ctrl`]  = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
   }
 }
 
