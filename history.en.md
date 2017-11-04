@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.0.1 (2017.11.4)
+   * Optimize operations to detect URIs from selection. Now actual ranges are not detected until they are actuall required.
  - 6.0.0 (2017.11.3)
    * Rebuilt on WebExtensions.
    * Drop support for Thunderbird.
