@@ -37,6 +37,7 @@ var URIMatcher = {
     aParams.onProgress && aParams.onProgress(0);
     this._updateURIRegExp();
     var results = [];
+    var startAt = Date.now();
 
     var maxCount = 0;
     var uniqueURIs = {};
@@ -78,7 +79,8 @@ var URIMatcher = {
           });
         }
         count++;
-        aParams.onProgress && aParams.onProgress(count / maxCount);
+        if (Date.now() - startAt > 250)
+          aParams.onProgress && aParams.onProgress(count / maxCount);
         if (count % 100 == 0)
           await wait(0);
       }
