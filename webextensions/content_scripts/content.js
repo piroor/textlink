@@ -63,6 +63,13 @@ function postAction(aResult) {
 }
 
 function doCopy(aText) {
+  gChangingSelectionRangeInternally++;
+  var selection = window.getSelection();
+  var ranges = [];
+  for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
+    ranges.push(getRangeData(selection.getRangeAt(i)));
+  }
+
   var field = document.createElement('textarea');
   field.value = aText;
   document.body.appendChild(field);
@@ -73,6 +80,9 @@ function doCopy(aText) {
   field.select();
   document.execCommand('copy');
   field.parentNode.removeChild(field);
+
+  selectRanges(ranges);
+  gChangingSelectionRangeInternally--;
 }
 
 
@@ -80,10 +90,10 @@ var gLastSelection = '';
 var gFindingURIRanges = false;
 var gLastSelectionChangeAt = 0;
 var gLastURIRanges = Promise.resolve([]);
-var gSelectionURIRanges = false;
+var gChangingSelectionRangeInternally = 0;
 
 async function onSelectionChange(aEvent) {
-  if (gSelectionURIRanges)
+  if (gChangingSelectionRangeInternally > 0)
     return;
 
   var changedAt = gLastSelectionChangeAt = Date.now();
@@ -155,7 +165,7 @@ function onSelectionRangeChanged() {
   }, 100);
 }
 
-async function findURIRanges() {
+async function findURIRanges(aOptions = {}) {
   var selection = window.getSelection();
   if (!selection.toString().trim()) {
     browser.runtime.sendMessage({
@@ -169,10 +179,18 @@ async function findURIRanges() {
   var selectionRanges = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     let selectionRange = selection.getRangeAt(i);
+    let selectionText  = rangeToText(selectionRange);
     let preceding      = getPrecedingRange(selectionRange);
     let following      = getFollowingRange(selectionRange);
-    let rangeData = getRangeData(selectionRange);
-    rangeData.text = `${preceding.text}${rangeToText(selectionRange)}${following.text}`;
+    let rangeData      = getRangeData(selectionRange);
+    if (!aOptions.includeRange) {
+      rangeData.startNodePos = rangeData.startTextNodePos;
+      delete rangeData.startTextNodePos;
+      delete rangeData.endTextNodePos;
+      rangeData.startOffset += preceding.text.length;
+      rangeData.endOffset   = preceding.text.length + selectionText.length - (selectionRange.endContainer.nodeValue - selectionRange.endOffset);
+    }
+    rangeData.text = `${preceding.text}${selectionText}${following.text}`;
     selectionRanges.push(rangeData);
   }
   var ranges = await browser.runtime.sendMessage({
@@ -270,14 +288,21 @@ function onMessage(aMessage, aSender) {
         if (ranges.length > 1)
           uris += '\n';
         doCopy(uris);
-        selectRanges(ranges.map(aRange => aRange.range));
       }
       else {
-        selectRanges(ranges.map(aRange => aRange.range));
         browser.runtime.sendMessage(clone(aMessage, {
           uris: ranges.map(aRange => aRange.uri)
         }));
       }
+      if (ranges.length > 0 &&
+          (!('startTextNodePos' in ranges[0]) ||
+           !('endTextNodePos' in ranges[0]))) {
+        gLastURIRanges = findURIRanges({
+          includeRange: true
+        });
+        ranges = await gLastURIRanges;
+      }
+      selectRanges(ranges.map(aRange => aRange.range));
     })();
 
     case kCOMMAND_FETCH_URI_RANGES:

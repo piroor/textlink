@@ -88,6 +88,7 @@ var URIMatcher = {
     aParams.onProgress && aParams.onProgress(1);
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||
+      aA.range.startNodePos - aB.range.startNodePos ||
       aA.range.startOffset - aB.range.startOffset);
     log(' => ', results);
     return results;

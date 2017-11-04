@@ -183,9 +183,9 @@ function selectRanges(aRanges) {
   if (aRanges.length == 0)
     return;
 
-  gSelectionURIRanges = true;
+  gChangingSelectionRangeInternally++;
   setTimeout(() => {
-    gSelectionURIRanges = false;
+    gChangingSelectionRangeInternally--;
   }, 100);
 
   if ('fieldNodePos' in aRanges[0]) {
