@@ -122,7 +122,8 @@ var URIMatcher = {
           continue;
         return {
           startOffset: index,
-          endOffset:   index + length
+          endOffset:   index + length,
+          text:        aParams.text
         };
       }
       return null;
