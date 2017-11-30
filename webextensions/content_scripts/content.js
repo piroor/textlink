@@ -70,6 +70,16 @@ function doCopy(aText) {
     ranges.push(getRangeData(selection.getRangeAt(i)));
   }
 
+  // this is required to block overriding clipboard data from scripts of the webpage.
+  document.addEventListener('copy', aEvent => {
+    aEvent.stopImmediatePropagation();
+    aEvent.preventDefault();
+    aEvent.clipboardData.setData('text/plain', aText);
+  }, {
+    capture: true,
+    once: true
+  });
+
   var field = document.createElement('textarea');
   field.value = aText;
   document.body.appendChild(field);
