@@ -40,15 +40,3 @@ function nextFrame() {
   });
 }
 
-function clone(aOriginalObject, aExtraProperties) {
-  var cloned = {};
-  for (let key of Object.keys(aOriginalObject)) {
-    cloned[key] = aOriginalObject[key];
-  }
-  if (aExtraProperties) {
-    for (let key of Object.keys(aExtraProperties)) {
-      cloned[key] = aExtraProperties[key];
-    }
-  }
-  return cloned;
-}
