@@ -20,7 +20,7 @@ async function onDblClick(aEvent) {
   gTryingAction = true;
   gLastActionResult = null;
   var textFieldSelection = isInputField(aEvent.target);
-  gLastActionResult = await browser.runtime.sendMessage(Object.assign(data, {
+  gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
   if (textFieldSelection &&
@@ -41,7 +41,7 @@ async function onKeyPress(aEvent) {
   gTryingAction = true;
   gLastActionResult = null;
   var textFieldSelection = isInputField(aEvent.target);
-  gLastActionResult = await browser.runtime.sendMessage(Object.assign(data, {
+  gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
   if (textFieldSelection &&
@@ -300,7 +300,7 @@ function onMessage(aMessage, aSender) {
         doCopy(uris);
       }
       else {
-        browser.runtime.sendMessage(Object.assign(aMessage, {
+        browser.runtime.sendMessage(Object.assign({}, aMessage, {
           uris: ranges.map(aRange => aRange.uri)
         }));
       }
