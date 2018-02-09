@@ -407,4 +407,6 @@ zw
   }
 }
 
-var configs = new Configs(defaultConfigs);
+var configs = new Configs(defaultConfigs, {
+  syncKeys: Object.keys(defaultConfigs)
+});
