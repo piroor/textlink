@@ -115,7 +115,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
             });
             if (gLastContextTab == aSender.tab.id)
               browser.contextMenus.update('waiting', {
-                title: browser.i18n.getMessage(`menu.waiting.label`, [progress])
+                title: browser.i18n.getMessage(`menu_waiting_label`, [progress])
               });
           }
           catch(e) {
@@ -173,7 +173,7 @@ async function initContextMenuForWaiting(aTabId) {
   });
   browser.contextMenus.create({
     id:       'waiting',
-    title:    browser.i18n.getMessage(`menu.waiting.label`, [progress || 0]),
+    title:    browser.i18n.getMessage(`menu_waiting_label`, [progress || 0]),
     enabled:  false,
     contexts: ['selection']
   });

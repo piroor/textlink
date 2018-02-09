@@ -370,7 +370,7 @@ function updateProgress() {
                     #000000 ${gMatchAllProgress}%,
                     #000000 100%)
   `;
-  gProgressIndicator.setAttribute('title', browser.i18n.getMessage('menu.waiting.label', [gMatchAllProgress]));
+  gProgressIndicator.setAttribute('title', browser.i18n.getMessage('menu_waiting_label', [gMatchAllProgress]));
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });

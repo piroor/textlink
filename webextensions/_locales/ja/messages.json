@@ -2,85 +2,85 @@
   "extensionName": { "message": "テキストリンク" },
   "extensionDescription": { "message": "ページ中に書かれたURI文字列をダブルクリックしただけで読み込めるようにします。" },
 
-  "menu.waiting.label": { "message": "選択範囲内のURIを検出中... ($PROGRESS$%)",
+  "menu_waiting_label": { "message": "選択範囲内のURIを検出中... ($PROGRESS$%)",
     "placeholders": {
       "progress": { "content": "$1", "example": "100" }
     }},
-  "menu.group.single": { "message": "選択範囲中のURI: \"$URI$\"",
+  "menu_group_single": { "message": "選択範囲中のURI: \"$URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },
       "uri": { "content": "$2", "example": "http://example.net/" }
     }},
-  "menu.group.multiple": { "message": "選択範囲中の $COUNT$ 個のURI: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+  "menu_group_multiple": { "message": "選択範囲中の $COUNT$ 個のURI: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },
       "first_uri": { "content": "$2", "example": "http://example.com/" },
       "last_uri": { "content": "$3", "example": "http://example.net/" }
     }},
-  "menu.direct.single": { "message": "$TITLE$: \"$URI$\"",
+  "menu_direct_single": { "message": "$TITLE$: \"$URI$\"",
     "placeholders": {
       "title": { "content": "$1", "example": "Open" },
       "uri": { "content": "$2", "example": "http://example.net/" }
     }},
-  "menu.direct.multiple": { "message": "$TITLE$: \"$FIRST_URI$\"～\"$LAST_URI$\"",
+  "menu_direct_multiple": { "message": "$TITLE$: \"$FIRST_URI$\"～\"$LAST_URI$\"",
     "placeholders": {
       "title": { "content": "$1", "example": "Open" },
       "first_uri": { "content": "$2", "example": "http://example.com/" },
       "last_uri": { "content": "$3", "example": "http://example.net/" }
     }},
-  "menu.openCurrent.single":   { "message": "開く" },
-  "menu.openCurrent.multiple": { "message": "すべて開く" },
-  "menu.openTab.single":       { "message": "新しいタブで開く" },
-  "menu.openTab.multiple":     { "message": "すべて新しいタブで開く" },
-  "menu.openWindow.single":    { "message": "新しいウィンドウで開く" },
-  "menu.openWindow.multiple":  { "message": "すべて新しいウィンドウで開く" },
-  "menu.copy.single":          { "message": "コピー" },
-  "menu.copy.multiple":        { "message": "すべてコピー" },
+  "menu_openCurrent_single":   { "message": "開く" },
+  "menu_openCurrent_multiple": { "message": "すべて開く" },
+  "menu_openTab_single":       { "message": "新しいタブで開く" },
+  "menu_openTab_multiple":     { "message": "すべて新しいタブで開く" },
+  "menu_openWindow_single":    { "message": "新しいウィンドウで開く" },
+  "menu_openWindow_multiple":  { "message": "すべて新しいウィンドウで開く" },
+  "menu_copy_single":          { "message": "コピー" },
+  "menu_copy_multiple":        { "message": "すべてコピー" },
   "shortURI": { "message": "$URI$...",
     "placeholders": {
       "uri": { "content": "$1", "example": "http://example.com/" }
     }},
 
 
-  "config.action.caption": { "message": "URI文字列上での操作" },
+  "config_action_caption": { "message": "URI文字列上での操作" },
 
-  "config.action.group.action":           { "message": "通常の場面" },
-  "config.action.group.actionInEditable": { "message": "入力フィールド内" },
+  "config_action_group_action":           { "message": "通常の場面" },
+  "config_action_group_actionInEditable": { "message": "入力フィールド内" },
 
-  "config.action.select":        { "message": "URI文字列を選択する" },
-  "config.action.current":       { "message": "現在のタブに読み込む" },
-  "config.action.window":        { "message": "新しいウィンドウで開く" },
-  "config.action.tab":           { "message": "新しいアクティブなタブで開く" },
-  "config.action.tabBackground": { "message": "新しいタブで開く" },
-  "config.action.copy":          { "message": "クリップボードにコピーする" },
+  "config_action_select":        { "message": "URI文字列を選択する" },
+  "config_action_current":       { "message": "現在のタブに読み込む" },
+  "config_action_window":        { "message": "新しいウィンドウで開く" },
+  "config_action_tab":           { "message": "新しいアクティブなタブで開く" },
+  "config_action_tabBackground": { "message": "新しいタブで開く" },
+  "config_action_copy":          { "message": "クリップボードにコピーする" },
 
-  "config.trigger.dblclick":  { "message": "ダブルクリック" },
-  "config.trigger.enter":     { "message": "Enterキー" },
-  "config.trigger.alt":       { "message": "Alt" },
-  "config.trigger.ctrl":      { "message": "Ctrl/Control" },
-  "config.trigger.meta":      { "message": "Meta/⌘" },
-  "config.trigger.shift":     { "message": "Shift" },
-
-
-  "config.menu.caption":       { "message": "コンテキストメニューの項目" },
-  "menu.single.description":   { "message": "（URIが1つだけの場合）" },
-  "menu.multiple.description": { "message": "（URIが複数ある場合）" },
-
-  "config.advanced.caption":           { "message": "詳細" },
-  "config.showProgress":               { "message": "選択範囲中のURIの検出処理の進行状況を表示する" },
-  "config.detection.group":            { "message": "URIの検出方法" },
-  "config.scheme":                     { "message": "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: " },
-  "config.scheme.default":             { "message": "初期値に戻す" },
-  "config.scheme.fixup.table":         { "message": "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）" },
-  "config.scheme.fixup.table.default": { "message": "初期値に戻す" },
-  "config.relative.enabled":           { "message": "相対パスも認識する（非推奨）" },
-  "config.multibyte.enabled":          { "message": "全角英数文字も認識する" },
-  "config.multiline.enabled":          { "message": "改行されたURIも認識する（非推奨）" },
-  "config.idn.enabled":                { "message": "以下で始まるURIでは国際化ドメイン（IDN）も認識する" },
-  "config.idn.scheme.default":         { "message": "初期値に戻す" },
-  "config.i18nPath.enabled":           { "message": "非ASCII文字のパスも認識する" },
+  "config_trigger_dblclick":  { "message": "ダブルクリック" },
+  "config_trigger_enter":     { "message": "Enterキー" },
+  "config_trigger_alt":       { "message": "Alt" },
+  "config_trigger_ctrl":      { "message": "Ctrl/Control" },
+  "config_trigger_meta":      { "message": "Meta/⌘" },
+  "config_trigger_shift":     { "message": "Shift" },
 
 
-  "config.debug.caption": { "message": "開発用" },
-  "config.debug.label": { "message": "デバッグモード" }
+  "config_menu_caption":       { "message": "コンテキストメニューの項目" },
+  "menu_single_description":   { "message": "（URIが1つだけの場合）" },
+  "menu_multiple_description": { "message": "（URIが複数ある場合）" },
+
+  "config_advanced_caption":           { "message": "詳細" },
+  "config_showProgress":               { "message": "選択範囲中のURIの検出処理の進行状況を表示する" },
+  "config_detection_group":            { "message": "URIの検出方法" },
+  "config_scheme":                     { "message": "以下で始まる文字列をURIとして認識する（例：「http,ftp,mailto」）: " },
+  "config_scheme_default":             { "message": "初期値に戻す" },
+  "config_scheme_fixup_table":         { "message": "以下のルールに従ってURIを補完する（例：「ttp=>http,ttps=>https」）" },
+  "config_scheme_fixup_table_default": { "message": "初期値に戻す" },
+  "config_relative_enabled":           { "message": "相対パスも認識する（非推奨）" },
+  "config_multibyte_enabled":          { "message": "全角英数文字も認識する" },
+  "config_multiline_enabled":          { "message": "改行されたURIも認識する（非推奨）" },
+  "config_idn_enabled":                { "message": "以下で始まるURIでは国際化ドメイン（IDN）も認識する" },
+  "config_idn_scheme_default":         { "message": "初期値に戻す" },
+  "config_i18nPath_enabled":           { "message": "非ASCII文字のパスも認識する" },
+
+
+  "config_debug_caption": { "message": "開発用" },
+  "config_debug_label": { "message": "デバッグモード" }
 }

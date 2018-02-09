@@ -54,19 +54,19 @@ function actionCheckboxes(aParams) {
        <span class="delimiter">-</span>
        <label><input id="${base}_${action}_${type}_alt"
                      type="checkbox">
-              __MSG_config.trigger.alt__</label>
+              __MSG_config_trigger_alt__</label>
        <span class="delimiter">-</span>
        <label><input id="${base}_${action}_${type}_ctrl"
                      type="checkbox">
-              __MSG_config.trigger.ctrl__</label>
+              __MSG_config_trigger_ctrl__</label>
        <span class="delimiter">-</span>
        <label><input id="${base}_${action}_${type}_meta"
                      type="checkbox">
-              __MSG_config.trigger.meta__</label>
+              __MSG_config_trigger_meta__</label>
        <span class="delimiter">-</span>
        <label><input id="${base}_${action}_${type}_shift"
                      type="checkbox">
-              __MSG_config.trigger.shift__</label></p>
+              __MSG_config_trigger_shift__</label></p>
   `;
 }
 

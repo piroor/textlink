@@ -2,85 +2,85 @@
   "extensionName": { "message": "Text Link" },
   "extensionDescription": { "message": "Allows URI texts written in webpages to be loaded by double clicks." },
 
-  "menu.waiting.label": { "message": "Finding URIs in Selection… ($PROGRESS$%)",
+  "menu_waiting_label": { "message": "Finding URIs in Selection… ($PROGRESS$%)",
     "placeholders": {
       "progress": { "content": "$1", "example": "100" }
     }},
-  "menu.group.single": { "message": "URI in Selection: \"$URI$\"",
+  "menu_group_single": { "message": "URI in Selection: \"$URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },
       "uri": { "content": "$2", "example": "http://example.net/" }
     }},
-  "menu.group.multiple": { "message": "$COUNT$ URIs in Selection: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+  "menu_group_multiple": { "message": "$COUNT$ URIs in Selection: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
     "placeholders": {
       "count": { "content": "$1", "example": "1" },
       "first_uri": { "content": "$2", "example": "http://example.com/" },
       "last_uri": { "content": "$3", "example": "http://example.net/" }
     }},
-  "menu.direct.single": { "message": "$TITLE$: \"$URI$\"",
+  "menu_direct_single": { "message": "$TITLE$: \"$URI$\"",
     "placeholders": {
       "title": { "content": "$1", "example": "Open" },
       "uri": { "content": "$3", "example": "http://example.net/" }
     }},
-  "menu.direct.multiple": { "message": "$TITLE$: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
+  "menu_direct_multiple": { "message": "$TITLE$: \"$FIRST_URI$\" ~ \"$LAST_URI$\"",
     "placeholders": {
       "title": { "content": "$1", "example": "Open" },
       "first_uri": { "content": "$2", "example": "http://example.com/" },
       "last_uri": { "content": "$3", "example": "http://example.net/" }
     }},
-  "menu.openCurrent.single":   { "message": "Open" },
-  "menu.openCurrent.multiple": { "message": "Open All" },
-  "menu.openTab.single":       { "message": "Open in New Tab" },
-  "menu.openTab.multiple":     { "message": "Open All in New Tabs" },
-  "menu.openWindow.single":    { "message": "Open in New Window" },
-  "menu.openWindow.multiple":  { "message": "Open All in New Windows" },
-  "menu.copy.single":          { "message": "Copy" },
-  "menu.copy.multiple":        { "message": "Copy All" },
+  "menu_openCurrent_single":   { "message": "Open" },
+  "menu_openCurrent_multiple": { "message": "Open All" },
+  "menu_openTab_single":       { "message": "Open in New Tab" },
+  "menu_openTab_multiple":     { "message": "Open All in New Tabs" },
+  "menu_openWindow_single":    { "message": "Open in New Window" },
+  "menu_openWindow_multiple":  { "message": "Open All in New Windows" },
+  "menu_copy_single":          { "message": "Copy" },
+  "menu_copy_multiple":        { "message": "Copy All" },
   "shortURI": { "message": "$URI$…",
     "placeholders": {
       "uri": { "content": "$1", "example": "http://example.com/" }
     }},
 
 
-  "config.action.caption": { "message": "Actions for URI text" },
+  "config_action_caption": { "message": "Actions for URI text" },
 
-  "config.action.group.action":           { "message": "in Regular Context" },
-  "config.action.group.actionInEditable": { "message": "in Input Field" },
+  "config_action_group_action":           { "message": "in Regular Context" },
+  "config_action_group_actionInEditable": { "message": "in Input Field" },
 
-  "config.action.select":        { "message": "Just Select" },
-  "config.action.current":       { "message": "Load in the Current Tab" },
-  "config.action.window":        { "message": "Open in a New Window" },
-  "config.action.tab":           { "message": "Open in a New Active Tab" },
-  "config.action.tabBackground": { "message": "Open in a New Tab" },
-  "config.action.copy":          { "message": "Copy to the Clipboard" },
+  "config_action_select":        { "message": "Just Select" },
+  "config_action_current":       { "message": "Load in the Current Tab" },
+  "config_action_window":        { "message": "Open in a New Window" },
+  "config_action_tab":           { "message": "Open in a New Active Tab" },
+  "config_action_tabBackground": { "message": "Open in a New Tab" },
+  "config_action_copy":          { "message": "Copy to the Clipboard" },
 
-  "config.trigger.dblclick":  { "message": "Double-click" },
-  "config.trigger.enter":     { "message": "Enter key" },
-  "config.trigger.alt":       { "message": "Alt" },
-  "config.trigger.ctrl":      { "message": "Ctrl/Control" },
-  "config.trigger.meta":      { "message": "Meta/⌘" },
-  "config.trigger.shift":     { "message": "Shift" },
+  "config_trigger_dblclick":  { "message": "Double-click" },
+  "config_trigger_enter":     { "message": "Enter key" },
+  "config_trigger_alt":       { "message": "Alt" },
+  "config_trigger_ctrl":      { "message": "Ctrl/Control" },
+  "config_trigger_meta":      { "message": "Meta/⌘" },
+  "config_trigger_shift":     { "message": "Shift" },
 
 
-  "config.menu.caption":       { "message": "Context Menu Items" },
-  "menu.single.description":   { "message": " (for single URI)" },
-  "menu.multiple.description": { "message": " (for multiple URIs)" },
+  "config_menu_caption":       { "message": "Context Menu Items" },
+  "menu_single_description":   { "message": " (for single URI)" },
+  "menu_multiple_description": { "message": " (for multiple URIs)" },
 
-  "config.advanced.caption":           { "message": "Advanced" },
-  "config.showProgress":               { "message": "Show progress of finding URIs in selection" },
-  "config.detection.group":            { "message": "URI Detection" },
-  "config.scheme":                     { "message": "Recognize text which starts with following parts, as URI: (ex. \"http,ftp,mailto\")" },
-  "config.scheme.default":             { "message": "Reset" },
-  "config.scheme.fixup.table":         { "message": "Fix up broken URI, with following rules: (ex. \"ttp=>http,ttps=>https\")" },
-  "config.scheme.fixup.table.default": { "message": "Reset" },
-  "config.relative.enabled":           { "message": "Parse relative paths (unrecommended)" },
-  "config.multibyte.enabled":          { "message": "Parse multi-byte characters" },
-  "config.multiline.enabled":          { "message": "Parse URIs split in multiple lines (unrecommended)" },
-  "config.idn.enabled":                { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
-  "config.idn.scheme.default":         { "message": "Reset" },
-  "config.i18nPath.enabled":           { "message": "Parse non-ASCII paths" },
+  "config_advanced_caption":           { "message": "Advanced" },
+  "config_showProgress":               { "message": "Show progress of finding URIs in selection" },
+  "config_detection_group":            { "message": "URI Detection" },
+  "config_scheme":                     { "message": "Recognize text which starts with following parts, as URI: (ex. \"http,ftp,mailto\")" },
+  "config_scheme_default":             { "message": "Reset" },
+  "config_scheme_fixup_table":         { "message": "Fix up broken URI, with following rules: (ex. \"ttp=>http,ttps=>https\")" },
+  "config_scheme_fixup_table_default": { "message": "Reset" },
+  "config_relative_enabled":           { "message": "Parse relative paths (unrecommended)" },
+  "config_multibyte_enabled":          { "message": "Parse multi-byte characters" },
+  "config_multiline_enabled":          { "message": "Parse URIs split in multiple lines (unrecommended)" },
+  "config_idn_enabled":                { "message": "Parse IDN(Internationalized Domain Names)s for URIs starts with" },
+  "config_idn_scheme_default":         { "message": "Reset" },
+  "config_i18nPath_enabled":           { "message": "Parse non-ASCII paths" },
   
 
-  "config.debug.caption": { "message": "Development" },
-  "config.debug.label": { "message": "Debug mode" }
+  "config_debug_caption": { "message": "Development" },
+  "config_debug_label": { "message": "Debug mode" }
 }
