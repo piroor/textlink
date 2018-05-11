@@ -111,9 +111,8 @@ window.addEventListener('DOMContentLoaded', () => {
       resetButton.addEventListener('click', () => {
         field.$reset();
       });
-      resetButton.addEventListener('keypress', (aEvent) => {
-        if (aEvent.keyCode == aEvent.DOM_VK_ENTER ||
-            aEvent.keyCode == aEvent.DOM_VK_RETURN)
+      resetButton.addEventListener('keyup', (aEvent) => {
+        if (aEvent.key == 'Enter')
           field.$reset();
       });
     }
