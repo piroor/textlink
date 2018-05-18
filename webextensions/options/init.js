@@ -29,7 +29,7 @@ function onConfigChanged(aKey) {
 
 function actionGroup(aParams) {
   return `
-    <h2>__MSG_config.action.group.${aParams.group}__</h2>
+    <h2>__MSG_config_action_group_${aParams.group}__</h2>
     ${aParams.content}
   `;
 }
@@ -37,7 +37,7 @@ function actionGroup(aParams) {
 function actionFieldSet(aParams) {
   return `
     <fieldset class="action-definition">
-      <legend>__MSG_config.action.${aParams.action}__</legend>
+      <legend>__MSG_config_action_${aParams.action}__</legend>
       ${aParams.content}
     </fieldset>
   `;
@@ -50,7 +50,7 @@ function actionCheckboxes(aParams) {
   return `
     <p><label><input id="${base}_${action}_${type}"
                      type="checkbox">
-              __MSG_config.trigger.${type}__</label>
+              __MSG_config_trigger_${type}__</label>
        <span class="delimiter">-</span>
        <label><input id="${base}_${action}_${type}_alt"
                      type="checkbox">
