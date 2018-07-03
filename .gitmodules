@@ -1,12 +1,12 @@
 [submodule "makexpi"]
 	path = makexpi
 	url = https://github.com/piroor/makexpi.git
-[submodule "extlib/webextensions-lib-configs"]
-	path = extlib/webextensions-lib-configs
+[submodule "submodules/webextensions-lib-configs"]
+	path = submodules/webextensions-lib-configs
 	url = https://github.com/piroor/webextensions-lib-configs.git
-[submodule "extlib/webextensions-lib-options"]
-	path = extlib/webextensions-lib-options
-	url = https://github.com/piroor/webextensions-lib-options.git
-[submodule "extlib/webextensions-lib-l10n"]
-	path = extlib/webextensions-lib-l10n
+[submodule "submodules/webextensions-lib-l10n"]
+	path = submodules/webextensions-lib-l10n
 	url = https://github.com/piroor/webextensions-lib-l10n.git
+[submodule "submodules/webextensions-lib-options"]
+	path = submodules/webextensions-lib-options
+	url = https://github.com/piroor/webextensions-lib-options.git
