@@ -16,7 +16,7 @@ format:
 
 xpi: update_extlib install_extlib lint
 	rm -f ./*.xpi
-	zip -r -0 textlink-we.xpi manifest.json _locales common content_scripts options background resources extlib >/dev/null 2>/dev/null
+	zip -r -0 textlink-we.xpi manifest.json _locales common content_scripts options background resources extlib -x '*/.*' >/dev/null 2>/dev/null
 
 update_extlib:
 	git submodule update --init
