@@ -5,7 +5,9 @@
 */
 'use strict';
 
-var defaultActions = [
+import Configs from '../extlib/Configs.js'
+
+const defaultActions = [
   { action:       'select',
     triggerMouse: '',
     triggerKey:   '' },
@@ -25,7 +27,7 @@ var defaultActions = [
     triggerMouse: '',
     triggerKey:   '' }
 ];
-var defaultActionsInEditable = [
+const defaultActionsInEditable = [
   { action:       'select',
     triggerMouse: 'dblclick',
     triggerKey:   '' },
@@ -46,7 +48,7 @@ var defaultActionsInEditable = [
     triggerKey:   '' }
 ];
 
-var defaultConfigs = {
+const defaultConfigs = {
   menu_openCurrent_single:   false,
   menu_openCurrent_multiple: false,
   menu_openTab_single:       true,
@@ -407,6 +409,6 @@ zw
   }
 }
 
-var configs = new Configs(defaultConfigs, {
+export default const configs = new Configs(defaultConfigs, {
   syncKeys: Object.keys(defaultConfigs)
 });

@@ -5,6 +5,17 @@
 */
 'use strict';
 
+import {
+  log,
+  wait,
+  nextFrame,
+  configs
+} from '../common/common.js'
+import * as Constants from '../common/constants.js';
+
+import Options from '../extlib/Options.js';
+import l10n from '../extlib/l10n.js';
+
 gLogContext = 'Options';
 var options = new Options(configs);
 

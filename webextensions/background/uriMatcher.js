@@ -5,8 +5,15 @@
 */
 'use strict';
 
-var URIMatcher = { 
-  matchSingle: async function(aParams) {
+import {
+  log,
+  wait,
+  nextFrame,
+  configs
+} from '../common/common.js'
+
+export default const URIMatcher = { 
+  async matchSingle(aParams) {
     log('matchSingle: ', aParams);
     this._updateURIRegExp();
     var match = this.matchMaybeURIs(aParams.text);
@@ -32,7 +39,7 @@ var URIMatcher = {
     return null;
   },
 
-  matchAll: async function(aParams) {
+  async matchAll(aParams) {
     log('matchAll: ', aParams);
     aParams.onProgress && aParams.onProgress(0);
     this._updateURIRegExp();
@@ -108,7 +115,7 @@ var URIMatcher = {
     return match;
   },
 
-  findTextRange: async function(aParams) {
+  async findTextRange(aParams) {
     if (!('startTextNodePos' in aParams.range) ||
         !('endTextNodePos' in aParams.range)) {
       // text, fake range
@@ -933,4 +940,4 @@ var URIMatcher = {
     aConfigs.$addObserver(this);
   }
 };
-window.configs && URIMatcher.init(configs);
+URIMatcher.init(configs);

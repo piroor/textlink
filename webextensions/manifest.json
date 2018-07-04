@@ -14,14 +14,7 @@
     "32": "resources/icon.png"
   },
   "background": {
-    "scripts": [
-      "extlib/Configs.js",
-      "common/constants.js",
-      "common/common.js",
-      "common/commonConfigs.js",
-      "background/uriMatcher.js",
-      "background/background.js"
-    ]
+    "page": "background/background.html"
   },
   "content_scripts": [
     {

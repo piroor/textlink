@@ -5,7 +5,16 @@
 */
 'use strict';
 
-gLogContext = 'BG';
+import {
+  log,
+  wait,
+  nextFrame,
+  configs
+} from '../common/common.js'
+import * as Constants from '../common/constants.js';
+import * as URIMatcher from '../common/uriMatcher.js';
+
+log.context = 'BG';
 
 browser.runtime.onMessage.addListener((aMessage, aSender) => {
   if (!aMessage ||

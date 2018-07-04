@@ -5,9 +5,13 @@
 */
 'use strict';
 
-var gLogContext = '?';
+import {
+  configs as commonConfigs
+} from './commonConfigs.js';
 
-function log(aMessage, ...aArgs)
+export const configs = commonConfigs;
+
+export function log(aMessage, ...aArgs)
 {
   if (!window.configs || !configs.debug)
     return;
@@ -17,10 +21,11 @@ function log(aMessage, ...aArgs)
   for (let i = 0; i < nest; i++) {
     indent += ' ';
   }
-  console.log(`TextLink<${gLogContext}>: ${indent}${aMessage}`, ...aArgs);
+  console.log(`TextLink<${log.context}>: ${indent}${aMessage}`, ...aArgs);
 }
+log.context = '?';
 
-async function wait(aTask = 0, aTimeout = 0) {
+export async function wait(aTask = 0, aTimeout = 0) {
   if (typeof aTask != 'function') {
     aTimeout = aTask;
     aTask    = null;
@@ -34,7 +39,7 @@ async function wait(aTask = 0, aTimeout = 0) {
   });
 }
 
-function nextFrame() {
+export function nextFrame() {
   return new Promise((aResolve, aReject) => {
     window.requestAnimationFrame(aResolve);
   });
