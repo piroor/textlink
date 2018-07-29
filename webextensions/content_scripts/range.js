@@ -239,7 +239,7 @@ function createRangeFromRangeData(aData) {
 
 function getTextNodeAt(aPosition) {
   return evaluateXPath(
-    `descendant::text()[count(preceding::text())=${aPosition}]`,
+    `descendant::text()[position()=${aPosition+1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
@@ -247,7 +247,7 @@ function getTextNodeAt(aPosition) {
 
 function getFieldNodeAt(aPosition) {
   return evaluateXPath(
-    `descendant::*[${kFIELD_CONDITION}][count(preceding::*[${kFIELD_CONDITION}])=${aPosition}]`,
+    `descendant::*[${kFIELD_CONDITION}][position()=${aPosition+1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
