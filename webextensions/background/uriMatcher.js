@@ -132,12 +132,28 @@ var URIMatcher = {
       return null;
     }
 
-    // real range
-    var match = await browser.find.find(aParams.text, {
-      tabId:            aParams.tabId,
-      caseSensitive:    true,
-      includeRangeData: true
-    });
+    // get real range
+    let match;
+    const startTryAt = Date.now();
+    while (true) {
+      match = await browser.find.find(aParams.text, {
+        tabId:            aParams.tabId,
+        caseSensitive:    true,
+        includeRangeData: true
+      });
+      if (match.rangeData &&
+          match.rangeData.length > 0)
+        break;
+
+      // Clicked URI text may not be found if the webpage contents are
+      // modified while we are processing. So we need to retry for a while.
+      // See also: https://github.com/piroor/textlink/issues/66
+      if (Date.now() - startTryAt > this.configs.rangeFindTimeout)
+        throw new Error('FATAL ERROR: Page contents are modified while finding clicked URI text!');
+
+      await new Promise(resolve => setTimeout(resolve, this.configs.rangeFindRetryDelay));
+    }
+
     for (let rangeData of match.rangeData) {
       if (rangeData.framePos != aParams.range.framePos ||
           rangeData.startTextNodePos > aParams.range.endTextNodePos ||

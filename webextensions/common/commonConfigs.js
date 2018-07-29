@@ -71,6 +71,9 @@ var defaultConfigs = {
   partExceptionEnd:           '-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?',
   IDNLazyDetectionSeparators: '\u3001\u3002',
 
+  rangeFindTimeout: 500,
+  rangeFindRetryDelay: 100,
+
   // http://www4.plala.or.jp/nomrax/TLD/ 
   // http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E4%B8%80%E8%A6%A7
   // http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
