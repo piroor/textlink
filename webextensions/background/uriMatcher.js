@@ -760,7 +760,7 @@ var URIMatcher = {
  
   fixupURI(aURIComponent, aBaseURI) {
     var originalURIComponent = aURIComponent;
-    if (configs.multibyteEnabled)
+    if (this.configs.multibyteEnabled)
       aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 
     aURIComponent = this.sanitizeURIString(aURIComponent);
@@ -771,7 +771,7 @@ var URIMatcher = {
 
     aURIComponent = this.fixupScheme(aURIComponent);
 
-    if (configs.relativeEnabled)
+    if (this.configs.relativeEnabled)
       aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 
     var result = this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
@@ -786,7 +786,7 @@ var URIMatcher = {
     if (!this._topLevelDomainsRegExp) {
       this._topLevelDomainsRegExp = new RegExp(`^(${this.topLevelDomains.join('|')})$`);
     }
-    if (configs.relativeEnabled) {
+    if (this.configs.relativeEnabled) {
       if ((aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
            !RegExp.$2.match(this._topLevelDomainsRegExp)) ||
           aURIComponent.match(/(\(\)|\([^\/]+\)|[;\.,])$/))
