@@ -1,6 +1,9 @@
 # History
 
  - master/HEAD
+   * Optimize operations to select detected URIs. In old versions, the operation took too much time on a webpage with too much nodes.
+   * Open clicked URI correctly even if the page contents are modified while processing.
+   * Synchronize configurations by Firefox Sync.
  - 6.0.1 (2017.11.4)
    * Optimize operations to detect URIs from selection. Now actual ranges are not detected until they are actuall required.
  - 6.0.0 (2017.11.3)
