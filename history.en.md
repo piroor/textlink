@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+   * Add ability to export and import all configurations except keyboard shortcuts. (Options => "Development" => "Debug mode" => "All Configs" => "Import/Export")
  - 6.0.2 (2018.7.30)
    * Optimize operations to select detected URIs. In old versions, the operation took too much time on a webpage with too much nodes.
    * Open clicked URI correctly even if the page contents are modified while processing.
