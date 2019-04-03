@@ -1,4 +1,0 @@
-URIの後に改行と半角英数字が連続する場合のテスト。
-...
-mozilla.jp/
-Mozilla Japanのサイト。
