@@ -48,7 +48,7 @@ var URIMatcher = {
         continue;
       }
 
-      let maybeURIs = Array.from(match, 0).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      let maybeURIs = Array.from(match).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
       range.maybeURIs = [];
       for (let maybeURI of maybeURIs) {
         let uri = this.fixupURI(maybeURI, aParams.baseURI);
