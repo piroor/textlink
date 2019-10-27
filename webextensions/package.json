@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "eslint": "^4.8.0",
-    "jsonlint-cli": "*"
+    "jsonlint-cli": "*",
+    "tunnel-agent": ">=0.6.0"
   }
 }
