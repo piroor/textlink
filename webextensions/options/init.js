@@ -74,49 +74,49 @@ configs.$addObserver(onConfigChanged);
 window.addEventListener('DOMContentLoaded', async () => {
   await configs.$loaded;
 
-    var fragment = document.createDocumentFragment();
-    var range = document.createRange();
-    range.selectNodeContents(document.querySelector('#actions'));
-    range.insertNode(range.createContextualFragment(
-      ['action', 'actionInEditable'].map(base =>
-        actionGroup({
-          group: base,
-          content: ['select', 'current', 'tab', 'tabBackground', 'window', 'copy'].map(action =>
-            actionFieldSet({
-              action,
-              content: ['dblclick', 'enter'].map(type =>
-                actionCheckboxes({ base, action, type })).join('\n')
-            })).join('\n')
-        })).join('\n')
-    ));
-    range.detach();
-    l10n.updateDocument();
+  var fragment = document.createDocumentFragment();
+  var range = document.createRange();
+  range.selectNodeContents(document.querySelector('#actions'));
+  range.insertNode(range.createContextualFragment(
+    ['action', 'actionInEditable'].map(base =>
+      actionGroup({
+        group: base,
+        content: ['select', 'current', 'tab', 'tabBackground', 'window', 'copy'].map(action =>
+          actionFieldSet({
+            action,
+            content: ['dblclick', 'enter'].map(type =>
+              actionCheckboxes({ base, action, type })).join('\n')
+          })).join('\n')
+      })).join('\n')
+  ));
+  range.detach();
+  l10n.updateDocument();
 
-    options.buildUIForAllConfigs(document.querySelector('#debug-configs'));
-    onConfigChanged('debug');
+  options.buildUIForAllConfigs(document.querySelector('#debug-configs'));
+  onConfigChanged('debug');
 
-    setTimeout(() => {
-      for (let checkbox of document.querySelectorAll('label > input[type="checkbox"]')) {
-        if (checkbox.checked)
-          checkbox.parentNode.classList.add('checked');
-        else
-          checkbox.parentNode.classList.remove('checked');
-      }
-    }, 0);
-
-    for (let resetButton of document.querySelectorAll('[data-reset-target]')) {
-      let id = resetButton.getAttribute('data-reset-target');
-      let field = document.querySelector(`#${id}`);
-      if (!field)
-        continue;
-      resetButton.addEventListener('click', () => {
-        field.$reset();
-      });
-      resetButton.addEventListener('keyup', (aEvent) => {
-        if (aEvent.key == 'Enter')
-          field.$reset();
-      });
+  setTimeout(() => {
+    for (let checkbox of document.querySelectorAll('label > input[type="checkbox"]')) {
+      if (checkbox.checked)
+        checkbox.parentNode.classList.add('checked');
+      else
+        checkbox.parentNode.classList.remove('checked');
     }
+  }, 0);
+
+  for (let resetButton of document.querySelectorAll('[data-reset-target]')) {
+    let id = resetButton.getAttribute('data-reset-target');
+    let field = document.querySelector(`#${id}`);
+    if (!field)
+      continue;
+    resetButton.addEventListener('click', () => {
+      field.$reset();
+    });
+    resetButton.addEventListener('keyup', (aEvent) => {
+      if (aEvent.key == 'Enter')
+        field.$reset();
+    });
+  }
 
   document.documentElement.classList.add('initialized');
 }, { once: true });
