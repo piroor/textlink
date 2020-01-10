@@ -71,8 +71,9 @@ function actionCheckboxes(aParams) {
 }
 
 configs.$addObserver(onConfigChanged);
-window.addEventListener('DOMContentLoaded', () => {
-  configs.$loaded.then(() => {
+window.addEventListener('DOMContentLoaded', async () => {
+  await configs.$loaded;
+
     var fragment = document.createDocumentFragment();
     var range = document.createRange();
     range.selectNodeContents(document.querySelector('#actions'));
@@ -116,5 +117,6 @@ window.addEventListener('DOMContentLoaded', () => {
           field.$reset();
       });
     }
-  });
+
+  document.documentElement.classList.add('initialized');
 }, { once: true });
