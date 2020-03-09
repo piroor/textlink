@@ -7,17 +7,17 @@
 
 // XPath utilities
 
-function hasClass(aClassName) {
-  return `contains(concat(" ", normalize-space(@class), " "), " ${aClassName} ")`;
+function hasClass(className) {
+  return `contains(concat(" ", normalize-space(@class), " "), " ${className} ")`;
 }
 
-function toLowerCase(aTarget) {
-  return `translate(${aTarget}, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')`;
+function toLowerCase(target) {
+  return `translate(${target}, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')`;
 }
 
 var NSResolver = {
-  lookupNamespaceURI : function(aPrefix) {
-    switch (aPrefix)
+  lookupNamespaceURI : function(prefix) {
+    switch (prefix)
     {
       case 'html':
       case 'xhtml':
@@ -30,16 +30,16 @@ var NSResolver = {
   }
 };
 
-function evaluateXPath(aExpression, aContext, aType) {
-  if (!aType)
-    aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+function evaluateXPath(expression, context, type) {
+  if (!type)
+    type = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
   let result;
   try {
-    result = (aContext.ownerDocument || aContext).evaluate(
-      aExpression,
-      (aContext || document),
+    result = (context.ownerDocument || context).evaluate(
+      expression,
+      (context || document),
       NSResolver,
-      aType,
+      type,
       null
     );
   }
@@ -55,14 +55,14 @@ function evaluateXPath(aExpression, aContext, aType) {
   return result;
 }
 
-function getArrayFromXPathResult(aXPathResult) {
-  const max   = aXPathResult.snapshotLength;
+function getArrayFromXPathResult(xathResult) {
+  const max   = xathResult.snapshotLength;
   const array = new Array(max);
   if (!max)
     return array;
 
   for (let i = 0; i < max; i++) {
-    array[i] = aXPathResult.snapshotItem(i);
+    array[i] = xathResult.snapshotItem(i);
   }
   return array;
 }

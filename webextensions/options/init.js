@@ -8,8 +8,8 @@
 gLogContext = 'Options';
 let options;
 
-function onConfigChanged(aKey) {
-  switch (aKey) {
+function onConfigChanged(key) {
+  switch (key) {
     case 'debug':
       if (configs.debug)
         document.documentElement.classList.add('debugging');
@@ -18,7 +18,7 @@ function onConfigChanged(aKey) {
       break;
   }
 
-  const checkbox = document.querySelector(`label > input[type="checkbox"]#${aKey}`);
+  const checkbox = document.querySelector(`label > input[type="checkbox"]#${key}`);
   if (checkbox) {
     if (checkbox.checked)
       checkbox.parentNode.classList.add('checked');
@@ -27,26 +27,26 @@ function onConfigChanged(aKey) {
   }
 }
 
-function actionGroup(aParams) {
+function actionGroup(params) {
   return `
-    <h2>__MSG_config_action_group_${aParams.group}__</h2>
-    ${aParams.content}
+    <h2>__MSG_config_action_group_${params.group}__</h2>
+    ${params.content}
   `;
 }
 
-function actionFieldSet(aParams) {
+function actionFieldSet(params) {
   return `
     <fieldset class="action-definition">
-      <legend>__MSG_config_action_${aParams.action}__</legend>
-      ${aParams.content}
+      <legend>__MSG_config_action_${params.action}__</legend>
+      ${params.content}
     </fieldset>
   `;
 }
 
-function actionCheckboxes(aParams) {
-  const base   = aParams.base;
-  const action = aParams.action;
-  const type   = aParams.type;
+function actionCheckboxes(params) {
+  const base   = params.base;
+  const action = params.action;
+  const type   = params.type;
   return `
     <p><label><input id="${base}_${action}_${type}"
                      type="checkbox">
@@ -114,8 +114,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     resetButton.addEventListener('click', () => {
       field.$reset();
     });
-    resetButton.addEventListener('keyup', (aEvent) => {
-      if (aEvent.key == 'Enter')
+    resetButton.addEventListener('keyup', (event) => {
+      if (event.key == 'Enter')
         field.$reset();
     });
   }

@@ -11,58 +11,58 @@ let gTryingAction = false;
 let gLastActionResult = null;
 let gMatchAllProgress = 0;
 
-async function onDblClick(aEvent) {
-  if (aEvent.target.ownerDocument != document)
+async function onDblClick(event) {
+  if (event.target.ownerDocument != document)
     return;
-  const data = getSelectionEventData(aEvent);
+  const data = getSelectionEventData(event);
   if (!data)
     return;
   gTryingAction = true;
   gLastActionResult = null;
-  const textFieldSelection = isInputField(aEvent.target);
+  const textFieldSelection = isInputField(event.target);
   gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
-    gLastActionResult.range.fieldNodePos = getFieldNodePosition(aEvent.target);
+    gLastActionResult.range.fieldNodePos = getFieldNodePosition(event.target);
   postAction(gLastActionResult);
   await wait(500);
   gTryingAction = false;
 }
 
-async function onKeyUp(aEvent) {
-  if (aEvent.target.ownerDocument != document)
+async function onKeyUp(event) {
+  if (event.target.ownerDocument != document)
     return;
-  const data = getSelectionEventData(aEvent);
+  const data = getSelectionEventData(event);
   if (!data)
     return;
   gTryingAction = true;
   gLastActionResult = null;
-  const textFieldSelection = isInputField(aEvent.target);
+  const textFieldSelection = isInputField(event.target);
   gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
-    gLastActionResult.range.fieldNodePos = getFieldNodePosition(aEvent.target);
+    gLastActionResult.range.fieldNodePos = getFieldNodePosition(event.target);
   postAction(gLastActionResult);
   gTryingAction = false;
 }
 
-function postAction(aResult) {
-  if (!aResult)
+function postAction(result) {
+  if (!result)
     return;
 
-  if (aResult.action & kACTION_COPY)
-    doCopy(aResult.uri);
-  if (aResult.range)
-    selectRanges(aResult.range);
+  if (result.action & kACTION_COPY)
+    doCopy(result.uri);
+  if (result.range)
+    selectRanges(result.range);
 }
 
-function doCopy(aText) {
+function doCopy(text) {
   gChangingSelectionRangeInternally++;
   const selection = window.getSelection();
   const ranges = [];
@@ -71,17 +71,17 @@ function doCopy(aText) {
   }
 
   // this is required to block overriding clipboard data from scripts of the webpage.
-  document.addEventListener('copy', aEvent => {
-    aEvent.stopImmediatePropagation();
-    aEvent.preventDefault();
-    aEvent.clipboardData.setData('text/plain', aText);
+  document.addEventListener('copy', event => {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', text);
   }, {
     capture: true,
     once: true
   });
 
   const field = document.createElement('textarea');
-  field.value = aText;
+  field.value = text;
   document.body.appendChild(field);
   field.style.position = 'fixed';
   field.style.opacity = 0;
@@ -102,7 +102,7 @@ let gLastSelectionChangeAt = 0;
 let gLastURIRanges = Promise.resolve([]);
 var gChangingSelectionRangeInternally = 0;
 
-async function onSelectionChange(aEvent) {
+async function onSelectionChange(event) {
   if (gChangingSelectionRangeInternally > 0)
     return;
 
@@ -126,14 +126,14 @@ async function onSelectionChange(aEvent) {
     }
   }
 
-  if (isInputField(aEvent.target))
-    onTextFieldSelectionChanged(aEvent.target);
+  if (isInputField(event.target))
+    onTextFieldSelectionChanged(event.target);
   else
     onSelectionRangeChanged();
 }
 
-function onTextFieldSelectionChanged(aField) {
-  const selectionRange = getFieldRangeData(aField);
+function onTextFieldSelectionChanged(field) {
+  const selectionRange = getFieldRangeData(field);
 
   gLastSelection    = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
   gFindingURIRanges = true;
@@ -141,18 +141,18 @@ function onTextFieldSelectionChanged(aField) {
   browser.runtime.sendMessage({
     type: kNOTIFY_READY_TO_FIND_URI_RANGES
   });
-  gLastURIRanges = new Promise(async (aResolve, aReject) => {
+  gLastURIRanges = new Promise(async (reolve, reject) => {
     const ranges = await browser.runtime.sendMessage({
       type:   kCOMMAND_FIND_URI_RANGES,
       base:   location.href,
       ranges: [selectionRange]
     });
-    const position = getFieldNodePosition(aField);
+    const position = getFieldNodePosition(field);
     for (const range of ranges) {
       range.range.fieldNodePos = position;
     }
     gFindingURIRanges = false;
-    aResolve(ranges);
+    reolve(ranges);
   });
 }
 
@@ -175,7 +175,7 @@ function onSelectionRangeChanged() {
   }, 100);
 }
 
-async function findURIRanges(aOptions = {}) {
+async function findURIRanges(options = {}) {
   const selection = window.getSelection();
   if (!selection.toString().trim()) {
     browser.runtime.sendMessage({
@@ -193,7 +193,7 @@ async function findURIRanges(aOptions = {}) {
     const preceding      = getPrecedingRange(selectionRange);
     const following      = getFollowingRange(selectionRange);
     const rangeData      = getRangeData(selectionRange);
-    if (!aOptions.includeRange) {
+    if (!options.includeRange) {
       rangeData.startNodePos = rangeData.startTextNodePos;
       delete rangeData.startTextNodePos;
       delete rangeData.endTextNodePos;
@@ -212,8 +212,8 @@ async function findURIRanges(aOptions = {}) {
   return ranges;
 }
 
-function getSelectionEventData(aEvent) {
-  const textFieldSelection = isInputField(aEvent.target);
+function getSelectionEventData(event) {
+  const textFieldSelection = isInputField(event.target);
 
   const selection = window.getSelection();
   if (!textFieldSelection && selection.rangeCount != 1)
@@ -221,7 +221,7 @@ function getSelectionEventData(aEvent) {
 
   let text, cursor;
   if (textFieldSelection) {
-    cursor = getFieldRangeData(aEvent.target);
+    cursor = getFieldRangeData(event.target);
     text   = cursor.text;
   }
   else {
@@ -236,20 +236,20 @@ function getSelectionEventData(aEvent) {
     text, cursor,
     base:  location.href,
     event: {
-      altKey:   aEvent.altKey,
-      ctrlKey:  aEvent.ctrlKey,
-      metaKey:  aEvent.metaKey,
-      shiftKey: aEvent.shiftKey,
-      inEditable: textFieldSelection || isEditableNode(aEvent.target)
+      altKey:   event.altKey,
+      ctrlKey:  event.ctrlKey,
+      metaKey:  event.metaKey,
+      shiftKey: event.shiftKey,
+      inEditable: textFieldSelection || isEditableNode(event.target)
     }
   };
 
-  if (aEvent.type == 'dblclick' &&
-      aEvent.button == 0) {
+  if (event.type == 'dblclick' &&
+      event.button == 0) {
     data.event.type = 'dblclick';
   }
-  else if (aEvent.type == 'keyup' &&
-           aEvent.key == 'Enter') {
+  else if (event.type == 'keyup' &&
+           event.key == 'Enter') {
     data.event.type = 'enter';
   }
   else {
@@ -259,8 +259,8 @@ function getSelectionEventData(aEvent) {
 }
 
 
-function onFocused(aEvent) {
-  const node = aEvent.target;
+function onFocused(event) {
+  const node = event.target;
   if (!isInputField(node))
     return;
   node.addEventListener('selectionchange', onSelectionChange, { capture: true });
@@ -269,20 +269,20 @@ function onFocused(aEvent) {
   }, { once: true });
 }
 
-function isInputField(aNode) {
+function isInputField(node) {
   return (
-    aNode.nodeType == Node.ELEMENT_NODE &&
-    evaluateXPath(`self::*[${kFIELD_CONDITION}]`, aNode, XPathResult.BOOLEAN_TYPE).booleanValue
+    node.nodeType == Node.ELEMENT_NODE &&
+    evaluateXPath(`self::*[${kFIELD_CONDITION}]`, node, XPathResult.BOOLEAN_TYPE).booleanValue
   );
 }
 
-function isEditableNode(aNode) {
-  if ((aNode.ownerDocument || aNode).designMode == 'on')
+function isEditableNode(node) {
+  if ((node.ownerDocument || node).designMode == 'on')
     return true;
-  while (aNode) {
-    if (aNode.contentEditable == 'true')
+  while (node) {
+    if (node.contentEditable == 'true')
       return true;
-    aNode = aNode.parentNode;
+    node = node.parentNode;
   }
   return false;
 }

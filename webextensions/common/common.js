@@ -7,7 +7,7 @@
 
 var gLogContext = '?';
 
-function log(aMessage, ...aArgs)
+function log(message, ...args)
 {
   if (!window.configs || !configs.debug)
     return;
@@ -17,26 +17,26 @@ function log(aMessage, ...aArgs)
   for (let i = 0; i < nest; i++) {
     indent += ' ';
   }
-  console.log(`TextLink<${gLogContext}>: ${indent}${aMessage}`, ...aArgs);
+  console.log(`TextLink<${gLogContext}>: ${indent}${message}`, ...args);
 }
 
-async function wait(aTask = 0, aTimeout = 0) {
-  if (typeof aTask != 'function') {
-    aTimeout = aTask;
-    aTask    = null;
+async function wait(task = 0, timeout = 0) {
+  if (typeof task != 'function') {
+    timeout = task;
+    task    = null;
   }
-  return new Promise((aResolve, aReject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(async () => {
-      if (aTask)
-        await aTask();
-      aResolve();
-    }, aTimeout);
+      if (task)
+        await task();
+      resolve();
+    }, timeout);
   });
 }
 
 function nextFrame() {
-  return new Promise((aResolve, aReject) => {
-    window.requestAnimationFrame(aResolve);
+  return new Promise((resolve, reject) => {
+    window.requestAnimationFrame(resolve);
   });
 }
 

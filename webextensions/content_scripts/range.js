@@ -5,27 +5,27 @@
 */
 'use strict';
 
-function rangeToText(aRange) {
+function rangeToText(range) {
   const walker = createVisibleTextNodeWalker();
-  walker.currentNode = aRange.startContainer;
+  walker.currentNode = range.startContainer;
   let result = '';
   if (walker.currentNode.nodeType == Node.TEXT_NODE) {
     let text = walker.currentNode.nodeValue;
-    if (walker.currentNode == aRange.endContainer)
-      text = text.substring(0, aRange.endOffset);
-    text = text.substring(aRange.startOffset);
+    if (walker.currentNode == range.endContainer)
+      text = text.substring(0, range.endOffset);
+    text = text.substring(range.startOffset);
     result += text;
   }
 
   while (walker.nextNode()) {
     const node = walker.currentNode;
-    const position = aRange.endContainer.compareDocumentPosition(node);
+    const position = range.endContainer.compareDocumentPosition(node);
     if (position & Node.DOCUMENT_POSITION_FOLLOWING &&
         !(position & Node.DOCUMENT_POSITION_CONTAINED_BY))
       break;
-    if (node == aRange.endContainer) {
+    if (node == range.endContainer) {
       if (node.nodeType == Node.TEXT_NODE) {
-        const text = node.nodeValue.substring(0, aRange.endOffset);
+        const text = node.nodeValue.substring(0, range.endOffset);
         result += text;
       }
       break;
@@ -36,28 +36,28 @@ function rangeToText(aRange) {
   return result; // .replace(/\n\s*|\s*\n/g, '\n');
 }
 
-function nodeToText(aNode) {
-  if (aNode.nodeType == Node.ELEMENT_NODE) {
-    if (/^br$/i.test(String(aNode.localName)) ||
-        !/^inline/.test(window.getComputedStyle(aNode, null).display))
+function nodeToText(node) {
+  if (node.nodeType == Node.ELEMENT_NODE) {
+    if (/^br$/i.test(String(node.localName)) ||
+        !/^inline/.test(window.getComputedStyle(node, null).display))
       return '\n';
     return '';
   }
-  return aNode.nodeValue;
+  return node.nodeValue;
 }
 
-function getPrecedingRange(aRange) {
+function getPrecedingRange(sourceRange) {
   const range = document.createRange();
-  range.setStart(aRange.startContainer, aRange.startOffset);
-  range.setEnd(aRange.startContainer, aRange.startOffset);
+  range.setStart(sourceRange.startContainer, sourceRange.startOffset);
+  range.setEnd(sourceRange.startContainer, sourceRange.startOffset);
   const walker = createVisibleTextNodeWalker();
-  walker.currentNode = aRange.startContainer;
+  walker.currentNode = range.startContainer;
   let text = '';
   if (walker.currentNode.nodeType == Node.TEXT_NODE) {
-    text += walker.currentNode.nodeValue.substring(0, aRange.startOffset);
+    text += walker.currentNode.nodeValue.substring(0, range.startOffset);
   }
   else {
-    const previousNode = walker.currentNode.childNodes[aRange.startOffset];
+    const previousNode = walker.currentNode.childNodes[range.startOffset];
     if (previousNode)
       walker.currentNode = previousNode;
   }
@@ -77,18 +77,18 @@ function getPrecedingRange(aRange) {
   return { range, text };
 }
 
-function getFollowingRange(aRange) {
+function getFollowingRange(sourceRange) {
   const range = document.createRange();
-  range.setStart(aRange.endContainer, aRange.endOffset);
-  range.setEnd(aRange.endContainer, aRange.endOffset);
+  range.setStart(sourceRange.endContainer, sourceRange.endOffset);
+  range.setEnd(sourceRange.endContainer, sourceRange.endOffset);
   const walker = createVisibleTextNodeWalker();
-  walker.currentNode = aRange.endContainer;
+  walker.currentNode = range.endContainer;
   let text = '';
   if (walker.currentNode.nodeType == Node.TEXT_NODE) {
-    text += walker.currentNode.nodeValue.substring(aRange.endOffset);
+    text += walker.currentNode.nodeValue.substring(range.endOffset);
   }
   else {
-    const nextNode = walker.currentNode.childNodes[aRange.endOffset];
+    const nextNode = walker.currentNode.childNodes[range.endOffset];
     if (nextNode)
       walker.currentNode = nextNode;
   }
@@ -111,36 +111,36 @@ function createVisibleTextNodeWalker() {
   return document.createTreeWalker(
     document,
     NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
-    { acceptNode: (aNode) =>
-      isNodeVisible(aNode) ?
+    { acceptNode: (node) =>
+      isNodeVisible(node) ?
         NodeFilter.FILTER_ACCEPT :
         NodeFilter.FILTER_REJECT },
     false
   );
 }
 
-function isNodeVisible(aNode) {
-  if (aNode.nodeType == Node.TEXT_NODE)
-    aNode = aNode.parentNode;
+function isNodeVisible(node) {
+  if (node.nodeType == Node.TEXT_NODE)
+    node = node.parentNode;
   do {
-    if (aNode.nodeType != Node.ELEMENT_NODE)
+    if (node.nodeType != Node.ELEMENT_NODE)
       break;
-    const style = window.getComputedStyle(aNode, null);
+    const style = window.getComputedStyle(node, null);
     if (style.display == 'none' ||
         /^(collapse|hidden)$/.test(style.visibility))
       return false;
-  } while (aNode = aNode.parentNode);
+  } while (node = node.parentNode);
   return true;
 }
 
 
 // returns rangeData compatible object
 // See also: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/find/find
-function getRangeData(aRange) {
-  let startContainer = aRange.startContainer;
-  let startOffset    = aRange.startOffset;
-  let endContainer   = aRange.endContainer;
-  let endOffset      = aRange.endOffset;
+function getRangeData(range) {
+  let startContainer = range.startContainer;
+  let startOffset    = range.startOffset;
+  let endContainer   = range.endContainer;
+  let endOffset      = range.endOffset;
   if (startContainer.nodeType != Node.TEXT_NODE) {
     const possibleStartContainer = startContainer.childNodes[startOffset];
     startContainer = evaluateXPath(
@@ -168,19 +168,19 @@ function getRangeData(aRange) {
   };
 }
 
-function getFieldRangeData(aField) {
+function getFieldRangeData(field) {
   return {
-    text:        aField.value,
-    startOffset: aField.selectionStart,
-    endOffset:   aField.selectionEnd
+    text:        field.value,
+    startOffset: field.selectionStart,
+    endOffset:   field.selectionEnd
   };
 }
 
-function selectRanges(aRanges) {
-  if (!Array.isArray(aRanges))
-    aRanges = [aRanges];
+function selectRanges(ranges) {
+  if (!Array.isArray(ranges))
+    ranges = [ranges];
 
-  if (aRanges.length == 0)
+  if (ranges.length == 0)
     return;
 
   gChangingSelectionRangeInternally++;
@@ -188,14 +188,14 @@ function selectRanges(aRanges) {
     gChangingSelectionRangeInternally--;
   }, 100);
 
-  if ('fieldNodePos' in aRanges[0]) {
+  if ('fieldNodePos' in ranges[0]) {
     // fake, text ranges
-    const field = getFieldNodeAt(aRanges[0].fieldNodePos);
+    const field = getFieldNodeAt(ranges[0].fieldNodePos);
     if (!field)
       return;
     field.setSelectionRange(
-      aRanges[0].startOffset,
-      aRanges[aRanges.length - 1].endOffset
+      ranges[0].startOffset,
+      ranges[ranges.length - 1].endOffset
     );
     field.focus();
     return;
@@ -204,16 +204,16 @@ function selectRanges(aRanges) {
   // ranges
   const selection = window.getSelection();
   selection.removeAllRanges();
-  for (let range of aRanges) {
+  for (let range of ranges) {
     range = createRangeFromRangeData(range);
     selection.addRange(range);
   }
 }
 
-function getTextNodePosition(aNode) {
+function getTextNodePosition(node) {
   return evaluateXPath(
     'count(preceding::text())',
-    aNode,
+    node,
     XPathResult.NUMBER_TYPE
   ).numberValue;
 }
@@ -222,32 +222,32 @@ const kINPUT_TEXT_CONDITION = `${toLowerCase('local-name()')} = "input" and ${to
 const kTEXT_AREA_CONDITION  = `${toLowerCase('local-name()')} = "textarea"`;
 var kFIELD_CONDITION      = `(${kINPUT_TEXT_CONDITION}) or (${kTEXT_AREA_CONDITION})`;
 
-function getFieldNodePosition(aNode) {
+function getFieldNodePosition(node) {
   return evaluateXPath(
     `count(preceding::*[${kFIELD_CONDITION}])`,
-    aNode,
+    node,
     XPathResult.NUMBER_TYPE
   ).numberValue;
 }
 
-function createRangeFromRangeData(aData) {
+function createRangeFromRangeData(data) {
   const range = document.createRange();
-  range.setStart(getTextNodeAt(aData.startTextNodePos), aData.startOffset);
-  range.setEnd(getTextNodeAt(aData.endTextNodePos), aData.endOffset);
+  range.setStart(getTextNodeAt(data.startTextNodePos), data.startOffset);
+  range.setEnd(getTextNodeAt(data.endTextNodePos), data.endOffset);
   return range;
 }
 
-function getTextNodeAt(aPosition) {
+function getTextNodeAt(position) {
   return evaluateXPath(
-    `descendant::text()[position()=${aPosition+1}]`,
+    `descendant::text()[position()=${position+1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
 }
 
-function getFieldNodeAt(aPosition) {
+function getFieldNodeAt(position) {
   return evaluateXPath(
-    `descendant::*[${kFIELD_CONDITION}][position()=${aPosition+1}]`,
+    `descendant::*[${kFIELD_CONDITION}][position()=${position+1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
