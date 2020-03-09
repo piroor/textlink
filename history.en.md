@@ -1,6 +1,9 @@
 # History
 
  - master/HEAD
+   * Fix invisible context menu commands on text selection.
+   * Fix broken options page on lately versions Firefox.
+   * Drop support for Firefox 63 and older versions.
  - 6.0.3 (2019.8.8)
    * Remove obsolete codes deprecated at Firefox 70.
    * Add ability to export and import all configurations except keyboard shortcuts. (Options => "Development" => "Debug mode" => "All Configs" => "Import/Export")
