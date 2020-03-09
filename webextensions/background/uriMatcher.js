@@ -5,17 +5,17 @@
 */
 'use strict';
 
-var URIMatcher = { 
+window.URIMatcher = { 
   matchSingle: async function(aParams) {
     log('matchSingle: ', aParams);
     this._updateURIRegExp();
-    var match = this.matchMaybeURIs(aParams.text);
+    const match = this.matchMaybeURIs(aParams.text);
     if (match.length == 0)
       return null;
 
     for (let maybeURI of match) {
       maybeURI = this.sanitizeURIString(maybeURI);
-      let uriRange = await this.findTextRange({
+      const uriRange = await this.findTextRange({
         text:  maybeURI,
         range: aParams.cursor,
         tabId: aParams.tabId
@@ -36,22 +36,22 @@ var URIMatcher = {
     log('matchAll: ', aParams);
     aParams.onProgress && aParams.onProgress(0);
     this._updateURIRegExp();
-    var results = [];
-    var startAt = Date.now();
+    const results = [];
+    const startAt = Date.now();
 
-    var maxCount = 0;
-    var uniqueURIs = {};
-    for (let range of aParams.ranges) {
-      let match = this.matchMaybeURIs(range.text);
+    let maxCount = 0;
+    const uniqueURIs = {};
+    for (const range of aParams.ranges) {
+      const match = this.matchMaybeURIs(range.text);
       if (match.length == 0) {
         range.maybeURIs = [];
         continue;
       }
 
-      let maybeURIs = Array.from(match).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      const maybeURIs = Array.from(match).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
       range.maybeURIs = [];
-      for (let maybeURI of maybeURIs) {
-        let uri = this.fixupURI(maybeURI, aParams.baseURI);
+      for (const maybeURI of maybeURIs) {
+        const uri = this.fixupURI(maybeURI, aParams.baseURI);
         if (uri in uniqueURIs)
           continue;
         uniqueURIs[uri] = true;
@@ -63,10 +63,10 @@ var URIMatcher = {
       maxCount += range.maybeURIs.length;
     }
 
-    var count = 0;
-    for (let range of aParams.ranges) {
-      for (let maybeURI of range.maybeURIs) {
-        let uriRange = await this.findTextRange({
+    let count = 0;
+    for (const range of aParams.ranges) {
+      for (const maybeURI of range.maybeURIs) {
+        const uriRange = await this.findTextRange({
           text:  maybeURI.original,
           range: range,
           tabId: aParams.tabId
@@ -112,11 +112,11 @@ var URIMatcher = {
     if (!('startTextNodePos' in aParams.range) ||
         !('endTextNodePos' in aParams.range)) {
       // text, fake range
-      let wholeText = aParams.range.text;
-      let length    = aParams.text.length;
+      const wholeText = aParams.range.text;
+      const length    = aParams.text.length;
       let startAt   = 0;
       while (true) {
-        let index = wholeText.indexOf(aParams.text, startAt);
+        const index = wholeText.indexOf(aParams.text, startAt);
         startAt = index + length;
         if (index < 0)
           return null;
@@ -154,7 +154,7 @@ var URIMatcher = {
       await new Promise(resolve => setTimeout(resolve, this.configs.rangeFindRetryDelay));
     }
 
-    for (let rangeData of match.rangeData) {
+    for (const rangeData of match.rangeData) {
       if (rangeData.framePos != aParams.range.framePos ||
           rangeData.startTextNodePos > aParams.range.endTextNodePos ||
           (rangeData.startTextNodePos == aParams.range.endTextNodePos &&
@@ -262,11 +262,11 @@ var URIMatcher = {
     if (this.configs.IDNEnabled) {
       if (this._fixupIDNSchemes === null) {
         this._fixupIDNSchemes = [];
-        for (let i in this._fixupTargetsHash) {
+        for (const i in this._fixupTargetsHash) {
           if (!this._fixupTargetsHash.hasOwnProperty(i))
             continue;
-          let fixUpToMatch = this._fixupTargetsHash[i].match(/^(\w+):/);
-          let fixUpFromMatch = i.match(/^(\w+):/);
+          const fixUpToMatch = this._fixupTargetsHash[i].match(/^(\w+):/);
+          const fixUpFromMatch = i.match(/^(\w+):/);
           if (fixUpToMatch &&
               this._IDNSchemes.indexOf(fixUpToMatch[1]) > -1 &&
               fixUpFromMatch)
@@ -285,7 +285,7 @@ var URIMatcher = {
   get nonIDNSchemes() {
     if (this.configs.IDNEnabled) {
       if (this._nonIDNSchemes === null) {
-        let IDNSchemes = this.IDNSchemes;
+        const IDNSchemes = this.IDNSchemes;
         this._nonIDNSchemes = this.schemes
           .filter(aScheme => IDNSchemes.indexOf(aScheme) < 0);
       }
@@ -311,12 +311,12 @@ var URIMatcher = {
     this._fixupSchemes     = [];
     this.niceSplit(this.expandWildcardsToRegExp(this._fixupTable))
       .forEach(aTarget => {
-        let [fixUpFrom, fixUpTo] = aTarget.split(/\s*=>\s*/);
+        const [fixUpFrom, fixUpTo] = aTarget.split(/\s*=>\s*/);
         if (!fixUpFrom || !fixUpTo)
           return;
         this._fixupTargetsHash[fixUpFrom] = fixUpTo;
         this._fixupTargets.push(fixUpFrom);
-        let match = fixUpFrom.match(/^(\w+):/);
+        const match = fixUpFrom.match(/^(\w+):/);
         if (match)
           this._fixupSchemes.push(match[1]);
       });
@@ -339,8 +339,8 @@ var URIMatcher = {
   
   get URIPattern() {
     if (!this._URIPattern) {
-      let patterns = [];
-      let base = this.URIPattern_base
+      const patterns = [];
+      const base = this.URIPattern_base
         .replace(
           /%PART_PATTERN%/g,
           this.URIPattern_part
@@ -398,8 +398,8 @@ var URIMatcher = {
  
   get URIPatternMultibyte() {
     if (!this._URIPatternMultibyte) {
-      let patterns = [];
-      let base = this.URIPatternMultibyte_base
+      const patterns = [];
+      const base = this.URIPatternMultibyte_base
         .replace(
           /%PART_PATTERN%/g,
           this.URIPatternMultibyte_part
@@ -465,7 +465,7 @@ var URIMatcher = {
  
   getDomainPattern(aOptionsFlag) {
     aOptionsFlag = aOptionsFlag || 0;
-    var pattern = this._domainPatterns[aOptionsFlag];
+    let pattern = this._domainPatterns[aOptionsFlag];
     if (!pattern) {
       if (aOptionsFlag & kDOMAIN_IDN) {
         let forbiddenCharacters = this.kStringprepForbiddenCharacters+
@@ -473,24 +473,24 @@ var URIMatcher = {
                       ':/@\uff1a\uff0f\uff20';
         if (!(aOptionsFlag & kDOMAIN_LAZY))
           forbiddenCharacters += this.configs.IDNLazyDetectionSeparators;
-        let part = '[^'+
+        const part = '[^'+
               forbiddenCharacters+
               (this.configs.IDNBlacklistChars || '')
                 .replace(new RegExp(`[${forbiddenCharacters}]`, 'g'), '')
                 .replace(/(.)\1+/g, '$1')
                 .replace(/./g, function(aChar) {
-                  var code = `00${aChar.charCodeAt(0).toString(16)}`.substr(-4, 4);
+                  const code = `00${aChar.charCodeAt(0).toString(16)}`.substr(-4, 4);
                   return `\\u${code}`;
                 })+
               ']+';
         pattern = `${part}(?:[${this.kIDNDomainSeparators}]${part})*`;
       }
       else if (aOptionsFlag & kDOMAIN_MULTIBYTE) {
-        let part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
+        const part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
         pattern = `${part}(?:[${this.kMultibyteDomainSeparators}]${part})*`;
       }
       else {
-        let part = '[0-9a-z-]+';
+        const part = '[0-9a-z-]+';
         pattern = `${part}(?:${this.kDomainSeparators + part})*`;
       }
 
@@ -513,9 +513,9 @@ var URIMatcher = {
   _domainPatterns : {},
  
   getTLDPattern(aOptionsFlag) {
-    var TLD = this.topLevelDomains;
-    var halfWidthTLDPattern = `(?:${TLD.join('|')})\\b`;
-    var TLDPattern = aOptionsFlag & kDOMAIN_MULTIBYTE || aOptionsFlag & kDOMAIN_IDN ?
+    const TLD = this.topLevelDomains;
+    const halfWidthTLDPattern = `(?:${TLD.join('|')})\\b`;
+    const TLDPattern = aOptionsFlag & kDOMAIN_MULTIBYTE || aOptionsFlag & kDOMAIN_IDN ?
       `(?:${
         [halfWidthTLDPattern]
           .concat(TLD.map(this.convertHalfWidthToFullWidth, this))
@@ -570,7 +570,7 @@ var URIMatcher = {
  
   get topLevelDomains() {
     if (!this._topLevelDomains) {
-      let TLD = [
+      const TLD = [
         this.configs.gTLD,
         this.configs.ccTLD,
         this.configs.extraTLD
@@ -606,9 +606,9 @@ var URIMatcher = {
   },
   _updateURIExceptionPattern() {
     try {
-      var whole = `^(?:${this.configs.partExceptionWhole})$`;
-      var start = `^(?:${this.configs.partExceptionStart})`;
-      var end = `(?:${this.configs.partExceptionEnd})$`;
+      const whole = `^(?:${this.configs.partExceptionWhole})$`;
+      const start = `^(?:${this.configs.partExceptionStart})`;
+      const end = `(?:${this.configs.partExceptionEnd})$`;
       this._URIExceptionPattern = new RegExp(whole, 'i');
       this._URIExceptionPattern_start = new RegExp(start, 'i');
       this._URIExceptionPattern_end = new RegExp(end, 'i');
@@ -673,7 +673,7 @@ var URIMatcher = {
   },
   fullWidthRegExp : /[\uFF01\uFF02\uFF03\uFF04\uFF05\uFF06\uFF07\uFF08\uFF09\uFF0A\uFF0B\uFF0C\uFF0D\uFF0E\uFF0F\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19\uFF1A\uFF1B\uFF1C\uFF1D\uFF1E\uFF1F\uFF20\uFF21\uFF22\uFF23\uFF24\uFF25\uFF26\uFF27\uFF28\uFF29\uFF2A\uFF2B\uFF2C\uFF2D\uFF2E\uFF2F\uFF30\uFF31\uFF32\uFF33\uFF34\uFF35\uFF36\uFF37\uFF38\uFF39\uFF3A\uFF3B\uFF3C\uFF3D\uFF3E\uFF3F\uFF40\uFF41\uFF42\uFF43\uFF44\uFF45\uFF46\uFF47\uFF48\uFF49\uFF4A\uFF4B\uFF4C\uFF4D\uFF4E\uFF4F\uFF50\uFF51\uFF52\uFF53\uFF54\uFF55\uFF56\uFF57\uFF58\uFF59\uFF5A\uFF5B\uFF5C\uFF5D\uFF5E]/g,
   f2h(aChar) {
-    var code = aChar.charCodeAt(0);
+    let code = aChar.charCodeAt(0);
     code &= 0x007F;
     code += 0x0020;
     return String.fromCharCode(code);
@@ -684,7 +684,7 @@ var URIMatcher = {
   },
   halfWidthRegExp : /[!"#$%&'\(\)\*\+,-\.\/0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_`abcdefghijklmnopqrstuvwxyz\{\|\}~]/g,
   h2f(aChar) {
-    var code = aChar.charCodeAt(0);
+    let code = aChar.charCodeAt(0);
     code += 0xFF00;
     code -= 0x0020;
     return String.fromCharCode(code);
@@ -705,7 +705,7 @@ var URIMatcher = {
 
   isHeadOfNewURI(aString) {
     this._updateURIRegExp();
-    var match = aString.match(this._URIMatchingRegExp_fromHead);
+    let match = aString.match(this._URIMatchingRegExp_fromHead);
     match = match ? match[1] : '' ;
     return this.hasLoadableScheme(match) ? match == aString : false ;
   },
@@ -714,7 +714,7 @@ var URIMatcher = {
   _updateURIRegExp() {
     if (this._URIMatchingRegExp)
       return;
-    var regexp = [];
+    const regexp = [];
     if (this.configs.multibyteEnabled) {
       this._URIMatchingRegExp_fromHead = new RegExp(this.URIPatternMultibyte, 'i');
       regexp.push(this.URIPatternMultibyte);
@@ -732,13 +732,13 @@ var URIMatcher = {
  
   getURIPartFromStart(aString, aExcludeURIHead) {
     this._updateURIPartFinderRegExp();
-    var match = aString.match(this._URIPartFinderRegExp_start);
-    var part = match ? match[1] : '' ;
+    const match = aString.match(this._URIPartFinderRegExp_start);
+    const part = match ? match[1] : '' ;
     return (!aExcludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
   },
   getURIPartFromEnd(aString) {
     this._updateURIPartFinderRegExp();
-    var match = aString.match(this._URIPartFinderRegExp_end);
+    const match = aString.match(this._URIPartFinderRegExp_end);
     return match ? match[1] : '' ;
   },
   _URIPartFinderRegExp_start : null,
@@ -747,7 +747,7 @@ var URIMatcher = {
     if (this._URIPartFinderRegExp_start && this._URIPartFinderRegExp_end)
       return;
 
-    var base = this.configs.multibyteEnabled ?
+    const base = this.configs.multibyteEnabled ?
       this.findURIPatternMultibytePart :
       this.findURIPatternPart ;
     this._URIPartFinderRegExp_start = new RegExp(`^(${base})`, 'i');
@@ -775,7 +775,7 @@ var URIMatcher = {
   __firstSchemeRegExp : null,
  
   fixupURI(aURIComponent, aBaseURI) {
-    var originalURIComponent = aURIComponent;
+    const originalURIComponent = aURIComponent;
     if (this.configs.multibyteEnabled)
       aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
 
@@ -790,14 +790,14 @@ var URIMatcher = {
     if (this.configs.relativeEnabled)
       aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
 
-    var result = this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
+    const result = this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
     if (result != originalURIComponent)
       log(`fixupURI: ${originalURIComponent} => ${result}`);
     return result;
   },
   
   sanitizeURIString(aURIComponent) {
-    var originalURIComponent = aURIComponent;
+    const originalURIComponent = aURIComponent;
     // escape patterns like program codes like JavaScript etc.
     if (!this._topLevelDomainsRegExp) {
       this._topLevelDomainsRegExp = new RegExp(`^(${this.topLevelDomains.join('|')})$`);
@@ -838,9 +838,9 @@ var URIMatcher = {
   _topLevelDomainsRegExp : null,
  
   removeParen(aInput) {
-    var originalInput = aInput;
-    var doRemoveParen = (aRegExp) => {
-      let match = aInput.match(aRegExp);
+    const originalInput = aInput;
+    const doRemoveParen = (aRegExp) => {
+      const match = aInput.match(aRegExp);
       if (!match)
         return false;
       aInput = match[1];
@@ -853,12 +853,12 @@ var URIMatcher = {
   },
  
   fixupScheme(aURI) {
-    var originalURI = aURI;
-    var match = aURI.match(this._fixupTargetsRegExp);
+    const originalURI = aURI;
+    let match = aURI.match(this._fixupTargetsRegExp);
     if (match) {
-      let target = match[1];
+      const target = match[1];
       let table = this._fixupTable;
-      for (let pattern of this.niceSplit(this._fixupTargetsPattern, '|')) {
+      for (const pattern of this.niceSplit(this._fixupTargetsPattern, '|')) {
         if (new RegExp(pattern).test(target))
           table = table.replace(new RegExp(`\\b${pattern}\\s*=>`), `${target}=>`);
       }
@@ -873,7 +873,7 @@ var URIMatcher = {
         aURI = aURI.replace(target, match[1]);
     }
     else if (!this._firstSchemeRegExp.test(aURI)) {
-      let scheme = this.configs.schemeFixupDefault;
+      const scheme = this.configs.schemeFixupDefault;
       if (scheme)
         aURI = `${scheme}://${aURI}`;
     }
@@ -897,7 +897,7 @@ var URIMatcher = {
         RegExp.$2.match(new RegExp(`^(${this.topLevelDomains.join('|')})$`))) {
       return `${this.configs.schemeFixupDefault}://${aURI}`;
     }
-    var base = aSourceURI.split('#')[0].split('?')[0].replace(/[^\/]+$/, '');
+    const base = aSourceURI.split('#')[0].split('?')[0].replace(/[^\/]+$/, '');
     return `${base}${aURI}`;
   },
    

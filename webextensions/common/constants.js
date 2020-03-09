@@ -5,24 +5,24 @@
 */
 'use strict';
 
-const kCOMMAND_TRY_ACTION       = 'textlink:try-action';
-const kCOMMAND_FIND_URI_RANGES  = 'textlink:find-uri-ranges';
-const kCOMMAND_ACTION_FOR_URIS  = 'textlink:action-for-uris';
-const kCOMMAND_FETCH_URI_RANGES = 'textlink:fetch-uri-ranges';
-const kNOTIFY_READY_TO_FIND_URI_RANGES = 'textlink:ready-to-find-uri-ranges';
+var kCOMMAND_TRY_ACTION       = 'textlink:try-action';
+var kCOMMAND_FIND_URI_RANGES  = 'textlink:find-uri-ranges';
+var kCOMMAND_ACTION_FOR_URIS  = 'textlink:action-for-uris';
+var kCOMMAND_FETCH_URI_RANGES = 'textlink:fetch-uri-ranges';
+var kNOTIFY_READY_TO_FIND_URI_RANGES = 'textlink:ready-to-find-uri-ranges';
 
-const kNOTIFY_MATCH_ALL_PROGRESS        = 'textlink:match-all-progress';
-const kCOMMAND_FETCH_MATCH_ALL_PROGRESS = 'textlink:fetch-match-all-progress';
+var kNOTIFY_MATCH_ALL_PROGRESS        = 'textlink:match-all-progress';
+var kCOMMAND_FETCH_MATCH_ALL_PROGRESS = 'textlink:fetch-match-all-progress';
 
-const kACTION_DISABLED               = 0;
-const kACTION_SELECT                 = 1 << 1;
-const kACTION_OPEN_IN_CURRENT        = 1 << 2;
-const kACTION_OPEN_IN_WINDOW         = 1 << 3;
-const kACTION_OPEN_IN_TAB            = 1 << 4;
-const kACTION_OPEN_IN_BACKGROUND_TAB = 1 << 5;
-const kACTION_COPY                   = 1 << 10;
+var kACTION_DISABLED               = 0;
+var kACTION_SELECT                 = 1 << 1;
+var kACTION_OPEN_IN_CURRENT        = 1 << 2;
+var kACTION_OPEN_IN_WINDOW         = 1 << 3;
+var kACTION_OPEN_IN_TAB            = 1 << 4;
+var kACTION_OPEN_IN_BACKGROUND_TAB = 1 << 5;
+var kACTION_COPY                   = 1 << 10;
 
-const kACTION_NAME_TO_ID = {
+var kACTION_NAME_TO_ID = {
   'select':        kACTION_SELECT,
   'current':       kACTION_OPEN_IN_CURRENT,
   'tab':           kACTION_OPEN_IN_TAB,
@@ -30,7 +30,7 @@ const kACTION_NAME_TO_ID = {
   'copy':          kACTION_COPY
 };
 
-const kDOMAIN_MULTIBYTE = 1 << 0;
-const kDOMAIN_LAZY      = 1 << 1;
-const kDOMAIN_IDN       = 1 << 2;
+var kDOMAIN_MULTIBYTE = 1 << 0;
+var kDOMAIN_LAZY      = 1 << 1;
+var kDOMAIN_IDN       = 1 << 2;
 

@@ -5,7 +5,7 @@
 */
 'use strict';
 
-gLogContext = 'BG';
+window.gLogContext = 'BG';
 
 browser.runtime.onMessage.addListener((aMessage, aSender) => {
   if (!aMessage ||
@@ -15,13 +15,13 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 
   switch (aMessage.type) {
     case kCOMMAND_TRY_ACTION: return (async () => {
-      let action = detectActionFromEvent(aMessage.event);
+      const action = detectActionFromEvent(aMessage.event);
       log('action: ', action);
       if (action == kACTION_DISABLED)
         return null;
 
       aMessage.cursor.framePos = aSender.frameId;
-      let result = await URIMatcher.matchSingle({
+      const result = await URIMatcher.matchSingle({
         text:    aMessage.text,
         tabId:   aSender.tab.id,
         cursor:  aMessage.cursor,
@@ -98,16 +98,16 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       });
       await initContextMenuForWaiting(aSender.tab.id);
       log('selection-changed', aMessage);
-      for (let range of aMessage.ranges) {
+      for (const range of aMessage.ranges) {
         range.framePos = aSender.frameId;
       }
-      let results = await URIMatcher.matchAll({
+      const results = await URIMatcher.matchAll({
         tabId:   aSender.tab.id,
         ranges:  aMessage.ranges,
         baseURI: aMessage.base,
         onProgress: (aProgress) => {
           try {
-            var progress = Math.round(aProgress * 100);
+            const progress = Math.round(aProgress * 100);
             browser.tabs.sendMessage(aSender.tab.id, {
               type:     kNOTIFY_MATCH_ALL_PROGRESS,
               progress: progress,
@@ -132,9 +132,9 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
 });
 
 function detectActionFromEvent(aEvent) {
-  var baseType = aEvent.inEditable ? 'actionInEditable' : 'action';
-  for (let name of Object.keys(kACTION_NAME_TO_ID)) {
-    let base = `${baseType}_${name}_${aEvent.type}`;
+  const baseType = aEvent.inEditable ? 'actionInEditable' : 'action';
+  for (const name of Object.keys(kACTION_NAME_TO_ID)) {
+    const base = `${baseType}_${name}_${aEvent.type}`;
     if (!configs[base] ||
         configs[`${base}_alt`] != aEvent.altKey ||
         configs[`${base}_ctrl`] != aEvent.ctrlKey ||
@@ -153,13 +153,13 @@ const MENU_ITEMS = [
   'copy'
 ];
 
-var gLastContextTab = 0;
+let gLastContextTab = 0;
 
 async function initContextMenuForWaiting(aTabId) {
   browser.menus.removeAll();
 
-  var count = 0;
-  for (let id of MENU_ITEMS) {
+  let count = 0;
+  for (const id of MENU_ITEMS) {
     if (configs[`menu_${id}_single`] ||
         configs[`menu_${id}_multiple`])
       count++;
@@ -168,7 +168,7 @@ async function initContextMenuForWaiting(aTabId) {
     return;
 
   gLastContextTab = aTabId;
-  var progress = await browser.tabs.sendMessage(aTabId, {
+  const progress = await browser.tabs.sendMessage(aTabId, {
     type: kCOMMAND_FETCH_MATCH_ALL_PROGRESS
   });
   browser.menus.create({
@@ -184,13 +184,13 @@ function initContextMenuForURIs(aURIs) {
   if (aURIs.length == 0)
     return;
 
-  var first = getShortURIString(aURIs[0]);
-  var last  = getShortURIString(aURIs[aURIs.length - 1]);
-  var type  = aURIs.length == 1 ? 'single' : 'multiple';
+  const first = getShortURIString(aURIs[0]);
+  const last  = getShortURIString(aURIs[aURIs.length - 1]);
+  const type  = aURIs.length == 1 ? 'single' : 'multiple';
 
-  var visibleCount = 0;
-  var visibility = {};
-  for (let id of MENU_ITEMS) {
+  let visibleCount = 0;
+  const visibility = {};
+  for (const id of MENU_ITEMS) {
     visibility[id] = configs[`menu_${id}_${type}`];
     if (visibility[id])
       visibleCount++;
@@ -198,7 +198,7 @@ function initContextMenuForURIs(aURIs) {
   if (visibleCount == 0)
     return;
 
-  var parentId = null;
+  let parentId = null;
   if (visibleCount > 1) {
     browser.menus.create({
       id:       'group',
@@ -208,7 +208,7 @@ function initContextMenuForURIs(aURIs) {
     parentId = 'group';
   }
 
-  for (let id of MENU_ITEMS) {
+  for (const id of MENU_ITEMS) {
     if (!visibility[id])
       continue;
     let title = browser.i18n.getMessage(`menu.${id}.${type}`);
@@ -261,19 +261,19 @@ browser.menus.onClicked.addListener((aInfo, aTab) => {
 
 
 browser.tabs.onActivated.addListener(async (aActiveInfo) => {
-  var ranges = await browser.tabs.sendMessage(aActiveInfo.tabId, {
+  const ranges = await browser.tabs.sendMessage(aActiveInfo.tabId, {
     type: kCOMMAND_FETCH_URI_RANGES
   });
   initContextMenuForURIs(ranges.map(aResult => aResult.uri));
 });
 
 browser.windows.onFocusChanged.addListener(async (aWindowId) => {
-  var window = await browser.windows.get(aWindowId, { populate: true });
+  const window = await browser.windows.get(aWindowId, { populate: true });
   if (!window.focused)
     return;
 
-  var activeTab = window.tabs.filter(aTab => aTab.active)[0];
-  var ranges = await browser.tabs.sendMessage(activeTab.id, {
+  const activeTab = window.tabs.filter(aTab => aTab.active)[0];
+  const ranges = await browser.tabs.sendMessage(activeTab.id, {
     type: kCOMMAND_FETCH_URI_RANGES
   });
   initContextMenuForURIs(ranges.map(aResult => aResult.uri));

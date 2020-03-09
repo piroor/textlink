@@ -5,14 +5,31 @@ module.exports = {
   'root': true,
 
   'parserOptions': {
-    'ecmaVersion': 2017,
+    'ecmaVersion': 2018,
   },
 
   'env': {
+    'browser': true,
+    'es6': true,
     'webextensions': true,
   },
 
+  'settings': {
+    'import/resolver': {
+      'babel-module': {
+        'root': ['./'],
+      }
+    }
+  },
+
   'rules': {
+    'no-const-assign': 'error',
+    'prefer-const': ['warn', {
+      'destructuring': 'any',
+      'ignoreReadBeforeAssign': false
+    }],
+    'no-var': 'warn',//'error',
+
     // stylisitc problem
     'indent': ['warn', 2, {
       'SwitchCase': 1,

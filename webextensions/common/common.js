@@ -12,8 +12,8 @@ function log(aMessage, ...aArgs)
   if (!window.configs || !configs.debug)
     return;
 
-  var nest   = (new Error()).stack.split('\n').length;
-  var indent = '';
+  const nest   = (new Error()).stack.split('\n').length;
+  let indent = '';
   for (let i = 0; i < nest; i++) {
     indent += ' ';
   }

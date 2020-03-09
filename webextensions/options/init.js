@@ -6,7 +6,7 @@
 'use strict';
 
 gLogContext = 'Options';
-var options;
+let options;
 
 function onConfigChanged(aKey) {
   switch (aKey) {
@@ -18,7 +18,7 @@ function onConfigChanged(aKey) {
       break;
   }
 
-  var checkbox = document.querySelector(`label > input[type="checkbox"]#${aKey}`);
+  const checkbox = document.querySelector(`label > input[type="checkbox"]#${aKey}`);
   if (checkbox) {
     if (checkbox.checked)
       checkbox.parentNode.classList.add('checked');
@@ -44,9 +44,9 @@ function actionFieldSet(aParams) {
 }
 
 function actionCheckboxes(aParams) {
-  var base   = aParams.base;
-  var action = aParams.action;
-  var type   = aParams.type;
+  const base   = aParams.base;
+  const action = aParams.action;
+  const type   = aParams.type;
   return `
     <p><label><input id="${base}_${action}_${type}"
                      type="checkbox">
@@ -74,8 +74,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   await configs.$loaded;
   configs.$addObserver(onConfigChanged);
 
-  var fragment = document.createDocumentFragment();
-  var range = document.createRange();
+  const fragment = document.createDocumentFragment();
+  const range = document.createRange();
   range.selectNodeContents(document.querySelector('#actions'));
   range.insertNode(range.createContextualFragment(
     ['action', 'actionInEditable'].map(base =>
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   onConfigChanged('debug');
 
   setTimeout(() => {
-    for (let checkbox of document.querySelectorAll('label > input[type="checkbox"]')) {
+    for (const checkbox of document.querySelectorAll('label > input[type="checkbox"]')) {
       if (checkbox.checked)
         checkbox.parentNode.classList.add('checked');
       else
@@ -106,9 +106,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   }, 0);
 
-  for (let resetButton of document.querySelectorAll('[data-reset-target]')) {
-    let id = resetButton.getAttribute('data-reset-target');
-    let field = document.querySelector(`#${id}`);
+  for (const resetButton of document.querySelectorAll('[data-reset-target]')) {
+    const id = resetButton.getAttribute('data-reset-target');
+    const field = document.querySelector(`#${id}`);
     if (!field)
       continue;
     resetButton.addEventListener('click', () => {

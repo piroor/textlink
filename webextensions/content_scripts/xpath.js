@@ -15,7 +15,7 @@ function toLowerCase(aTarget) {
   return `translate(${aTarget}, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')`;
 }
 
-const NSResolver = {
+var NSResolver = {
   lookupNamespaceURI : function(aPrefix) {
     switch (aPrefix)
     {
@@ -33,8 +33,9 @@ const NSResolver = {
 function evaluateXPath(aExpression, aContext, aType) {
   if (!aType)
     aType = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+  let result;
   try {
-    var result = (aContext.ownerDocument || aContext).evaluate(
+    result = (aContext.ownerDocument || aContext).evaluate(
       aExpression,
       (aContext || document),
       NSResolver,
@@ -55,12 +56,12 @@ function evaluateXPath(aExpression, aContext, aType) {
 }
 
 function getArrayFromXPathResult(aXPathResult) {
-  var max   = aXPathResult.snapshotLength;
-  var array = new Array(max);
+  const max   = aXPathResult.snapshotLength;
+  const array = new Array(max);
   if (!max)
     return array;
 
-  for (var i = 0; i < max; i++) {
+  for (let i = 0; i < max; i++) {
     array[i] = aXPathResult.snapshotItem(i);
   }
   return array;

@@ -7,19 +7,19 @@
 
 gLogContext = 'content';
 
-var gTryingAction = false;
-var gLastActionResult = null;
-var gMatchAllProgress = 0;
+let gTryingAction = false;
+let gLastActionResult = null;
+let gMatchAllProgress = 0;
 
 async function onDblClick(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
-  var data = getSelectionEventData(aEvent);
+  const data = getSelectionEventData(aEvent);
   if (!data)
     return;
   gTryingAction = true;
   gLastActionResult = null;
-  var textFieldSelection = isInputField(aEvent.target);
+  const textFieldSelection = isInputField(aEvent.target);
   gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
@@ -35,12 +35,12 @@ async function onDblClick(aEvent) {
 async function onKeyUp(aEvent) {
   if (aEvent.target.ownerDocument != document)
     return;
-  var data = getSelectionEventData(aEvent);
+  const data = getSelectionEventData(aEvent);
   if (!data)
     return;
   gTryingAction = true;
   gLastActionResult = null;
-  var textFieldSelection = isInputField(aEvent.target);
+  const textFieldSelection = isInputField(aEvent.target);
   gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
     type: kCOMMAND_TRY_ACTION
   }));
@@ -64,8 +64,8 @@ function postAction(aResult) {
 
 function doCopy(aText) {
   gChangingSelectionRangeInternally++;
-  var selection = window.getSelection();
-  var ranges = [];
+  const selection = window.getSelection();
+  const ranges = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     ranges.push(getRangeData(selection.getRangeAt(i)));
   }
@@ -80,7 +80,7 @@ function doCopy(aText) {
     once: true
   });
 
-  var field = document.createElement('textarea');
+  const field = document.createElement('textarea');
   field.value = aText;
   document.body.appendChild(field);
   field.style.position = 'fixed';
@@ -96,17 +96,17 @@ function doCopy(aText) {
 }
 
 
-var gLastSelection = '';
-var gFindingURIRanges = false;
-var gLastSelectionChangeAt = 0;
-var gLastURIRanges = Promise.resolve([]);
+let gLastSelection = '';
+let gFindingURIRanges = false;
+let gLastSelectionChangeAt = 0;
+let gLastURIRanges = Promise.resolve([]);
 var gChangingSelectionRangeInternally = 0;
 
 async function onSelectionChange(aEvent) {
   if (gChangingSelectionRangeInternally > 0)
     return;
 
-  var changedAt = gLastSelectionChangeAt = Date.now();
+  const changedAt = gLastSelectionChangeAt = Date.now();
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
 
@@ -133,7 +133,7 @@ async function onSelectionChange(aEvent) {
 }
 
 function onTextFieldSelectionChanged(aField) {
-  var selectionRange = getFieldRangeData(aField);
+  const selectionRange = getFieldRangeData(aField);
 
   gLastSelection    = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
   gFindingURIRanges = true;
@@ -142,13 +142,13 @@ function onTextFieldSelectionChanged(aField) {
     type: kNOTIFY_READY_TO_FIND_URI_RANGES
   });
   gLastURIRanges = new Promise(async (aResolve, aReject) => {
-    var ranges = await browser.runtime.sendMessage({
+    const ranges = await browser.runtime.sendMessage({
       type:   kCOMMAND_FIND_URI_RANGES,
       base:   location.href,
       ranges: [selectionRange]
     });
-    var position = getFieldNodePosition(aField);
-    for (let range of ranges) {
+    const position = getFieldNodePosition(aField);
+    for (const range of ranges) {
       range.range.fieldNodePos = position;
     }
     gFindingURIRanges = false;
@@ -157,8 +157,8 @@ function onTextFieldSelectionChanged(aField) {
 }
 
 function onSelectionRangeChanged() {
-  var selection     = window.getSelection();
-  var selectionText = selection.toString()
+  const selection     = window.getSelection();
+  const selectionText = selection.toString()
   if (selectionText == gLastSelection)
     return;
 
@@ -176,7 +176,7 @@ function onSelectionRangeChanged() {
 }
 
 async function findURIRanges(aOptions = {}) {
-  var selection = window.getSelection();
+  const selection = window.getSelection();
   if (!selection.toString().trim()) {
     browser.runtime.sendMessage({
       type:   kCOMMAND_FIND_URI_RANGES,
@@ -186,13 +186,13 @@ async function findURIRanges(aOptions = {}) {
     return [];
   }
 
-  var selectionRanges = [];
+  const selectionRanges = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
-    let selectionRange = selection.getRangeAt(i);
-    let selectionText  = rangeToText(selectionRange);
-    let preceding      = getPrecedingRange(selectionRange);
-    let following      = getFollowingRange(selectionRange);
-    let rangeData      = getRangeData(selectionRange);
+    const selectionRange = selection.getRangeAt(i);
+    const selectionText  = rangeToText(selectionRange);
+    const preceding      = getPrecedingRange(selectionRange);
+    const following      = getFollowingRange(selectionRange);
+    const rangeData      = getRangeData(selectionRange);
     if (!aOptions.includeRange) {
       rangeData.startNodePos = rangeData.startTextNodePos;
       delete rangeData.startTextNodePos;
@@ -203,7 +203,7 @@ async function findURIRanges(aOptions = {}) {
     rangeData.text = `${preceding.text}${selectionText}${following.text}`;
     selectionRanges.push(rangeData);
   }
-  var ranges = await browser.runtime.sendMessage({
+  const ranges = await browser.runtime.sendMessage({
     type:   kCOMMAND_FIND_URI_RANGES,
     base:   location.href,
     ranges: selectionRanges
@@ -213,26 +213,26 @@ async function findURIRanges(aOptions = {}) {
 }
 
 function getSelectionEventData(aEvent) {
-  var textFieldSelection = isInputField(aEvent.target);
+  const textFieldSelection = isInputField(aEvent.target);
 
-  var selection = window.getSelection();
+  const selection = window.getSelection();
   if (!textFieldSelection && selection.rangeCount != 1)
     return null;
 
-  var text, cursor;
+  let text, cursor;
   if (textFieldSelection) {
     cursor = getFieldRangeData(aEvent.target);
     text   = cursor.text;
   }
   else {
-    let selectionRange = selection.getRangeAt(0);
-    let preceding      = getPrecedingRange(selectionRange);
-    let following      = getFollowingRange(selectionRange);
+    const selectionRange = selection.getRangeAt(0);
+    const preceding      = getPrecedingRange(selectionRange);
+    const following      = getFollowingRange(selectionRange);
     text   = `${preceding.text}${rangeToText(selectionRange)}${following.text}`;
     cursor = getRangeData(selectionRange);
   }
 
-  var data = {
+  const data = {
     text, cursor,
     base:  location.href,
     event: {
@@ -260,7 +260,7 @@ function getSelectionEventData(aEvent) {
 
 
 function onFocused(aEvent) {
-  var node = aEvent.target;
+  const node = aEvent.target;
   if (!isInputField(node))
     return;
   node.addEventListener('selectionchange', onSelectionChange, { capture: true });
@@ -291,7 +291,7 @@ function isEditableNode(aNode) {
 function onMessage(aMessage, aSender) {
   switch (aMessage.type) {
     case kCOMMAND_ACTION_FOR_URIS: return (async () => {
-      var ranges = await gLastURIRanges;
+      let ranges = await gLastURIRanges;
       if (aMessage.action & kACTION_COPY) {
         let uris = ranges.map(aRange => aRange.uri).join('\n');
         if (ranges.length > 1)
@@ -328,7 +328,7 @@ function onMessage(aMessage, aSender) {
   }
 }
 
-var gProgressIndicator;
+let gProgressIndicator;
 
 function updateProgress() {
   if (gMatchAllProgress >= 100 || gMatchAllProgress <= 0) {
@@ -340,10 +340,10 @@ function updateProgress() {
   }
 
   if (!gProgressIndicator) {
-    let range = document.createRange();
+    const range = document.createRange();
     range.selectNodeContents(document.body || document.documentElement);
     range.collapse(false);
-    let fragment = range.createContextualFragment(`<span style="
+    const fragment = range.createContextualFragment(`<span style="
       bottom: 0.5em;
       box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.5),
                   0 0 0.2em rgba(0, 0, 0, 0.5);

@@ -5,7 +5,7 @@
 */
 'use strict';
 
-var defaultActions = [
+const defaultActions = [
   { action:       'select',
     triggerMouse: '',
     triggerKey:   '' },
@@ -25,7 +25,7 @@ var defaultActions = [
     triggerMouse: '',
     triggerKey:   '' }
 ];
-var defaultActionsInEditable = [
+const defaultActionsInEditable = [
   { action:       'select',
     triggerMouse: 'dblclick',
     triggerKey:   '' },
@@ -46,7 +46,7 @@ var defaultActionsInEditable = [
     triggerKey:   '' }
 ];
 
-var defaultConfigs = {
+const defaultConfigs = {
   menu_openCurrent_single:   false,
   menu_openCurrent_multiple: false,
   menu_openTab_single:       true,
@@ -383,8 +383,8 @@ zw
 };
 
 {
-  let isMac = /^Mac/i.test(navigator.platform);
-  for (let action of defaultActions) {
+  const isMac = /^Mac/i.test(navigator.platform);
+  for (const action of defaultActions) {
     defaultConfigs[`action_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
     defaultConfigs[`action_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
     defaultConfigs[`action_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
@@ -396,7 +396,7 @@ zw
     defaultConfigs[`action_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
     defaultConfigs[`action_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
   }
-  for (let action of defaultActionsInEditable) {
+  for (const action of defaultActionsInEditable) {
     defaultConfigs[`actionInEditable_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
     defaultConfigs[`actionInEditable_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
     defaultConfigs[`actionInEditable_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
