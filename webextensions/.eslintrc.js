@@ -28,7 +28,7 @@ module.exports = {
       'destructuring': 'any',
       'ignoreReadBeforeAssign': false
     }],
-    'no-var': 'warn',//'error',
+    //'no-var': 'error',
 
     // stylisitc problem
     'indent': ['warn', 2, {
