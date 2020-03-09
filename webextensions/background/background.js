@@ -114,7 +114,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
               showInContent: configs.showProgress
             });
             if (gLastContextTab == aSender.tab.id)
-              browser.contextMenus.update('waiting', {
+              browser.menus.update('waiting', {
                 title: browser.i18n.getMessage(`menu_waiting_label`, [progress])
               });
           }
@@ -156,7 +156,7 @@ const MENU_ITEMS = [
 var gLastContextTab = 0;
 
 async function initContextMenuForWaiting(aTabId) {
-  browser.contextMenus.removeAll();
+  browser.menus.removeAll();
 
   var count = 0;
   for (let id of MENU_ITEMS) {
@@ -171,7 +171,7 @@ async function initContextMenuForWaiting(aTabId) {
   var progress = await browser.tabs.sendMessage(aTabId, {
     type: kCOMMAND_FETCH_MATCH_ALL_PROGRESS
   });
-  browser.contextMenus.create({
+  browser.menus.create({
     id:       'waiting',
     title:    browser.i18n.getMessage(`menu_waiting_label`, [progress || 0]),
     enabled:  false,
@@ -180,7 +180,7 @@ async function initContextMenuForWaiting(aTabId) {
 }
 
 function initContextMenuForURIs(aURIs) {
-  browser.contextMenus.removeAll();
+  browser.menus.removeAll();
   if (aURIs.length == 0)
     return;
 
@@ -200,7 +200,7 @@ function initContextMenuForURIs(aURIs) {
 
   var parentId = null;
   if (visibleCount > 1) {
-    browser.contextMenus.create({
+    browser.menus.create({
       id:       'group',
       title:    browser.i18n.getMessage(`menu.group.${type}`, [aURIs.length, first, last]),
       contexts: ['selection']
@@ -214,7 +214,7 @@ function initContextMenuForURIs(aURIs) {
     let title = browser.i18n.getMessage(`menu.${id}.${type}`);
     if (visibleCount == 1)
       title = browser.i18n.getMessage(`menu.direct.${type}`, [title, first, last]);
-    browser.contextMenus.create({
+    browser.menus.create({
       id, title, parentId,
       contexts: ['selection']
     });
@@ -227,7 +227,7 @@ function getShortURIString(aURI) {
   return aURI;
 }
 
-browser.contextMenus.onClicked.addListener((aInfo, aTab) => {
+browser.menus.onClicked.addListener((aInfo, aTab) => {
   switch (aInfo.menuItemId) {
     case 'openCurrent':
       browser.tabs.sendMessage(aTab.id, {
