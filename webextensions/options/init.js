@@ -6,7 +6,7 @@
 'use strict';
 
 gLogContext = 'Options';
-var options = new Options(configs);
+var options;
 
 function onConfigChanged(aKey) {
   switch (aKey) {
@@ -70,9 +70,9 @@ function actionCheckboxes(aParams) {
   `;
 }
 
-configs.$addObserver(onConfigChanged);
 window.addEventListener('DOMContentLoaded', async () => {
   await configs.$loaded;
+  configs.$addObserver(onConfigChanged);
 
   var fragment = document.createDocumentFragment();
   var range = document.createRange();
@@ -92,6 +92,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   range.detach();
   l10n.updateDocument();
 
+  options = new Options(configs);
+  options.onReady();
   options.buildUIForAllConfigs(document.querySelector('#debug-configs'));
   onConfigChanged('debug');
 
