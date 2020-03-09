@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+ - 6.1.0 (2020.3.10)
    * Fix invisible context menu commands on text selection.
    * Fix broken options page on lately versions Firefox.
    * Drop support for Firefox 63 and older versions.
