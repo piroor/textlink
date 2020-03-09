@@ -5,27 +5,27 @@
 */
 'use strict';
 
-window.gLogContext = 'BG';
+gLogContext = 'BG';
 
-browser.runtime.onMessage.addListener((aMessage, aSender) => {
-  if (!aMessage ||
-      typeof aMessage.type != 'string' ||
-      aMessage.type.indexOf('textlink:') != 0)
+browser.runtime.onMessage.addListener((message, sender) => {
+  if (!message ||
+      typeof message.type != 'string' ||
+      message.type.indexOf('textlink:') != 0)
     return;
 
-  switch (aMessage.type) {
+  switch (message.type) {
     case kCOMMAND_TRY_ACTION: return (async () => {
-      const action = detectActionFromEvent(aMessage.event);
+      const action = detectActionFromEvent(message.event);
       log('action: ', action);
       if (action == kACTION_DISABLED)
         return null;
 
-      aMessage.cursor.framePos = aSender.frameId;
+      message.cursor.framePos = sender.frameId;
       const result = await URIMatcher.matchSingle({
-        text:    aMessage.text,
-        tabId:   aSender.tab.id,
-        cursor:  aMessage.cursor,
-        baseURI: aMessage.base
+        text:    message.text,
+        tabId:   sender.tab.id,
+        cursor:  message.cursor,
+        baseURI: message.base
       });
       log('matchSingle result: ', result);
       if (!result)
@@ -34,7 +34,7 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
       result.action = action;
       if (result.uri) {
         if (action & kACTION_OPEN_IN_CURRENT) {
-          browser.tabs.update(aSender.tab.id, {
+          browser.tabs.update(sender.tab.id, {
             url: result.uri
           });
         }
@@ -47,8 +47,8 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
           browser.tabs.create({
             active:      !!(action & kACTION_OPEN_IN_TAB),
             url:         result.uri,
-            windowId:    aSender.tab.windowId,
-            openerTabId: aSender.tab.id
+            windowId:    sender.tab.windowId,
+            openerTabId: sender.tab.id
           });
         }
       }
@@ -56,64 +56,64 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
     })();
 
     case kCOMMAND_ACTION_FOR_URIS:
-      if (aMessage.action & kACTION_OPEN_IN_CURRENT) {
-        browser.tabs.update(aSender.tab.id, {
-          url: aMessage.uris[0]
+      if (message.action & kACTION_OPEN_IN_CURRENT) {
+        browser.tabs.update(sender.tab.id, {
+          url: message.uris[0]
         });
-        aMessage.uris.slice(1).forEach((aURI, aIndex) => {
+        message.uris.slice(1).forEach((uri, index) => {
           browser.tabs.create({
-            url:         aURI,
-            windowId:    aSender.tab.windowId,
-            openerTabId: aSender.tab.id
+            url:         uri,
+            windowId:    sender.tab.windowId,
+            openerTabId: sender.tab.id
           });
         });
       }
-      else if (aMessage.action & kACTION_OPEN_IN_WINDOW) {
-        aMessage.uris.forEach((aURI, aIndex) => {
+      else if (message.action & kACTION_OPEN_IN_WINDOW) {
+        message.uris.forEach((uri, index) => {
           browser.windows.create({
-            url: aURI
+            url: uri
           });
         });
       }
-      else if (aMessage.action & kACTION_OPEN_IN_TAB) {
-        aMessage.uris.forEach((aURI, aIndex) => {
+      else if (message.action & kACTION_OPEN_IN_TAB) {
+        message.uris.forEach((uri, index) => {
           browser.tabs.create({
-            active:      aIndex == 0,
-            url:         aURI,
-            windowId:    aSender.tab.windowId,
-            openerTabId: aSender.tab.id
+            active:      index == 0,
+            url:         uri,
+            windowId:    sender.tab.windowId,
+            openerTabId: sender.tab.id
           });
         });
       }
       break;
 
     case kNOTIFY_READY_TO_FIND_URI_RANGES:
-      initContextMenuForWaiting(aSender.tab.id);
+      initContextMenuForWaiting(sender.tab.id);
       break;
 
     case kCOMMAND_FIND_URI_RANGES: return (async () => {
-      browser.tabs.sendMessage(aSender.tab.id, {
+      browser.tabs.sendMessage(sender.tab.id, {
         type:     kNOTIFY_MATCH_ALL_PROGRESS,
         progress: 0
       });
-      await initContextMenuForWaiting(aSender.tab.id);
-      log('selection-changed', aMessage);
-      for (const range of aMessage.ranges) {
-        range.framePos = aSender.frameId;
+      await initContextMenuForWaiting(sender.tab.id);
+      log('selection-changed', message);
+      for (const range of message.ranges) {
+        range.framePos = sender.frameId;
       }
       const results = await URIMatcher.matchAll({
-        tabId:   aSender.tab.id,
-        ranges:  aMessage.ranges,
-        baseURI: aMessage.base,
+        tabId:   sender.tab.id,
+        ranges:  message.ranges,
+        baseURI: message.base,
         onProgress: (aProgress) => {
           try {
             const progress = Math.round(aProgress * 100);
-            browser.tabs.sendMessage(aSender.tab.id, {
+            browser.tabs.sendMessage(sender.tab.id, {
               type:     kNOTIFY_MATCH_ALL_PROGRESS,
               progress: progress,
               showInContent: configs.showProgress
             });
-            if (gLastContextTab == aSender.tab.id)
+            if (gLastContextTab == sender.tab.id)
               browser.menus.update('waiting', {
                 title: browser.i18n.getMessage(`menu_waiting_label`, [progress])
               });
@@ -123,23 +123,23 @@ browser.runtime.onMessage.addListener((aMessage, aSender) => {
         }
       });
       log('matchAll results: ', results);
-      if (aSender.tab.active &&
-          (await browser.windows.get(aSender.tab.windowId)).focused)
-        initContextMenuForURIs(results.map(aResult => aResult.uri));
+      if (sender.tab.active &&
+          (await browser.windows.get(sender.tab.windowId)).focused)
+        initContextMenuForURIs(results.map(result => result.uri));
       return results;
     })();
   }
 });
 
-function detectActionFromEvent(aEvent) {
-  const baseType = aEvent.inEditable ? 'actionInEditable' : 'action';
+function detectActionFromEvent(event) {
+  const baseType = event.inEditable ? 'actionInEditable' : 'action';
   for (const name of Object.keys(kACTION_NAME_TO_ID)) {
-    const base = `${baseType}_${name}_${aEvent.type}`;
+    const base = `${baseType}_${name}_${event.type}`;
     if (!configs[base] ||
-        configs[`${base}_alt`] != aEvent.altKey ||
-        configs[`${base}_ctrl`] != aEvent.ctrlKey ||
-        configs[`${base}_meta`] != aEvent.metaKey ||
-        configs[`${base}_shift`] != aEvent.shiftKey)
+        configs[`${base}_alt`] != event.altKey ||
+        configs[`${base}_ctrl`] != event.ctrlKey ||
+        configs[`${base}_meta`] != event.metaKey ||
+        configs[`${base}_shift`] != event.shiftKey)
       continue;
     return kACTION_NAME_TO_ID[name];
   }
@@ -155,7 +155,7 @@ const MENU_ITEMS = [
 
 let gLastContextTab = 0;
 
-async function initContextMenuForWaiting(aTabId) {
+async function initContextMenuForWaiting(tabId) {
   browser.menus.removeAll();
 
   let count = 0;
@@ -167,8 +167,8 @@ async function initContextMenuForWaiting(aTabId) {
   if (count == 0)
     return;
 
-  gLastContextTab = aTabId;
-  const progress = await browser.tabs.sendMessage(aTabId, {
+  gLastContextTab = tabId;
+  const progress = await browser.tabs.sendMessage(tabId, {
     type: kCOMMAND_FETCH_MATCH_ALL_PROGRESS
   });
   browser.menus.create({
@@ -179,14 +179,14 @@ async function initContextMenuForWaiting(aTabId) {
   });
 }
 
-function initContextMenuForURIs(aURIs) {
+function initContextMenuForURIs(uris) {
   browser.menus.removeAll();
-  if (aURIs.length == 0)
+  if (uris.length == 0)
     return;
 
-  const first = getShortURIString(aURIs[0]);
-  const last  = getShortURIString(aURIs[aURIs.length - 1]);
-  const type  = aURIs.length == 1 ? 'single' : 'multiple';
+  const first = getShortURIString(uris[0]);
+  const last  = getShortURIString(uris[uris.length - 1]);
+  const type  = uris.length == 1 ? 'single' : 'multiple';
 
   let visibleCount = 0;
   const visibility = {};
@@ -202,7 +202,7 @@ function initContextMenuForURIs(aURIs) {
   if (visibleCount > 1) {
     browser.menus.create({
       id:       'group',
-      title:    browser.i18n.getMessage(`menu.group.${type}`, [aURIs.length, first, last]),
+      title:    browser.i18n.getMessage(`menu.group.${type}`, [uris.length, first, last]),
       contexts: ['selection']
     });
     parentId = 'group';
@@ -221,37 +221,37 @@ function initContextMenuForURIs(aURIs) {
   }
 }
 
-function getShortURIString(aURI) {
-  if (aURI.length > 20)
-    return browser.i18n.getMessage('shortURI', [aURI.substring(0, 15).replace(/\.+$/, '')]);
-  return aURI;
+function getShortURIString(uri) {
+  if (uri.length > 20)
+    return browser.i18n.getMessage('shortURI', [uri.substring(0, 15).replace(/\.+$/, '')]);
+  return uri;
 }
 
-browser.menus.onClicked.addListener((aInfo, aTab) => {
-  switch (aInfo.menuItemId) {
+browser.menus.onClicked.addListener((info, tab) => {
+  switch (info.menuItemId) {
     case 'openCurrent':
-      browser.tabs.sendMessage(aTab.id, {
+      browser.tabs.sendMessage(tab.id, {
         type:   kCOMMAND_ACTION_FOR_URIS,
         action: kACTION_OPEN_IN_CURRENT
       });
       break;
 
     case 'openTab':
-      browser.tabs.sendMessage(aTab.id, {
+      browser.tabs.sendMessage(tab.id, {
         type:   kCOMMAND_ACTION_FOR_URIS,
         action: kACTION_OPEN_IN_TAB
       });
       break;
 
     case 'openWindow':
-      browser.tabs.sendMessage(aTab.id, {
+      browser.tabs.sendMessage(tab.id, {
         type:   kCOMMAND_ACTION_FOR_URIS,
         action: kACTION_OPEN_IN_WINDOW
       });
       break;
 
     case 'copy':
-      browser.tabs.sendMessage(aTab.id, {
+      browser.tabs.sendMessage(tab.id, {
         type:   kCOMMAND_ACTION_FOR_URIS,
         action: kACTION_COPY
       });
@@ -260,21 +260,21 @@ browser.menus.onClicked.addListener((aInfo, aTab) => {
 });
 
 
-browser.tabs.onActivated.addListener(async (aActiveInfo) => {
-  const ranges = await browser.tabs.sendMessage(aActiveInfo.tabId, {
+browser.tabs.onActivated.addListener(async (activeInfo) => {
+  const ranges = await browser.tabs.sendMessage(activeInfo.tabId, {
     type: kCOMMAND_FETCH_URI_RANGES
   });
-  initContextMenuForURIs(ranges.map(aResult => aResult.uri));
+  initContextMenuForURIs(ranges.map(result => result.uri));
 });
 
-browser.windows.onFocusChanged.addListener(async (aWindowId) => {
-  const window = await browser.windows.get(aWindowId, { populate: true });
+browser.windows.onFocusChanged.addListener(async (windowId) => {
+  const window = await browser.windows.get(windowId, { populate: true });
   if (!window.focused)
     return;
 
-  const activeTab = window.tabs.filter(aTab => aTab.active)[0];
+  const activeTab = window.tabs.filter(tab => tab.active)[0];
   const ranges = await browser.tabs.sendMessage(activeTab.id, {
     type: kCOMMAND_FETCH_URI_RANGES
   });
-  initContextMenuForURIs(ranges.map(aResult => aResult.uri));
+  initContextMenuForURIs(ranges.map(result => result.uri));
 });

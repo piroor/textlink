@@ -5,11 +5,11 @@
 */
 'use strict';
 
-window.URIMatcher = { 
-  matchSingle: async function(aParams) {
-    log('matchSingle: ', aParams);
+var URIMatcher = { 
+  matchSingle: async function(params) {
+    log('matchSingle: ', params);
     this._updateURIRegExp();
-    const match = this.matchMaybeURIs(aParams.text);
+    const match = this.matchMaybeURIs(params.text);
     if (match.length == 0)
       return null;
 
@@ -17,41 +17,41 @@ window.URIMatcher = {
       maybeURI = this.sanitizeURIString(maybeURI);
       const uriRange = await this.findTextRange({
         text:  maybeURI,
-        range: aParams.cursor,
-        tabId: aParams.tabId
+        range: params.cursor,
+        tabId: params.tabId
       });
       if (!uriRange)
         continue;
       return {
         text:  maybeURI,
         range: uriRange,
-        uri:   this.fixupURI(maybeURI, aParams.baseURI)
+        uri:   this.fixupURI(maybeURI, params.baseURI)
       };
     }
     log(' => no match');
     return null;
   },
 
-  matchAll: async function(aParams) {
-    log('matchAll: ', aParams);
-    aParams.onProgress && aParams.onProgress(0);
+  matchAll: async function(params) {
+    log('matchAll: ', params);
+    params.onProgress && params.onProgress(0);
     this._updateURIRegExp();
     const results = [];
     const startAt = Date.now();
 
     let maxCount = 0;
     const uniqueURIs = {};
-    for (const range of aParams.ranges) {
+    for (const range of params.ranges) {
       const match = this.matchMaybeURIs(range.text);
       if (match.length == 0) {
         range.maybeURIs = [];
         continue;
       }
 
-      const maybeURIs = Array.from(match).map(aMaybeURI => this.sanitizeURIString(aMaybeURI));
+      const maybeURIs = Array.from(match).map(maybeURI => this.sanitizeURIString(maybeURI));
       range.maybeURIs = [];
       for (const maybeURI of maybeURIs) {
-        const uri = this.fixupURI(maybeURI, aParams.baseURI);
+        const uri = this.fixupURI(maybeURI, params.baseURI);
         if (uri in uniqueURIs)
           continue;
         uniqueURIs[uri] = true;
@@ -64,12 +64,12 @@ window.URIMatcher = {
     }
 
     let count = 0;
-    for (const range of aParams.ranges) {
+    for (const range of params.ranges) {
       for (const maybeURI of range.maybeURIs) {
         const uriRange = await this.findTextRange({
           text:  maybeURI.original,
           range: range,
-          tabId: aParams.tabId
+          tabId: params.tabId
         });
         if (uriRange) {
           results.push({
@@ -80,12 +80,12 @@ window.URIMatcher = {
         }
         count++;
         if (Date.now() - startAt > 250)
-          aParams.onProgress && aParams.onProgress(count / maxCount);
+          params.onProgress && params.onProgress(count / maxCount);
         if (count % 100 == 0)
           await wait(0);
       }
     }
-    aParams.onProgress && aParams.onProgress(1);
+    params.onProgress && params.onProgress(1);
     results.sort((aA, aB) =>
       aA.range.startTextNodePos - aB.range.startTextNodePos ||
       aA.range.startNodePos - aB.range.startNodePos ||
@@ -94,39 +94,39 @@ window.URIMatcher = {
     return results;
   },
 
-  matchMaybeURIs(aText) {
-    let match = aText.match(this._URIMatchingRegExp);
+  matchMaybeURIs(text) {
+    let match = text.match(this._URIMatchingRegExp);
     if (!match)
       return [];
-    match = [...match].filter(aMaybeURI => (
-      (!this.hasLoadableScheme(aMaybeURI) &&
-       !this.URIExceptionPattern_all.test(aMaybeURI)) ||
-      this.isHeadOfNewURI(aMaybeURI)
+    match = [...match].filter(maybeURI => (
+      (!this.hasLoadableScheme(maybeURI) &&
+       !this.URIExceptionPattern_all.test(maybeURI)) ||
+      this.isHeadOfNewURI(maybeURI)
     ));
     if (match.length == 0)
       return [];
     return match;
   },
 
-  findTextRange: async function(aParams) {
-    if (!('startTextNodePos' in aParams.range) ||
-        !('endTextNodePos' in aParams.range)) {
+  findTextRange: async function(params) {
+    if (!('startTextNodePos' in params.range) ||
+        !('endTextNodePos' in params.range)) {
       // text, fake range
-      const wholeText = aParams.range.text;
-      const length    = aParams.text.length;
+      const wholeText = params.range.text;
+      const length    = params.text.length;
       let startAt   = 0;
       while (true) {
-        const index = wholeText.indexOf(aParams.text, startAt);
+        const index = wholeText.indexOf(params.text, startAt);
         startAt = index + length;
         if (index < 0)
           return null;
-        if (index > aParams.range.endOffset ||
-            index + length < aParams.range.startOffset)
+        if (index > params.range.endOffset ||
+            index + length < params.range.startOffset)
           continue;
         return {
           startOffset: index,
           endOffset:   index + length,
-          text:        aParams.text
+          text:        params.text
         };
       }
       return null;
@@ -136,8 +136,8 @@ window.URIMatcher = {
     let match;
     const startTryAt = Date.now();
     while (true) {
-      match = await browser.find.find(aParams.text, {
-        tabId:            aParams.tabId,
+      match = await browser.find.find(params.text, {
+        tabId:            params.tabId,
         caseSensitive:    true,
         includeRangeData: true
       });
@@ -155,13 +155,13 @@ window.URIMatcher = {
     }
 
     for (const rangeData of match.rangeData) {
-      if (rangeData.framePos != aParams.range.framePos ||
-          rangeData.startTextNodePos > aParams.range.endTextNodePos ||
-          (rangeData.startTextNodePos == aParams.range.endTextNodePos &&
-           rangeData.startOffset > aParams.range.endOffset) ||
-          rangeData.endTextNodePos < aParams.range.startTextNodePos ||
-          (rangeData.endTextNodePos == aParams.range.startTextNodePos &&
-           rangeData.endOffset < aParams.range.startOffset))
+      if (rangeData.framePos != params.range.framePos ||
+          rangeData.startTextNodePos > params.range.endTextNodePos ||
+          (rangeData.startTextNodePos == params.range.endTextNodePos &&
+           rangeData.startOffset > params.range.endOffset) ||
+          rangeData.endTextNodePos < params.range.startTextNodePos ||
+          (rangeData.endTextNodePos == params.range.startTextNodePos &&
+           rangeData.endOffset < params.range.startOffset))
         continue;
       return rangeData;
     }
@@ -231,12 +231,12 @@ window.URIMatcher = {
   get scheme() {
     return this._scheme;
   },
-  set scheme(aValue) {
-    this._scheme = aValue;
+  set scheme(value) {
+    this._scheme = value;
     this._schemes = this.niceSplit(this.expandWildcardsToRegExp(this.scheme));
     this.IDNScheme = this.IDNScheme; // reset IDN-enabled schemes list
     this.invalidatePatterns();
-    return aValue;
+    return value;
   },
   _scheme : '',
   get schemes() {
@@ -245,14 +245,14 @@ window.URIMatcher = {
   _schemes : [],
   _fixupSchemes : [],
 
-  set IDNScheme(aValue) {
-    this._IDNScheme = aValue;
+  set IDNScheme(value) {
+    this._IDNScheme = value;
     this._IDNSchemes = this.niceSplit(this.expandWildcardsToRegExp(this._IDNScheme))
-      .filter(function(aScheme) {
-        return this.schemes.indexOf(aScheme) > -1;
+      .filter(function(scheme) {
+        return this.schemes.indexOf(scheme) > -1;
       }, this);
     this.invalidatePatterns();
-    return aValue;
+    return value;
   },
   get IDNScheme() {
     return this._IDNScheme;
@@ -287,7 +287,7 @@ window.URIMatcher = {
       if (this._nonIDNSchemes === null) {
         const IDNSchemes = this.IDNSchemes;
         this._nonIDNSchemes = this.schemes
-          .filter(aScheme => IDNSchemes.indexOf(aScheme) < 0);
+          .filter(scheme => IDNSchemes.indexOf(scheme) < 0);
       }
       return this._nonIDNSchemes;
     }
@@ -300,8 +300,8 @@ window.URIMatcher = {
   get schemeFixupTable() {
     return this._schemeFixupTable;
   },
-  set schemeFixupTable(aValue) {
-    this._schemeFixupTable = aValue;
+  set schemeFixupTable(value) {
+    this._schemeFixupTable = value;
 
     this._fixupTable = this._schemeFixupTable
       .replace(/(\s*[^:,\s]+)\s*=>\s*([^:,\s]+)(\s*([,\| \n\r\t]|$))/g, '$1:=>$2:$3');
@@ -310,8 +310,8 @@ window.URIMatcher = {
     this._fixupTargetsHash = {};
     this._fixupSchemes     = [];
     this.niceSplit(this.expandWildcardsToRegExp(this._fixupTable))
-      .forEach(aTarget => {
-        const [fixUpFrom, fixUpTo] = aTarget.split(/\s*=>\s*/);
+      .forEach(target => {
+        const [fixUpFrom, fixUpTo] = target.split(/\s*=>\s*/);
         if (!fixUpFrom || !fixUpTo)
           return;
         this._fixupTargetsHash[fixUpFrom] = fixUpTo;
@@ -321,8 +321,8 @@ window.URIMatcher = {
           this._fixupSchemes.push(match[1]);
       });
 
-    this._fixupTargets.sort().forEach(aTarget => {
-      this._fixupTargetsHash[aTarget] = this._fixupTargetsHash[aTarget];
+    this._fixupTargets.sort().forEach(target => {
+      this._fixupTargetsHash[target] = this._fixupTargetsHash[target];
     });
     this._fixupSchemes.sort();
 
@@ -330,7 +330,7 @@ window.URIMatcher = {
     this._fixupTargetsRegExp = new RegExp(`^(${this._fixupTargetsPattern})`);
 
     this.invalidatePatterns();
-    return aValue;
+    return value;
   },
   _schemeFixupTable : '',
 
@@ -412,9 +412,9 @@ window.URIMatcher = {
         .replace(
           /%SCHEME_PATTERN%/g,
           '(?:'+
-                this.nonIDNSchemes.map(function(aScheme) {
-                  return `${aScheme}|${this.convertHalfWidthToFullWidth(aScheme)}`;
-                }, this).join('|')+
+                this.nonIDNSchemes.map(scheme => {
+                  return `${scheme}|${this.convertHalfWidthToFullWidth(scheme)}`;
+                }).join('|')+
                 ')[:\uff1a]'
         )
         .replace(
@@ -430,9 +430,9 @@ window.URIMatcher = {
           .replace(
             /%SCHEME_PATTERN%/g,
             '(?:'+
-                  this.IDNSchemes.map(function(aScheme) {
-                    return `${aScheme}|${this.convertHalfWidthToFullWidth(aScheme)}`;
-                  }, this).join('|')+
+                  this.IDNSchemes.map(scheme => {
+                    return `${scheme}|${this.convertHalfWidthToFullWidth(scheme)}`;
+                  }).join('|')+
                   ')[:\uff1a]'
           )
           .replace(
@@ -463,15 +463,15 @@ window.URIMatcher = {
   },
   _URIPatternMultibyteRelative : null,
  
-  getDomainPattern(aOptionsFlag) {
-    aOptionsFlag = aOptionsFlag || 0;
-    let pattern = this._domainPatterns[aOptionsFlag];
+  getDomainPattern(optionsFlag) {
+    optionsFlag = optionsFlag || 0;
+    let pattern = this._domainPatterns[optionsFlag];
     if (!pattern) {
-      if (aOptionsFlag & kDOMAIN_IDN) {
+      if (optionsFlag & kDOMAIN_IDN) {
         let forbiddenCharacters = this.kStringprepForbiddenCharacters+
                       this.kIDNDomainSeparators+
                       ':/@\uff1a\uff0f\uff20';
-        if (!(aOptionsFlag & kDOMAIN_LAZY))
+        if (!(optionsFlag & kDOMAIN_LAZY))
           forbiddenCharacters += this.configs.IDNLazyDetectionSeparators;
         const part = '[^'+
               forbiddenCharacters+
@@ -485,7 +485,7 @@ window.URIMatcher = {
               ']+';
         pattern = `${part}(?:[${this.kIDNDomainSeparators}]${part})*`;
       }
-      else if (aOptionsFlag & kDOMAIN_MULTIBYTE) {
+      else if (optionsFlag & kDOMAIN_MULTIBYTE) {
         const part = '[0-9a-z-\uff10-\uff19\uff41-\uff5a\uff21-\uff3a\uff0d]+';
         pattern = `${part}(?:[${this.kMultibyteDomainSeparators}]${part})*`;
       }
@@ -494,37 +494,37 @@ window.URIMatcher = {
         pattern = `${part}(?:${this.kDomainSeparators + part})*`;
       }
 
-      if (!(aOptionsFlag & kDOMAIN_LAZY) ||
-          aOptionsFlag & kDOMAIN_IDN)
-        pattern += this.getTLDPattern(aOptionsFlag);
+      if (!(optionsFlag & kDOMAIN_LAZY) ||
+          optionsFlag & kDOMAIN_IDN)
+        pattern += this.getTLDPattern(optionsFlag);
 
-      if (aOptionsFlag & kDOMAIN_IDN ||
-          aOptionsFlag & kDOMAIN_MULTIBYTE) {
+      if (optionsFlag & kDOMAIN_IDN ||
+          optionsFlag & kDOMAIN_MULTIBYTE) {
         pattern += '(?:[:\uff1a][0-9\uff10-\uff19]+)?';
       }
       else {
         pattern += '(?::[0-9]+)?';
       }
 
-      this._domainPatterns[aOptionsFlag] = pattern;
+      this._domainPatterns[optionsFlag] = pattern;
     }
     return pattern;
   },
   _domainPatterns : {},
  
-  getTLDPattern(aOptionsFlag) {
+  getTLDPattern(optionsFlag) {
     const TLD = this.topLevelDomains;
     const halfWidthTLDPattern = `(?:${TLD.join('|')})\\b`;
-    const TLDPattern = aOptionsFlag & kDOMAIN_MULTIBYTE || aOptionsFlag & kDOMAIN_IDN ?
+    const TLDPattern = optionsFlag & kDOMAIN_MULTIBYTE || optionsFlag & kDOMAIN_IDN ?
       `(?:${
         [halfWidthTLDPattern]
           .concat(TLD.map(this.convertHalfWidthToFullWidth, this))
           .join('|')
       })` :
       halfWidthTLDPattern ;
-    return (aOptionsFlag & kDOMAIN_IDN ?
+    return (optionsFlag & kDOMAIN_IDN ?
       `[${this.kIDNDomainSeparators}]` :
-      aOptionsFlag & kDOMAIN_MULTIBYTE ?
+      optionsFlag & kDOMAIN_MULTIBYTE ?
         `[${this.kMultibyteDomainSeparators}]` :
         this.kDomainSeparators
     ) + TLDPattern;
@@ -667,8 +667,8 @@ window.URIMatcher = {
   // string operations 
   
   // from http://taken.s101.xrea.com/blog/article.php?id=510
-  convertFullWidthToHalfWidth(aString) {
-    return aString.replace(this.fullWidthRegExp, this.f2h)
+  convertFullWidthToHalfWidth(string) {
+    return string.replace(this.fullWidthRegExp, this.f2h)
       .replace(/\u301c/g, '~'); // another version of tilde
   },
   fullWidthRegExp : /[\uFF01\uFF02\uFF03\uFF04\uFF05\uFF06\uFF07\uFF08\uFF09\uFF0A\uFF0B\uFF0C\uFF0D\uFF0E\uFF0F\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19\uFF1A\uFF1B\uFF1C\uFF1D\uFF1E\uFF1F\uFF20\uFF21\uFF22\uFF23\uFF24\uFF25\uFF26\uFF27\uFF28\uFF29\uFF2A\uFF2B\uFF2C\uFF2D\uFF2E\uFF2F\uFF30\uFF31\uFF32\uFF33\uFF34\uFF35\uFF36\uFF37\uFF38\uFF39\uFF3A\uFF3B\uFF3C\uFF3D\uFF3E\uFF3F\uFF40\uFF41\uFF42\uFF43\uFF44\uFF45\uFF46\uFF47\uFF48\uFF49\uFF4A\uFF4B\uFF4C\uFF4D\uFF4E\uFF4F\uFF50\uFF51\uFF52\uFF53\uFF54\uFF55\uFF56\uFF57\uFF58\uFF59\uFF5A\uFF5B\uFF5C\uFF5D\uFF5E]/g,
@@ -679,8 +679,8 @@ window.URIMatcher = {
     return String.fromCharCode(code);
   },
 
-  convertHalfWidthToFullWidth(aString) {
-    return aString.replace(this.halfWidthRegExp, this.h2f);
+  convertHalfWidthToFullWidth(string) {
+    return string.replace(this.halfWidthRegExp, this.h2f);
   },
   halfWidthRegExp : /[!"#$%&'\(\)\*\+,-\.\/0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_`abcdefghijklmnopqrstuvwxyz\{\|\}~]/g,
   h2f(aChar) {
@@ -690,24 +690,24 @@ window.URIMatcher = {
     return String.fromCharCode(code);
   },
  
-  expandWildcardsToRegExp(aInput)  {
-    return String(aInput)
+  expandWildcardsToRegExp(input)  {
+    return String(input)
       .replace(/([\(\)\+\.\{\}])/g, '\\$1')
       .replace(/\?/g, '.')
       .replace(/\*/g, '.+');
   },
  
-  niceSplit(aInput) {
-    return String(aInput)
+  niceSplit(input) {
+    return String(input)
       .split(/[\s\|,]+/)
       .filter(aItem => !!aItem);
   },
 
-  isHeadOfNewURI(aString) {
+  isHeadOfNewURI(string) {
     this._updateURIRegExp();
-    let match = aString.match(this._URIMatchingRegExp_fromHead);
+    let match = string.match(this._URIMatchingRegExp_fromHead);
     match = match ? match[1] : '' ;
-    return this.hasLoadableScheme(match) ? match == aString : false ;
+    return this.hasLoadableScheme(match) ? match == string : false ;
   },
   _URIMatchingRegExp : null,
   _URIMatchingRegExp_fromHead : null,
@@ -730,15 +730,15 @@ window.URIMatcher = {
     this._URIMatchingRegExp = new RegExp(regexp.join('|'), 'ig');
   },
  
-  getURIPartFromStart(aString, aExcludeURIHead) {
+  getURIPartFromStart(string, excludeURIHead) {
     this._updateURIPartFinderRegExp();
-    const match = aString.match(this._URIPartFinderRegExp_start);
+    const match = string.match(this._URIPartFinderRegExp_start);
     const part = match ? match[1] : '' ;
-    return (!aExcludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
+    return (!excludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
   },
-  getURIPartFromEnd(aString) {
+  getURIPartFromEnd(string) {
     this._updateURIPartFinderRegExp();
-    const match = aString.match(this._URIPartFinderRegExp_end);
+    const match = string.match(this._URIPartFinderRegExp_end);
     return match ? match[1] : '' ;
   },
   _URIPartFinderRegExp_start : null,
@@ -754,18 +754,18 @@ window.URIMatcher = {
     this._URIPartFinderRegExp_end   = new RegExp(`(${base})$`, 'i');
   },
  
-  hasLoadableScheme(aURI)  {
+  hasLoadableScheme(uri)  {
     if (!this._schemeRegExp)
       this._schemeRegExp = new RegExp(`^(${this.schemes.join('|')}):`, 'i');
-    return this._schemeRegExp.test(this.convertFullWidthToHalfWidth(aURI));
+    return this._schemeRegExp.test(this.convertFullWidthToHalfWidth(uri));
   },
   _schemeRegExp : null,
  
-  hasScheme(aInput) {
-    return this._firstSchemeRegExp.test(aInput);
+  hasScheme(input) {
+    return this._firstSchemeRegExp.test(input);
   },
-  removeScheme(aInput) {
-    return aInput.replace(this._firstSchemeRegExp, '');
+  removeScheme(input) {
+    return input.replace(this._firstSchemeRegExp, '');
   },
   get _firstSchemeRegExp() {
     if (!this.__firstSchemeRegExp)
@@ -774,87 +774,87 @@ window.URIMatcher = {
   },
   __firstSchemeRegExp : null,
  
-  fixupURI(aURIComponent, aBaseURI) {
-    const originalURIComponent = aURIComponent;
+  fixupURI(uriComponent, aBaseURI) {
+    const originalURIComponent = uriComponent;
     if (this.configs.multibyteEnabled)
-      aURIComponent = this.convertFullWidthToHalfWidth(aURIComponent);
+      uriComponent = this.convertFullWidthToHalfWidth(uriComponent);
 
-    aURIComponent = this.sanitizeURIString(aURIComponent);
-    if (!aURIComponent) {
+    uriComponent = this.sanitizeURIString(uriComponent);
+    if (!uriComponent) {
       log(' => not a URI');
       return null;
     }
 
-    aURIComponent = this.fixupScheme(aURIComponent);
+    uriComponent = this.fixupScheme(uriComponent);
 
     if (this.configs.relativeEnabled)
-      aURIComponent = this.makeURIComplete(aURIComponent, aBaseURI);
+      uriComponent = this.makeURIComplete(uriComponent, aBaseURI);
 
-    const result = this.hasLoadableScheme(aURIComponent) ? aURIComponent : null ;
+    const result = this.hasLoadableScheme(uriComponent) ? uriComponent : null ;
     if (result != originalURIComponent)
       log(`fixupURI: ${originalURIComponent} => ${result}`);
     return result;
   },
   
-  sanitizeURIString(aURIComponent) {
-    const originalURIComponent = aURIComponent;
+  sanitizeURIString(uriComponent) {
+    const originalURIComponent = uriComponent;
     // escape patterns like program codes like JavaScript etc.
     if (!this._topLevelDomainsRegExp) {
       this._topLevelDomainsRegExp = new RegExp(`^(${this.topLevelDomains.join('|')})$`);
     }
     if (this.configs.relativeEnabled) {
-      if ((aURIComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
+      if ((uriComponent.match(/^([^\/\.]+\.)+([^\/\.]+)$/) &&
            !RegExp.$2.match(this._topLevelDomainsRegExp)) ||
-          aURIComponent.match(/(\(\)|\([^\/]+\)|[;\.,])$/))
+          uriComponent.match(/(\(\)|\([^\/]+\)|[;\.,])$/))
         return '';
     }
 
-    aURIComponent = this.removeParen(aURIComponent);
+    uriComponent = this.removeParen(uriComponent);
 
     while (
-      aURIComponent.match(/^\((.*)$/) ||
-      aURIComponent.match(/^([^\(]*)\)$/) ||
-      aURIComponent.match(/^(.*)[\.,]$/) ||
-      aURIComponent.match(/^([^\"]*)\"$/) ||
-      aURIComponent.match(/^([^\']*)\'$/) ||
-      aURIComponent.match(/^(.+)\s*\([^\)]+$/) ||
-      aURIComponent.match(/^[^\(]+\)\s*(.+)$/) ||
-      aURIComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
+      uriComponent.match(/^\((.*)$/) ||
+      uriComponent.match(/^([^\(]*)\)$/) ||
+      uriComponent.match(/^(.*)[\.,]$/) ||
+      uriComponent.match(/^([^\"]*)\"$/) ||
+      uriComponent.match(/^([^\']*)\'$/) ||
+      uriComponent.match(/^(.+)\s*\([^\)]+$/) ||
+      uriComponent.match(/^[^\(]+\)\s*(.+)$/) ||
+      uriComponent.match(/^[^\.\/:]*\((.+)\)[^\.\/]*$/) ||
       (!this.configs.relativeEnabled &&
-       aURIComponent.match(/^[\.\/:](.+)$/))
+       uriComponent.match(/^[\.\/:](.+)$/))
     ) {
-      aURIComponent = RegExp.$1;
+      uriComponent = RegExp.$1;
     }
 
-    aURIComponent = this.removeParen(aURIComponent);
+    uriComponent = this.removeParen(uriComponent);
 
     if (this.configs.IDNEnabled || this.configs.i18nPathEnabled)
-      aURIComponent = aURIComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
+      uriComponent = uriComponent.replace(this.kStringprepReplaceToNothingRegExp, '');
 
-    if (aURIComponent != originalURIComponent)
-      log(`sanitizeURIString: ${originalURIComponent} => ${aURIComponent}`);
-    return aURIComponent; // aURIComponent.replace(/^.*\((.+)\).*$/, '$1');
+    if (uriComponent != originalURIComponent)
+      log(`sanitizeURIString: ${originalURIComponent} => ${uriComponent}`);
+    return uriComponent; // uriComponent.replace(/^.*\((.+)\).*$/, '$1');
   },
   _topLevelDomainsRegExp : null,
  
-  removeParen(aInput) {
-    const originalInput = aInput;
+  removeParen(input) {
+    const originalInput = input;
     const doRemoveParen = (aRegExp) => {
-      const match = aInput.match(aRegExp);
+      const match = input.match(aRegExp);
       if (!match)
         return false;
-      aInput = match[1];
+      input = match[1];
       return true;
     };
     while (this._parenPatterns.some(doRemoveParen)) {}
-    if (aInput != originalInput)
-      log(`removeParen: ${originalInput} => ${aInput}`);
-    return aInput;
+    if (input != originalInput)
+      log(`removeParen: ${originalInput} => ${input}`);
+    return input;
   },
  
-  fixupScheme(aURI) {
-    const originalURI = aURI;
-    let match = aURI.match(this._fixupTargetsRegExp);
+  fixupScheme(uri) {
+    const originalURI = uri;
+    let match = uri.match(this._fixupTargetsRegExp);
     if (match) {
       const target = match[1];
       let table = this._fixupTable;
@@ -870,17 +870,17 @@ window.URIMatcher = {
           '\\s*=>\\s*([^,\\| \\n\\r\\t]+)'
       ));
       if (match)
-        aURI = aURI.replace(target, match[1]);
+        uri = uri.replace(target, match[1]);
     }
-    else if (!this._firstSchemeRegExp.test(aURI)) {
+    else if (!this._firstSchemeRegExp.test(uri)) {
       const scheme = this.configs.schemeFixupDefault;
       if (scheme)
-        aURI = `${scheme}://${aURI}`;
+        uri = `${scheme}://${uri}`;
     }
 
-    if (aURI != originalURI)
-      log(`fixupScheme: ${originalURI} => ${aURI}`);
-    return aURI;
+    if (uri != originalURI)
+      log(`fixupScheme: ${originalURI} => ${uri}`);
+    return uri;
   },
   _fixupTable : '',
   _fixupTargets : [],
@@ -889,30 +889,30 @@ window.URIMatcher = {
   _fixupTargetsRegExp : '',
  
   // 相対パスの解決 
-  makeURIComplete(aURI, aSourceURI) {
-    if (aURI.match(/^(urn|mailto):/i))
-      return aURI;
+  makeURIComplete(uri, sourceURI) {
+    if (uri.match(/^(urn|mailto):/i))
+      return uri;
 
-    if (aURI.match(/^([^\/\.]+\.)+([^\/\.]+)/) &&
+    if (uri.match(/^([^\/\.]+\.)+([^\/\.]+)/) &&
         RegExp.$2.match(new RegExp(`^(${this.topLevelDomains.join('|')})$`))) {
-      return `${this.configs.schemeFixupDefault}://${aURI}`;
+      return `${this.configs.schemeFixupDefault}://${uri}`;
     }
-    const base = aSourceURI.split('#')[0].split('?')[0].replace(/[^\/]+$/, '');
-    return `${base}${aURI}`;
+    const base = sourceURI.split('#')[0].split('?')[0].replace(/[^\/]+$/, '');
+    return `${base}${uri}`;
   },
    
-  onChangeConfig(aKey) {
-    switch (aKey) {
+  onChangeConfig(key) {
+    switch (key) {
       case 'scheme':
-        this.scheme = this.configs[aKey];
+        this.scheme = this.configs[key];
         return;
 
       case 'schemeFixupTable':
-        this.schemeFixupTable = this.configs[aKey];
+        this.schemeFixupTable = this.configs[key];
         return;
 
       case 'IDNScheme':
-        this.IDNScheme = this.configs[aKey];
+        this.IDNScheme = this.configs[key];
         return;
 
       case 'relativeEnabled':
@@ -935,18 +935,18 @@ window.URIMatcher = {
     }
   },
 
-  init: async function(aConfigs) {
-    log('URIMatcher init with configs ', aConfigs);
-    if (aConfigs.$loaded)
-      await aConfigs.$loaded;
+  init: async function(configs) {
+    log('URIMatcher init with configs ', configs);
+    if (configs.$loaded)
+      await configs.$loaded;
 
     log('URIMatcher init: ready to init');
-    this.configs = aConfigs;
+    this.configs = configs;
 
-    this.scheme           = aConfigs.scheme;
-    this.schemeFixupTable = aConfigs.schemeFixupTable;
-    this.IDNScheme        = aConfigs.IDNScheme;
-    aConfigs.$addObserver(this);
+    this.scheme           = configs.scheme;
+    this.schemeFixupTable = configs.schemeFixupTable;
+    this.IDNScheme        = configs.IDNScheme;
+    configs.$addObserver(this);
   }
 };
 window.configs && URIMatcher.init(configs);
