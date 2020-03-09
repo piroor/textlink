@@ -8,8 +8,7 @@
     "clipboardWrite",
     "menus",
     "find",
-    "storage",
-    "<all_urls>"
+    "storage"
   ],
   "icons": {
     "32": "resources/icon.png"
