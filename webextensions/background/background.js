@@ -155,34 +155,77 @@ const MENU_ITEMS = [
 
 let gLastContextTab = 0;
 
-async function initContextMenuForWaiting(tabId) {
-  browser.menus.removeAll();
+browser.menus.create({
+  id:       'waiting',
+  title:    browser.i18n.getMessage(`menu_waiting_label`, [0]),
+  visible:  false,
+  enabled:  false,
+  contexts: ['selection']
+});
+browser.menus.create({
+  id:       'group',
+  visible:  false,
+  contexts: ['selection']
+});
+for (const id of MENU_ITEMS) {
+  browser.menus.create({
+    id,
+    title: id,
+    visible:  false,
+    contexts: ['selection']
+  });
+  browser.menus.create({
+    id:       `grouped:${id}`,
+    visible:  false,
+    parentId: 'group',
+    contexts: ['selection']
+  });
+}
 
+async function initContextMenuForWaiting(tabId) {
+  log('initContextMenuForWaiting: hide all');
+  browser.menus.update('waiting', {
+    visible: false
+  });
+  browser.menus.update('group', {
+    visible: false
+  });
   let count = 0;
   for (const id of MENU_ITEMS) {
+    browser.menus.update(id, {
+      visible: false
+    });
+    browser.menus.update(`grouped:${id}`, {
+      visible: false
+    });
     if (configs[`menu_${id}_single`] ||
         configs[`menu_${id}_multiple`])
       count++;
   }
-  if (count == 0)
+  if (count == 0) {
+    browser.menus.refresh();
     return;
+  }
 
   gLastContextTab = tabId;
   const progress = await browser.tabs.sendMessage(tabId, {
     type: kCOMMAND_FETCH_MATCH_ALL_PROGRESS
   });
-  browser.menus.create({
-    id:       'waiting',
-    title:    browser.i18n.getMessage(`menu_waiting_label`, [progress || 0]),
-    enabled:  false,
-    contexts: ['selection']
+  browser.menus.update('waiting', {
+    title:   browser.i18n.getMessage(`menu_waiting_label`, [progress || 0]),
+    visible: true
   });
+  browser.menus.refresh();
 }
 
 function initContextMenuForURIs(uris) {
-  browser.menus.removeAll();
-  if (uris.length == 0)
+  browser.menus.update('waiting', {
+    visible: false
+  });
+  if (uris.length == 0) {
+    browser.menus.refresh();
     return;
+  }
 
   const first = getShortURIString(uris[0]);
   const last  = getShortURIString(uris[uris.length - 1]);
@@ -195,30 +238,38 @@ function initContextMenuForURIs(uris) {
     if (visibility[id])
       visibleCount++;
   }
+  log('initContextMenuForURIs visibleCount = ', visibleCount);
   if (visibleCount == 0)
     return;
 
-  let parentId = null;
   if (visibleCount > 1) {
-    browser.menus.create({
-      id:       'group',
-      title:    browser.i18n.getMessage(`menu.group.${type}`, [uris.length, first, last]),
-      contexts: ['selection']
+    log('show group');
+    browser.menus.update('group', {
+      title:   browser.i18n.getMessage(`menu_group_${type}`, [uris.length, first, last]),
+      visible: true
     });
-    parentId = 'group';
   }
 
   for (const id of MENU_ITEMS) {
     if (!visibility[id])
       continue;
-    let title = browser.i18n.getMessage(`menu.${id}.${type}`);
-    if (visibleCount == 1)
-      title = browser.i18n.getMessage(`menu.direct.${type}`, [title, first, last]);
-    browser.menus.create({
-      id, title, parentId,
-      contexts: ['selection']
-    });
+    const title = browser.i18n.getMessage(`menu_${id}_${type}`);
+    if (visibleCount == 1) {
+      log('show directly ', id);
+      browser.menus.update(id, {
+        title:   browser.i18n.getMessage(`menu_direct_${type}`, [title, first, last]),
+        visible: true
+      });
+    }
+    else {
+      log('show in group ', id);
+      browser.menus.update(`grouped:${id}`, {
+        title,
+        visible: true
+      });
+    }
   }
+  browser.menus.refresh();
 }
 
 function getShortURIString(uri) {
@@ -228,7 +279,7 @@ function getShortURIString(uri) {
 }
 
 browser.menus.onClicked.addListener((info, tab) => {
-  switch (info.menuItemId) {
+  switch (info.menuItemId.replace(/^grouped:/, '')) {
     case 'openCurrent':
       browser.tabs.sendMessage(tab.id, {
         type:   kCOMMAND_ACTION_FOR_URIS,
