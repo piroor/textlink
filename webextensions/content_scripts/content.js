@@ -20,9 +20,10 @@ async function onDblClick(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
-  gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
+  gLastActionResult = await browser.runtime.sendMessage({
+    ...data,
     type: kCOMMAND_TRY_ACTION
-  }));
+  });
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
@@ -41,9 +42,10 @@ async function onKeyUp(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
-  gLastActionResult = await browser.runtime.sendMessage(Object.assign({}, data, {
+  gLastActionResult = await browser.runtime.sendMessage({
+    ...data,
     type: kCOMMAND_TRY_ACTION
-  }));
+  });
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
@@ -299,9 +301,10 @@ function onMessage(aMessage, aSender) {
         doCopy(uris);
       }
       else {
-        browser.runtime.sendMessage(Object.assign({}, aMessage, {
+        browser.runtime.sendMessage({
+          ...aMessage,
           uris: ranges.map(aRange => aRange.uri)
-        }));
+        });
       }
       if (ranges.length > 0 &&
           (!('startTextNodePos' in ranges[0]) ||
