@@ -33,9 +33,20 @@ async function onDblClick(event) {
   gTryingAction = false;
 }
 
-async function onKeyUp(event) {
-  if (event.target.ownerDocument != document)
+function onKeyUpThrottled(event) {
+  if (event.target.ownerDocument != document ||
+      event.key != 'Enter')
     return;
+  if (onKeyUpThrottled.timeout)
+    clearTimeout(onKeyUpThrottled.timeout);
+  onKeyUpThrottled.timeout = setTimeout(() => {
+    onKeyUpThrottled.timeout = null;
+    onKeyUp(event);
+  }, 100);
+}
+onKeyUpThrottled.timeout = null;
+
+async function onKeyUp(event) {
   const data = getSelectionEventData(event);
   if (!data)
     return;
@@ -376,14 +387,14 @@ function updateProgress() {
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
-window.addEventListener('keyup', onKeyUp, { capture: true });
+window.addEventListener('keyup', onKeyUpThrottled, { capture: true });
 window.addEventListener('selectionchange', onSelectionChange, { capture: true });
 window.addEventListener('focus', onFocused, { capture: true });
 browser.runtime.onMessage.addListener(onMessage);
 
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
-  window.removeEventListener('keyup', onKeyUp, { capture: true });
+  window.removeEventListener('keyup', onKeyUpThrottled, { capture: true });
   window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
   window.removeEventListener('focus', onFocused, { capture: true });
   browser.runtime.onMessage.removeListener(onMessage);
