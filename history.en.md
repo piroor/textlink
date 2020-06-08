@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.1 (2020.6.8)
+   * Fix unexpected slow-down of keyboard input in text fields.
  - 6.1.0 (2020.3.10)
    * Fix invisible context menu commands on text selection.
    * Fix broken options page on lately versions Firefox.
