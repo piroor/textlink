@@ -1,6 +1,7 @@
 # History
 
  - master/HEAD
+   * Fix wrong behaviors of "All Configs" UI: apply imported configs to options UI immediately and treat decimal values as valid for some numeric options.
  - 6.1.1 (2020.6.8)
    * Fix unexpected slow-down of keyboard input in text fields.
  - 6.1.0 (2020.3.10)
