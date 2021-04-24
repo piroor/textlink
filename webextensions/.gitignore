@@ -1,5 +1,6 @@
 *.xpi
 extlib/*.js
+extlib/*.dat
 
 # node.js dependency
 node_modules/

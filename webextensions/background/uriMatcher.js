@@ -8,6 +8,8 @@
 var URIMatcher = { 
   matchSingle: async function(params) {
     log('matchSingle: ', params);
+    try{
+    await this.initialized;
     this._updateURIRegExp();
     const match = this.matchMaybeURIs(params.text);
     if (match.length == 0)
@@ -29,11 +31,17 @@ var URIMatcher = {
       };
     }
     log(' => no match');
+    }
+    catch(error){
+      console.error(error);
+    }
     return null;
   },
 
   matchAll: async function(params) {
     log('matchAll: ', params);
+    try{
+    await this.initialized;
     params.onProgress && params.onProgress(0);
     this._updateURIRegExp();
     const results = [];
@@ -91,6 +99,10 @@ var URIMatcher = {
       aA.range.startNodePos - aB.range.startNodePos ||
       aA.range.startOffset - aB.range.startOffset);
     log(' => ', results);
+    }
+    catch(error){
+      console.error(error);
+    }
     return results;
   },
 
@@ -570,13 +582,9 @@ var URIMatcher = {
  
   get topLevelDomains() {
     if (!this._topLevelDomains) {
-      const TLD = [
-        this.configs.gTLD,
-        this.configs.ccTLD,
-        this.configs.extraTLD
-      ];
-      if (this.configs.IDNEnabled)
-        TLD.push(this.configs.IDN_TLD);
+      let TLD = this.allTLD;
+      if (!this.configs.IDNEnabled)
+        TLD = TLD.filter(tld => /^[\.a-z]$/i.test(tld));
       this._topLevelDomains = this.cleanUpArray(TLD.join(' ').replace(/^\s+|\s+$/g, '').split(/\s+/))
         .reverse(); // this is required to match "com" instead of "co".
     }
@@ -946,7 +954,27 @@ var URIMatcher = {
     this.scheme           = configs.scheme;
     this.schemeFixupTable = configs.schemeFixupTable;
     this.IDNScheme        = configs.IDNScheme;
+    this.allTLD           = [];
     configs.$addObserver(this);
+
+    this.initialized = (async () => {
+      const request = new XMLHttpRequest();
+      try {
+        await new Promise((resolve, reject) => {
+          request.open('GET', browser.extension.getURL('extlib/public_suffix_list.dat'), true);
+          request.overrideMimeType('text/plain');
+          request.addEventListener('load', resolve, { once: true });
+          request.addEventListener('error', reject, { once: true });
+          request.send(null);
+        });
+        this.allTLD = request.responseText.replace(/^\/\/.*\n/gm, '').replace(/^\*/gm, '').replace(/\./gm, '\\.').replace(/\n\n+/g, '\n').trim().split('\n');
+        log(this.allTLD.join('\n'));
+      }
+      catch(error) {
+        console.error(error);
+      }
+      return true;
+    })();
   }
 };
 window.configs && URIMatcher.init(configs);

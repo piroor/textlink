@@ -23,7 +23,9 @@ update_extlib:
 	git submodule update --init
 
 install_extlib:
+	rm -f extlib/*.js extlib/*.dat
 	cp ../submodules/webextensions-lib-configs/Configs.js extlib/
 	cp ../submodules/webextensions-lib-options/Options.js extlib/
 	cp ../submodules/webextensions-lib-l10n/l10n.js extlib/
+	cp ../submodules/publicsuffixlist/public_suffix_list.dat extlib/
 

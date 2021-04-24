@@ -10,3 +10,6 @@
 [submodule "submodules/webextensions-lib-options"]
 	path = submodules/webextensions-lib-options
 	url = https://github.com/piroor/webextensions-lib-options.git
+[submodule "submodules/publicsuffixlist"]
+	path = submodules/publicsuffixlist
+	url = https://github.com/publicsuffix/list.git
