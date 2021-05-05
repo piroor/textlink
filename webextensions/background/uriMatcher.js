@@ -9,28 +9,28 @@ var URIMatcher = {
   matchSingle: async function(params) {
     log('matchSingle: ', params);
     try{
-    await this.initialized;
-    this._updateURIRegExp();
-    const match = this.matchMaybeURIs(params.text);
-    if (match.length == 0)
-      return null;
+      await this.initialized;
+      this._updateURIRegExp();
+      const match = this.matchMaybeURIs(params.text);
+      if (match.length == 0)
+        return null;
 
-    for (let maybeURI of match) {
-      maybeURI = this.sanitizeURIString(maybeURI);
-      const uriRange = await this.findTextRange({
-        text:  maybeURI,
-        range: params.cursor,
-        tabId: params.tabId
-      });
-      if (!uriRange)
-        continue;
-      return {
-        text:  maybeURI,
-        range: uriRange,
-        uri:   this.fixupURI(maybeURI, params.baseURI)
-      };
-    }
-    log(' => no match');
+      for (let maybeURI of match) {
+        maybeURI = this.sanitizeURIString(maybeURI);
+        const uriRange = await this.findTextRange({
+          text:  maybeURI,
+          range: params.cursor,
+          tabId: params.tabId
+        });
+        if (!uriRange)
+          continue;
+        return {
+          text:  maybeURI,
+          range: uriRange,
+          uri:   this.fixupURI(maybeURI, params.baseURI)
+        };
+      }
+      log(' => no match');
     }
     catch(error){
       console.error(error);
@@ -41,64 +41,64 @@ var URIMatcher = {
   matchAll: async function(params) {
     log('matchAll: ', params);
     try{
-    await this.initialized;
-    params.onProgress && params.onProgress(0);
-    this._updateURIRegExp();
-    const results = [];
-    const startAt = Date.now();
+      await this.initialized;
+      params.onProgress && params.onProgress(0);
+      this._updateURIRegExp();
+      const results = [];
+      const startAt = Date.now();
 
-    let maxCount = 0;
-    const uniqueURIs = {};
-    for (const range of params.ranges) {
-      const match = this.matchMaybeURIs(range.text);
-      if (match.length == 0) {
-        range.maybeURIs = [];
-        continue;
-      }
-
-      const maybeURIs = Array.from(match).map(maybeURI => this.sanitizeURIString(maybeURI));
-      range.maybeURIs = [];
-      for (const maybeURI of maybeURIs) {
-        const uri = this.fixupURI(maybeURI, params.baseURI);
-        if (uri in uniqueURIs)
+      let maxCount = 0;
+      const uniqueURIs = {};
+      for (const range of params.ranges) {
+        const match = this.matchMaybeURIs(range.text);
+        if (match.length == 0) {
+          range.maybeURIs = [];
           continue;
-        uniqueURIs[uri] = true;
-        range.maybeURIs.push({
-          original: maybeURI,
-          uri:      uri
-        });
-      }
-      maxCount += range.maybeURIs.length;
-    }
+        }
 
-    let count = 0;
-    for (const range of params.ranges) {
-      for (const maybeURI of range.maybeURIs) {
-        const uriRange = await this.findTextRange({
-          text:  maybeURI.original,
-          range: range,
-          tabId: params.tabId
-        });
-        if (uriRange) {
-          results.push({
-            text:  maybeURI.original,
-            range: uriRange,
-            uri:   maybeURI.uri
+        const maybeURIs = Array.from(match).map(maybeURI => this.sanitizeURIString(maybeURI));
+        range.maybeURIs = [];
+        for (const maybeURI of maybeURIs) {
+          const uri = this.fixupURI(maybeURI, params.baseURI);
+          if (uri in uniqueURIs)
+            continue;
+          uniqueURIs[uri] = true;
+          range.maybeURIs.push({
+            original: maybeURI,
+            uri:      uri
           });
         }
-        count++;
-        if (Date.now() - startAt > 250)
-          params.onProgress && params.onProgress(count / maxCount);
-        if (count % 100 == 0)
-          await wait(0);
+        maxCount += range.maybeURIs.length;
       }
-    }
-    params.onProgress && params.onProgress(1);
-    results.sort((aA, aB) =>
-      aA.range.startTextNodePos - aB.range.startTextNodePos ||
-      aA.range.startNodePos - aB.range.startNodePos ||
-      aA.range.startOffset - aB.range.startOffset);
-    log(' => ', results);
+
+      let count = 0;
+      for (const range of params.ranges) {
+        for (const maybeURI of range.maybeURIs) {
+          const uriRange = await this.findTextRange({
+            text:  maybeURI.original,
+            range: range,
+            tabId: params.tabId
+          });
+          if (uriRange) {
+            results.push({
+              text:  maybeURI.original,
+              range: uriRange,
+              uri:   maybeURI.uri
+            });
+          }
+          count++;
+          if (Date.now() - startAt > 250)
+            params.onProgress && params.onProgress(count / maxCount);
+          if (count % 100 == 0)
+            await wait(0);
+        }
+      }
+      params.onProgress && params.onProgress(1);
+      results.sort((aA, aB) =>
+        aA.range.startTextNodePos - aB.range.startTextNodePos ||
+        aA.range.startNodePos - aB.range.startNodePos ||
+        aA.range.startOffset - aB.range.startOffset);
+      log(' => ', results);
     }
     catch(error){
       console.error(error);
