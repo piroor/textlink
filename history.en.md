@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.2 (2020.5.5)
+   * Use the [public suffix list](https://publicsuffix.org/) as the source of known top level domains. URL-like strings including a hostname with a top level domain included in the list are detected as effective URLs now.
    * Fix wrong behaviors of "All Configs" UI: apply imported configs to options UI immediately and treat decimal values as valid for some numeric options.
  - 6.1.1 (2020.6.8)
    * Fix unexpected slow-down of keyboard input in text fields.
