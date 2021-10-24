@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.3 (2021.10.25)
+   * Fix non-functioning of the context menu item (by [gontazaka](https://github.com/gontazaka), thanks!)
  - 6.1.2 (2020.5.5)
    * Use the [public suffix list](https://publicsuffix.org/) as the source of known top level domains. URL-like strings including a hostname with a top level domain included in the list are detected as effective URLs now.
    * Fix wrong behaviors of "All Configs" UI: apply imported configs to options UI immediately and treat decimal values as valid for some numeric options.
