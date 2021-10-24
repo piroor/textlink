@@ -40,11 +40,11 @@ var URIMatcher = {
 
   matchAll: async function(params) {
     log('matchAll: ', params);
+    const results = [];
     try{
       await this.initialized;
       params.onProgress && params.onProgress(0);
       this._updateURIRegExp();
-      const results = [];
       const startAt = Date.now();
 
       let maxCount = 0;
@@ -98,11 +98,11 @@ var URIMatcher = {
         aA.range.startTextNodePos - aB.range.startTextNodePos ||
         aA.range.startNodePos - aB.range.startNodePos ||
         aA.range.startOffset - aB.range.startOffset);
-      log(' => ', results);
     }
     catch(error){
       console.error(error);
     }
+    log(' => ', results);
     return results;
   },
 
