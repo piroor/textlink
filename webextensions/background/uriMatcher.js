@@ -50,7 +50,7 @@ var URIMatcher = {
       let maxCount = 0;
       const uniqueURIs = {};
       for (const range of params.ranges) {
-        const match = this.matchMaybeURIs(range.text);
+        const match = this.matchMaybeURIs(range.expandedText || range.text);
         if (match.length == 0) {
           range.maybeURIs = [];
           continue;

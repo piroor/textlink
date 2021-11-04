@@ -206,14 +206,8 @@ async function findURIRanges(options = {}) {
     const preceding      = getPrecedingRange(selectionRange);
     const following      = getFollowingRange(selectionRange);
     const rangeData      = getRangeData(selectionRange);
-    if (!options.includeRange) {
-      rangeData.startNodePos = rangeData.startTextNodePos;
-      delete rangeData.startTextNodePos;
-      delete rangeData.endTextNodePos;
-      rangeData.startOffset += preceding.text.length;
-      rangeData.endOffset   = preceding.text.length + selectionText.length - (selectionRange.endContainer.nodeValue - selectionRange.endOffset);
-    }
-    rangeData.text = `${preceding.text}${selectionText}${following.text}`;
+    rangeData.text = selectionText;
+    rangeData.expandedText = `${preceding.text}${selectionText}${following.text}`;
     selectionRanges.push(rangeData);
   }
   const ranges = await browser.runtime.sendMessage({
@@ -320,9 +314,7 @@ function onMessage(aMessage, aSender) {
       if (ranges.length > 0 &&
           (!('startTextNodePos' in ranges[0]) ||
            !('endTextNodePos' in ranges[0]))) {
-        gLastURIRanges = findURIRanges({
-          includeRange: true
-        });
+        gLastURIRanges = findURIRanges();
         ranges = await gLastURIRanges;
       }
       selectRanges(ranges.map(aRange => aRange.range));
