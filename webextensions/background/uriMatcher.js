@@ -55,8 +55,10 @@ var URIMatcher = {
           range.maybeURIs = [];
           continue;
         }
+        log('matchAll: loop for a range: ', { range, match });
 
         const maybeURIs = Array.from(match).map(maybeURI => this.sanitizeURIString(maybeURI));
+        log('matchAll: maybeURIs: ', maybeURIs);
         range.maybeURIs = [];
         for (const maybeURI of maybeURIs) {
           const uri = this.fixupURI(maybeURI, params.baseURI);
@@ -68,6 +70,7 @@ var URIMatcher = {
             uri:      uri
           });
         }
+        log('matchAll: range.maybeURIs: ', range.maybeURIs);
         maxCount += range.maybeURIs.length;
       }
 
@@ -79,6 +82,7 @@ var URIMatcher = {
             range: range,
             tabId: params.tabId
           });
+          log('matchAll: uriRange for URI: ', maybeURI.original, uriRange);
           if (uriRange) {
             results.push({
               text:  maybeURI.original,
