@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.4 (2021.11.4)
+   * Fix wrong URI detection around context menu commands.
  - 6.1.3 (2021.10.25)
    * Fix non-functioning of the context menu item (by [gontazaka](https://github.com/gontazaka), thanks!)
  - 6.1.2 (2020.5.5)
