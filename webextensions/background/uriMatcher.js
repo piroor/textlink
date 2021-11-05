@@ -100,7 +100,6 @@ var URIMatcher = {
       params.onProgress && params.onProgress(1);
       results.sort((aA, aB) =>
         aA.range.startTextNodePos - aB.range.startTextNodePos ||
-        aA.range.startNodePos - aB.range.startNodePos ||
         aA.range.startOffset - aB.range.startOffset);
     }
     catch(error){
