@@ -85,6 +85,15 @@ var URIMatcher = {
           });
           log('matchAll: uriRange for URI: ', maybeURI.original, uriRange);
           if (uriRange) {
+            // If the find range contains multiple URIs and longer variations
+            // appear after its shorter versions, shorter versions may be
+            // detected wrongly as "found reuslt" from the selection range.
+            // For example, on a case like:
+            //   http://example.com/ , http://example.com/<SELECTION START>fo</SELECTION END>o/
+            // both "http://example.com/" and "http://example.com/foo" will be
+            // listed as found results.
+            // To avoid such an unexpected result, we need to reject all
+            // shorter versions starting from the same position.
             const positionKey = `${range.startTextNodePos}:${range.startOffset}`;
             const longestResult = longestResultAt.get(positionKey);
             if (longestResult) {
