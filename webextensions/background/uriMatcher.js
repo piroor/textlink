@@ -40,7 +40,7 @@ var URIMatcher = {
 
   matchAll: async function(params) {
     log('matchAll: ', params);
-    const results = [];
+    const results = new Set();
     try{
       await this.initialized;
       params.onProgress && params.onProgress(0);
@@ -75,6 +75,7 @@ var URIMatcher = {
       }
 
       let count = 0;
+      const longestResultAt = new Map();
       for (const range of params.ranges) {
         for (const maybeURI of range.maybeURIs) {
           const uriRange = await this.findTextRange({
@@ -84,11 +85,20 @@ var URIMatcher = {
           });
           log('matchAll: uriRange for URI: ', maybeURI.original, uriRange);
           if (uriRange) {
-            results.push({
+            const positionKey = `${range.startTextNodePos}:${range.startOffset}`;
+            const longestResult = longestResultAt.get(positionKey);
+            if (longestResult) {
+              if (longestResult.text.length > maybeURI.original.length)
+                continue;
+              results.delete(longestResult);
+            }
+            const result = {
               text:  maybeURI.original,
               range: uriRange,
               uri:   maybeURI.uri
-            });
+            };
+            longestResultAt.set(positionKey, result);
+            results.add(result);
           }
           count++;
           if (Date.now() - startAt > 250)
@@ -98,15 +108,17 @@ var URIMatcher = {
         }
       }
       params.onProgress && params.onProgress(1);
-      results.sort((aA, aB) =>
+      const sortedResults = [...results].sort((aA, aB) =>
         aA.range.startTextNodePos - aB.range.startTextNodePos ||
         aA.range.startOffset - aB.range.startOffset);
+      log(' => ', sortedResults);
+      return sortedResults;
     }
     catch(error){
       console.error(error);
+      log(' => no result');
     }
-    log(' => ', results);
-    return results;
+    return [];
   },
 
   matchMaybeURIs(text) {
