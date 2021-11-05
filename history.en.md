@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.5 (2021.11.5)
+   * Detect only the single long URI from a selection range on itself, instead of both partial URIs and the long URI, if there are any partial URIs preceding to the selection range.
  - 6.1.4 (2021.11.4)
    * Fix wrong URI detection around context menu commands.
  - 6.1.3 (2021.10.25)
