@@ -1,6 +1,9 @@
 # History
 
  - master/HEAD
+ - 6.1.6 (2021.12.21)
+   * Trigger actions with keydown events instead of keyup. This reduces misfirering of Ctrl-Enter by immediately pressed Ctrl-V for a text including URL just after regular Enter.
+   * Update the list of effective TLDs (based on [public suffix list](https://publicsuffix.org/).)
  - 6.1.5 (2021.11.5)
    * Detect only the single long URI from a selection range on itself, instead of both partial URIs and the long URI, if there are any partial URIs preceding to the selection range.
  - 6.1.4 (2021.11.4)
