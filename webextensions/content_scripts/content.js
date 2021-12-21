@@ -33,20 +33,20 @@ async function onDblClick(event) {
   gTryingAction = false;
 }
 
-function onKeyUpThrottled(event) {
+function onKeyDownThrottled(event) {
   if (event.target.ownerDocument != document ||
       event.key != 'Enter')
     return;
-  if (onKeyUpThrottled.timeout)
-    clearTimeout(onKeyUpThrottled.timeout);
-  onKeyUpThrottled.timeout = setTimeout(() => {
-    onKeyUpThrottled.timeout = null;
-    onKeyUp(event);
+  if (onKeyDownThrottled.timeout)
+    clearTimeout(onKeyDownThrottled.timeout);
+  onKeyDownThrottled.timeout = setTimeout(() => {
+    onKeyDownThrottled.timeout = null;
+    onKeyDown(event);
   }, 100);
 }
-onKeyUpThrottled.timeout = null;
+onKeyDownThrottled.timeout = null;
 
-async function onKeyUp(event) {
+async function onKeyDown(event) {
   const data = getSelectionEventData(event);
   if (!data)
     return;
@@ -255,7 +255,7 @@ function getSelectionEventData(event) {
       event.button == 0) {
     data.event.type = 'dblclick';
   }
-  else if (event.type == 'keyup' &&
+  else if (event.type == 'keydown' &&
            event.key == 'Enter') {
     data.event.type = 'enter';
   }
@@ -379,14 +379,14 @@ function updateProgress() {
 }
 
 window.addEventListener('dblclick', onDblClick, { capture: true });
-window.addEventListener('keyup', onKeyUpThrottled, { capture: true });
+window.addEventListener('keydown', onKeyDownThrottled, { capture: true });
 window.addEventListener('selectionchange', onSelectionChange, { capture: true });
 window.addEventListener('focus', onFocused, { capture: true });
 browser.runtime.onMessage.addListener(onMessage);
 
 window.addEventListener('unload', () => {
   window.removeEventListener('dblclick', onDblClick, { capture: true });
-  window.removeEventListener('keyup', onKeyUpThrottled, { capture: true });
+  window.removeEventListener('keydown', onKeyDownThrottled, { capture: true });
   window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
   window.removeEventListener('focus', onFocused, { capture: true });
   browser.runtime.onMessage.removeListener(onMessage);
