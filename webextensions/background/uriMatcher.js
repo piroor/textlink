@@ -982,21 +982,12 @@ var URIMatcher = {
     configs.$addObserver(this);
 
     this.initialized = (async () => {
-      const request = new XMLHttpRequest();
-      try {
-        await new Promise((resolve, reject) => {
-          request.open('GET', browser.extension.getURL('extlib/public_suffix_list.dat'), true);
-          request.overrideMimeType('text/plain');
-          request.addEventListener('load', resolve, { once: true });
-          request.addEventListener('error', reject, { once: true });
-          request.send(null);
-        });
-        this.allTLD = request.responseText.replace(/^\/\/.*\n/gm, '').replace(/^\*/gm, '').replace(/\./gm, '\\.').replace(/\n\n+/g, '\n').trim().split('\n');
-        log(this.allTLD.join('\n'));
-      }
-      catch(error) {
-        console.error(error);
-      }
+      const response = await fetch(browser.extension.getURL('extlib/public_suffix_list.dat'));
+      if (!response.ok)
+        return false;
+      const body = await response.text();
+      this.allTLD = body.replace(/^\/\/.*\n/gm, '').replace(/^\*/gm, '').replace(/\./gm, '\\.').replace(/\n\n+/g, '\n').trim().split('\n');
+      log(this.allTLD.join('\n'));
       return true;
     })();
   }
