@@ -5,6 +5,11 @@
 */
 'use strict';
 
+const STATE_CONTINUE_PHYSICALLY = 1 << 0;
+const STATE_CONTINUE_VISUALLY   = 1 << 1;
+const STATE_CONTINUE            = STATE_CONTINUE_PHYSICALLY | STATE_CONTINUE_VISUALLY;
+const STATE_SEPARATED           = 1 << 2;
+
 function rangeToText(range) {
   const walker = createVisibleTextNodeWalker();
   walker.currentNode = range.startContainer;
@@ -30,20 +35,43 @@ function rangeToText(range) {
       }
       break;
     }
-    result += nodeToText(node);
+    const { text, state } = nodeToText(node);
+    result += text;
   }
 
   return result; // .replace(/\n\s*|\s*\n/g, '\n');
 }
 
 function nodeToText(node) {
-  if (node.nodeType == Node.ELEMENT_NODE) {
-    if (/^br$/i.test(String(node.localName)) ||
-        !/^inline/.test(window.getComputedStyle(node, null).display))
-      return '\n';
-    return '';
-  }
-  return node.nodeValue;
+  if (node.nodeType != Node.ELEMENT_NODE)
+    return {
+      text:  node.nodeValue,
+      state: STATE_CONTINUE_PHYSICALLY,
+    };
+
+  if (/^br$/i.test(String(node.localName)))
+    return {
+      text: '\n',
+      state: STATE_SEPARATED,
+    };
+
+  if (/^inline/.test(window.getComputedStyle(node, null).display))
+    return {
+      text:  '',
+      state: STATE_CONTINUE_PHYSICALLY,
+    };
+
+  if (node.offsetParent &&
+      /^inline/.test(window.getComputedStyle(node.offsetParent, null).display))
+    return {
+      text:  '',
+      state: STATE_CONTINUE_VISUALLY,
+    };
+
+  return {
+    text:  '\n',
+    state: STATE_SEPARATED,
+  };
 }
 
 function getPrecedingRange(sourceRange) {
@@ -68,10 +96,9 @@ function getPrecedingRange(sourceRange) {
     else {
       range.setStartBefore(walker.currentNode);
     }
-    const partialText = nodeToText(walker.currentNode);
-    if (partialText.indexOf('\n') > -1) {
+    const { text: partialText, state } = nodeToText(walker.currentNode);
+    if (state == STATE_SEPARATED)
       break;
-    }
     text = `${partialText}${text}`;
   }
   return { range, text };
@@ -99,8 +126,8 @@ function getFollowingRange(sourceRange) {
     else {
       range.setEndAfter(walker.currentNode);
     }
-    const partialText = nodeToText(walker.currentNode);
-    if (partialText.indexOf('\n') > -1)
+    const { text: partialText, state } = nodeToText(walker.currentNode);
+    if (state == STATE_SEPARATED)
       break;
     text += partialText;
   }
