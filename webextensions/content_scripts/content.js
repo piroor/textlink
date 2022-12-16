@@ -203,11 +203,11 @@ async function findURIRanges(options = {}) {
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     const selectionRange = selection.getRangeAt(i);
     const selectionText  = rangeToText(selectionRange);
-    const preceding      = getPrecedingRange(selectionRange);
-    const following      = getFollowingRange(selectionRange);
+    const precedings     = getPrecedingRanges(selectionRange);
+    const followings     = getFollowingRanges(selectionRange);
     const rangeData      = getRangeData(selectionRange);
     rangeData.text = selectionText;
-    rangeData.expandedText = `${preceding.text}${selectionText}${following.text}`;
+    rangeData.expandedText = `${precedings.map(part => part.text).join('')}${selectionText}${followings.map(part => part.text).join('')}`;
     selectionRanges.push(rangeData);
   }
   const ranges = await browser.runtime.sendMessage({
@@ -233,9 +233,9 @@ function getSelectionEventData(event) {
   }
   else {
     const selectionRange = selection.getRangeAt(0);
-    const preceding      = getPrecedingRange(selectionRange);
-    const following      = getFollowingRange(selectionRange);
-    text   = `${preceding.text}${rangeToText(selectionRange)}${following.text}`;
+    const precedings     = getPrecedingRanges(selectionRange);
+    const followings     = getFollowingRanges(selectionRange);
+    text   = `${precedings.map(part => part.text).join('')}${rangeToText(selectionRange)}${followings.map(part => part.text).join('')}`;
     cursor = getRangeData(selectionRange);
   }
 

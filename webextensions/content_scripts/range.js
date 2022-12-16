@@ -7,7 +7,6 @@
 
 const STATE_CONTINUE_PHYSICALLY = 1 << 0;
 const STATE_CONTINUE_VISUALLY   = 1 << 1;
-const STATE_CONTINUE            = STATE_CONTINUE_PHYSICALLY | STATE_CONTINUE_VISUALLY;
 const STATE_SEPARATED           = 1 << 2;
 
 function rangeToText(range) {
@@ -74,7 +73,8 @@ function nodeToText(node) {
   };
 }
 
-function getPrecedingRange(sourceRange) {
+function getPrecedingRanges(sourceRange) {
+  const ranges = [];
   const range = document.createRange();
   range.setStart(sourceRange.startContainer, sourceRange.startOffset);
   range.setEnd(sourceRange.startContainer, sourceRange.startOffset);
@@ -97,14 +97,27 @@ function getPrecedingRange(sourceRange) {
       range.setStartBefore(walker.currentNode);
     }
     const { text: partialText, state } = nodeToText(walker.currentNode);
-    if (state == STATE_SEPARATED)
-      break;
-    text = `${partialText}${text}`;
+    switch (state) {
+      case STATE_CONTINUE_PHYSICALLY:
+        text = `${partialText}${text}`;
+        continue;
+
+      case STATE_CONTINUE_VISUALLY:
+        ranges.unshift({ range: range.cloneRange(), text });
+        text = partialText;
+        range.collapse(true);
+        continue;
+
+      case STATE_SEPARATED:
+        break;
+    }
   }
-  return { range, text };
+  ranges.unshift({ range, text });
+  return ranges;
 }
 
-function getFollowingRange(sourceRange) {
+function getFollowingRanges(sourceRange) {
+  const ranges = [];
   const range = document.createRange();
   range.setStart(sourceRange.endContainer, sourceRange.endOffset);
   range.setEnd(sourceRange.endContainer, sourceRange.endOffset);
@@ -127,11 +140,23 @@ function getFollowingRange(sourceRange) {
       range.setEndAfter(walker.currentNode);
     }
     const { text: partialText, state } = nodeToText(walker.currentNode);
-    if (state == STATE_SEPARATED)
-      break;
-    text += partialText;
+    switch (state) {
+      case STATE_CONTINUE_PHYSICALLY:
+        text += partialText;
+        continue;
+
+      case STATE_CONTINUE_VISUALLY:
+        ranges.push({ range: range.cloneRange(), text });
+        text = partialText;
+        range.collapse(false);
+        continue;
+
+      case STATE_SEPARATED:
+        break;
+    }
   }
-  return { range, text };
+  ranges.push({ range, text });
+  return ranges;
 }
 
 function createVisibleTextNodeWalker() {
