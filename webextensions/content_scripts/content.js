@@ -207,7 +207,7 @@ async function findURIRanges(options = {}) {
     const followings     = getFollowingRanges(selectionRange);
     const rangeData      = getRangeData(selectionRange);
     rangeData.text = selectionText;
-    rangeData.expandedText = `${precedings.map(part => part.text).join('')}${selectionText}${followings.map(part => part.text).join('')}`;
+    rangeData.expandedText = `${precedings.texts.join('')}${selectionText}${followings.texts.join('')}`;
     selectionRanges.push(rangeData);
   }
   const ranges = await browser.runtime.sendMessage({
@@ -235,7 +235,7 @@ function getSelectionEventData(event) {
     const selectionRange = selection.getRangeAt(0);
     const precedings     = getPrecedingRanges(selectionRange);
     const followings     = getFollowingRanges(selectionRange);
-    text   = `${precedings.map(part => part.text).join('')}${rangeToText(selectionRange)}${followings.map(part => part.text).join('')}`;
+    text   = `${precedings.texts.join('')}${rangeToText(selectionRange)}${followings.texts.join('')}`;
     cursor = getRangeData(selectionRange);
   }
 

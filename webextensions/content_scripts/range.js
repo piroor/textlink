@@ -74,6 +74,7 @@ function nodeToText(node) {
 }
 
 function getPrecedingRanges(sourceRange) {
+  const texts  = [];
   const ranges = [];
   const range = document.createRange();
   range.setStart(sourceRange.startContainer, sourceRange.startOffset);
@@ -103,7 +104,8 @@ function getPrecedingRanges(sourceRange) {
         continue;
 
       case STATE_CONTINUE_VISUALLY:
-        ranges.unshift({ range: range.cloneRange(), text });
+        texts.unshift(text);
+        ranges.unshift(range.cloneRange());
         text = partialText;
         range.collapse(true);
         continue;
@@ -112,11 +114,13 @@ function getPrecedingRanges(sourceRange) {
         break;
     }
   }
-  ranges.unshift({ range, text });
-  return ranges;
+  texts.unshift(text);
+  ranges.unshift(range);
+  return { texts, ranges };
 }
 
 function getFollowingRanges(sourceRange) {
+  const texts  = [];
   const ranges = [];
   const range = document.createRange();
   range.setStart(sourceRange.endContainer, sourceRange.endOffset);
@@ -146,7 +150,8 @@ function getFollowingRanges(sourceRange) {
         continue;
 
       case STATE_CONTINUE_VISUALLY:
-        ranges.push({ range: range.cloneRange(), text });
+        texts.push(text);
+        ranges.push(range.cloneRange());
         text = partialText;
         range.collapse(false);
         continue;
@@ -155,8 +160,9 @@ function getFollowingRanges(sourceRange) {
         break;
     }
   }
-  ranges.push({ range, text });
-  return ranges;
+  texts.push(text);
+  ranges.push(range);
+  return { texts, ranges };
 }
 
 function createVisibleTextNodeWalker() {
