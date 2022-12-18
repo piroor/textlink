@@ -7,7 +7,7 @@
 
 gLogContext = 'content';
 
-const INLINE_BOUNDARY_NODE = 'textlink-boundary-inline-node';
+const BOUNDARY_INLINE_NODE = 'textlink-boundary-inline-node';
 
 let gTryingAction = false;
 let gLastActionResult = null;
@@ -23,7 +23,7 @@ async function onDblClick(event) {
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
   for (const node of data.boundaryInlineNodes) {
-    node.classList.add(INLINE_BOUNDARY_NODE);
+    node.classList.add(BOUNDARY_INLINE_NODE);
   }
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
@@ -31,7 +31,7 @@ async function onDblClick(event) {
     type: kCOMMAND_TRY_ACTION
   });
   for (const node of data.boundaryInlineNodes) {
-    node.classList.remove(INLINE_BOUNDARY_NODE);
+    node.classList.remove(BOUNDARY_INLINE_NODE);
   }
   if (textFieldSelection &&
       gLastActionResult &&
@@ -63,7 +63,7 @@ async function onKeyDown(event) {
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
   for (const node of data.boundaryInlineNodes) {
-    node.classList.add(INLINE_BOUNDARY_NODE);
+    node.classList.add(BOUNDARY_INLINE_NODE);
   }
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
@@ -71,7 +71,7 @@ async function onKeyDown(event) {
     type: kCOMMAND_TRY_ACTION
   });
   for (const node of data.boundaryInlineNodes) {
-    node.classList.remove(INLINE_BOUNDARY_NODE);
+    node.classList.remove(BOUNDARY_INLINE_NODE);
   }
   if (textFieldSelection &&
       gLastActionResult &&
@@ -229,7 +229,7 @@ async function findURIRanges(options = {}) {
     boundaryInlineNodes.push(...selectionText.boundaryInlineNodes, ...precedings.boundaryInlineNodes, ...followings.boundaryInlineNodes);
   }
   for (const node of boundaryInlineNodes) {
-    node.classList.add(INLINE_BOUNDARY_NODE);
+    node.classList.add(BOUNDARY_INLINE_NODE);
   }
   const ranges = await browser.runtime.sendMessage({
     type:   kCOMMAND_FIND_URI_RANGES,
@@ -237,7 +237,7 @@ async function findURIRanges(options = {}) {
     ranges: selectionRanges
   });
   for (const node of boundaryInlineNodes) {
-    node.classList.remove(INLINE_BOUNDARY_NODE);
+    node.classList.remove(BOUNDARY_INLINE_NODE);
   }
   gFindingURIRanges = false;
   return ranges;
