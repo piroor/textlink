@@ -10,6 +10,7 @@
   The API "browser.find.find()" (and Firefox's native in-page find feature also)
   fails to find a term across the boundary. Thus we need to change its "display"
   temporary while finding URI-like texts in webpages.
+  See also: https://bugzilla.mozilla.org/show_bug.cgi?id=1806291
 */
 .textlink-boundary-inline-node:not(#never#match#to#any#element) {
   display: inline !important;

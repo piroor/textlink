@@ -22,6 +22,7 @@ async function onDblClick(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
+  // workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1806291
   for (const node of data.boundaryInlineNodes) {
     node.classList.add(BOUNDARY_INLINE_NODE);
   }
@@ -62,6 +63,7 @@ async function onKeyDown(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
+  // workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1806291
   for (const node of data.boundaryInlineNodes) {
     node.classList.add(BOUNDARY_INLINE_NODE);
   }
@@ -228,6 +230,7 @@ async function findURIRanges(options = {}) {
     selectionRanges.push(rangeData);
     boundaryInlineNodes.push(...selectionText.boundaryInlineNodes, ...precedings.boundaryInlineNodes, ...followings.boundaryInlineNodes);
   }
+  // workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1806291
   for (const node of boundaryInlineNodes) {
     node.classList.add(BOUNDARY_INLINE_NODE);
   }
