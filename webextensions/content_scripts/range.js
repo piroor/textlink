@@ -21,6 +21,7 @@ function rangeToText(range) {
     result += text;
   }
 
+  const boundaryInlineNodes = [];
   while (walker.nextNode()) {
     const node = walker.currentNode;
     const position = range.endContainer.compareDocumentPosition(node);
@@ -36,9 +37,14 @@ function rangeToText(range) {
     }
     const { text, state } = nodeToText(node);
     result += text;
+    if (state == STATE_CONTINUE_VISUALLY)
+      boundaryInlineNodes.push(node.offsetParent);
   }
 
-  return result; // .replace(/\n\s*|\s*\n/g, '\n');
+  return {
+    text: result, // .replace(/\n\s*|\s*\n/g, '\n')
+    boundaryInlineNodes,
+  };
 }
 
 function nodeToText(node) {
@@ -76,6 +82,7 @@ function nodeToText(node) {
 function getPrecedingRanges(sourceRange) {
   const texts  = [];
   const ranges = [];
+  const boundaryInlineNodes = [];
   const range = document.createRange();
   range.setStart(sourceRange.startContainer, sourceRange.startOffset);
   range.setEnd(sourceRange.startContainer, sourceRange.startOffset);
@@ -106,6 +113,7 @@ function getPrecedingRanges(sourceRange) {
       case STATE_CONTINUE_VISUALLY:
         texts.unshift(text);
         ranges.unshift(range.cloneRange());
+        boundaryInlineNodes.unshift(walker.currentNode.offsetParent);
         text = partialText;
         range.collapse(true);
         continue;
@@ -116,12 +124,13 @@ function getPrecedingRanges(sourceRange) {
   }
   texts.unshift(text);
   ranges.unshift(range);
-  return { texts, ranges };
+  return { texts, ranges, boundaryInlineNodes };
 }
 
 function getFollowingRanges(sourceRange) {
   const texts  = [];
   const ranges = [];
+  const boundaryInlineNodes = [];
   const range = document.createRange();
   range.setStart(sourceRange.endContainer, sourceRange.endOffset);
   range.setEnd(sourceRange.endContainer, sourceRange.endOffset);
@@ -152,6 +161,7 @@ function getFollowingRanges(sourceRange) {
       case STATE_CONTINUE_VISUALLY:
         texts.push(text);
         ranges.push(range.cloneRange());
+        boundaryInlineNodes.push(walker.currentNode.offsetParent);
         text = partialText;
         range.collapse(false);
         continue;
@@ -162,7 +172,7 @@ function getFollowingRanges(sourceRange) {
   }
   texts.push(text);
   ranges.push(range);
-  return { texts, ranges };
+  return { texts, ranges, boundaryInlineNodes };
 }
 
 function createVisibleTextNodeWalker() {

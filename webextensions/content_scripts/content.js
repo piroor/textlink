@@ -7,6 +7,8 @@
 
 gLogContext = 'content';
 
+const INLINE_BOUNDARY_NODE = 'textlink-boundary-inline-node';
+
 let gTryingAction = false;
 let gLastActionResult = null;
 let gMatchAllProgress = 0;
@@ -20,10 +22,17 @@ async function onDblClick(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
+  for (const node of data.boundaryInlineNodes) {
+    node.classList.add(INLINE_BOUNDARY_NODE);
+  }
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
+    boundaryInlineNodes: [], // don't send raw DOM nodes
     type: kCOMMAND_TRY_ACTION
   });
+  for (const node of data.boundaryInlineNodes) {
+    node.classList.remove(INLINE_BOUNDARY_NODE);
+  }
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
@@ -53,10 +62,17 @@ async function onKeyDown(event) {
   gTryingAction = true;
   gLastActionResult = null;
   const textFieldSelection = isInputField(event.target);
+  for (const node of data.boundaryInlineNodes) {
+    node.classList.add(INLINE_BOUNDARY_NODE);
+  }
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
+    boundaryInlineNodes: [], // don't send raw DOM nodes
     type: kCOMMAND_TRY_ACTION
   });
+  for (const node of data.boundaryInlineNodes) {
+    node.classList.remove(INLINE_BOUNDARY_NODE);
+  }
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
@@ -200,21 +216,29 @@ async function findURIRanges(options = {}) {
   }
 
   const selectionRanges = [];
+  const boundaryInlineNodes = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     const selectionRange = selection.getRangeAt(i);
     const selectionText  = rangeToText(selectionRange);
     const precedings     = getPrecedingRanges(selectionRange);
     const followings     = getFollowingRanges(selectionRange);
     const rangeData      = getRangeData(selectionRange);
-    rangeData.text = selectionText;
-    rangeData.expandedText = `${precedings.texts.join('')}${selectionText}${followings.texts.join('')}`;
+    rangeData.text = selectionText.text;
+    rangeData.expandedText = `${precedings.texts.join('')}${selectionText.text}${followings.texts.join('')}`;
     selectionRanges.push(rangeData);
+    boundaryInlineNodes.push(...selectionText.boundaryInlineNodes, ...precedings.boundaryInlineNodes, ...followings.boundaryInlineNodes);
+  }
+  for (const node of boundaryInlineNodes) {
+    node.classList.add(INLINE_BOUNDARY_NODE);
   }
   const ranges = await browser.runtime.sendMessage({
     type:   kCOMMAND_FIND_URI_RANGES,
     base:   location.href,
     ranges: selectionRanges
   });
+  for (const node of boundaryInlineNodes) {
+    node.classList.remove(INLINE_BOUNDARY_NODE);
+  }
   gFindingURIRanges = false;
   return ranges;
 }
@@ -226,17 +250,20 @@ function getSelectionEventData(event) {
   if (!textFieldSelection && selection.rangeCount != 1)
     return null;
 
-  let text, cursor;
+  let text, cursor, boundaryInlineNodes;
   if (textFieldSelection) {
     cursor = getFieldRangeData(event.target);
     text   = cursor.text;
+    boundaryInlineNodes = [];
   }
   else {
     const selectionRange = selection.getRangeAt(0);
+    const selectionText  = rangeToText(selectionRange);
     const precedings     = getPrecedingRanges(selectionRange);
     const followings     = getFollowingRanges(selectionRange);
-    text   = `${precedings.texts.join('')}${rangeToText(selectionRange)}${followings.texts.join('')}`;
+    text   = `${precedings.texts.join('')}${selectionText.text}${followings.texts.join('')}`;
     cursor = getRangeData(selectionRange);
+    boundaryInlineNodes = [...selectionText.boundaryInlineNodes, ...precedings.boundaryInlineNodes, ...followings.boundaryInlineNodes];
   }
 
   const data = {
@@ -248,7 +275,8 @@ function getSelectionEventData(event) {
       metaKey:  event.metaKey,
       shiftKey: event.shiftKey,
       inEditable: textFieldSelection || isEditableNode(event.target)
-    }
+    },
+    boundaryInlineNodes,
   };
 
   if (event.type == 'dblclick' &&

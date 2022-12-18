@@ -1,0 +1,16 @@
+/*
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
+/*
+  An elements with "display:inline-flex" is visually rendered as a regular
+  inline box, but it is actually treated as a non-inline box internally.
+  The API "browser.find.find()" (and Firefox's native in-page find feature also)
+  fails to find a term across the boundary. Thus we need to change its "display"
+  temporary while finding URI-like texts in webpages.
+*/
+.textlink-boundary-inline-node:not(#never#match#to#any#element) {
+  display: inline !important;
+}
