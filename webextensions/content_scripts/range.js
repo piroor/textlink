@@ -195,6 +195,25 @@ function createVisibleTextNodeWalker() {
 function isNodeVisible(node) {
   if (node.nodeType == Node.TEXT_NODE)
     node = node.parentNode;
+
+  return isNodeVisibleFromPoint(node);
+  //return isNodeVisibleFromStyle(node);
+}
+
+function isNodeVisibleFromPoint(node) {
+  if (!nodeVisibilityCache)
+    nodeVisibilityCache = new WeakMap();
+  if (nodeVisibilityCache.has(node))
+    return nodeVisibilityCache.get(node);
+
+  const rect = node.getBoundingClientRect();
+  const visibleElements = document.elementsFromPoint(rect.left, rect.top);
+  const visbility = new Set(visibleElements).has(node);
+  nodeVisibilityCache.set(node, visbility);
+  return visbility;
+}
+
+function isNodeVisibleFromStyle(node) {
   const givenNode = node;
   if (!nodeVisibilityCache)
     nodeVisibilityCache = new WeakMap();
