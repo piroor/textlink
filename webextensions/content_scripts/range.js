@@ -196,44 +196,23 @@ function isNodeVisible(node) {
   if (node.nodeType == Node.TEXT_NODE)
     node = node.parentNode;
 
-  return isNodeVisibleFromPoint(node);
-  //return isNodeVisibleFromStyle(node);
-}
-
-function isNodeVisibleFromPoint(node) {
   if (!nodeVisibilityCache)
     nodeVisibilityCache = new WeakMap();
   if (nodeVisibilityCache.has(node))
     return nodeVisibilityCache.get(node);
 
-  const rect = node.getBoundingClientRect();
+  const rects = node.getClientRects();
+  if (rects.length == 0) {
+    nodeVisibilityCache.set(node, false);
+    return false;
+  }
+
+  const rect = rects[0];
   const visibleElements = document.elementsFromPoint(rect.left, rect.top);
-  const visbility = new Set(visibleElements).has(node);
-  nodeVisibilityCache.set(node, visbility);
-  return visbility;
-}
-
-function isNodeVisibleFromStyle(node) {
-  const givenNode = node;
-  if (!nodeVisibilityCache)
-    nodeVisibilityCache = new WeakMap();
-  if (nodeVisibilityCache.has(node))
-    return nodeVisibilityCache.get(node);
-  do {
-    if (node.nodeType != Node.ELEMENT_NODE)
-      break;
-    if (nodeVisibilityCache.get(node) === false)
-      return false;
-    const style = window.getComputedStyle(node, null);
-    if (style.display == 'none' ||
-        /^(collapse|hidden)$/.test(style.visibility)) {
-      nodeVisibilityCache.set(node, false);
-      nodeVisibilityCache.set(givenNode, false);
-      return false;
-    }
-  } while (node = node.parentNode);
-  nodeVisibilityCache.set(givenNode, true);
-  return true;
+  const hit = new Set(visibleElements).has(node);
+  const visible = hit && window.getComputedStyle(node, null).visibility != 'hidden';
+  nodeVisibilityCache.set(node, visible);
+  return visible;
 }
 
 
