@@ -201,6 +201,13 @@ function isNodeVisible(node) {
   if (nodeVisibilityCache.has(node))
     return nodeVisibilityCache.get(node);
 
+  // We should return earlier if the node is certainly invisible,
+  // because getClientRects and elementsFromPointElements are slow.
+  if (node.offsetWidth == 0 || node.offsetHeight == 0) {
+    nodeVisibilityCache.set(node, false);
+    return false;
+  }
+
   const rects = node.getClientRects();
   if (rects.length == 0) {
     nodeVisibilityCache.set(node, false);
