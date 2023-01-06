@@ -4,7 +4,7 @@
  - 6.1.7 (2023.1.7)
    * Support URL texts separated by virtual inline elements (e.g. URL text including screen name links on Twitter).
    * Optimize performance to check node visibility.
-   * Update effective TLD list. (powered by the [public suffix list](https://publicsuffix.org/))
+   * Update the list of effective TLDs (based on [public suffix list](https://publicsuffix.org/).)
  - 6.1.6 (2021.12.21)
    * Trigger actions with keydown events instead of keyup. This reduces misfirering of Ctrl-Enter by immediately pressed Ctrl-V for a text including URL just after regular Enter.
    * Update the list of effective TLDs (based on [public suffix list](https://publicsuffix.org/).)
