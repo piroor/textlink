@@ -4,7 +4,7 @@
  - 6.1.7 (2023.1.7)
    * 事実上のインライン要素で区切られたURL文字列を受け付けるように↓（例：Twitter上でのスクリーンネームのリンクを含むURL文字列）
    * 要素ノードの可視性を確認する処理を高速化
-   * 基地のトップレベルドメインのリストを更新（powered by the [public suffix list](https://publicsuffix.org/)）
+   * 有効なTLDのリストを更新（[public suffix list](https://publicsuffix.org/)を使用）
  - 6.1.6 (2021.12.21)
    * キー操作に対する反応をkeyupではなくkeydownのタイミングで行うようにした（この変更により、Enterの直後にURLを含む文字列をCtrl-Vで貼り付けた場合のCtrl-Enterとの誤認を防ぎます）
    * 有効なTLDのリストを更新（[public suffix list](https://publicsuffix.org/)を使用）
