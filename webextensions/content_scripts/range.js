@@ -208,11 +208,12 @@ function isNodeVisible(node) {
   }
 
   const rect = rects[0];
+  // elementsFromPointElements doesn't list "visibility: hidden" elements,
+  // so we don't need to do double-check with computed style.
   const visibleElements = document.elementsFromPoint(rect.left, rect.top);
   const hit = new Set(visibleElements).has(node);
-  const visible = hit && window.getComputedStyle(node, null).visibility != 'hidden';
-  nodeVisibilityCache.set(node, visible);
-  return visible;
+  nodeVisibilityCache.set(node, hit);
+  return hit;
 }
 
 
