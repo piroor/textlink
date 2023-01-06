@@ -217,6 +217,8 @@ async function findURIRanges(options = {}) {
     return [];
   }
 
+  clearNodeVisibilityCache();
+
   const selectionRanges = [];
   const boundaryInlineNodes = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
@@ -252,6 +254,8 @@ function getSelectionEventData(event) {
   const selection = window.getSelection();
   if (!textFieldSelection && selection.rangeCount != 1)
     return null;
+
+  clearNodeVisibilityCache();
 
   let text, cursor, boundaryInlineNodes;
   if (textFieldSelection) {

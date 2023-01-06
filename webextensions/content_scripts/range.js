@@ -175,6 +175,11 @@ function getFollowingRanges(sourceRange) {
   return { texts, ranges, boundaryInlineNodes };
 }
 
+let nodeVisibilityCache;
+function clearNodeVisibilityCache() {
+  nodeVisibilityCache = null;
+}
+
 function createVisibleTextNodeWalker() {
   return document.createTreeWalker(
     document,
@@ -190,14 +195,25 @@ function createVisibleTextNodeWalker() {
 function isNodeVisible(node) {
   if (node.nodeType == Node.TEXT_NODE)
     node = node.parentNode;
+  const givenNode = node;
+  if (!nodeVisibilityCache)
+    nodeVisibilityCache = new WeakMap();
+  if (nodeVisibilityCache.has(node))
+    return nodeVisibilityCache.get(node);
   do {
     if (node.nodeType != Node.ELEMENT_NODE)
       break;
+    if (nodeVisibilityCache.get(node) === false)
+      return false;
     const style = window.getComputedStyle(node, null);
     if (style.display == 'none' ||
-        /^(collapse|hidden)$/.test(style.visibility))
+        /^(collapse|hidden)$/.test(style.visibility)) {
+      nodeVisibilityCache.set(node, false);
+      nodeVisibilityCache.set(givenNode, false);
       return false;
+    }
   } while (node = node.parentNode);
+  nodeVisibilityCache.set(givenNode, true);
   return true;
 }
 
