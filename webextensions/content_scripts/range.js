@@ -86,6 +86,12 @@ function getPrecedingRanges(sourceRange) {
   const range = document.createRange();
   range.setStart(sourceRange.startContainer, sourceRange.startOffset);
   range.setEnd(sourceRange.startContainer, sourceRange.startOffset);
+
+  const scanningBoundaryPoint = range.cloneRange();
+  scanningBoundaryPoint.selectNodeContents(findNearestContainerElement(sourceRange.startContainer));
+  scanningBoundaryPoint.collapse(true);
+  const scanningRange = range.cloneRange();
+
   const walker = createVisibleTextNodeWalker();
   walker.currentNode = range.startContainer;
   let text = '';
@@ -98,6 +104,13 @@ function getPrecedingRanges(sourceRange) {
       walker.currentNode = previousNode;
   }
   while (walker.previousNode()) {
+    // We should accept text nodes in the same container.
+    scanningRange.selectNode(walker.currentNode);
+    if (scanningRange.compareBoundaryPoints(Range.START_TO_END, scanningBoundaryPoint) <= 0) {
+      //console.log('getPrecedingRanges: reached to the boundary', { container: scanningBoundaryPoint.startContainer, current: walker.currentNode });
+      break;
+    }
+
     if (walker.currentNode.nodeType == Node.TEXT_NODE) {
       range.setStart(walker.currentNode, 0);
     }
@@ -124,6 +137,10 @@ function getPrecedingRanges(sourceRange) {
   }
   texts.unshift(text);
   ranges.unshift(range);
+
+  scanningBoundaryPoint.detach();
+  scanningRange.detach();
+
   return { texts, ranges, boundaryInlineNodes };
 }
 
@@ -134,6 +151,12 @@ function getFollowingRanges(sourceRange) {
   const range = document.createRange();
   range.setStart(sourceRange.endContainer, sourceRange.endOffset);
   range.setEnd(sourceRange.endContainer, sourceRange.endOffset);
+
+  const scanningBoundaryPoint = range.cloneRange();
+  scanningBoundaryPoint.selectNodeContents(findNearestContainerElement(sourceRange.endContainer));
+  scanningBoundaryPoint.collapse(false);
+  const scanningRange = range.cloneRange();
+
   const walker = createVisibleTextNodeWalker();
   walker.currentNode = range.endContainer;
   let text = '';
@@ -146,6 +169,13 @@ function getFollowingRanges(sourceRange) {
       walker.currentNode = nextNode;
   }
   while (walker.nextNode()) {
+    // We should accept text nodes in the same container.
+    scanningRange.selectNode(walker.currentNode);
+    if (scanningRange.compareBoundaryPoints(Range.END_TO_START, scanningBoundaryPoint) >= 0) {
+      //console.log('getFollowingRanges: reached to the boundary', { container: scanningBoundaryPoint.endContainer, current: walker.currentNode });
+      break;
+    }
+
     if (walker.currentNode.nodeType == Node.TEXT_NODE) {
       range.setEnd(walker.currentNode, walker.currentNode.nodeValue.length);
     }
@@ -172,6 +202,10 @@ function getFollowingRanges(sourceRange) {
   }
   texts.push(text);
   ranges.push(range);
+
+  scanningBoundaryPoint.detach();
+  scanningRange.detach();
+
   return { texts, ranges, boundaryInlineNodes };
 }
 
@@ -306,6 +340,22 @@ function getTextNodePosition(node) {
     node,
     XPathResult.NUMBER_TYPE
   ).numberValue;
+}
+
+function findNearestContainerElement(node) {
+  let container = node;
+  if (container.nodeType != Node.ELEMENT_NODE)
+    container = container.parentNode;
+  while (container &&
+         /^inline/.test(window.getComputedStyle(container, null).display)) {
+    container = container.parentNode;
+  }
+
+  if (node.offsetParent &&
+      container.contains(node.offsetParent))
+    return node.offsetParent;
+
+  return container;
 }
 
 const kINPUT_TEXT_CONDITION = `${toLowerCase('local-name()')} = "input" and ${toLowerCase('@type')} = "text"`;
