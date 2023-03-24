@@ -74,8 +74,8 @@ function nodeToText(node) {
   const containerWidth = offsetParent && parseFloat(window.getComputedStyle(findNearestContainerElement(offsetParent), null).width);
   if (offsetParent &&
       isInline(offsetParent, { containerWidth }) &&
-      (isInline(offsetParent.previousSibling, { containerWidth }) ||
-       isInline(offsetParent.nextSibling, { containerWidth }) ||
+      (isInline(findEffectivePreviousSibling(offsetParent), { containerWidth }) ||
+       isInline(findEffectiveNextSibling(offsetParent), { containerWidth }) ||
        isInline(offsetParent.parentNode, { containerWidth })))
     return {
       text:  '',
@@ -103,6 +103,44 @@ function isInline(node, { containerWidth } = {}) {
     return true;
 
   return /^inline-/.test(display) && (node.getBoundingClientRect().width < containerWidth);
+}
+
+function findEffectivePreviousSibling(node) {
+  if (!node)
+    return null;
+
+  const sibling = node.previousSibling;
+  switch (sibling.nodeType) {
+    case Node.TEXT_NODE:
+      if (sibling.nodeValue.trim() == '')
+        return findEffectivePreviousSibling(sibling);
+      break;
+
+    case Node.ELEMENT_NODE:
+      return sibling;
+
+    default:
+      return findEffectivePreviousSibling(sibling);
+  }
+}
+
+function findEffectiveNextSibling(node) {
+  if (!node)
+    return null;
+
+  const sibling = node.nextSibling;
+  switch (sibling.nodeType) {
+    case Node.TEXT_NODE:
+      if (sibling.nodeValue.trim() == '')
+        return findEffectiveNextSibling(sibling);
+      break;
+
+    case Node.ELEMENT_NODE:
+      return sibling;
+
+    default:
+      return findEffectiveNextSibling(sibling);
+  }
 }
 
 function getPrecedingRanges(sourceRange) {
