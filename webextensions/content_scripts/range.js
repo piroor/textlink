@@ -66,8 +66,17 @@ function nodeToText(node) {
       state: STATE_CONTINUE_PHYSICALLY,
     };
 
-  if (node.offsetParent &&
-      /^inline/.test(window.getComputedStyle(node.offsetParent, null).display))
+
+  // We should treat inline-* block as virtual inline node, only when it is visually inline really.
+  // For example, if it is a inlie-block but has 100% width of its container, it may not look as an inline block.
+  // See also: https://github.com/piroor/textlink/issues/80
+  const offsetParent = node.offsetParent;
+  const containerWidth = offsetParent && parseFloat(window.getComputedStyle(findNearestContainerElement(offsetParent), null).width);
+  if (offsetParent &&
+      isInline(offsetParent, { containerWidth }) &&
+      (isInline(offsetParent.previousSibling, { containerWidth }) ||
+       isInline(offsetParent.nextSibling, { containerWidth }) ||
+       isInline(offsetParent.parentNode, { containerWidth })))
     return {
       text:  '',
       state: STATE_CONTINUE_VISUALLY,
@@ -77,6 +86,23 @@ function nodeToText(node) {
     text:  '\n',
     state: STATE_SEPARATED,
   };
+}
+
+function isInline(node, { containerWidth } = {}) {
+  if (!node)
+    return false;
+
+  if (node.nodeType == Node.TEXT_NODE)
+    return true;
+
+  if (node.nodeType != Node.ELEMENT_NODE)
+    return false;
+
+  const display = window.getComputedStyle(node, null).display;
+  if (display == 'inline' || !containerWidth)
+    return true;
+
+  return /^inline-/.test(display) && (node.getBoundingClientRect().width < containerWidth);
 }
 
 function getPrecedingRanges(sourceRange) {
