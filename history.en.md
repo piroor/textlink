@@ -1,6 +1,8 @@
 # History
 
  - master/HEAD
+ - 6.1.9 (2023.3.25)
+   * Optimize reaction for modifications of text selections: early termination of DOM traversing on not visually inline container.
  - 6.1.8 (2023.3.24)
    * Optimize reaction for modifications of text selections: early termination of DOM traversing on switching of block level container.
  - 6.1.7 (2023.1.7)
