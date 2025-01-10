@@ -71,6 +71,7 @@ function actionCheckboxes(params) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  document.documentElement.classList.toggle('rtl', isRTL());
   await configs.$loaded;
   configs.$addObserver(onConfigChanged);
 
