@@ -145,6 +145,9 @@ var URIMatcher = {
   },
 
   findTextRange: async function(params) {
+    if (params.text.length <= 0)
+      return null;
+
     if (!('startTextNodePos' in params.range) ||
         !('endTextNodePos' in params.range)) {
       // text, fake range
