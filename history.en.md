@@ -1,6 +1,9 @@
 # History
 
  - master/HEAD
+ - 6.1.10 (2025.5.27)
+   * Detect multiple URIs in a selection correctly. (regression at 6.1.5)
+   * Detect exactly targetted URI from partial selection even if there is any shorter version URIs appear before the targetted part.
  - 6.1.9 (2023.3.25)
    * Optimize reaction for modifications of text selections: early termination of DOM traversing on not visually inline container.
  - 6.1.8 (2023.3.24)
