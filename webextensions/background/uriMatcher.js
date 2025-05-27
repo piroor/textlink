@@ -15,6 +15,7 @@ var URIMatcher = {
       if (match.length == 0)
         return null;
 
+      const longestResultAt = new Map();
       for (let maybeURI of match) {
         maybeURI = this.sanitizeURIString(maybeURI);
         const uriRange = await this.findTextRange({
@@ -22,13 +23,24 @@ var URIMatcher = {
           range: params.cursor,
           tabId: params.tabId
         });
-        if (!uriRange)
+        if (!uriRange) {
           continue;
-        return {
+        }
+        const positionKey = `${uriRange.startTextNodePos}:${uriRange.startOffset}`;
+        const result = {
           text:  maybeURI,
           range: uriRange,
           uri:   this.fixupURI(maybeURI, params.baseURI)
         };
+        const longestResult = longestResultAt.get(positionKey);
+        if (!longestResult ||
+            (longestResult.text.length <= maybeURI.length &&
+             maybeURI.startsWith(longestResult.text))) {
+          longestResultAt.set(positionKey, result);
+        }
+      }
+      if (longestResultAt.size > 0) {
+        return [...longestResultAt.values()][0];
       }
       log(' => no match');
     }
