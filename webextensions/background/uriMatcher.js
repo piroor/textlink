@@ -143,7 +143,9 @@ var URIMatcher = {
   },
 
   matchMaybeURIs(text) {
+    const start = Date.now();
     let match = text.match(this._URIMatchingRegExp);
+    log('matchMaybeURIs matching: ', Date.now() - start, 'msec for ', text.length, ' characters text, ', this._URIMatchingRegExp.source.length, ' characters regexp');
     if (!match)
       return [];
     match = [...match].filter(maybeURI => (
@@ -752,7 +754,9 @@ var URIMatcher = {
 
   isHeadOfNewURI(string) {
     this._updateURIRegExp();
+    const start = Date.now();
     let match = string.match(this._URIMatchingRegExp_fromHead);
+    log('isHeadOfNewURI matching: ', Date.now() - start, 'msec for ', string.length, ' characters text, ', this._URIMatchingRegExp_fromHead.source.length, ' characters regexp');
     match = match ? match[1] : '' ;
     return this.hasLoadableScheme(match) ? match == string : false ;
   },
@@ -779,13 +783,17 @@ var URIMatcher = {
  
   getURIPartFromStart(string, excludeURIHead) {
     this._updateURIPartFinderRegExp();
+    const start = Date.now();
     const match = string.match(this._URIPartFinderRegExp_start);
+    log('getURIPartFromStart matching: ', Date.now() - start, 'msec for ', string.length, ' characters text, ', this._URIPartFinderRegExp_start.source.length, ' characters regexp');
     const part = match ? match[1] : '' ;
     return (!excludeURIHead || !this.isHeadOfNewURI(part)) ? part : '' ;
   },
   getURIPartFromEnd(string) {
     this._updateURIPartFinderRegExp();
+    const start = Date.now();
     const match = string.match(this._URIPartFinderRegExp_end);
+    log('getURIPartFromEnd matching: ', Date.now() - start, 'msec for ', string.length, ' characters text, ', this._URIPartFinderRegExp_end.source.length, ' characters regexp');
     return match ? match[1] : '' ;
   },
   _URIPartFinderRegExp_start : null,
