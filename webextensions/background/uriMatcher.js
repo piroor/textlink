@@ -108,11 +108,10 @@ var URIMatcher = {
             // shorter versions starting from the same position.
             const positionKey = `${range.startTextNodePos}:${range.startOffset}`;
             const longestResult = longestResultAt.get(positionKey);
-            if (longestResult) {
-              if (longestResult.text.length <= maybeURI.original.length &&
-                  maybeURI.original.startsWith(longestResult.text)) {
-                results.delete(longestResult);
-              }
+            if (longestResult &&
+                longestResult.text.length <= maybeURI.original.length &&
+                maybeURI.original.startsWith(longestResult.text)) {
+              results.delete(longestResult);
             }
             const result = {
               text:  maybeURI.original,
