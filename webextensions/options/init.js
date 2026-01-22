@@ -5,10 +5,15 @@
 */
 'use strict';
 
-import { configs } from '../common/commonConfigs.js';
-import { isRTL, setLogContext } from '../common/common.js';
-import Options from '../extlib/Options.js';
-import l10n from '../extlib/l10n.js';
+import {
+  configs,
+} from '/common/commonConfigs.js';
+import {
+  isRTL,
+  setLogContext,
+} from '/common/common.js';
+import Options from '/extlib/Options.js';
+import l10n from '/extlib/l10n.js';
 
 setLogContext('Options');
 let options;

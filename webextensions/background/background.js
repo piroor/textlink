@@ -5,8 +5,8 @@
 */
 'use strict';
 
-import { configs } from '../common/commonConfigs.js';
-import { log, setLogContext } from '../common/common.js';
+import { configs } from '/common/commonConfigs.js';
+import { log, setLogContext } from '/common/common.js';
 import { URIMatcher } from './uriMatcher.js';
 import * as Constants from '../common/constants.js';
 
