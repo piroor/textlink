@@ -5,7 +5,12 @@
 */
 'use strict';
 
-gLogContext = 'Options';
+import { configs } from '../common/commonConfigs.js';
+import { isRTL, setLogContext } from '../common/common.js';
+import Options from '../extlib/Options.js';
+import l10n from '../extlib/l10n.js';
+
+setLogContext('Options');
 let options;
 
 function onConfigChanged(key) {
@@ -44,9 +49,9 @@ function actionFieldSet(params) {
 }
 
 function actionCheckboxes(params) {
-  const base   = params.base;
+  const base = params.base;
   const action = params.action;
-  const type   = params.type;
+  const type = params.type;
   return `
     <p><label><input id="${base}_${action}_${type}"
                      type="checkbox">
@@ -75,13 +80,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   await configs.$loaded;
   configs.$addObserver(onConfigChanged);
 
-  const fragment = document.createDocumentFragment();
   const range = document.createRange();
   range.selectNodeContents(document.querySelector('#actions'));
   range.insertNode(range.createContextualFragment(
     ['action', 'actionInEditable'].map(base =>
       actionGroup({
-        group: base,
+        group:   base,
         content: ['select', 'current', 'tab', 'tabBackground', 'window', 'copy'].map(action =>
           actionFieldSet({
             action,

@@ -6,14 +6,14 @@ NPM_BIN_DIR := $(NPM_MOD_DIR)/.bin
 all: xpi
 
 install_dependency:
-	[ -e "$(NPM_BIN_DIR)/eslint" -a -e "$(NPM_BIN_DIR)/jsonlint-cli" ] || npm install
+	[ -e "$(NPM_BIN_DIR)/eslint" -a -e "$(NPM_BIN_DIR)/jsonlint" ] || npm install --save-dev
 
 lint: install_dependency
 	"$(NPM_BIN_DIR)/eslint" . --report-unused-disable-directives
-	find . -type d -name node_modules -prune -o -type f -name '*.json' -print | xargs "$(NPM_BIN_DIR)/jsonlint-cli"
+	find . -type d -name node_modules -prune -o -type f -name '*.json' -print | xargs "$(NPM_BIN_DIR)/jsonlint" --quiet
 
 format: install_dependency
-	"$(NPM_BIN_DIR)/eslint" . --ext=.js --report-unused-disable-directives --fix
+	"$(NPM_BIN_DIR)/eslint" . --report-unused-disable-directives --fix
 
 xpi: init_extlib install_extlib lint
 	rm -f ./*.xpi
@@ -27,8 +27,8 @@ update_extlib:
 
 install_extlib:
 	rm -f extlib/*.js extlib/*.dat
-	cp ../submodules/webextensions-lib-configs/Configs.js extlib/
-	cp ../submodules/webextensions-lib-options/Options.js extlib/
-	cp ../submodules/webextensions-lib-l10n/l10n.js extlib/
+	cp ../submodules/webextensions-lib-configs/Configs.js extlib/; echo 'export default Configs;' >> extlib/Configs.js
+	cp ../submodules/webextensions-lib-options/Options.js extlib/; echo 'export default Options;' >> extlib/Options.js
+	cp ../submodules/webextensions-lib-l10n/l10n.js extlib/; echo 'export default l10n;' >> extlib/l10n.js
 	cp ../submodules/publicsuffixlist/public_suffix_list.dat extlib/
 

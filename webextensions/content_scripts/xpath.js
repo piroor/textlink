@@ -7,18 +7,19 @@
 
 // XPath utilities
 
+/*
 function hasClass(className) {
   return `contains(concat(" ", normalize-space(@class), " "), " ${className} ")`;
 }
+*/
 
-function toLowerCase(target) {
+export function toLowerCase(target) {
   return `translate(${target}, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')`;
 }
 
-var NSResolver = {
-  lookupNamespaceURI : function(prefix) {
-    switch (prefix)
-    {
+const NSResolver = {
+  lookupNamespaceURI: function(prefix) {
+    switch (prefix) {
       case 'html':
       case 'xhtml':
         return 'http://www.w3.org/1999/xhtml';
@@ -30,7 +31,7 @@ var NSResolver = {
   }
 };
 
-function evaluateXPath(expression, context, type) {
+export function evaluateXPath(expression, context, type) {
   if (!type)
     type = XPathResult.ORDERED_NODE_SNAPSHOT_TYPE;
   let result;
@@ -43,7 +44,7 @@ function evaluateXPath(expression, context, type) {
       null
     );
   }
-  catch(e) {
+  catch(_error) {
     return {
       singleNodeValue: null,
       snapshotLength:  0,
@@ -55,8 +56,9 @@ function evaluateXPath(expression, context, type) {
   return result;
 }
 
+/*
 function getArrayFromXPathResult(xathResult) {
-  const max   = xathResult.snapshotLength;
+  const max = xathResult.snapshotLength;
   const array = new Array(max);
   if (!max)
     return array;
@@ -66,3 +68,4 @@ function getArrayFromXPathResult(xathResult) {
   }
   return array;
 }
+*/

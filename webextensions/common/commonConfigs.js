@@ -5,45 +5,71 @@
 */
 'use strict';
 
+import Configs from '../extlib/Configs.js';
+
 const defaultActions = [
-  { action:       'select',
+  {
+    action:       'select',
     triggerMouse: '',
-    triggerKey:   '' },
-  { action:       'current',
+    triggerKey:   ''
+  },
+  {
+    action:       'current',
     triggerMouse: 'accel,dblclick',
-    triggerKey:   'accel,enter' },
-  { action:       'tab',
+    triggerKey:   'accel,enter'
+  },
+  {
+    action:       'tab',
     triggerMouse: 'dblclick',
-    triggerKey:   'enter' },
-  { action:       'tabBackground',
+    triggerKey:   'enter'
+  },
+  {
+    action:       'tabBackground',
     triggerMouse: 'shift,dblclick',
-    triggerKey:   'shift,enter' },
-  { action:       'window',
+    triggerKey:   'shift,enter'
+  },
+  {
+    action:       'window',
     triggerMouse: '',
-    triggerKey:   '' },
-  { action:       'copy',
+    triggerKey:   ''
+  },
+  {
+    action:       'copy',
     triggerMouse: '',
-    triggerKey:   '' }
+    triggerKey:   ''
+  }
 ];
 const defaultActionsInEditable = [
-  { action:       'select',
+  {
+    action:       'select',
     triggerMouse: 'dblclick',
-    triggerKey:   '' },
-  { action:       'current',
+    triggerKey:   ''
+  },
+  {
+    action:       'current',
     triggerMouse: '',
-    triggerKey:   '' },
-  { action:       'tab',
+    triggerKey:   ''
+  },
+  {
+    action:       'tab',
     triggerMouse: 'accel,dblclick',
-    triggerKey:   'accel,enter' },
-  { action:       'tabBackground',
+    triggerKey:   'accel,enter'
+  },
+  {
+    action:       'tabBackground',
     triggerMouse: '',
-    triggerKey:   '' },
-  { action:       'window',
+    triggerKey:   ''
+  },
+  {
+    action:       'window',
     triggerMouse: '',
-    triggerKey:   '' },
-  { action:       'copy',
+    triggerKey:   ''
+  },
+  {
+    action:       'copy',
     triggerMouse: '',
-    triggerKey:   '' }
+    triggerKey:   ''
+  }
 ];
 
 const defaultConfigs = {
@@ -71,7 +97,7 @@ const defaultConfigs = {
   partExceptionEnd:           '-+|=+|(?:-=)+-?|(?:=-)=?|\\#+|\\++|\\*+|~+|[+-]?\\d+:\\d+(?::\\d+)?',
   IDNLazyDetectionSeparators: '\u3001\u3002',
 
-  rangeFindTimeout: 500,
+  rangeFindTimeout:    500,
   rangeFindRetryDelay: 100,
 
   // Services.prefs.getStringPref('network.IDN.blacklist_chars').split('').map(aChar => `\\u${('0000'+aChar.charCodeAt(0).toString(16)).substr(-4)}`).join('')
@@ -83,31 +109,31 @@ const defaultConfigs = {
 {
   const isMac = /^Mac/i.test(navigator.platform);
   for (const action of defaultActions) {
-    defaultConfigs[`action_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
-    defaultConfigs[`action_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
-    defaultConfigs[`action_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
-    defaultConfigs[`action_${action.action}_dblclick_meta`]  = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick`] = /dblclick/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_alt`] = /alt/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_ctrl`] = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`action_${action.action}_dblclick_meta`] = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
     defaultConfigs[`action_${action.action}_dblclick_shift`] = /shift/.test(action.triggerMouse);
-    defaultConfigs[`action_${action.action}_enter`]       = /enter/.test(action.triggerKey);
-    defaultConfigs[`action_${action.action}_enter_alt`]   = /alt/.test(action.triggerKey);
-    defaultConfigs[`action_${action.action}_enter_ctrl`]  = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
-    defaultConfigs[`action_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter`] = /enter/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_alt`] = /alt/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_ctrl`] = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`action_${action.action}_enter_meta`] = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
     defaultConfigs[`action_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
   }
   for (const action of defaultActionsInEditable) {
-    defaultConfigs[`actionInEditable_${action.action}_dblclick`]       = /dblclick/.test(action.triggerMouse);
-    defaultConfigs[`actionInEditable_${action.action}_dblclick_alt`]   = /alt/.test(action.triggerMouse);
-    defaultConfigs[`actionInEditable_${action.action}_dblclick_ctrl`]  = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
-    defaultConfigs[`actionInEditable_${action.action}_dblclick_meta`]  = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick`] = /dblclick/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_alt`] = /alt/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_ctrl`] = /ctrl/.test(action.triggerMouse) || !isMac && /accel/.test(action.triggerMouse);
+    defaultConfigs[`actionInEditable_${action.action}_dblclick_meta`] = /meta/.test(action.triggerMouse) || isMac && /accel/.test(action.triggerMouse);
     defaultConfigs[`actionInEditable_${action.action}_dblclick_shift`] = /shift/.test(action.triggerMouse);
-    defaultConfigs[`actionInEditable_${action.action}_enter`]       = /enter/.test(action.triggerKey);
-    defaultConfigs[`actionInEditable_${action.action}_enter_alt`]   = /alt/.test(action.triggerKey);
-    defaultConfigs[`actionInEditable_${action.action}_enter_ctrl`]  = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
-    defaultConfigs[`actionInEditable_${action.action}_enter_meta`]  = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter`] = /enter/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_alt`] = /alt/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_ctrl`] = /ctrl/.test(action.triggerKey) || !isMac && /accel/.test(action.triggerKey);
+    defaultConfigs[`actionInEditable_${action.action}_enter_meta`] = /meta/.test(action.triggerKey) || isMac && /accel/.test(action.triggerKey);
     defaultConfigs[`actionInEditable_${action.action}_enter_shift`] = /shift/.test(action.triggerKey);
   }
 }
 
-var configs = new Configs(defaultConfigs, {
+export const configs = new Configs(defaultConfigs, {
   syncKeys: Object.keys(defaultConfigs)
 });

@@ -5,14 +5,18 @@
 */
 'use strict';
 
-var gLogContext = '?';
+import { configs } from './commonConfigs.js';
 
-function log(message, ...args)
-{
+let gLogContext = '?';
+export function setLogContext(context) {
+  gLogContext = context;
+}
+
+export function log(message, ...args) {
   if (!window.configs || !configs.debug)
     return;
 
-  const nest   = (new Error()).stack.split('\n').length;
+  const nest = (new Error()).stack.split('\n').length;
   let indent = '';
   for (let i = 0; i < nest; i++) {
     indent += ' ';
@@ -20,12 +24,12 @@ function log(message, ...args)
   console.log(`TextLink<${gLogContext}>: ${indent}${message}`, ...args);
 }
 
-async function wait(task = 0, timeout = 0) {
+export async function wait(task = 0, timeout = 0) {
   if (typeof task != 'function') {
     timeout = task;
-    task    = null;
+    task = null;
   }
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     setTimeout(async () => {
       if (task)
         await task();
@@ -34,13 +38,13 @@ async function wait(task = 0, timeout = 0) {
   });
 }
 
-function nextFrame() {
-  return new Promise((resolve, reject) => {
+export function nextFrame() {
+  return new Promise((resolve, _reject) => {
     window.requestAnimationFrame(resolve);
   });
 }
 
-const RTL_LANGUAGES = new Set([
+export const RTL_LANGUAGES = new Set([
   'ar',
   'he',
   'fa',
@@ -52,7 +56,7 @@ const RTL_LANGUAGES = new Set([
   'rhg',
 ]);
 
-function isRTL() {
+export function isRTL() {
   const lang = (
     navigator.language ||
     navigator.userLanguage ||

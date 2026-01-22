@@ -5,7 +5,26 @@
 */
 'use strict';
 
-gLogContext = 'content';
+let Common, Constants, ChangingSelectionRanges, Range, XPath;
+(async () => {
+  const [common, constants, changingSelectionRanges, range, xPath] = await Promise.all([
+    import(browser.runtime.getURL('/common/common.js')),
+    import(browser.runtime.getURL('/common/constants.js')),
+    import(browser.runtime.getURL('/content_scripts/changing-selection-ranges.js')),
+    import(browser.runtime.getURL('/content_scripts/range.js')),
+    import(browser.runtime.getURL('/content_scripts/xpath.js')),
+  ]);
+  Common                  = common;
+  Constants               = constants;
+  ChangingSelectionRanges = changingSelectionRanges;
+  Range                   = range;
+  XPath                   = xPath;
+
+  Common.setLogContext('content');
+
+  registerListeners();
+})();
+
 
 const BOUNDARY_INLINE_NODE = 'textlink-boundary-inline-node';
 
@@ -29,7 +48,7 @@ async function onDblClick(event) {
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
     boundaryInlineNodes: [], // don't send raw DOM nodes
-    type: kCOMMAND_TRY_ACTION
+    type:                Constants.kCOMMAND_TRY_ACTION
   });
   for (const node of data.boundaryInlineNodes) {
     node.classList.remove(BOUNDARY_INLINE_NODE);
@@ -37,9 +56,9 @@ async function onDblClick(event) {
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
-    gLastActionResult.range.fieldNodePos = getFieldNodePosition(event.target);
+    gLastActionResult.range.fieldNodePos = Range.getFieldNodePosition(event.target);
   postAction(gLastActionResult);
-  await wait(500);
+  await Common.wait(500);
   gTryingAction = false;
 }
 
@@ -70,7 +89,7 @@ async function onKeyDown(event) {
   gLastActionResult = await browser.runtime.sendMessage({
     ...data,
     boundaryInlineNodes: [], // don't send raw DOM nodes
-    type: kCOMMAND_TRY_ACTION
+    type:                Constants.kCOMMAND_TRY_ACTION
   });
   for (const node of data.boundaryInlineNodes) {
     node.classList.remove(BOUNDARY_INLINE_NODE);
@@ -78,7 +97,7 @@ async function onKeyDown(event) {
   if (textFieldSelection &&
       gLastActionResult &&
       gLastActionResult.range)
-    gLastActionResult.range.fieldNodePos = getFieldNodePosition(event.target);
+    gLastActionResult.range.fieldNodePos = Range.getFieldNodePosition(event.target);
   postAction(gLastActionResult);
   gTryingAction = false;
 }
@@ -87,18 +106,18 @@ function postAction(result) {
   if (!result)
     return;
 
-  if (result.action & kACTION_COPY)
+  if (result.action & Constants.kACTION_COPY)
     doCopy(result.uri);
   if (result.range)
-    selectRanges(result.range);
+    Range.selectRanges(result.range);
 }
 
 function doCopy(text) {
-  gChangingSelectionRangeInternally++;
+  ChangingSelectionRanges.increase();
   const selection = window.getSelection();
   const ranges = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
-    ranges.push(getRangeData(selection.getRangeAt(i)));
+    ranges.push(Range.getRangeData(selection.getRangeAt(i)));
   }
 
   // this is required to block overriding clipboard data from scripts of the webpage.
@@ -108,7 +127,7 @@ function doCopy(text) {
     event.clipboardData.setData('text/plain', text);
   }, {
     capture: true,
-    once: true
+    once:    true
   });
 
   const field = document.createElement('textarea');
@@ -122,32 +141,30 @@ function doCopy(text) {
   document.execCommand('copy');
   field.parentNode.removeChild(field);
 
-  selectRanges(ranges);
-  gChangingSelectionRangeInternally--;
+  Range.selectRanges(ranges);
+  ChangingSelectionRanges.decrease();
 }
 
 
 let gLastSelection = '';
-let gFindingURIRanges = false;
 let gLastSelectionChangeAt = 0;
 let gLastURIRanges = Promise.resolve([]);
-var gChangingSelectionRangeInternally = 0;
 
 async function onSelectionChange(event) {
-  if (gChangingSelectionRangeInternally > 0)
+  if (ChangingSelectionRanges.has())
     return;
 
   const changedAt = gLastSelectionChangeAt = Date.now();
   if (findURIRanges.delayed)
     clearTimeout(findURIRanges.delayed);
 
-  await wait(200);
+  await Common.wait(200);
   if (changedAt != gLastSelectionChangeAt)
     return;
 
   if (gTryingAction) {
     while (gTryingAction) {
-      await wait(500);
+      await Common.wait(500);
     }
     if (changedAt != gLastSelectionChangeAt)
       return;
@@ -164,40 +181,37 @@ async function onSelectionChange(event) {
 }
 
 function onTextFieldSelectionChanged(field) {
-  const selectionRange = getFieldRangeData(field);
+  const selectionRange = Range.getFieldRangeData(field);
 
-  gLastSelection    = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
-  gFindingURIRanges = true;
+  gLastSelection = selectionRange.text.substring(selectionRange.startOffset, selectionRange.endOffset);
 
   browser.runtime.sendMessage({
-    type: kNOTIFY_READY_TO_FIND_URI_RANGES
+    type: Constants.kNOTIFY_READY_TO_FIND_URI_RANGES
   });
-  gLastURIRanges = new Promise(async (reolve, reject) => {
+  gLastURIRanges = new Promise(async (reolve, _reject) => {
     const ranges = await browser.runtime.sendMessage({
-      type:   kCOMMAND_FIND_URI_RANGES,
+      type:   Constants.kCOMMAND_FIND_URI_RANGES,
       base:   location.href,
       ranges: [selectionRange]
     });
-    const position = getFieldNodePosition(field);
+    const position = Range.getFieldNodePosition(field);
     for (const range of ranges) {
       range.range.fieldNodePos = position;
     }
-    gFindingURIRanges = false;
     reolve(ranges);
   });
 }
 
 function onSelectionRangeChanged() {
-  const selection     = window.getSelection();
+  const selection = window.getSelection();
   const selectionText = selection.toString()
   if (selectionText == gLastSelection)
     return;
 
-  gLastSelection    = selectionText;
-  gFindingURIRanges = true;
+  gLastSelection = selectionText;
 
   browser.runtime.sendMessage({
-    type: kNOTIFY_READY_TO_FIND_URI_RANGES
+    type: Constants.kNOTIFY_READY_TO_FIND_URI_RANGES
   });
 
   findURIRanges.delayed = setTimeout(() => {
@@ -206,27 +220,27 @@ function onSelectionRangeChanged() {
   }, 100);
 }
 
-async function findURIRanges(options = {}) {
+async function findURIRanges(_options = {}) {
   const selection = window.getSelection();
   if (!selection.toString().trim()) {
     browser.runtime.sendMessage({
-      type:   kCOMMAND_FIND_URI_RANGES,
+      type:   Constants.kCOMMAND_FIND_URI_RANGES,
       base:   location.href,
       ranges: []
     });
     return [];
   }
 
-  clearNodeVisibilityCache();
+  Range.clearNodeVisibilityCache();
 
   const selectionRanges = [];
   const boundaryInlineNodes = [];
   for (let i = 0, maxi = selection.rangeCount; i < maxi; i++) {
     const selectionRange = selection.getRangeAt(i);
-    const selectionText  = rangeToText(selectionRange);
-    const precedings     = getPrecedingRanges(selectionRange);
-    const followings     = getFollowingRanges(selectionRange);
-    const rangeData      = getRangeData(selectionRange);
+    const selectionText = Range.rangeToText(selectionRange);
+    const precedings = Range.getPrecedingRanges(selectionRange);
+    const followings = Range.getFollowingRanges(selectionRange);
+    const rangeData = Range.getRangeData(selectionRange);
     rangeData.text = selectionText.text;
     rangeData.expandedText = `${precedings.texts.join('')}${selectionText.text}${followings.texts.join('')}`;
     selectionRanges.push(rangeData);
@@ -237,14 +251,13 @@ async function findURIRanges(options = {}) {
     node.classList.add(BOUNDARY_INLINE_NODE);
   }
   const ranges = await browser.runtime.sendMessage({
-    type:   kCOMMAND_FIND_URI_RANGES,
+    type:   Constants.kCOMMAND_FIND_URI_RANGES,
     base:   location.href,
     ranges: selectionRanges
   });
   for (const node of boundaryInlineNodes) {
     node.classList.remove(BOUNDARY_INLINE_NODE);
   }
-  gFindingURIRanges = false;
   return ranges;
 }
 
@@ -255,21 +268,21 @@ function getSelectionEventData(event) {
   if (!textFieldSelection && selection.rangeCount != 1)
     return null;
 
-  clearNodeVisibilityCache();
+  Range.clearNodeVisibilityCache();
 
   let text, cursor, boundaryInlineNodes;
   if (textFieldSelection) {
-    cursor = getFieldRangeData(event.target);
-    text   = cursor.text;
+    cursor = Range.getFieldRangeData(event.target);
+    text = cursor.text;
     boundaryInlineNodes = [];
   }
   else {
     const selectionRange = selection.getRangeAt(0);
-    const selectionText  = rangeToText(selectionRange);
-    const precedings     = getPrecedingRanges(selectionRange);
-    const followings     = getFollowingRanges(selectionRange);
-    text   = `${precedings.texts.join('')}${selectionText.text}${followings.texts.join('')}`;
-    cursor = getRangeData(selectionRange);
+    const selectionText = Range.rangeToText(selectionRange);
+    const precedings = Range.getPrecedingRanges(selectionRange);
+    const followings = Range.getFollowingRanges(selectionRange);
+    text = `${precedings.texts.join('')}${selectionText.text}${followings.texts.join('')}`;
+    cursor = Range.getRangeData(selectionRange);
     boundaryInlineNodes = [...selectionText.boundaryInlineNodes, ...precedings.boundaryInlineNodes, ...followings.boundaryInlineNodes];
   }
 
@@ -277,10 +290,10 @@ function getSelectionEventData(event) {
     text, cursor,
     base:  location.href,
     event: {
-      altKey:   event.altKey,
-      ctrlKey:  event.ctrlKey,
-      metaKey:  event.metaKey,
-      shiftKey: event.shiftKey,
+      altKey:     event.altKey,
+      ctrlKey:    event.ctrlKey,
+      metaKey:    event.metaKey,
+      shiftKey:   event.shiftKey,
       inEditable: textFieldSelection || isEditableNode(event.target)
     },
     boundaryInlineNodes,
@@ -314,7 +327,7 @@ function onFocused(event) {
 function isInputField(node) {
   return (
     node.nodeType == Node.ELEMENT_NODE &&
-    evaluateXPath(`self::*[${kFIELD_CONDITION}]`, node, XPathResult.BOOLEAN_TYPE).booleanValue
+    XPath.evaluateXPath(`self::*[${Range.kFIELD_CONDITION}]`, node, XPathResult.BOOLEAN_TYPE).booleanValue
   );
 }
 
@@ -330,11 +343,11 @@ function isEditableNode(node) {
 }
 
 
-function onMessage(aMessage, aSender) {
+function onMessage(aMessage, _aSender) {
   switch (aMessage.type) {
-    case kCOMMAND_ACTION_FOR_URIS: return (async () => {
+    case Constants.kCOMMAND_ACTION_FOR_URIS: return (async () => {
       let ranges = await gLastURIRanges;
-      if (aMessage.action & kACTION_COPY) {
+      if (aMessage.action & Constants.kACTION_COPY) {
         let uris = ranges.map(aRange => aRange.uri).join('\n');
         if (ranges.length > 1)
           uris += '\n';
@@ -352,19 +365,19 @@ function onMessage(aMessage, aSender) {
         gLastURIRanges = findURIRanges();
         ranges = await gLastURIRanges;
       }
-      selectRanges(ranges.map(aRange => aRange.range));
+      Range.selectRanges(ranges.map(aRange => aRange.range));
     })();
 
-    case kCOMMAND_FETCH_URI_RANGES:
+    case Constants.kCOMMAND_FETCH_URI_RANGES:
       return gLastURIRanges;
 
-    case kNOTIFY_MATCH_ALL_PROGRESS:
+    case Constants.kNOTIFY_MATCH_ALL_PROGRESS:
       gMatchAllProgress = aMessage.progress;
       if (aMessage.showInContent)
         updateProgress();
       break;
 
-    case kCOMMAND_FETCH_MATCH_ALL_PROGRESS:
+    case Constants.kCOMMAND_FETCH_MATCH_ALL_PROGRESS:
       return Promise.resolve(gMatchAllProgress);
   }
 }
@@ -413,17 +426,19 @@ function updateProgress() {
   gProgressIndicator.setAttribute('title', browser.i18n.getMessage('menu_waiting_label', [gMatchAllProgress]));
 }
 
-window.addEventListener('dblclick', onDblClick, { capture: true });
-window.addEventListener('keydown', onKeyDownThrottled, { capture: true });
-window.addEventListener('selectionchange', onSelectionChange, { capture: true });
-window.addEventListener('focus', onFocused, { capture: true });
-browser.runtime.onMessage.addListener(onMessage);
 
-window.addEventListener('unload', () => {
-  window.removeEventListener('dblclick', onDblClick, { capture: true });
-  window.removeEventListener('keydown', onKeyDownThrottled, { capture: true });
-  window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
-  window.removeEventListener('focus', onFocused, { capture: true });
-  browser.runtime.onMessage.removeListener(onMessage);
-}, { once: true });
+function registerListeners() {
+  window.addEventListener('dblclick', onDblClick, { capture: true });
+  window.addEventListener('keydown', onKeyDownThrottled, { capture: true });
+  window.addEventListener('selectionchange', onSelectionChange, { capture: true });
+  window.addEventListener('focus', onFocused, { capture: true });
+  browser.runtime.onMessage.addListener(onMessage);
 
+  window.addEventListener('unload', () => {
+    window.removeEventListener('dblclick', onDblClick, { capture: true });
+    window.removeEventListener('keydown', onKeyDownThrottled, { capture: true });
+    window.removeEventListener('selectionchange', onSelectionChange, { capture: true });
+    window.removeEventListener('focus', onFocused, { capture: true });
+    browser.runtime.onMessage.removeListener(onMessage);
+  }, { once: true });
+}

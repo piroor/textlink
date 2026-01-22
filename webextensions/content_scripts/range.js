@@ -5,11 +5,14 @@
 */
 'use strict';
 
-const STATE_CONTINUE_PHYSICALLY = 1 << 0;
-const STATE_CONTINUE_VISUALLY   = 1 << 1;
-const STATE_SEPARATED           = 1 << 2;
+import * as XPath from './xpath.js';
+import * as ChangingSelectionRanges from './changing-selection-ranges.js';
 
-function rangeToText(range) {
+const STATE_CONTINUE_PHYSICALLY = 1 << 0;
+const STATE_CONTINUE_VISUALLY = 1 << 1;
+const STATE_SEPARATED = 1 << 2;
+
+export function rangeToText(range) {
   const walker = createVisibleTextNodeWalker();
   walker.currentNode = range.startContainer;
   let result = '';
@@ -56,7 +59,7 @@ function nodeToText(node) {
 
   if (/^br$/i.test(String(node.localName)))
     return {
-      text: '\n',
+      text:  '\n',
       state: STATE_SEPARATED,
     };
 
@@ -143,8 +146,8 @@ function findEffectiveNextSibling(node) {
   }
 }
 
-function getPrecedingRanges(sourceRange) {
-  const texts  = [];
+export function getPrecedingRanges(sourceRange) {
+  const texts = [];
   const ranges = [];
   const boundaryInlineNodes = [];
   const range = document.createRange();
@@ -208,8 +211,8 @@ function getPrecedingRanges(sourceRange) {
   return { texts, ranges, boundaryInlineNodes };
 }
 
-function getFollowingRanges(sourceRange) {
-  const texts  = [];
+export function getFollowingRanges(sourceRange) {
+  const texts = [];
   const ranges = [];
   const boundaryInlineNodes = [];
   const range = document.createRange();
@@ -274,7 +277,7 @@ function getFollowingRanges(sourceRange) {
 }
 
 let nodeVisibilityCache;
-function clearNodeVisibilityCache() {
+export function clearNodeVisibilityCache() {
   nodeVisibilityCache = null;
 }
 
@@ -282,10 +285,12 @@ function createVisibleTextNodeWalker() {
   return document.createTreeWalker(
     document,
     NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
-    { acceptNode: (node) =>
-      isNodeVisible(node) ?
-        NodeFilter.FILTER_ACCEPT :
-        NodeFilter.FILTER_REJECT },
+    {
+      acceptNode: (node) =>
+        isNodeVisible(node) ?
+          NodeFilter.FILTER_ACCEPT :
+          NodeFilter.FILTER_REJECT
+    },
     false
   );
 }
@@ -301,7 +306,7 @@ function isNodeVisible(node) {
 
   if (typeof node.checkVisibility == 'function') {
     const visible = node.checkVisibility({
-      checkOpacity: true,
+      checkOpacity:       true,
       checkVisibilityCSS: true
     });
     nodeVisibilityCache.set(node, visible);
@@ -333,14 +338,14 @@ function isNodeVisible(node) {
 
 // returns rangeData compatible object
 // See also: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/find/find
-function getRangeData(range) {
+export function getRangeData(range) {
   let startContainer = range.startContainer;
-  let startOffset    = range.startOffset;
-  let endContainer   = range.endContainer;
-  let endOffset      = range.endOffset;
+  let startOffset = range.startOffset;
+  let endContainer = range.endContainer;
+  let endOffset = range.endOffset;
   if (startContainer.nodeType != Node.TEXT_NODE) {
     const possibleStartContainer = startContainer.childNodes[startOffset];
-    startContainer = evaluateXPath(
+    startContainer = XPath.evaluateXPath(
       `self::text() || following::text()[1]`,
       possibleStartContainer,
       XPathResult.FIRST_ORDERED_NODE_TYPE
@@ -355,7 +360,7 @@ function getRangeData(range) {
       possibleEndContainer = walker.previousNode();
     }
     endContainer = possibleEndContainer;
-    endOffset    = endContainer.nodeValue.length;
+    endOffset = endContainer.nodeValue.length;
   }
   return {
     startTextNodePos: getTextNodePosition(startContainer),
@@ -365,7 +370,7 @@ function getRangeData(range) {
   };
 }
 
-function getFieldRangeData(field) {
+export function getFieldRangeData(field) {
   return {
     text:        field.value,
     startOffset: field.selectionStart,
@@ -373,16 +378,16 @@ function getFieldRangeData(field) {
   };
 }
 
-function selectRanges(ranges) {
+export function selectRanges(ranges) {
   if (!Array.isArray(ranges))
     ranges = [ranges];
 
   if (ranges.length == 0)
     return;
 
-  gChangingSelectionRangeInternally++;
+  ChangingSelectionRanges.increase();
   setTimeout(() => {
-    gChangingSelectionRangeInternally--;
+    ChangingSelectionRanges.decrease();
   }, 100);
 
   if ('fieldNodePos' in ranges[0]) {
@@ -408,7 +413,7 @@ function selectRanges(ranges) {
 }
 
 function getTextNodePosition(node) {
-  return evaluateXPath(
+  return XPath.evaluateXPath(
     'count(preceding::text())',
     node,
     XPathResult.NUMBER_TYPE
@@ -431,12 +436,12 @@ function findNearestContainerElement(node) {
   return container;
 }
 
-const kINPUT_TEXT_CONDITION = `${toLowerCase('local-name()')} = "input" and ${toLowerCase('@type')} = "text"`;
-const kTEXT_AREA_CONDITION  = `${toLowerCase('local-name()')} = "textarea"`;
-var kFIELD_CONDITION      = `(${kINPUT_TEXT_CONDITION}) or (${kTEXT_AREA_CONDITION})`;
+const kINPUT_TEXT_CONDITION = `${XPath.toLowerCase('local-name()')} = "input" and ${XPath.toLowerCase('@type')} = "text"`;
+const kTEXT_AREA_CONDITION = `${XPath.toLowerCase('local-name()')} = "textarea"`;
+export const kFIELD_CONDITION = `(${kINPUT_TEXT_CONDITION}) or (${kTEXT_AREA_CONDITION})`;
 
-function getFieldNodePosition(node) {
-  return evaluateXPath(
+export function getFieldNodePosition(node) {
+  return XPath.evaluateXPath(
     `count(preceding::*[${kFIELD_CONDITION}])`,
     node,
     XPathResult.NUMBER_TYPE
@@ -451,16 +456,16 @@ function createRangeFromRangeData(data) {
 }
 
 function getTextNodeAt(position) {
-  return evaluateXPath(
-    `descendant::text()[position()=${position+1}]`,
+  return XPath.evaluateXPath(
+    `descendant::text()[position()=${position + 1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;
 }
 
 function getFieldNodeAt(position) {
-  return evaluateXPath(
-    `descendant::*[${kFIELD_CONDITION}][position()=${position+1}]`,
+  return XPath.evaluateXPath(
+    `descendant::*[${kFIELD_CONDITION}][position()=${position + 1}]`,
     document,
     XPathResult.FIRST_ORDERED_NODE_TYPE
   ).singleNodeValue;

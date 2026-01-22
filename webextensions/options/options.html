@@ -3,94 +3,78 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <script type="application/javascript" src="/common/constants.js"></script>
-    <script type="application/javascript" src="/extlib/Configs.js"></script>
-    <script type="application/javascript" src="/common/common.js"></script>
-    <script type="application/javascript" src="/common/commonConfigs.js"></script>
-    <script type="application/javascript" src="/extlib/Options.js"></script>
-    <script type="application/javascript" src="/extlib/l10n.js"></script>
-    <script type="application/javascript" src="/options/init.js"></script>
-    <link rel="stylesheet" type="text/css" href="options.css"/>
-  </head>
-  <body>
-    <h1>__MSG_config_action_caption__</h1>
-    <div id="actions"></div>
 
-    <h1>__MSG_config_menu_caption__</h1>
-    <p><label><input id="menu_openCurrent_single"
-                     type="checkbox">
-              __MSG_menu_openCurrent_single__
-              __MSG_menu_single_description__</label></p>
-    <p><label><input id="menu_openCurrent_multiple"
-                     type="checkbox">
-              __MSG_menu_openCurrent_multiple__
-              __MSG_menu_multiple_description__</label></p>
-    <p><label><input id="menu_openTab_single"
-                     type="checkbox">
-              __MSG_menu_openTab_single__
-              __MSG_menu_single_description__</label></p>
-    <p><label><input id="menu_openTab_multiple"
-                     type="checkbox">
-              __MSG_menu_openTab_multiple__
-              __MSG_menu_multiple_description__</label></p>
-    <p><label><input id="menu_openWindow_single"
-                     type="checkbox">
-              __MSG_menu_openWindow_single__
-              __MSG_menu_single_description__</label></p>
-    <p><label><input id="menu_openWindow_multiple"
-                     type="checkbox">
-              __MSG_menu_openWindow_multiple__
-              __MSG_menu_multiple_description__</label></p>
-    <p><label><input id="menu_copy_single"
-                     type="checkbox">
-              __MSG_menu_copy_single__
-              __MSG_menu_single_description__</label></p>
-    <p><label><input id="menu_copy_multiple"
-                     type="checkbox">
-              __MSG_menu_copy_multiple__
-              __MSG_menu_multiple_description__</label></p>
+<head>
+       <meta charset="UTF-8">
+       <script type="module" src="init.js"></script>
+       <link rel="stylesheet" type="text/css" href="options.css" />
+</head>
 
-    <h1>__MSG_config_advanced_caption__</h1>
-    <p><label><input id="showProgress"
-                     type="checkbox">
-             __MSG_config_showProgress__</label></p>
-    <fieldset class="uri-detection">
-      <legend>__MSG_config_detection_group__</legend>
-      <p><label for="scheme">__MSG_config_scheme__</label>
-         <span><input id="scheme"
-                      type="textbox"></label>
-               <button data-reset-target="scheme">__MSG_config_scheme_default__</button></span></p>
-      <p><label><input id="IDNEnabled"
-                       type="checkbox">
-                __MSG_config_idn_enabled__</label>
-         <span><input id="IDNScheme"
-                      type="textbox">
-               <button data-reset-target="IDNScheme">__MSG_config_idn_scheme_default__</button></span></p>
-      <p><label for="schemeFixupTable">__MSG_config_scheme_fixup_table__</label>
-         <span><input id="schemeFixupTable"
-                      type="textbox">
-               <button data-reset-target="schemeFixupTable">__MSG_config_scheme_fixup_table_default__</button></span></p>
-      <p><label><input id="relativeEnabled"
-                       type="checkbox">
-                __MSG_config_relative_enabled__</label></p>
-      <p><label><input id="multibyteEnabled"
-                       type="checkbox">
-                __MSG_config_multibyte_enabled__</label></p>
-      <p><label><input id="i18nPathEnabled"
-                       type="checkbox">
-                __MSG_config_i18nPath_enabled__</label></p>
-    </fieldset>
+<body>
+       <h1>__MSG_config_action_caption__</h1>
+       <div id="actions"></div>
 
-    <hr/>
+       <h1>__MSG_config_menu_caption__</h1>
+       <p><label><input id="menu_openCurrent_single" type="checkbox">
+                     __MSG_menu_openCurrent_single__
+                     __MSG_menu_single_description__</label></p>
+       <p><label><input id="menu_openCurrent_multiple" type="checkbox">
+                     __MSG_menu_openCurrent_multiple__
+                     __MSG_menu_multiple_description__</label></p>
+       <p><label><input id="menu_openTab_single" type="checkbox">
+                     __MSG_menu_openTab_single__
+                     __MSG_menu_single_description__</label></p>
+       <p><label><input id="menu_openTab_multiple" type="checkbox">
+                     __MSG_menu_openTab_multiple__
+                     __MSG_menu_multiple_description__</label></p>
+       <p><label><input id="menu_openWindow_single" type="checkbox">
+                     __MSG_menu_openWindow_single__
+                     __MSG_menu_single_description__</label></p>
+       <p><label><input id="menu_openWindow_multiple" type="checkbox">
+                     __MSG_menu_openWindow_multiple__
+                     __MSG_menu_multiple_description__</label></p>
+       <p><label><input id="menu_copy_single" type="checkbox">
+                     __MSG_menu_copy_single__
+                     __MSG_menu_single_description__</label></p>
+       <p><label><input id="menu_copy_multiple" type="checkbox">
+                     __MSG_menu_copy_multiple__
+                     __MSG_menu_multiple_description__</label></p>
 
-    <h1>__MSG_config_debug_caption__</h1>
-    <p><label><input id="debug"
-                     type="checkbox">
-             __MSG_config_debug_label__</label></p>
-    <div id="debug-configs">
-      <h2>__MSG_config_all_caption__</h2>
-    </div>
-  </body>
+       <h1>__MSG_config_advanced_caption__</h1>
+       <p><label><input id="showProgress" type="checkbox">
+                     __MSG_config_showProgress__</label></p>
+       <fieldset class="uri-detection">
+              <legend>__MSG_config_detection_group__</legend>
+              <p><label for="scheme">__MSG_config_scheme__</label>
+                     <span><input id="scheme" type="textbox"></label>
+                            <button data-reset-target="scheme">__MSG_config_scheme_default__</button></span>
+              </p>
+              <p><label><input id="IDNEnabled" type="checkbox">
+                            __MSG_config_idn_enabled__</label>
+                     <span><input id="IDNScheme" type="textbox">
+                            <button data-reset-target="IDNScheme">__MSG_config_idn_scheme_default__</button></span>
+              </p>
+              <p><label for="schemeFixupTable">__MSG_config_scheme_fixup_table__</label>
+                     <span><input id="schemeFixupTable" type="textbox">
+                            <button
+                                   data-reset-target="schemeFixupTable">__MSG_config_scheme_fixup_table_default__</button></span>
+              </p>
+              <p><label><input id="relativeEnabled" type="checkbox">
+                            __MSG_config_relative_enabled__</label></p>
+              <p><label><input id="multibyteEnabled" type="checkbox">
+                            __MSG_config_multibyte_enabled__</label></p>
+              <p><label><input id="i18nPathEnabled" type="checkbox">
+                            __MSG_config_i18nPath_enabled__</label></p>
+       </fieldset>
+
+       <hr />
+
+       <h1>__MSG_config_debug_caption__</h1>
+       <p><label><input id="debug" type="checkbox">
+                     __MSG_config_debug_label__</label></p>
+       <div id="debug-configs">
+              <h2>__MSG_config_all_caption__</h2>
+       </div>
+</body>
+
 </html>
